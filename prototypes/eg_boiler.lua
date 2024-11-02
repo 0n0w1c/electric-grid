@@ -2,7 +2,7 @@
 
 local eg_boiler = {
     type = "boiler",
-    name = "electric-boiler",
+    name = "eg-boiler",
     icon = "__base__/graphics/icons/boiler.png",
     energy_consumption = "1.8MW",
 
@@ -57,7 +57,7 @@ local eg_boiler = {
         production_type = "output",
         volume = 200
     },
-    minable = { mining_time = 0.3, result = "electric-boiler" },
+    minable = { mining_time = 0.3, result = "eg-boiler" },
     collision_box = {
         { -0.4, -0.4 },
         { 0.4,  0.4 }
@@ -306,22 +306,22 @@ local eg_boiler = {
 
 local eg_boiler_item = {
     type = "item",
-    name = "electric-boiler",
+    name = "eg-boiler",
     icon = "__base__/graphics/icons/boiler.png", -- Custom icon if desired
-    place_result = "electric-boiler",
+    place_result = "eg-boiler",
     stack_size = 50
 }
 
 local eg_boiler_recipe = {
     type = "recipe",
-    name = "electric-boiler",
+    name = "eg-boiler",
     enabled = true,
     ingredients = {
         { type = "item", name = "boiler",             amount = 1 },
         { type = "item", name = "electronic-circuit", amount = 5 }
     },
     results = {
-        { type = "item", name = "electric-boiler", amount = 1 }
+        { type = "item", name = "eg-boiler", amount = 1 }
     }
 }
 

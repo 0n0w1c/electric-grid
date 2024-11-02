@@ -1,11 +1,11 @@
 -- Electric Infinity Pipe Definition
 local eg_infinity_pipe = {
     type = "infinity-pipe",
-    name = "electric-infinity-pipe",
+    name = "eg-infinity-pipe",
     icon = "__base__/graphics/icons/pipe.png", -- Custom icon if desired
     gui_mode = "all",
-    minable = { mining_time = 0.5, result = "electric-infinity-pipe" },
-    placeable_by = { item = "electric-infinity-pipe", count = 1 },
+    minable = { mining_time = 0.5, result = "eg-infinity-pipe" },
+    placeable_by = { item = "eg-infinity-pipe", count = 1 },
     max_health = 200,
     corpse = "small-remnants",
     resistances = { { type = "fire", percent = 100 } },
@@ -78,23 +78,23 @@ local eg_infinity_pipe = {
 
 local eg_infinity_pipe_item = {
     type = "item",
-    name = "electric-infinity-pipe",
+    name = "eg-infinity-pipe",
     icon = "__base__/graphics/icons/pipe.png",
-    place_result = "electric-infinity-pipe",
+    place_result = "eg-infinity-pipe",
     subgroup = "energy-pipe-distribution",
-    order = "b[pipe]-c[electric-infinity-pipe]",
+    order = "b[pipe]-c[eg-infinity-pipe]",
     stack_size = 50
 }
 
 local eg_infinity_pipe_recipe = {
     type = "recipe",
-    name = "electric-infinity-pipe",
+    name = "eg-infinity-pipe",
     ingredients = {
         { type = "item", name = "iron-plate",         amount = 10 },
         { type = "item", name = "electronic-circuit", amount = 5 }
     },
     results = {
-        { type = "item", name = "electric-infinity-pipe", amount = 1 }
+        { type = "item", name = "eg-infinity-pipe", amount = 1 }
     },
     enabled = true
 }
