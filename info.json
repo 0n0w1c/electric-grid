@@ -1,0 +1,16 @@
+{
+    "name": "electric-grid",
+    "version": "0.0.1",
+    "title": "Electric Grid",
+    "author": "0n0w1c",
+    "description": "Electric overhaul - maybe??? Hopefully???",
+    "factorio_version": "2.0",
+    "quality_required": false,
+    "space_travel_required": false,
+    "spoiling_required": false,
+    "freezing_required": false,
+    "segmented_units_required": false,
+    "dependencies": [
+        "! noangledcables"
+    ]
+}
