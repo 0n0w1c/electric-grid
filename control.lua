@@ -41,6 +41,20 @@ local function get_eg_steam_engine_offset(direction)
     return { x = 0, y = 0 }      -- Default offset in case of unknown direction
 end
 
+-- Define the position offset for the steam generator based on direction for a 1x1 boiler
+local function get_eg_low_voltage_pole_offset(direction)
+    if direction == defines.direction.north then
+        return { x = 0, y = -2 } -- Position below the boiler
+    elseif direction == defines.direction.east then
+        return { x = 2, y = 0 }  -- Position to the right of the boiler
+    elseif direction == defines.direction.south then
+        return { x = 0, y = 2 }  -- Position above the boiler
+    elseif direction == defines.direction.west then
+        return { x = -2, y = 0 } -- Position to the left of the boiler
+    end
+    return { x = 0, y = 0 }      -- Default offset in case of unknown direction
+end
+
 -- Place the electric boiler and infinity pipe with direction handling
 local function on_eg_transformator_displayer_built(event)
     local entity = event.entity
@@ -60,7 +74,7 @@ local function on_eg_transformator_displayer_built(event)
         entity.destroy()
         game.print("Displayer destroyed.") -- Debugging confirmation
 
-        -- Place the electric boiler with the same direction as the displayer
+        -- Place the eg-boiler with the same direction as the displayer
         local eg_boiler = surface.create_entity {
             name = "eg-boiler",
             position = position,
@@ -68,24 +82,26 @@ local function on_eg_transformator_displayer_built(event)
             direction = direction
         }
 
-        -- Calculate the offset position for the infinity pipe based on direction
+        -- Calculate the offset position for the eg-infinity-pipe based on direction
         local offset = get_eg_infinity_pipe_offset(direction)
         local eg_infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
 
-        -- Place the electric infinity pipe with the same direction as the boiler
+        -- Place the eg-infinity-pipe with the same direction as the boiler
         local eg_infinity_pipe = surface.create_entity {
             name = "eg-infinity-pipe",
             position = eg_infinity_pipe_position,
             force = force,
             direction = direction
         }
-        eg_infinity_pipe.set_fluid({ name = "water", amount = 100 })
 
-        -- Calculate the offset position for the infinity pipe based on direction
+        -- Make the water flow
+        eg_infinity_pipe.set_fluid(1, { name = "water", amount = 100, temperature = 15 })
+
+        -- Calculate the offset position for the eg-steam-engine based on direction
         offset = get_eg_steam_engine_offset(direction)
         local eg_steam_engine_position = { position.x + offset.x, position.y + offset.y }
 
-        -- Place the electric infinity pipe with the same direction as the boiler
+        -- Place the eg-steam-engine with the same direction as the boiler
         local eg_steam_engine = surface.create_entity {
             name = "eg-steam-engine",
             position = eg_steam_engine_position,
@@ -93,12 +109,24 @@ local function on_eg_transformator_displayer_built(event)
             direction = direction
         }
 
-        -- Track the boiler and infinity pipe together as a eg_transformator
+        -- Calculate the offset position for the eg-low-voltage-pole based on direction
+        offset = get_eg_low_voltage_pole_offset(direction)
+        local eg_low_voltage_pole_position = { position.x + offset.x, position.y + offset.y }
+
+        -- Place the eg-low-voltage-pole with the same direction as the boiler
+        local eg_low_voltage_pole = surface.create_entity {
+            name = "eg-low-voltage-pole",
+            position = eg_low_voltage_pole_position,
+            force = force,
+            direction = direction
+        }
+
+        -- Track components together as a eg_transformators
         eg_transformators[#eg_transformators + 1] = {
             boiler = eg_boiler,
             infinity_pipe = eg_infinity_pipe,
-            generator =
-                eg_steam_engine
+            generator = eg_steam_engine,
+            low_voltage = eg_low_voltage_pole
         }
         storage.eg_transformators = eg_transformators -- Update storage after modification
     end

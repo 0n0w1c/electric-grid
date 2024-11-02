@@ -62,7 +62,7 @@ local eg_infinity_pipe = {
             }
         },
         production_type = "output", -- Sets this pipe to output mode by default
-        volume = 100
+        volume = 200
     },
 
     horizontal_window_bounding_box = {

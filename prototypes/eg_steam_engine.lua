@@ -22,7 +22,7 @@ local eg_steam_engine = {
         type = "electric",
         usage_priority = "secondary-output"
     },
-    fast_replaceable_group = "steam-engine",
+    --fast_replaceable_group = "steam-engine",
     flags = {
         "placeable-neutral",
         "player-creation"
@@ -45,8 +45,9 @@ local eg_steam_engine = {
         production_type = "input",
         volume = 200
     },
-    fluid_usage_per_tick = 0.5,
-    heating_energy = "50kW",
+    fluid_usage_per_tick = 1,
+    heating_energy = "100kW",
+    --[[
     horizontal_animation = {
         layers = {
             {
@@ -76,6 +77,7 @@ local eg_steam_engine = {
             }
         }
     },
+    ]]
     icon = "__base__/graphics/icons/steam-engine.png",
     impact_category = "metal-large",
     max_health = 400,
@@ -85,6 +87,7 @@ local eg_steam_engine = {
         result = "eg-steam-engine"
     },
     name = "eg-steam-engine",
+    --[[
     open_sound = {
         filename = "__base__/sound/machine-open.ogg",
         scale = 0.0046296296296296289,
@@ -94,6 +97,7 @@ local eg_steam_engine = {
         minimum = 0.25,
         performance_to_activity_rate = 2
     },
+    ]]
     resistances = {
         {
             percent = 70,
@@ -110,68 +114,6 @@ local eg_steam_engine = {
         { 0.5,  0.5 }
     },
     type = "generator",
-    vertical_animation = {
-        layers = {
-            {
-                filename = "__base__/graphics/entity/steam-engine/steam-engine-V.png",
-                frame_count = 32,
-                height = 391,
-                line_length = 8,
-                scale = 0.16666666666666665,
-                shift = {
-                    0.049479166666666661,
-                    -0.065104166666666652
-                },
-                width = 225
-            },
-            {
-                draw_as_shadow = true,
-                filename = "__base__/graphics/entity/steam-engine/steam-engine-V-shadow.png",
-                frame_count = 32,
-                height = 307,
-                line_length = 8,
-                scale = 0.16666666666666665,
-                shift = {
-                    0.421875,
-                    0.096354166666666643
-                },
-                width = 330
-            }
-        }
-    },
-    water_reflection = {
-        orientation_to_variation = true,
-        pictures = {
-            filename = "__base__/graphics/entity/steam-engine/steam-engine-reflection.png",
-            height = 44,
-            priority = "extra-high",
-            repeat_count = 2,
-            scale = 5,
-            shift = {
-                0,
-                1.71875
-            },
-            variation_count = 2,
-            width = 40
-        },
-        rotate = false
-    },
-    working_sound = {
-        audible_distance_modifier = 0.8,
-        fade_in_ticks = 4,
-        fade_out_ticks = 20,
-        match_speed_to_activity = true,
-        max_sounds_per_type = 3,
-        sound = {
-            filename = "__base__/sound/steam-engine-90bpm.ogg",
-            modifiers = {
-                type = "tips-and-tricks",
-                volume_multiplier = 1.1000000000000001
-            },
-            speed_smoothing_window_size = 60,
-            volume = 0.55
-        }
-    }
 }
 
 local steam_engine_prototype = data.raw["item"]["steam-engine"]
