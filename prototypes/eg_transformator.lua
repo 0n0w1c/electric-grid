@@ -1,5 +1,3 @@
-local boiler_prototype = data.raw["boiler"]["boiler"]
-
 local eg_transformator_displayer = {
     type = "simple-entity-with-force",
     name = "eg-transformator-displayer",
@@ -13,6 +11,8 @@ local eg_transformator_displayer = {
     pictures = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(),
     direction_count = 4
 }
+
+local boiler_prototype = data.raw["item"]["boiler"]
 
 local eg_transformator_item = {
     type = "item",

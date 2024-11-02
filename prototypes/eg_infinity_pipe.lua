@@ -13,13 +13,20 @@ local eg_infinity_pipe = {
         { -0.29, -0.29 },
         { 0.29,  0.29 }
     },
+    selection_box = {
+        { -0.29, -0.29 },
+        { 0.29,  0.29 }
+    },
     vertical_window_bounding_box = {
         { -0.28125, -0.5 },
         { 0.03125,  0.125 }
     },
 
+    -- Fluid box with water set as default output fluid
     fluid_box = {
         hide_connection_info = true,
+        base_area = 1,    -- Determines how much fluid is in the pipe (adjust as needed)
+        filter = "water", -- Ensures only water flows through this pipe
         pipe_connections = {
             {
                 connection_category = {
@@ -54,8 +61,10 @@ local eg_infinity_pipe = {
                 position = { 0, 0 }
             }
         },
+        production_type = "output", -- Sets this pipe to output mode by default
         volume = 100
     },
+
     horizontal_window_bounding_box = {
         { -0.25, -0.28125 },
         { 0.25,  0.15625 }

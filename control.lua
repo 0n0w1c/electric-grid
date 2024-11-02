@@ -28,7 +28,7 @@ local function get_eg_infinity_pipe_offset(direction)
 end
 
 -- Define the position offset for the steam generator based on direction for a 1x1 boiler
-local function get_steam_generator_offset(direction)
+local function get_eg_steam_engine_offset(direction)
     if direction == defines.direction.north then
         return { x = 0, y = -1 } -- Position below the boiler
     elseif direction == defines.direction.east then
@@ -61,7 +61,7 @@ local function on_eg_transformator_displayer_built(event)
         game.print("Displayer destroyed.") -- Debugging confirmation
 
         -- Place the electric boiler with the same direction as the displayer
-        local boiler = surface.create_entity {
+        local eg_boiler = surface.create_entity {
             name = "eg-boiler",
             position = position,
             force = force,
@@ -70,18 +70,36 @@ local function on_eg_transformator_displayer_built(event)
 
         -- Calculate the offset position for the infinity pipe based on direction
         local offset = get_eg_infinity_pipe_offset(direction)
-        local infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
+        local eg_infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
 
         -- Place the electric infinity pipe with the same direction as the boiler
-        local infinity_pipe = surface.create_entity {
+        local eg_infinity_pipe = surface.create_entity {
             name = "eg-infinity-pipe",
-            position = infinity_pipe_position,
+            position = eg_infinity_pipe_position,
+            force = force,
+            direction = direction
+        }
+        eg_infinity_pipe.set_fluid({ name = "water", amount = 100 })
+
+        -- Calculate the offset position for the infinity pipe based on direction
+        offset = get_eg_steam_engine_offset(direction)
+        local eg_steam_engine_position = { position.x + offset.x, position.y + offset.y }
+
+        -- Place the electric infinity pipe with the same direction as the boiler
+        local eg_steam_engine = surface.create_entity {
+            name = "eg-steam-engine",
+            position = eg_steam_engine_position,
             force = force,
             direction = direction
         }
 
         -- Track the boiler and infinity pipe together as a eg_transformator
-        eg_transformators[#eg_transformators + 1] = { boiler = boiler, infinity_pipe = infinity_pipe }
+        eg_transformators[#eg_transformators + 1] = {
+            boiler = eg_boiler,
+            infinity_pipe = eg_infinity_pipe,
+            generator =
+                eg_steam_engine
+        }
         storage.eg_transformators = eg_transformators -- Update storage after modification
     end
 end
