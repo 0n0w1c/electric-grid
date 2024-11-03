@@ -29,6 +29,8 @@ local eg_steam_engine = {
         filter = "steam",
         hide_connection_info = true,
         minimum_temperature = 100,
+        production_type = "input",
+        volume = 200,
         pipe_connections = {
             {
                 direction = 8,
@@ -40,10 +42,8 @@ local eg_steam_engine = {
                 flow_direction = "input-output",
                 position = { 0, -0.4 }
             }
-        },
-        production_type = "input",
-        volume = 200
-    },
+        }
+    }
 }
 
 data:extend({ eg_steam_engine })

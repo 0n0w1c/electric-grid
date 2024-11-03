@@ -44,6 +44,17 @@ end
 -- Define the position offset for the eg-high-voltage-pole on the opposite side of a 1x1 boiler
 local function get_eg_high_voltage_pole_offset(direction)
     if direction == defines.direction.north then
+        return { x = 0, y = 0 }  -- Opposite side (above) the boiler
+    elseif direction == defines.direction.east then
+        return { x = -0, y = 0 } -- Opposite side (left) of the boiler
+    elseif direction == defines.direction.south then
+        return { x = 0, y = -0 } -- Opposite side (below) the boiler
+    elseif direction == defines.direction.west then
+        return { x = 0, y = 0 }  -- Opposite side (right) of the boiler
+    end
+    return { x = 0, y = 0 }      -- Default offset in case of unknown direction
+    --[[
+    if direction == defines.direction.north then
         return { x = 0, y = 0.5 }  -- Opposite side (above) the boiler
     elseif direction == defines.direction.east then
         return { x = -0.5, y = 0 } -- Opposite side (left) of the boiler
@@ -53,20 +64,21 @@ local function get_eg_high_voltage_pole_offset(direction)
         return { x = 0.5, y = 0 }  -- Opposite side (right) of the boiler
     end
     return { x = 0, y = 0 }        -- Default offset in case of unknown direction
+]]
 end
 
 -- Define the position offset for the eg-low-voltage-pole based on direction for a 1x1 boiler
 local function get_eg_low_voltage_pole_offset(direction)
     if direction == defines.direction.north then
-        return { x = 0, y = -1.5 } -- Position below the boiler
+        return { x = 0, y = -1 } -- Position below the boiler
     elseif direction == defines.direction.east then
-        return { x = 1.5, y = 0 }  -- Position to the right of the boiler
+        return { x = 1, y = 0 }  -- Position to the right of the boiler
     elseif direction == defines.direction.south then
-        return { x = 0, y = 1.5 }  -- Position above the boiler
+        return { x = 0, y = 1 }  -- Position above the boiler
     elseif direction == defines.direction.west then
-        return { x = -1.5, y = 0 } -- Position to the left of the boiler
+        return { x = -1, y = 0 } -- Position to the left of the boiler
     end
-    return { x = 0, y = 0 }        -- Default offset in case of unknown direction
+    return { x = 0, y = 0 }      -- Default offset in case of unknown direction
 end
 
 -- Place the electric boiler and infinity pipe with direction handling
@@ -86,7 +98,6 @@ local function on_eg_transformator_displayer_built(event)
 
         -- Remove the displayer
         entity.destroy()
-        game.print("Displayer destroyed.") -- Debugging confirmation
 
         -- Place the eg-boiler with the same direction as the displayer
         local eg_boiler = surface.create_entity {
@@ -127,7 +138,7 @@ local function on_eg_transformator_displayer_built(event)
         -- Place the eg-low-voltage-pole with the same direction as the boiler
         local eg_high_voltage_pole = surface.create_entity {
             name = "eg-high-voltage-pole",
-            position = position, --place on top of eg-boiler
+            position = eg_high_voltage_pole_position, --place on top of eg-boiler
             force = force,
             direction = direction
         }
@@ -139,7 +150,7 @@ local function on_eg_transformator_displayer_built(event)
         -- Place the eg-low-voltage-pole with the same direction as the boiler
         local eg_low_voltage_pole = surface.create_entity {
             name = "eg-low-voltage-pole",
-            position = eg_steam_engine_position, --place on top of eg-steam-engine
+            position = eg_low_voltage_pole_position, --place on top of eg-steam-engine
             force = force,
             direction = direction
         }
