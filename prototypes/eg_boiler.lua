@@ -53,13 +53,13 @@ local eg_boiler = {
         production_type = "output",
         volume = 200
     },
-    minable = { mining_time = 0.3, result = "eg-boiler" },
+    --minable = { mining_time = 0.3, result = "eg-boiler" },
     collision_box = {
         { -0.4, -0.4 },
         { 0.4,  0.4 }
     }
 }
-
+--[[
 local eg_boiler_item = {
     type = "item",
     name = "eg-boiler",
@@ -82,3 +82,5 @@ local eg_boiler_recipe = {
 }
 
 data:extend({ eg_boiler, eg_boiler_item, eg_boiler_recipe })
+]]
+data:extend({ eg_boiler })
