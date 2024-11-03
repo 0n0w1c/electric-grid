@@ -127,7 +127,7 @@ local function on_eg_transformator_displayer_built(event)
         -- Place the eg-low-voltage-pole with the same direction as the boiler
         local eg_high_voltage_pole = surface.create_entity {
             name = "eg-high-voltage-pole",
-            position = position,
+            position = position, --place on top of eg-boiler
             force = force,
             direction = direction
         }
@@ -139,7 +139,7 @@ local function on_eg_transformator_displayer_built(event)
         -- Place the eg-low-voltage-pole with the same direction as the boiler
         local eg_low_voltage_pole = surface.create_entity {
             name = "eg-low-voltage-pole",
-            position = eg_steam_engine_position,
+            position = eg_steam_engine_position, --place on top of eg-steam-engine
             force = force,
             direction = direction
         }

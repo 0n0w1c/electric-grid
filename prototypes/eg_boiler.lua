@@ -17,6 +17,7 @@ local eg_boiler = {
     burning_cooldown = 20,
     fluid_box = {
         filter = "water",
+        hide_connection_info = true,
         pipe_connections = {
             {
                 direction = 12,
@@ -41,6 +42,7 @@ local eg_boiler = {
     mode = "output-to-separate-pipe",
     output_fluid_box = {
         filter = "steam",
+        hide_connection_info = true,
         pipe_connections = {
             {
                 direction = 0,

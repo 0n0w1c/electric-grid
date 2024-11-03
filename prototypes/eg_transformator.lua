@@ -9,7 +9,7 @@ local eg_transformator_displayer = {
     collision_box = { { -0.7, -1.7 }, { 0.7, 1.7 } },
     selection_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
     drawing_box = { { -1.0, -3.0 }, { 1.0, 2.0 } },
-    picture = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(), -- must use picture not pictures!
+    picture = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(), -- use picture not pictures, rotation works
     direction_count = 4
 }
 
@@ -30,8 +30,7 @@ local eg_transformator_recipe = {
     type = "recipe",
     name = "eg-transformator-item",
     ingredients = {
-        { type = "item", name = "eg-boiler",        amount = 1 },
-        { type = "item", name = "eg-infinity-pipe", amount = 1 }
+        { type = "item", name = "boiler", amount = 1 },
     },
     results = {
         { type = "item", name = "eg-transformator-item", amount = 1 }

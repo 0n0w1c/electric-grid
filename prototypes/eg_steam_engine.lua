@@ -29,6 +29,7 @@ local eg_steam_engine = {
     },
     fluid_box = {
         filter = "steam",
+        hide_connection_info = true,
         minimum_temperature = 100,
         pipe_connections = {
             {
@@ -82,10 +83,10 @@ local eg_steam_engine = {
     impact_category = "metal-large",
     max_health = 400,
     maximum_temperature = 165,
-    minable = {
-        mining_time = 0.3,
-        result = "eg-steam-engine"
-    },
+    --minable = {
+    --    mining_time = 0.3,
+    --    result = "eg-steam-engine"
+    --},
     name = "eg-steam-engine",
     --[[
     open_sound = {
@@ -115,7 +116,7 @@ local eg_steam_engine = {
     },
     type = "generator",
 }
-
+--[[
 local steam_engine_prototype = data.raw["item"]["steam-engine"]
 
 local eg_steam_engine_item = {
@@ -143,3 +144,5 @@ local eg_steam_engine_recipe = {
 }
 
 data:extend({ eg_steam_engine, eg_steam_engine_item, eg_steam_engine_recipe })
+]]
+data:extend({ eg_steam_engine })
