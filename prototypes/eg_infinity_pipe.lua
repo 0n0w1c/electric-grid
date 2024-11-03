@@ -6,14 +6,13 @@ local eg_infinity_pipe = {
     gui_mode = "all",
     max_health = 200,
     corpse = "small-remnants",
-    resistances = { { type = "fire", percent = 100 } },
     collision_box = {
         { -0.29, -0.29 },
         { 0.29,  0.29 }
     },
-    selection_box = {
-        { -0.29, -0.29 },
-        { 0.29,  0.29 }
+    horizontal_window_bounding_box = {
+        { -0.25, -0.28125 },
+        { 0.25,  0.15625 }
     },
     vertical_window_bounding_box = {
         { -0.28125, -0.5 },
@@ -42,12 +41,7 @@ local eg_infinity_pipe = {
         },
         production_type = "output",
         volume = 100
-    },
-
-    horizontal_window_bounding_box = {
-        { -0.25, -0.28125 },
-        { 0.25,  0.15625 }
-    },
+    }
 }
 
 data:extend({ eg_infinity_pipe })

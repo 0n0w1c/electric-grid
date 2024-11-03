@@ -13,13 +13,11 @@ local eg_transformator_displayer = {
     direction_count = 4
 }
 
-local boiler_prototype = data.raw["item"]["boiler"]
-
 local eg_transformator_item = {
     type = "item",
     name = "eg-transformator-item",
-    icon = boiler_prototype.icon,
-    icon_size = boiler_prototype.icon_size,
+    icon = constants.EG_GRAPHICS .. "/icons/trafo.png",
+    icon_size = 32,
     subgroup = "energy-pipe-distribution",
     order = "b[pipe]-d[eg-transformator-item]",
     place_result = "eg-transformator-displayer",

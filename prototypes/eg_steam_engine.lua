@@ -12,10 +12,6 @@ local eg_steam_engine = {
         { -0.4, -0.4 },
         { 0.4,  0.4 }
     },
-    selection_box = {
-        { -0.5, -0.5 },
-        { 0.5,  0.5 }
-    },
     effectivity = 1,
     energy_source = {
         type = "electric",
