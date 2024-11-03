@@ -4,8 +4,6 @@ local eg_infinity_pipe = {
     name = "eg-infinity-pipe",
     icon = "__base__/graphics/icons/pipe.png", -- Custom icon if desired
     gui_mode = "all",
-    --minable = { mining_time = 0.5, result = "eg-infinity-pipe" },
-    --placeable_by = { item = "eg-infinity-pipe", count = 1 },
     max_health = 200,
     corpse = "small-remnants",
     resistances = { { type = "fire", percent = 100 } },
@@ -21,7 +19,6 @@ local eg_infinity_pipe = {
         { -0.28125, -0.5 },
         { 0.03125,  0.125 }
     },
-    -- Fluid box with water set as default output fluid
     fluid_box = {
         hide_connection_info = true,
         filter = "water",
@@ -51,46 +48,6 @@ local eg_infinity_pipe = {
         { -0.25, -0.28125 },
         { 0.25,  0.15625 }
     },
-    --[[
-    icon_draw_specification = {
-        scale = 0.5
-    },
-    icons = {
-        {
-            icon = "__base__/graphics/icons/pipe.png",
-            tint = {
-                a = 1,
-                b = 1,
-                g = 0.5,
-                r = 1
-            }
-        }
-    },
-    ]]
-}
---[[
-local eg_infinity_pipe_item = {
-    type = "item",
-    name = "eg-infinity-pipe",
-    icon = "__base__/graphics/icons/pipe.png",
-    place_result = "eg-infinity-pipe",
-    subgroup = "energy-pipe-distribution",
-    order = "b[pipe]-c[eg-infinity-pipe]",
-    stack_size = 50
 }
 
-local eg_infinity_pipe_recipe = {
-    type = "recipe",
-    name = "eg-infinity-pipe",
-    ingredients = {
-        { type = "item", name = "iron-plate",         amount = 10 },
-        { type = "item", name = "electronic-circuit", amount = 5 }
-    },
-    results = {
-        { type = "item", name = "eg-infinity-pipe", amount = 1 }
-    },
-    enabled = true
-}
-]]
---data:extend({ eg_infinity_pipe, eg_infinity_pipe_item, eg_infinity_pipe_recipe })
 data:extend({ eg_infinity_pipe })
