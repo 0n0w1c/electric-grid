@@ -1,7 +1,7 @@
 -- High Voltage Pole Entity
 local eg_high_voltage_pole = table.deepcopy(data.raw["electric-pole"]["small-electric-pole"])
 eg_high_voltage_pole.name = "eg-high-voltage-pole"
-eg_high_voltage_pole.supply_area_distance = 0.9
+eg_high_voltage_pole.supply_area_distance = 0.4
 
 -- High Voltage Pole Item
 local eg_high_voltage_pole_item = {
@@ -26,7 +26,7 @@ local eg_high_voltage_pole_recipe = {
 -- Low Voltage Pole Entity
 local eg_low_voltage_pole = table.deepcopy(data.raw["electric-pole"]["small-electric-pole"])
 eg_low_voltage_pole.name = "eg-low-voltage-pole"
-eg_low_voltage_pole.supply_area_distance = 0.9
+eg_low_voltage_pole.supply_area_distance = 0.4
 
 -- Low Voltage Pole Item
 local eg_low_voltage_pole_item = {

@@ -21,48 +21,32 @@ local eg_infinity_pipe = {
         { -0.28125, -0.5 },
         { 0.03125,  0.125 }
     },
-
+    minimum_temperature = 15,
+    maximum_temperature = 15,
     -- Fluid box with water set as default output fluid
     fluid_box = {
         hide_connection_info = true,
-        base_area = 1,    -- Determines how much fluid is in the pipe (adjust as needed)
-        filter = "water", -- Ensures only water flows through this pipe
+        filter = "water",
         pipe_connections = {
             {
-                connection_category = {
-                    "default",
-                    "fusion-plasma"
-                },
                 direction = 0,
                 position = { 0, 0 }
             },
             {
-                connection_category = {
-                    "default",
-                    "fusion-plasma"
-                },
                 direction = 4,
                 position = { 0, 0 }
             },
             {
-                connection_category = {
-                    "default",
-                    "fusion-plasma"
-                },
                 direction = 8,
                 position = { 0, 0 }
             },
             {
-                connection_category = {
-                    "default",
-                    "fusion-plasma"
-                },
                 direction = 12,
                 position = { 0, 0 }
             }
         },
-        production_type = "output", -- Sets this pipe to output mode by default
-        volume = 200
+        production_type = "output",
+        volume = 100
     },
 
     horizontal_window_bounding_box = {

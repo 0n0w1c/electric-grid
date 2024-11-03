@@ -41,18 +41,32 @@ local function get_eg_steam_engine_offset(direction)
     return { x = 0, y = 0 }      -- Default offset in case of unknown direction
 end
 
--- Define the position offset for the steam generator based on direction for a 1x1 boiler
+-- Define the position offset for the eg-high-voltage-pole on the opposite side of a 1x1 boiler
+local function get_eg_high_voltage_pole_offset(direction)
+    if direction == defines.direction.north then
+        return { x = 0, y = 0.5 }  -- Opposite side (above) the boiler
+    elseif direction == defines.direction.east then
+        return { x = -0.5, y = 0 } -- Opposite side (left) of the boiler
+    elseif direction == defines.direction.south then
+        return { x = 0, y = -0.5 } -- Opposite side (below) the boiler
+    elseif direction == defines.direction.west then
+        return { x = 0.5, y = 0 }  -- Opposite side (right) of the boiler
+    end
+    return { x = 0, y = 0 }        -- Default offset in case of unknown direction
+end
+
+-- Define the position offset for the eg-low-voltage-pole based on direction for a 1x1 boiler
 local function get_eg_low_voltage_pole_offset(direction)
     if direction == defines.direction.north then
-        return { x = 0, y = -2 } -- Position below the boiler
+        return { x = 0, y = -1.5 } -- Position below the boiler
     elseif direction == defines.direction.east then
-        return { x = 2, y = 0 }  -- Position to the right of the boiler
+        return { x = 1.5, y = 0 }  -- Position to the right of the boiler
     elseif direction == defines.direction.south then
-        return { x = 0, y = 2 }  -- Position above the boiler
+        return { x = 0, y = 1.5 }  -- Position above the boiler
     elseif direction == defines.direction.west then
-        return { x = -2, y = 0 } -- Position to the left of the boiler
+        return { x = -1.5, y = 0 } -- Position to the left of the boiler
     end
-    return { x = 0, y = 0 }      -- Default offset in case of unknown direction
+    return { x = 0, y = 0 }        -- Default offset in case of unknown direction
 end
 
 -- Place the electric boiler and infinity pipe with direction handling
@@ -91,11 +105,8 @@ local function on_eg_transformator_displayer_built(event)
             name = "eg-infinity-pipe",
             position = eg_infinity_pipe_position,
             force = force,
-            direction = direction
+            direction = direction,
         }
-
-        -- Make the water flow
-        eg_infinity_pipe.set_fluid(1, { name = "water", amount = 100, temperature = 15 })
 
         -- Calculate the offset position for the eg-steam-engine based on direction
         offset = get_eg_steam_engine_offset(direction)
@@ -110,22 +121,38 @@ local function on_eg_transformator_displayer_built(event)
         }
 
         -- Calculate the offset position for the eg-low-voltage-pole based on direction
+        offset = get_eg_high_voltage_pole_offset(direction)
+        local eg_high_voltage_pole_position = { position.x + offset.x, position.y + offset.y }
+
+        -- Place the eg-low-voltage-pole with the same direction as the boiler
+        local eg_high_voltage_pole = surface.create_entity {
+            name = "eg-high-voltage-pole",
+            position = position,
+            force = force,
+            direction = direction
+        }
+
+        -- Calculate the offset position for the eg-low-voltage-pole based on direction
         offset = get_eg_low_voltage_pole_offset(direction)
         local eg_low_voltage_pole_position = { position.x + offset.x, position.y + offset.y }
 
         -- Place the eg-low-voltage-pole with the same direction as the boiler
         local eg_low_voltage_pole = surface.create_entity {
             name = "eg-low-voltage-pole",
-            position = eg_low_voltage_pole_position,
+            position = eg_steam_engine_position,
             force = force,
             direction = direction
         }
+
+        -- Let the water flow
+        eg_infinity_pipe.set_infinity_pipe_filter({ name = "water", percentage = 1, temperature = 15, mode = "at-least" })
 
         -- Track components together as a eg_transformators
         eg_transformators[#eg_transformators + 1] = {
             boiler = eg_boiler,
             infinity_pipe = eg_infinity_pipe,
             generator = eg_steam_engine,
+            high_voltage = eg_high_voltage_pole,
             low_voltage = eg_low_voltage_pole
         }
         storage.eg_transformators = eg_transformators -- Update storage after modification
@@ -137,10 +164,13 @@ local function on_eg_transformator_displayer_mined(event)
     local entity = event.entity
     if entity.name == name then
         -- Remove the associated boiler and infinity pipe from storage tracking
-        for i, eg_transformator in pairs(eg_transformators) do
+        for index, eg_transformator in pairs(eg_transformators) do
             if eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
             if eg_transformator.infinity_pipe.valid then eg_transformator.infinity_pipe.destroy() end
-            table.remove(eg_transformators, i)
+            if eg_transformator.generator.valid then eg_transformator.generator.destroy() end
+            if eg_transformator.high_voltage.valid then eg_transformator.high_voltage.destroy() end
+            if eg_transformator.low_voltage.valid then eg_transformator.low_voltage.destroy() end
+            table.remove(eg_transformators, index)
             break
         end
     end

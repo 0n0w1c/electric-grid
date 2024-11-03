@@ -3,12 +3,13 @@ local eg_transformator_displayer = {
     name = "eg-transformator-displayer",
     icon = constants.EG_GRAPHICS .. "/entities/trafo-sprites.png",
     icon_size = 64,
-    flags = { "placeable-neutral", "player-creation" },
+    flags = { "placeable-player", "player-creation" },
     minable = { mining_time = 0.5, result = "eg-transformator-item" },
     max_health = 200,
-    collision_box = { { -0.9, -0.9 }, { 0.9, 0.9 } },
-    selection_box = { { -1, -1 }, { 1, 1 } },
-    pictures = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(),
+    collision_box = { { -0.7, -1.7 }, { 0.7, 1.7 } },
+    selection_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
+    drawing_box = { { -1.0, -3.0 }, { 1.0, 2.0 } },
+    picture = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(), -- must use picture not pictures!
     direction_count = 4
 }
 
