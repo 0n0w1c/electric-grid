@@ -44,15 +44,15 @@ end
 -- Define the position offset for the eg-high-voltage-pole on the opposite side of a 1x1 boiler
 local function get_eg_high_voltage_pole_offset(direction)
     if direction == defines.direction.north then
-        return { x = 0, y = 0 }  -- Opposite side (above) the boiler
+        return { x = 0, y = 0 } -- Opposite side (above) the boiler
     elseif direction == defines.direction.east then
-        return { x = -0, y = 0 } -- Opposite side (left) of the boiler
+        return { x = 0, y = 0 } -- Opposite side (left) of the boiler
     elseif direction == defines.direction.south then
-        return { x = 0, y = -0 } -- Opposite side (below) the boiler
+        return { x = 0, y = 0 } -- Opposite side (below) the boiler
     elseif direction == defines.direction.west then
-        return { x = 0, y = 0 }  -- Opposite side (right) of the boiler
+        return { x = 0, y = 0 }    -- Opposite side (right) of the boiler
     end
-    return { x = 0, y = 0 }      -- Default offset in case of unknown direction
+    return { x = 0, y = 0 }        -- Default offset in case of unknown direction
     --[[
     if direction == defines.direction.north then
         return { x = 0, y = 0.5 }  -- Opposite side (above) the boiler
@@ -99,9 +99,16 @@ local function on_eg_transformator_displayer_built(event)
         -- Remove the displayer
         entity.destroy()
 
+        local eg_unit = surface.create_entity {
+            name = "eg-transformator-1-unit",
+            position = position,
+            force = force,
+            direction = direction
+        }
+
         -- Place the eg-boiler with the same direction as the displayer
         local eg_boiler = surface.create_entity {
-            name = "eg-boiler",
+            name = "eg-boiler-1",
             position = position,
             force = force,
             direction = direction
@@ -125,7 +132,7 @@ local function on_eg_transformator_displayer_built(event)
 
         -- Place the eg-steam-engine with the same direction as the boiler
         local eg_steam_engine = surface.create_entity {
-            name = "eg-steam-engine",
+            name = "eg-steam-engine-1",
             position = eg_steam_engine_position,
             force = force,
             direction = direction
@@ -156,10 +163,16 @@ local function on_eg_transformator_displayer_built(event)
         }
 
         -- Let the water flow
-        eg_infinity_pipe.set_infinity_pipe_filter({ name = "water", percentage = 1, temperature = 15, mode = "at-least" })
+        eg_infinity_pipe.set_infinity_pipe_filter({
+            name = "eg-water-1",
+            percentage = 1,
+            temperature = 15,
+            mode = "at-least"
+        })
 
         -- Track components together as a eg_transformators
         eg_transformators[#eg_transformators + 1] = {
+            unit = eg_unit,
             boiler = eg_boiler,
             infinity_pipe = eg_infinity_pipe,
             generator = eg_steam_engine,

@@ -10,6 +10,10 @@ local eg_infinity_pipe = {
         { -0.29, -0.29 },
         { 0.29,  0.29 }
     },
+    selection_box = {
+        { -0.29, -0.29 },
+        { 0.29,  0.29 }
+    },
     horizontal_window_bounding_box = {
         { -0.25, -0.28125 },
         { 0.25,  0.15625 }
@@ -20,7 +24,6 @@ local eg_infinity_pipe = {
     },
     fluid_box = {
         hide_connection_info = true,
-        filter = "water",
         pipe_connections = {
             {
                 direction = 0,
