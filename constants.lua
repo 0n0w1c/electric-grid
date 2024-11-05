@@ -4,6 +4,7 @@ constants.EG_MOD = "__electric-grid__"
 constants.EG_GRAPHICS = constants.EG_MOD .. "/graphics"
 constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
+constants.EG_DISPLAYER = "eg-transformator-displayer"
 
 if settings.startup["eg-hide-alt-overlay"].value then
     constants.EG_ALTOVERLAY = "hide-alt-info"

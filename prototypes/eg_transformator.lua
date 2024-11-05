@@ -183,9 +183,6 @@ local function create_transformator_entity(tier)
         max_health = 300,
         resistances = { { type = "fire", percent = 70 } },
         random_variation_on_create = false,
-        --collision_box = { { -0.7, -1.7 }, { 0.7, 1.7 } },
-        --selection_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
-        --drawing_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         selection_box = { { -0.8, -1.8 }, { 0.8, 1.8 } },
         drawing_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
@@ -217,7 +214,7 @@ end
 
 local eg_transformator_displayer = {
     type = "simple-entity-with-force",
-    name = "eg-unit-displayer",
+    name = constants.EG_DISPLAYER,
     icon = constants.EG_GRAPHICS .. "/entities/trafo-sprites.png",
     icon_size = 64,
     flags = { "placeable-player", "player-creation" },

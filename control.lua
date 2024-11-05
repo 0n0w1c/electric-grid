@@ -1,4 +1,3 @@
-local name = "eg-unit-displayer"
 local eg_transformators
 
 -- Initialize global memory structures and event handlers
@@ -86,112 +85,110 @@ end
 -- Place the electric boiler and infinity pipe with direction handling
 local function on_eg_transformator_displayer_built(event)
     local entity = event.entity
-    if not entity then
-        game.print("Error: entity is nil.")
-        return
-    end
 
-    if entity.name == name then
-        -- Store surface, force, position and direction
-        local surface = entity.surface
-        local force = entity.force
-        local position = entity.position
-        local direction = entity.direction
-        local offset = { x = 0, y = 0 }
+    if not entity or entity.name ~= constants.EG_DISPLAYER then return end
 
-        -- Remove the displayer
-        entity.destroy()
+    -- Store surface, force, position and direction
+    local surface = entity.surface
+    local force = entity.force
+    local position = entity.position
+    local direction = entity.direction
+    local offset = { x = 0, y = 0 }
 
-        -- Use the same position, no offset
-        local eg_unit_position = { position.x, position.y }
+    -- Remove the displayer
+    entity.destroy()
 
-        -- Replace with the unit, same positon and direction
-        local eg_unit = surface.create_entity {
-            name = "eg-unit-1",
-            position = eg_unit_position,
-            force = force,
-            direction = direction
-        }
+    -- Use the same position, no offset
+    local eg_unit_position = { position.x, position.y }
 
-        -- Calculate the offset position for the eg-infinity-pipe based on direction
-        offset = get_eg_boiler_offset(direction)
-        local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
+    -- Replace with the unit, same positon and direction
+    local eg_unit = surface.create_entity {
+        name = "eg-unit-1",
+        position = eg_unit_position,
+        force = force,
+        direction = direction
+    }
 
-        -- Place the eg-boiler with the same direction as the displayer
-        local eg_boiler = surface.create_entity {
-            name = "eg-boiler-1",
-            position = eg_boiler_position,
-            force = force,
-            direction = direction
-        }
+    -- Calculate the offset position for the eg-infinity-pipe based on direction
+    offset = get_eg_boiler_offset(direction)
+    local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
 
-        -- Calculate the offset position for the eg-infinity-pipe based on direction
-        offset = get_eg_infinity_pipe_offset(direction)
-        local eg_infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
+    -- Place the eg-boiler with the same direction as the displayer
+    local eg_boiler = surface.create_entity {
+        name = "eg-boiler-1",
+        position = eg_boiler_position,
+        force = force,
+        direction = direction
+    }
 
-        -- Place the eg-infinity-pipe with the same direction as the boiler
-        local eg_infinity_pipe = surface.create_entity {
-            name = "eg-infinity-pipe",
-            position = eg_infinity_pipe_position,
-            force = force,
-            direction = direction,
-        }
+    -- Calculate the offset position for the eg-infinity-pipe based on direction
+    offset = get_eg_infinity_pipe_offset(direction)
+    local eg_infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
 
-        -- Calculate the offset position for the eg-steam-engine based on direction
-        offset = get_eg_steam_engine_offset(direction)
-        local eg_steam_engine_position = { position.x + offset.x, position.y + offset.y }
+    -- Place the eg-infinity-pipe with the same direction as the boiler
+    local eg_infinity_pipe = surface.create_entity {
+        name = "eg-infinity-pipe",
+        position = eg_infinity_pipe_position,
+        force = force,
+        direction = direction,
+    }
 
-        -- Place the eg-steam-engine with the same direction as the boiler
-        local eg_steam_engine = surface.create_entity {
-            name = "eg-steam-engine-1",
-            position = eg_steam_engine_position,
-            force = force,
-            direction = direction
-        }
+    -- Calculate the offset position for the eg-steam-engine based on direction
+    offset = get_eg_steam_engine_offset(direction)
+    local eg_steam_engine_position = { position.x + offset.x, position.y + offset.y }
 
-        -- Calculate the offset position for the eg-low-voltage-pole based on direction
-        offset = get_eg_high_voltage_pole_offset(direction)
-        local eg_high_voltage_pole_position = { position.x + offset.x, position.y + offset.y }
+    -- Place the eg-steam-engine with the same direction as the boiler
+    local eg_steam_engine = surface.create_entity {
+        name = "eg-steam-engine-1",
+        position = eg_steam_engine_position,
+        force = force,
+        direction = direction
+    }
 
-        -- Place the eg-low-voltage-pole with the same direction as the boiler
-        local eg_high_voltage_pole = surface.create_entity {
-            name = "eg-high-voltage-pole",
-            position = eg_high_voltage_pole_position, --place on top of eg-boiler
-            force = force,
-            direction = direction
-        }
+    -- Calculate the offset position for the eg-low-voltage-pole based on direction
+    offset = get_eg_high_voltage_pole_offset(direction)
+    local eg_high_voltage_pole_position = { position.x + offset.x, position.y + offset.y }
 
-        -- Calculate the offset position for the eg-low-voltage-pole based on direction
-        offset = get_eg_low_voltage_pole_offset(direction)
-        local eg_low_voltage_pole_position = { position.x + offset.x, position.y + offset.y }
+    -- Place the eg-low-voltage-pole with the same direction as the boiler
+    local eg_high_voltage_pole = surface.create_entity {
+        name = "eg-high-voltage-pole",
+        position = eg_high_voltage_pole_position,     --place on top of eg-boiler
+        force = force,
+        direction = direction
+    }
 
-        -- Place the eg-low-voltage-pole with the same direction as the boiler
-        local eg_low_voltage_pole = surface.create_entity {
-            name = "eg-low-voltage-pole",
-            position = eg_low_voltage_pole_position, --place on top of eg-steam-engine
-            force = force,
-            direction = direction
-        }
+    -- Calculate the offset position for the eg-low-voltage-pole based on direction
+    offset = get_eg_low_voltage_pole_offset(direction)
+    local eg_low_voltage_pole_position = { position.x + offset.x, position.y + offset.y }
 
-        -- Let the water flow
-        eg_infinity_pipe.set_infinity_pipe_filter({
-            name = "eg-water-1",
-            percentage = 1,
-            temperature = 15,
-            mode = "at-least"
-        })
+    -- Place the eg-low-voltage-pole with the same direction as the boiler
+    local eg_low_voltage_pole = surface.create_entity {
+        name = "eg-low-voltage-pole",
+        position = eg_low_voltage_pole_position,     --place on top of eg-steam-engine
+        force = force,
+        direction = direction
+    }
 
-        -- Track the transformer components by unit_number
-        storage.eg_transformators[eg_unit.unit_number] = {
-            unit = eg_unit,
-            boiler = eg_boiler,
-            infinity_pipe = eg_infinity_pipe,
-            generator = eg_steam_engine,
-            high_voltage = eg_high_voltage_pole,
-            low_voltage = eg_low_voltage_pole
-        }
-        storage.eg_transformators = eg_transformators -- Update storage after modification
-    end
+    -- Let the water flow
+    eg_infinity_pipe.set_infinity_pipe_filter({
+        name = "eg-water-1",
+        percentage = 1,
+        temperature = 15,
+        mode = "at-least"
+    })
+
+    -- Track the transformer components by unit_number
+    storage.eg_transformators[eg_unit.unit_number] = {
+        unit = eg_unit,
+        boiler = eg_boiler,
+        infinity_pipe = eg_infinity_pipe,
+        generator = eg_steam_engine,
+        high_voltage = eg_high_voltage_pole,
+        low_voltage = eg_low_voltage_pole
+    }
+
+    -- Update storage
+    storage.eg_transformators = eg_transformators
 end
 
 -- Remove all components of a transformer when the displayer is mined
@@ -205,17 +202,15 @@ local function on_eg_transformator_displayer_mined(event)
         -- Destroy each component if it still exists
         if eg_transformator.boiler and eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
         if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
-            eg_transformator.infinity_pipe
-                .destroy()
+            eg_transformator.infinity_pipe.destroy()
         end
         if eg_transformator.generator and eg_transformator.generator.valid then eg_transformator.generator.destroy() end
         if eg_transformator.high_voltage and eg_transformator.high_voltage.valid then
-            eg_transformator.high_voltage
-                .destroy()
+            eg_transformator.high_voltage.destroy()
         end
         if eg_transformator.low_voltage and eg_transformator.low_voltage.valid then eg_transformator.low_voltage.destroy() end
 
-        -- Remove the entry from storage
+        -- Update storage
         storage.eg_transformators[unit_number] = nil
     end
 end
