@@ -182,7 +182,7 @@ local function on_eg_transformator_displayer_built(event)
         })
 
         -- Track the transformer components by unit_number
-        storage.eg_transformators[unit_number] = {
+        storage.eg_transformators[eg_unit.unit_number] = {
             unit = eg_unit,
             boiler = eg_boiler,
             infinity_pipe = eg_infinity_pipe,
@@ -198,16 +198,21 @@ end
 local function on_eg_transformator_displayer_mined(event)
     local entity = event.entity
     local unit_number = entity.unit_number
+
     if storage.eg_transformators[unit_number] then
         local eg_transformator = storage.eg_transformators[unit_number]
 
         -- Destroy each component if it still exists
         if eg_transformator.boiler and eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
-        if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then eg_transformator.infinity_pipe
-                .destroy() end
+        if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
+            eg_transformator.infinity_pipe
+                .destroy()
+        end
         if eg_transformator.generator and eg_transformator.generator.valid then eg_transformator.generator.destroy() end
-        if eg_transformator.high_voltage and eg_transformator.high_voltage.valid then eg_transformator.high_voltage
-                .destroy() end
+        if eg_transformator.high_voltage and eg_transformator.high_voltage.valid then
+            eg_transformator.high_voltage
+                .destroy()
+        end
         if eg_transformator.low_voltage and eg_transformator.low_voltage.valid then eg_transformator.low_voltage.destroy() end
 
         -- Remove the entry from storage
