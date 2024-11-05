@@ -1,4 +1,4 @@
-local name = "eg-transformator-displayer"
+local name = "eg-unit-displayer"
 local eg_transformators
 
 -- Initialize global memory structures and event handlers
@@ -11,6 +11,20 @@ end
 -- Handle loading globals when the game is loaded
 local function load_globals()
     eg_transformators = storage.eg_transformators
+end
+
+-- Define the position offset for the infinity pipe based on direction with 90-degree rotation
+local function get_eg_boiler_offset(direction)
+    if direction == defines.direction.north then
+        return { x = 0, y = 0 } -- Previously was (0, -1), now rotated to right of boiler
+    elseif direction == defines.direction.east then
+        return { x = 0, y = 0 } -- Previously was (1, 0), now rotated to above the boiler
+    elseif direction == defines.direction.south then
+        return { x = 0, y = 0 } -- Previously was (0, 1), now rotated to left of the boiler
+    elseif direction == defines.direction.west then
+        return { x = 0, y = 0 } -- Previously was (-1, 0), now rotated to below the boiler
+    end
+    return { x = 0, y = 0 }     -- Default offset in case of unknown direction
 end
 
 -- Define the position offset for the infinity pipe based on direction with 90-degree rotation
@@ -44,27 +58,15 @@ end
 -- Define the position offset for the eg-high-voltage-pole on the opposite side of a 1x1 boiler
 local function get_eg_high_voltage_pole_offset(direction)
     if direction == defines.direction.north then
-        return { x = 0, y = 0 } -- Opposite side (above) the boiler
+        return { x = 0, y = 1 }  -- Opposite side (above) the boiler
     elseif direction == defines.direction.east then
-        return { x = 0, y = 0 } -- Opposite side (left) of the boiler
+        return { x = -1, y = 0 } -- Opposite side (left) of the boiler
     elseif direction == defines.direction.south then
-        return { x = 0, y = 0 } -- Opposite side (below) the boiler
+        return { x = 0, y = -1 } -- Opposite side (below) the boiler
     elseif direction == defines.direction.west then
-        return { x = 0, y = 0 }    -- Opposite side (right) of the boiler
+        return { x = 1, y = 0 }  -- Opposite side (right) of the boiler
     end
-    return { x = 0, y = 0 }        -- Default offset in case of unknown direction
-    --[[
-    if direction == defines.direction.north then
-        return { x = 0, y = 0.5 }  -- Opposite side (above) the boiler
-    elseif direction == defines.direction.east then
-        return { x = -0.5, y = 0 } -- Opposite side (left) of the boiler
-    elseif direction == defines.direction.south then
-        return { x = 0, y = -0.5 } -- Opposite side (below) the boiler
-    elseif direction == defines.direction.west then
-        return { x = 0.5, y = 0 }  -- Opposite side (right) of the boiler
-    end
-    return { x = 0, y = 0 }        -- Default offset in case of unknown direction
-]]
+    return { x = 0, y = 0 }      -- Default offset in case of unknown direction
 end
 
 -- Define the position offset for the eg-low-voltage-pole based on direction for a 1x1 boiler
@@ -90,32 +92,41 @@ local function on_eg_transformator_displayer_built(event)
     end
 
     if entity.name == name then
-        -- Capture position, surface, force, and direction information
+        -- Store surface, force, position and direction
         local surface = entity.surface
-        local position = entity.position
         local force = entity.force
-        local direction = entity.direction -- Get the direction of the displayer
+        local position = entity.position
+        local direction = entity.direction
+        local offset = { x = 0, y = 0 }
 
         -- Remove the displayer
         entity.destroy()
 
-        local eg_unit = surface.create_entity {
-            name = "eg-transformator-1-unit",
-            position = position,
-            force = force,
-            direction = direction
-        }
+        -- Use the same position, no offset
+        local eg_unit_position = { position.x, position.y }
 
-        -- Place the eg-boiler with the same direction as the displayer
-        local eg_boiler = surface.create_entity {
-            name = "eg-boiler-1",
-            position = position,
+        -- Replace with the unit, same positon and direction
+        local eg_unit = surface.create_entity {
+            name = "eg-unit-1",
+            position = eg_unit_position,
             force = force,
             direction = direction
         }
 
         -- Calculate the offset position for the eg-infinity-pipe based on direction
-        local offset = get_eg_infinity_pipe_offset(direction)
+        offset = get_eg_boiler_offset(direction)
+        local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
+
+        -- Place the eg-boiler with the same direction as the displayer
+        local eg_boiler = surface.create_entity {
+            name = "eg-boiler-1",
+            position = eg_boiler_position,
+            force = force,
+            direction = direction
+        }
+
+        -- Calculate the offset position for the eg-infinity-pipe based on direction
+        offset = get_eg_infinity_pipe_offset(direction)
         local eg_infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
 
         -- Place the eg-infinity-pipe with the same direction as the boiler
@@ -170,8 +181,8 @@ local function on_eg_transformator_displayer_built(event)
             mode = "at-least"
         })
 
-        -- Track components together as a eg_transformators
-        eg_transformators[#eg_transformators + 1] = {
+        -- Track the transformer components by unit_number
+        storage.eg_transformators[unit_number] = {
             unit = eg_unit,
             boiler = eg_boiler,
             infinity_pipe = eg_infinity_pipe,
@@ -183,20 +194,24 @@ local function on_eg_transformator_displayer_built(event)
     end
 end
 
--- Remove both the boiler and infinity pipe when the eg_transformator displayer is mined
+-- Remove all components of a transformer when the displayer is mined
 local function on_eg_transformator_displayer_mined(event)
     local entity = event.entity
-    if entity.name == name then
-        -- Remove the associated boiler and infinity pipe from storage tracking
-        for index, eg_transformator in pairs(eg_transformators) do
-            if eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
-            if eg_transformator.infinity_pipe.valid then eg_transformator.infinity_pipe.destroy() end
-            if eg_transformator.generator.valid then eg_transformator.generator.destroy() end
-            if eg_transformator.high_voltage.valid then eg_transformator.high_voltage.destroy() end
-            if eg_transformator.low_voltage.valid then eg_transformator.low_voltage.destroy() end
-            table.remove(eg_transformators, index)
-            break
-        end
+    local unit_number = entity.unit_number
+    if storage.eg_transformators[unit_number] then
+        local eg_transformator = storage.eg_transformators[unit_number]
+
+        -- Destroy each component if it still exists
+        if eg_transformator.boiler and eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
+        if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then eg_transformator.infinity_pipe
+                .destroy() end
+        if eg_transformator.generator and eg_transformator.generator.valid then eg_transformator.generator.destroy() end
+        if eg_transformator.high_voltage and eg_transformator.high_voltage.valid then eg_transformator.high_voltage
+                .destroy() end
+        if eg_transformator.low_voltage and eg_transformator.low_voltage.valid then eg_transformator.low_voltage.destroy() end
+
+        -- Remove the entry from storage
+        storage.eg_transformators[unit_number] = nil
     end
 end
 

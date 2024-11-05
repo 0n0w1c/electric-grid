@@ -6,6 +6,7 @@ local eg_infinity_pipe = {
     gui_mode = "all",
     max_health = 200,
     corpse = "small-remnants",
+    hidden = true,
     collision_box = {
         { -0.29, -0.29 },
         { 0.29,  0.29 }

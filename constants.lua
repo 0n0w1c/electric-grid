@@ -27,16 +27,16 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
 }
 
 constants.EG_TRANSFORMATORS = {
-    --["eg-transformator-1-unit"] = { rating = "1MW", heat_capacity = "20J" },
-    ["eg-transformator-1-unit"] = { rating = "1MW", heat_capacity = "0.263kJ" },
-    ["eg-transformator-2-unit"] = { rating = "5MW", heat_capacity = "100J" },
-    ["eg-transformator-3-unit"] = { rating = "10MW", heat_capacity = "200J" },
-    ["eg-transformator-4-unit"] = { rating = "50MW", heat_capacity = "1000J" },
-    ["eg-transformator-5-unit"] = { rating = "100MW", heat_capacity = "2000J" },
-    ["eg-transformator-6-unit"] = { rating = "500MW", heat_capacity = "10000J" },
-    ["eg-transformator-7-unit"] = { rating = "1GW", heat_capacity = "20000J" },
-    ["eg-transformator-8-unit"] = { rating = "5GW", heat_capacity = "100000J" },
-    ["eg-transformator-9-unit"] = { rating = "10GW", heat_capacity = "200000J" }
+    --["eg-unit-1"] = { rating = "1MW", heat_capacity = "20J" },
+    ["eg-unit-1"] = { rating = "1MW", heat_capacity = "0.263kJ" },
+    ["eg-unit-2"] = { rating = "5MW", heat_capacity = "100J" },
+    ["eg-unit-3"] = { rating = "10MW", heat_capacity = "200J" },
+    ["eg-unit-4"] = { rating = "50MW", heat_capacity = "1000J" },
+    ["eg-unit-5"] = { rating = "100MW", heat_capacity = "2000J" },
+    ["eg-unit-6"] = { rating = "500MW", heat_capacity = "10000J" },
+    ["eg-unit-7"] = { rating = "1GW", heat_capacity = "20000J" },
+    ["eg-unit-8"] = { rating = "5GW", heat_capacity = "100000J" },
+    ["eg-unit-9"] = { rating = "10GW", heat_capacity = "200000J" }
 }
 
 constants.EG_NUM_TIERS = 0

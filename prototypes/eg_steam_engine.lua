@@ -1,5 +1,5 @@
 function create_transformator_steam_engine(tier)
-    local rating = constants.EG_TRANSFORMATORS["eg-transformator-" .. tier .. "-unit"].rating
+    local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
     return {
         type = "generator",

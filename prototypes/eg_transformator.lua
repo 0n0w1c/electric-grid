@@ -41,8 +41,7 @@ local function get_transformator_picture(tier)
                     x = 466,
                     width = 466,
                     height = 310,
-                    --shift = { 2.6, -0.45 },
-                    shift = { 3.1, -0.45 },
+                    shift = { 2.6, -0.45 },
                     scale = 0.5,
                 },
                 {
@@ -50,8 +49,7 @@ local function get_transformator_picture(tier)
                     x = 466,
                     width = 466,
                     height = 310,
-                    --shift = { 2.6, -0.45 },
-                    shift = { 3.1, -0.45 },
+                    shift = { 2.6, -0.45 },
                     scale = 0.5,
                     draw_as_shadow = true,
                 },
@@ -60,8 +58,7 @@ local function get_transformator_picture(tier)
                     x = 466,
                     width = 466,
                     height = 310,
-                    --shift = { 2.6, -0.45 },
-                    shift = { 3.1, -0.45 },
+                    shift = { 2.6, -0.45 },
                     blend_mode = constants.EG_TIER_BLEND_MODE,
                     tint = constants.EG_TINT[tier],
                     scale = 0.5,
@@ -171,24 +168,27 @@ local function get_transformator_picture(tier)
 end
 
 local function create_transformator_entity(tier)
-    local power_consumption = constants.EG_TRANSFORMATORS["eg-transformator-" .. tier .. "-unit"].rating
+    local power_consumption = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
     return {
         type = "simple-entity-with-force",
-        name = "eg-transformator-" .. tier .. "-unit",
+        name = "eg-unit-" .. tier,
         icon = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
         icon_size = 128,
         flags = { "placeable-player", "player-creation" },
-        minable = { mining_time = 0.5, result = "eg-transformator-item" },
+        minable = { mining_time = 0.5, result = "eg-unit-item" },
         corpse = "big-remnants",
         dying_explosion = "medium-explosion",
-        placeable_by = { item = "eg-transformator-item", count = 1 },
+        placeable_by = { item = "eg-unit-item", count = 1 },
         max_health = 300,
         resistances = { { type = "fire", percent = 70 } },
         random_variation_on_create = false,
-        collision_box = { { -0.7, -1.7 }, { 0.7, 1.7 } },
-        selection_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
-        drawing_box = { { -1.0, -3.0 }, { 1.0, 2.0 } },
+        --collision_box = { { -0.7, -1.7 }, { 0.7, 1.7 } },
+        --selection_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
+        --drawing_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
+        collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
+        selection_box = { { -0.8, -1.8 }, { 0.8, 1.8 } },
+        drawing_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         picture = get_transformator_picture(tier),
     }
 end
@@ -217,38 +217,33 @@ end
 
 local eg_transformator_displayer = {
     type = "simple-entity-with-force",
-    name = "eg-transformator-displayer",
+    name = "eg-unit-displayer",
     icon = constants.EG_GRAPHICS .. "/entities/trafo-sprites.png",
     icon_size = 64,
     flags = { "placeable-player", "player-creation" },
-    minable = { mining_time = 0.5, result = "eg-transformator-item" },
-    max_health = 200,
-    collision_box = { { -0.7, -1.7 }, { 0.7, 1.7 } },
-    selection_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
-    drawing_box = { { -1.0, -3.0 }, { 1.0, 2.0 } },
     picture = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(), -- use picture not pictures, rotation works
     direction_count = 4
 }
 
 local eg_transformator_item = {
     type = "item",
-    name = "eg-transformator-item",
+    name = "eg-unit-item",
     icon = constants.EG_GRAPHICS .. "/icons/trafo.png",
     icon_size = 32,
     subgroup = "energy-pipe-distribution",
-    order = "b[pipe]-d[eg-transformator-item]",
-    place_result = "eg-transformator-displayer",
+    order = "b[pipe]-d[eg-unit-item]",
+    place_result = "eg-unit-displayer",
     stack_size = 50,
 }
 
 local eg_transformator_recipe = {
     type = "recipe",
-    name = "eg-transformator-item",
+    name = "eg-unit-recipe",
     ingredients = {
         { type = "item", name = "boiler", amount = 1 },
     },
     results = {
-        { type = "item", name = "eg-transformator-item", amount = 1 }
+        { type = "item", name = "eg-unit-item", amount = 1 }
     },
     enabled = true
 }
