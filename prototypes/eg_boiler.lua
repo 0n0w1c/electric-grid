@@ -10,6 +10,10 @@ function create_transformator_boiler(tier)
         --energy_consumption = heat_capacity,
         energy_consumption = rating,
         target_temperature = 165,
+        hidden = true,
+        minable = nil,
+        selectable_in_game = false,
+        hidden_in_factoriopedia = true,
         energy_source = {
             type = "electric",
             buffer_capacity = heat_capacity, -- Buffer capacity matching one second of consumption
@@ -23,10 +27,10 @@ function create_transformator_boiler(tier)
             { -0.4, -0.4 },
             { 0.4,  0.4 }
         },
-        selection_box = {
-            { -0.5, -0.5 },
-            { 0.5,  0.5 }
-        },
+        --        selection_box = {
+        --            { -0.5, -0.5 },
+        --            { 0.5,  0.5 }
+        --        },
         fluid_box = {
             filter = "eg-water-" .. tier,
             hide_connection_info = false,
@@ -34,12 +38,12 @@ function create_transformator_boiler(tier)
                 {
                     direction = 12,
                     flow_direction = "input-output",
-                    position = { 0.39, 0 }
+                    position = { 0.4, 0 }
                 },
                 {
                     direction = 4,
                     flow_direction = "input-output",
-                    position = { -0.39, 0 }
+                    position = { -0.4, 0 }
                 }
             },
             production_type = "input",

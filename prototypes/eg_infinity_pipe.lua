@@ -2,19 +2,22 @@
 local eg_infinity_pipe = {
     type = "infinity-pipe",
     name = "eg-infinity-pipe",
-    icon = "__base__/graphics/icons/pipe.png", -- Custom icon if desired
+    icon = "__base__/graphics/icons/pipe.png",
     gui_mode = "all",
     max_health = 200,
     corpse = "small-remnants",
     hidden = true,
+    minable = nil,
+    selectable_in_game = false,
+    hidden_in_factoriopedia = true,
     collision_box = {
         { -0.29, -0.29 },
         { 0.29,  0.29 }
     },
-    selection_box = {
-        { -0.29, -0.29 },
-        { 0.29,  0.29 }
-    },
+    --    selection_box = {
+    --        { -0.29, -0.29 },
+    --        { 0.29,  0.29 }
+    --    },
     horizontal_window_bounding_box = {
         { -0.25, -0.28125 },
         { 0.25,  0.15625 }

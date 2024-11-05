@@ -1,3 +1,5 @@
+constants = require("constants")
+
 local eg_transformators
 
 -- Initialize global memory structures and event handlers
@@ -12,46 +14,46 @@ local function load_globals()
     eg_transformators = storage.eg_transformators
 end
 
--- Define the position offset for the infinity pipe based on direction with 90-degree rotation
+-- Define the position offset for the boiler
 local function get_eg_boiler_offset(direction)
     if direction == defines.direction.north then
-        return { x = 0, y = 0 } -- Previously was (0, -1), now rotated to right of boiler
+        return { x = -1, y = 0 }  -- Previously was (0, -1), now rotated to right of boiler
     elseif direction == defines.direction.east then
-        return { x = 0, y = 0 } -- Previously was (1, 0), now rotated to above the boiler
+        return { x = -1, y = -1 } -- Previously was (1, 0), now rotated to above the boiler
     elseif direction == defines.direction.south then
-        return { x = 0, y = 0 } -- Previously was (0, 1), now rotated to left of the boiler
+        return { x = 0, y = -1 }  -- Previously was (0, 1), now rotated to left of the boiler
     elseif direction == defines.direction.west then
-        return { x = 0, y = 0 } -- Previously was (-1, 0), now rotated to below the boiler
+        return { x = 0, y = 0 }   -- Previously was (-1, 0), now rotated to below the boiler
     end
-    return { x = 0, y = 0 }     -- Default offset in case of unknown direction
+    return { x = 0, y = 0 }       -- Default offset in case of unknown direction
 end
 
 -- Define the position offset for the infinity pipe based on direction with 90-degree rotation
 local function get_eg_infinity_pipe_offset(direction)
     if direction == defines.direction.north then
-        return { x = 1, y = 0 }  -- Previously was (0, -1), now rotated to right of boiler
+        return { x = 0, y = 0 }   -- Previously was (0, -1), now rotated to right of boiler
     elseif direction == defines.direction.east then
-        return { x = 0, y = 1 }  -- Previously was (1, 0), now rotated to above the boiler
+        return { x = -1, y = 0 }  -- Previously was (1, 0), now rotated to above the boiler
     elseif direction == defines.direction.south then
-        return { x = -1, y = 0 } -- Previously was (0, 1), now rotated to left of the boiler
+        return { x = -1, y = -1 } -- Previously was (0, 1), now rotated to left of the boiler
     elseif direction == defines.direction.west then
-        return { x = 0, y = -1 } -- Previously was (-1, 0), now rotated to below the boiler
+        return { x = 0, y = -1 }  -- Previously was (-1, 0), now rotated to below the boiler
     end
-    return { x = 0, y = 0 }      -- Default offset in case of unknown direction
+    return { x = 0, y = 0 }       -- Default offset in case of unknown direction
 end
 
 -- Define the position offset for the steam generator based on direction for a 1x1 boiler
 local function get_eg_steam_engine_offset(direction)
     if direction == defines.direction.north then
-        return { x = 0, y = -1 } -- Position below the boiler
+        return { x = -1, y = -1 } -- Position below the boiler
     elseif direction == defines.direction.east then
-        return { x = 1, y = 0 }  -- Position to the right of the boiler
+        return { x = 0, y = -1 }  -- Position to the right of the boiler
     elseif direction == defines.direction.south then
-        return { x = 0, y = 1 }  -- Position above the boiler
+        return { x = 0, y = 0 }   -- Position above the boiler
     elseif direction == defines.direction.west then
-        return { x = -1, y = 0 } -- Position to the left of the boiler
+        return { x = -1, y = 0 }  -- Position to the left of the boiler
     end
-    return { x = 0, y = 0 }      -- Default offset in case of unknown direction
+    return { x = 0, y = 0 }       -- Default offset in case of unknown direction
 end
 
 -- Define the position offset for the eg-high-voltage-pole on the opposite side of a 1x1 boiler
@@ -152,7 +154,7 @@ local function on_eg_transformator_displayer_built(event)
     -- Place the eg-low-voltage-pole with the same direction as the boiler
     local eg_high_voltage_pole = surface.create_entity {
         name = "eg-high-voltage-pole",
-        position = eg_high_voltage_pole_position,     --place on top of eg-boiler
+        position = eg_high_voltage_pole_position, --place on top of eg-boiler
         force = force,
         direction = direction
     }
@@ -164,7 +166,7 @@ local function on_eg_transformator_displayer_built(event)
     -- Place the eg-low-voltage-pole with the same direction as the boiler
     local eg_low_voltage_pole = surface.create_entity {
         name = "eg-low-voltage-pole",
-        position = eg_low_voltage_pole_position,     --place on top of eg-steam-engine
+        position = eg_low_voltage_pole_position, --place on top of eg-steam-engine
         force = force,
         direction = direction
     }
@@ -200,15 +202,21 @@ local function on_eg_transformator_displayer_mined(event)
         local eg_transformator = storage.eg_transformators[unit_number]
 
         -- Destroy each component if it still exists
-        if eg_transformator.boiler and eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
+        if eg_transformator.boiler and eg_transformator.boiler.valid then
+            eg_transformator.boiler.destroy()
+        end
         if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
             eg_transformator.infinity_pipe.destroy()
         end
-        if eg_transformator.generator and eg_transformator.generator.valid then eg_transformator.generator.destroy() end
+        if eg_transformator.generator and eg_transformator.generator.valid then
+            eg_transformator.generator.destroy()
+        end
         if eg_transformator.high_voltage and eg_transformator.high_voltage.valid then
             eg_transformator.high_voltage.destroy()
         end
-        if eg_transformator.low_voltage and eg_transformator.low_voltage.valid then eg_transformator.low_voltage.destroy() end
+        if eg_transformator.low_voltage and eg_transformator.low_voltage.valid then
+            eg_transformator.low_voltage.destroy()
+        end
 
         -- Update storage
         storage.eg_transformators[unit_number] = nil

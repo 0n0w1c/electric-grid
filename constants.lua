@@ -6,12 +6,6 @@ constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 
-if settings.startup["eg-hide-alt-overlay"].value then
-    constants.EG_ALTOVERLAY = "hide-alt-info"
-else
-    constants.EG_ALTOVERLAY = nil
-end
-
 constants.EG_INTERNAL_ENTITY_FLAGS = {
     "not-rotatable",
     "placeable-neutral",
@@ -19,7 +13,6 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
     "not-on-map",
     "not-blueprintable",
     "not-deconstructable",
-    --"hidden",
     "not-flammable",
     "no-copy-paste",
     "not-selectable-in-game",
@@ -29,15 +22,15 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
 
 constants.EG_TRANSFORMATORS = {
     --["eg-unit-1"] = { rating = "1MW", heat_capacity = "20J" },
-    ["eg-unit-1"] = { rating = "1MW", heat_capacity = "0.263kJ" },
-    ["eg-unit-2"] = { rating = "5MW", heat_capacity = "100J" },
-    ["eg-unit-3"] = { rating = "10MW", heat_capacity = "200J" },
-    ["eg-unit-4"] = { rating = "50MW", heat_capacity = "1000J" },
-    ["eg-unit-5"] = { rating = "100MW", heat_capacity = "2000J" },
-    ["eg-unit-6"] = { rating = "500MW", heat_capacity = "10000J" },
-    ["eg-unit-7"] = { rating = "1GW", heat_capacity = "20000J" },
-    ["eg-unit-8"] = { rating = "5GW", heat_capacity = "100000J" },
-    ["eg-unit-9"] = { rating = "10GW", heat_capacity = "200000J" }
+    ["eg-unit-1"] = { rating = "1MW", heat_capacity = "0.263kJ", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 } },  -- Tier 1: Pure Red
+    ["eg-unit-2"] = { rating = "5MW", heat_capacity = "100J", tint = { r = 1.0, g = 0.0, b = 0.5, a = 1 } },     -- Tier 2: Magenta (Red + Blue)
+    ["eg-unit-3"] = { rating = "10MW", heat_capacity = "200J", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } },    -- Tier 3: Pure Magenta
+    ["eg-unit-4"] = { rating = "50MW", heat_capacity = "1000J", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 } },   -- Tier 4: Purple (Blue + Magenta)
+    ["eg-unit-5"] = { rating = "100MW", heat_capacity = "2000J", tint = { r = 0.0, g = 0.0, b = 1.0, a = 1 } },  -- Tier 5: Pure Blue
+    ["eg-unit-6"] = { rating = "500MW", heat_capacity = "10000J", tint = { r = 0.0, g = 1.0, b = 1.0, a = 1 } }, -- Tier 6: Cyan (Green + Blue)
+    ["eg-unit-7"] = { rating = "1GW", heat_capacity = "20000J", tint = { r = 0.0, g = 1.0, b = 0.0, a = 1 } },   -- Tier 7: Pure Green
+    ["eg-unit-8"] = { rating = "5GW", heat_capacity = "100000J", tint = { r = 0.5, g = 1.0, b = 0.0, a = 1 } },  -- Tier 8: Yellow-Green (Green + Yellow)
+    ["eg-unit-9"] = { rating = "10GW", heat_capacity = "200000J", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } }  -- Tier 9: Yellow (Red + Green)
 }
 
 constants.EG_NUM_TIERS = 0
@@ -48,18 +41,6 @@ end
 constants.EG_CONSUMPTION_THRESHOLD = 0.98
 constants.EG_MAXIMUM_WIRE_DISTANCE = 4.5
 constants.EG_SUPPLY_AREA_DISTANCE = 1
-
-constants.EG_TINT = {
-    { r = 1.0, g = 0.0, b = 0.0, a = 1 }, -- Tier 1: Pure Red
-    { r = 1.0, g = 0.0, b = 0.5, a = 1 }, -- Tier 2: Magenta (Red + Blue)
-    { r = 1.0, g = 0.0, b = 1.0, a = 1 }, -- Tier 3: Pure Magenta
-    { r = 0.5, g = 0.0, b = 1.0, a = 1 }, -- Tier 4: Purple (Blue + Magenta)
-    { r = 0.0, g = 0.0, b = 1.0, a = 1 }, -- Tier 5: Pure Blue
-    { r = 0.0, g = 1.0, b = 1.0, a = 1 }, -- Tier 6: Cyan (Green + Blue)
-    { r = 0.0, g = 1.0, b = 0.0, a = 1 }, -- Tier 7: Pure Green
-    { r = 0.5, g = 1.0, b = 0.0, a = 1 }, -- Tier 8: Yellow-Green (Green + Yellow)
-    { r = 1.0, g = 1.0, b = 0.0, a = 1 }, -- Tier 9: Yellow (Red + Green)
-}
 
 function constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES()
     return {

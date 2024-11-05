@@ -13,15 +13,19 @@ function create_transformator_steam_engine(tier)
         icon_size = 64,
         impact_category = "metal-large",
         max_health = 400,
+        hidden = true,
+        hidden_in_factoriopedia = true,
+        minable = nil,
+        selectable_in_game = false,
         scale_entity_info_icon = true,
         collision_box = {
             { -0.4, -0.4 },
             { 0.4,  0.4 }
         },
-        selection_box = {
-            { -0.5, -0.5 },
-            { 0.5,  0.5 }
-        },
+        --        selection_box = {
+        --            { -0.5, -0.5 },
+        --            { 0.5,  0.5 }
+        --        },
         effectivity = 1,
         energy_source = {
             type = "electric",

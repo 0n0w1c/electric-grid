@@ -60,7 +60,7 @@ local function get_transformator_picture(tier)
                     height = 310,
                     shift = { 2.6, -0.45 },
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TINT[tier],
+                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
                     scale = 0.5,
                 },
             },
@@ -89,7 +89,7 @@ local function get_transformator_picture(tier)
                     shift = { 1.5, -1.15 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TINT[tier],
+                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
                 },
             },
         },
@@ -120,7 +120,7 @@ local function get_transformator_picture(tier)
                     shift = { 2.6, -0.45 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TINT[tier],
+                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
                 },
             },
         },
@@ -151,7 +151,7 @@ local function get_transformator_picture(tier)
                     shift = { 1.5, -1.15 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TINT[tier],
+                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
                 },
             },
         },
@@ -167,7 +167,7 @@ local function get_transformator_picture(tier)
     return template
 end
 
-local function create_transformator_entity(tier)
+local function create_transformator_unit(tier)
     local power_consumption = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
     return {
@@ -179,12 +179,12 @@ local function create_transformator_entity(tier)
         minable = { mining_time = 0.5, result = "eg-transformator-item" },
         corpse = "big-remnants",
         dying_explosion = "medium-explosion",
-        placeable_by = { item = "eg-unit-item", count = 1 },
+        placeable_by = { item = "eg-transformator-item", count = 1 },
         max_health = 300,
         resistances = { { type = "fire", percent = 70 } },
         random_variation_on_create = false,
-        collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
-        selection_box = { { -0.8, -1.8 }, { 0.8, 1.8 } },
+        collision_box = { { -2.0, -2.0 }, { 2.0, 2.0 } },
+        selection_box = { { -1.0, -1.5 }, { 1.0, 1.5 } },
         drawing_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         picture = get_transformator_picture(tier),
     }
@@ -204,7 +204,7 @@ end
 -- Consider incorporating Quality!
 for tier = 1, constants.EG_NUM_TIERS do
     data:extend({
-        create_transformator_entity(tier),
+        create_transformator_unit(tier),
         create_transformator_water(tier),
         create_transformator_steam(tier),
         create_transformator_boiler(tier),
@@ -228,7 +228,7 @@ local eg_transformator_item = {
     icon = constants.EG_GRAPHICS .. "/icons/trafo.png",
     icon_size = 32,
     subgroup = "energy-pipe-distribution",
-    order = "b[pipe]-d[eg-unit-item]",
+    order = "b[pipe]-d[eg-transformator-item]",
     place_result = constants.EG_DISPLAYER,
     stack_size = 50,
 }
@@ -240,7 +240,7 @@ local eg_transformator_recipe = {
         { type = "item", name = "boiler", amount = 1 },
     },
     results = {
-        { type = "item", name = "eg-unit-item", amount = 1 }
+        { type = "item", name = "eg-transformator-item", amount = 1 }
     },
     enabled = true
 }
