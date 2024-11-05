@@ -176,7 +176,7 @@ local function create_transformator_entity(tier)
         icon = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
         icon_size = 128,
         flags = { "placeable-player", "player-creation" },
-        minable = { mining_time = 0.5, result = "eg-unit-item" },
+        minable = { mining_time = 0.5, result = "eg-transformator-item" },
         corpse = "big-remnants",
         dying_explosion = "medium-explosion",
         placeable_by = { item = "eg-unit-item", count = 1 },
@@ -224,18 +224,18 @@ local eg_transformator_displayer = {
 
 local eg_transformator_item = {
     type = "item",
-    name = "eg-unit-item",
+    name = "eg-transformator-item",
     icon = constants.EG_GRAPHICS .. "/icons/trafo.png",
     icon_size = 32,
     subgroup = "energy-pipe-distribution",
     order = "b[pipe]-d[eg-unit-item]",
-    place_result = "eg-unit-displayer",
+    place_result = constants.EG_DISPLAYER,
     stack_size = 50,
 }
 
 local eg_transformator_recipe = {
     type = "recipe",
-    name = "eg-unit-recipe",
+    name = "eg-transformator-recipe",
     ingredients = {
         { type = "item", name = "boiler", amount = 1 },
     },

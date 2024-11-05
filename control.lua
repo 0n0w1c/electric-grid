@@ -169,7 +169,7 @@ local function on_eg_transformator_displayer_built(event)
         direction = direction
     }
 
-    -- Let the water flow
+    -- Set eg-water to be actively flowing
     eg_infinity_pipe.set_infinity_pipe_filter({
         name = "eg-water-1",
         percentage = 1,
@@ -177,7 +177,7 @@ local function on_eg_transformator_displayer_built(event)
         mode = "at-least"
     })
 
-    -- Track the transformer components by unit_number
+    -- Track the eg_transformator components by unit_number
     storage.eg_transformators[eg_unit.unit_number] = {
         unit = eg_unit,
         boiler = eg_boiler,
