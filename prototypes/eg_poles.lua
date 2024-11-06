@@ -26,6 +26,62 @@ local function eg_wireconnections(pole, direction)
     }
 end
 
+local function get_eg_high_voltage_pole_selection_box(direction)
+    if direction == defines.direction.north then
+        return {
+            { -1, 0 },
+            { 1,  1 }
+        }
+    elseif direction == defines.direction.east then
+        return {
+            { -1, -1 },
+            { 0,  1 }
+        }
+    elseif direction == defines.direction.south then
+        return {
+            { -1, -1 },
+            { 1,  0 }
+        }
+    elseif direction == defines.direction.west then
+        return {
+            { 0, -1 },
+            { 1, 1 }
+        }
+    end
+    return {
+        { -1, -1 },
+        { 1,  1 }
+    }
+end
+
+local function get_eg_low_voltage_pole_selection_box(direction)
+    if direction == defines.direction.north then
+        return {
+            { -1, -1 },
+            { 1,  0 }
+        }
+    elseif direction == defines.direction.east then
+        return {
+            { 0, -1 },
+            { 1, 1 }
+        }
+    elseif direction == defines.direction.south then
+        return {
+            { -1, 0 },
+            { 1,  1 }
+        }
+    elseif direction == defines.direction.west then
+        return {
+            { -1, -1 },
+            { 0,  1 }
+        }
+    end
+    return {
+        { -1, -1 },
+        { 1,  1 }
+    }
+end
+
 -- Loop to define high and low voltage poles for each direction
 for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     local eg_high_voltage_pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
@@ -37,12 +93,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     eg_high_voltage_pole.auto_connect_up_to_n_wires = 0
     eg_high_voltage_pole.minable = nil
     eg_high_voltage_pole.connection_points = eg_wireconnections("eg_high_voltage_pole", direction)
-    -- selection_box needs to be adjusted by direction, make it 1x2
-    eg_high_voltage_pole.selection_box =
-    {
-        { -1, -1 },
-        { 1,  1 }
-    }
+    eg_high_voltage_pole.selection_box = get_eg_high_voltage_pole_selection_box(direction)
 
     local eg_low_voltage_pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
 
@@ -53,12 +104,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     eg_low_voltage_pole.auto_connect_up_to_n_wires = 0
     eg_low_voltage_pole.minable = nil
     eg_low_voltage_pole.connection_points = eg_wireconnections("eg_low_voltage_pole", direction)
-    -- selection_box needs to be adjusted by direction, make it 1x2
-    eg_low_voltage_pole.selection_box =
-    {
-        { -1, -1 },
-        { 1,  1 }
-    }
+    eg_low_voltage_pole.selection_box = get_eg_low_voltage_pole_selection_box(direction)
 
     data:extend({ eg_high_voltage_pole, eg_low_voltage_pole })
 end
