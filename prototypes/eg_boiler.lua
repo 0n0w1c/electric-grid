@@ -14,6 +14,7 @@ function create_transformator_boiler(tier)
         minable = nil,
         selectable_in_game = false,
         hidden_in_factoriopedia = true,
+        flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         energy_source = {
             type = "electric",
             buffer_capacity = heat_capacity, -- Buffer capacity matching one second of consumption

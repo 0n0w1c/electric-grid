@@ -18,6 +18,7 @@ function create_transformator_steam_engine(tier)
         minable = nil,
         selectable_in_game = false,
         scale_entity_info_icon = true,
+        flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         collision_box = {
             { -0.4, -0.4 },
             { 0.4,  0.4 }
@@ -30,10 +31,6 @@ function create_transformator_steam_engine(tier)
         energy_source = {
             type = "electric",
             usage_priority = "secondary-output"
-        },
-        flags = {
-            "placeable-neutral",
-            "player-creation"
         },
         fluid_box = {
             filter = "eg-steam-" .. tier,

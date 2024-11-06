@@ -10,6 +10,7 @@ local eg_infinity_pipe = {
     minable = nil,
     selectable_in_game = false,
     hidden_in_factoriopedia = true,
+    flags = constants.EG_INTERNAL_ENTITY_FLAGS,
     collision_box = {
         { -0.29, -0.29 },
         { 0.29,  0.29 }
@@ -28,6 +29,7 @@ local eg_infinity_pipe = {
     },
     fluid_box = {
         hide_connection_info = true,
+        max_pipeline_extent = 2,
         pipe_connections = {
             {
                 direction = 0,
