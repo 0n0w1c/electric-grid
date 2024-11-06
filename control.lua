@@ -88,7 +88,9 @@ end
 local function on_eg_transformator_displayer_built(event)
     local entity = event.entity
 
-    if not entity or entity.name ~= constants.EG_DISPLAYER then return end
+    if not entity then return end
+
+    if entity.name ~= constants.EG_DISPLAYER and string.sub(entity.name, 1, -2) ~= "eg-unit-" then return end
 
     -- Store surface, force, position and direction
     local surface = entity.surface
@@ -226,7 +228,9 @@ end
 -- Register events and load globals
 local function register_event_handlers()
     script.on_event(defines.events.on_built_entity, on_eg_transformator_displayer_built)
+    script.on_event(defines.events.on_robot_built_entity, on_eg_transformator_displayer_built)
     script.on_event(defines.events.on_player_mined_entity, on_eg_transformator_displayer_mined)
+    script.on_event(defines.events.on_robot_mined_entity, on_eg_transformator_displayer_mined)
 end
 
 -- Set up globals and event handlers on initialization

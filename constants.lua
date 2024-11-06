@@ -24,7 +24,7 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
     "not-deconstructable",
     "not-flammable",
     "no-copy-paste",
-    "not-selectable-in-game",
+--    "not-selectable-in-game",
     "not-upgradable",
     "not-in-kill-statistics",
 }

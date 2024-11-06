@@ -92,6 +92,8 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     eg_high_voltage_pole.water_reflection = nil
     eg_high_voltage_pole.auto_connect_up_to_n_wires = 0
     eg_high_voltage_pole.minable = nil
+    eg_high_voltage_pole.radius_visualisation_picture = nil
+    eg_high_voltage_pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
     eg_high_voltage_pole.connection_points = eg_wireconnections("eg_high_voltage_pole", direction)
     eg_high_voltage_pole.selection_box = get_eg_high_voltage_pole_selection_box(direction)
 
@@ -103,6 +105,8 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     eg_low_voltage_pole.water_reflection = nil
     eg_low_voltage_pole.auto_connect_up_to_n_wires = 0
     eg_low_voltage_pole.minable = nil
+    eg_low_voltage_pole.radius_visualisation_picture = nil
+    eg_low_voltage_pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
     eg_low_voltage_pole.connection_points = eg_wireconnections("eg_low_voltage_pole", direction)
     eg_low_voltage_pole.selection_box = get_eg_low_voltage_pole_selection_box(direction)
 
