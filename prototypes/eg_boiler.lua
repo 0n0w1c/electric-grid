@@ -51,7 +51,7 @@ function create_transformator_boiler(tier)
         },
         output_fluid_box = {
             filter = "eg-steam-" .. tier,
-            hide_connection_info = false,
+            hide_connection_info = true,
             pipe_connections = {
                 {
                     direction = 0,
