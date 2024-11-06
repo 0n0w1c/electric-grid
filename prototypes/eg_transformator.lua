@@ -183,7 +183,7 @@ local function create_transformator_unit(tier)
         max_health = 300,
         resistances = { { type = "fire", percent = 70 } },
         random_variation_on_create = false,
-        collision_box = { { -2.0, -2.0 }, { 2.0, 2.0 } },
+        collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         selection_box = { { -1.0, -1.5 }, { 1.0, 1.5 } },
         drawing_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         picture = get_transformator_picture(tier),

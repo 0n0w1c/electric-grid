@@ -6,6 +6,13 @@ constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 
+constants.EG_DIRECTION_TO_CARDINAL = {
+    [0] = "north",
+    [4] = "east",
+    [8] = "south",
+    [12] = "west"
+}
+
 constants.EG_INTERNAL_ENTITY_FLAGS = {
     "not-rotatable",
     "placeable-neutral",
@@ -41,6 +48,21 @@ end
 constants.EG_CONSUMPTION_THRESHOLD = 0.98
 constants.EG_MAXIMUM_WIRE_DISTANCE = 4.5
 constants.EG_SUPPLY_AREA_DISTANCE = 1
+constants.EG_WIRE_CONNECTION_OFFSET = 0.1
+constants.EG_POLE_CONNECTIONS = {
+    eg_high_voltage_pole = {
+        north = { wire = { 0.0, -1.8 }, shadow = { 2.2, 0.7 } },
+        east  = { wire = { -0.4, -1.6 }, shadow = { 1.5, -1.2 } },
+        south = { wire = { 0.0, -1.2 }, shadow = { 2.5, 0.6 } },
+        west  = { wire = { 0.3, -1.6 }, shadow = { 2.0, 0.6 } },
+    },
+    eg_low_voltage_pole = {
+        north = { wire = { 0.0, -1.6 }, shadow = { 3.0, 0.5 } },
+        east  = { wire = { 0.3, -2.1 }, shadow = { 4.0, 0.5 } },
+        south = { wire = { 0.0, -2.1 }, shadow = { 2.9, 0.7 } },
+        west  = { wire = { -0.4, -2.0 }, shadow = { 1.8, 0.2 } },
+    },
+}
 
 function constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES()
     return {
