@@ -13,3 +13,12 @@ require("prototypes/eg_boiler")
 require("prototypes/eg_steam_engine")
 require("prototypes/eg_poles")
 require("prototypes/eg_transformator")
+
+data:extend({
+    {
+        type = "custom-input",
+        name = "transformator_rating_selection",   -- This is the custom input name we’re using
+        key_sequence = "CONTROL + mouse-button-1", -- CTRL + left-click
+        consuming = "none"
+    }
+})

@@ -242,7 +242,9 @@ local eg_transformator_recipe = {
     results = {
         { type = "item", name = "eg-transformator-item", amount = 1 }
     },
-    enabled = true
+    enabled = true,
+    allow_quality_upgrades = true,             -- Enables automatic quality handling
+    always_show_quality_in_description = true  -- Optionally shows quality level in descriptions
 }
 
 data:extend({ eg_transformator_displayer, eg_transformator_item, eg_transformator_recipe })
