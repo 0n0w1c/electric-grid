@@ -33,7 +33,7 @@ function create_transformator_boiler(tier)
         --        },
         fluid_box = {
             filter = "eg-water-" .. tier,
-            hide_connection_info = false,
+            hide_connection_info = true,
             pipe_connections = {
                 {
                     direction = 12,

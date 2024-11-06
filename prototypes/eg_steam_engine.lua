@@ -37,7 +37,7 @@ function create_transformator_steam_engine(tier)
         },
         fluid_box = {
             filter = "eg-steam-" .. tier,
-            hide_connection_info = false,
+            hide_connection_info = true,
             minimum_temperature = 100,
             production_type = "input",
             volume = 100,

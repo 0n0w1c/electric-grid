@@ -6,6 +6,8 @@ constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 
+constants.EG_CONSUMPTION_THRESHOLD = 0.98
+
 constants.EG_DIRECTION_TO_CARDINAL = {
     [0] = "north",
     [4] = "east",
@@ -45,7 +47,6 @@ for _ in pairs(constants.EG_TRANSFORMATORS) do
     constants.EG_NUM_TIERS = constants.EG_NUM_TIERS + 1
 end
 
-constants.EG_CONSUMPTION_THRESHOLD = 0.98
 constants.EG_MAXIMUM_WIRE_DISTANCE = 4.5
 constants.EG_SUPPLY_AREA_DISTANCE = 1
 constants.EG_WIRE_CONNECTION_OFFSET = 0.1
