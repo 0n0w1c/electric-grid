@@ -180,7 +180,7 @@ local function create_transformator_unit(tier)
         corpse = "big-remnants",
         dying_explosion = "medium-explosion",
         placeable_by = { item = "eg-transformator-item", count = 1 },
-        max_health = 300,
+        max_health = constants.EG_MAX_HEALTH,
         resistances = { { type = "fire", percent = 70 } },
         random_variation_on_create = false,
         collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
@@ -243,8 +243,8 @@ local eg_transformator_recipe = {
         { type = "item", name = "eg-transformator-item", amount = 1 }
     },
     enabled = true,
-    allow_quality_upgrades = true,             -- Enables automatic quality handling
-    always_show_quality_in_description = true  -- Optionally shows quality level in descriptions
+    allow_quality_upgrades = true,            -- Enables automatic quality handling
+    always_show_quality_in_description = true -- Optionally shows quality level in descriptions
 }
 
 data:extend({ eg_transformator_displayer, eg_transformator_item, eg_transformator_recipe })

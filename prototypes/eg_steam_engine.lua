@@ -12,9 +12,8 @@ function create_transformator_steam_engine(tier)
         icon = "__base__/graphics/icons/steam-engine.png",
         icon_size = 64,
         impact_category = "metal-large",
-        max_health = 400,
+        max_health = constants.EG_MAX_HEALTH,
         hidden = true,
-        hidden_in_factoriopedia = true,
         minable = nil,
         selectable_in_game = false,
         scale_entity_info_icon = true,
@@ -23,10 +22,10 @@ function create_transformator_steam_engine(tier)
             { -0.4, -0.4 },
             { 0.4,  0.4 }
         },
-        --        selection_box = {
-        --            { -0.5, -0.5 },
-        --            { 0.5,  0.5 }
-        --        },
+        selection_box = {
+            { -0.5, -0.5 },
+            { 1.5,  1.5 }
+        },
         effectivity = 1,
         energy_source = {
             type = "electric",

@@ -5,6 +5,7 @@ constants.EG_GRAPHICS = constants.EG_MOD .. "/graphics"
 constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_DISPLAYER = "eg-transformator-displayer"
+constants.EG_MAX_HEALTH = 200
 
 constants.EG_CONSUMPTION_THRESHOLD = 0.98
 
@@ -24,7 +25,7 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
     "not-deconstructable",
     "not-flammable",
     "no-copy-paste",
---    "not-selectable-in-game",
+    "not-selectable-in-game",
     "not-upgradable",
     "not-in-kill-statistics",
 }

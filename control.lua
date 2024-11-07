@@ -86,13 +86,34 @@ local function get_eg_low_voltage_pole_offset(direction)
     return { x = 0, y = 0 }
 end
 
+local function is_transformator(name)
+    if name == constants.EG_DISPLAYER or constants.EG_TRANSFORMATORS[name] then
+        return true
+    end
+
+    return false
+end
+
+local function rating_to_unit(rating)
+    local unit = nil
+
+    for name, specs in pairs(constants.EG_TRANSFORMATORS) do
+        if specs.rating == rating then
+            unit = name
+            break
+        end
+    end
+
+    return unit
+end
+
 -- Place the electric boiler and infinity pipe with direction handling
 local function on_eg_transformator_built(event)
     local entity = event.entity
 
     if not entity or not entity.name then return end
 
-    if entity.name ~= constants.EG_DISPLAYER and not constants.EG_TRANSFORMATORS[entity.name] then return end
+    if not is_transformator(entity.name) then return end
 
     -- Store surface, force, position and direction
     local surface = entity.surface
@@ -100,7 +121,6 @@ local function on_eg_transformator_built(event)
     local position = entity.position
     local direction = entity.direction
     local offset = { x = 0, y = 0 }
-    local quality = entity.quality or 1
 
     -- Remove the displayer
     entity.destroy()
@@ -198,7 +218,7 @@ local function on_eg_transformator_built(event)
     storage.eg_transformators = eg_transformators
 end
 
--- Remove all components of a transformer when the displayer is mined
+-- Remove all components of a transformer when the unit is mined
 local function on_eg_transformator_mined(event)
     local entity = event.entity
     local unit_number = entity.unit_number
@@ -247,170 +267,4 @@ end)
 script.on_load(function()
     load_globals()
     register_event_handlers()
-end)
-
----BEGIN NEW HERE
----
---- Check if the given transformator rating is researched for the player's force.
--- @param player LuaPlayer The player to check for.
--- @param rating string The transformator rating to check.
--- @return boolean True if the rating is researched, otherwise false.
-local function is_rating_researched(player, rating)
-    --[[
-    if not player or not rating then return end
-
-    local force = player.force
-    local rating_num = tonumber(string.sub(rating, 7, 7))
-
-    if rating_num < 4 and force.technologies["trafo-1-tech"] and force.technologies["trafo-1-tech"].researched then
-        return true
-    elseif rating_num < 7 and force.technologies["trafo-2-tech"] and force.technologies["trafo-2-tech"].researched then
-        return true
-    elseif force.technologies["trafo-3-tech"] and force.technologies["trafo-3-tech"].researched then
-        return true
-    end
-
-    return false
-]]
-    return true
-end
-
-local function is_transformator(name)
-    if name == constants.EG_DISPLAYER or constants.EG_TRANSFORMATORS[name] then return true end
-
-    return false
-end
-
---- Closes the transformator GUI if open.
--- @param player LuaPlayer The player for whom the GUI is closed.
-local function close_transformator_gui(player)
-    if player.gui.screen.transformator_rating_selection_frame then
-        player.gui.screen.transformator_rating_selection_frame.destroy()
-    end
-end
-
---- Show the transformator GUI with rating selection checkboxes.
--- @param player LuaPlayer The player for whom the GUI is shown.
--- @param transformator LuaEntity The selected transformator entity.
-local function show_transformator_gui(player, transformator)
-    -- Ensure any existing GUI is cleared
-    close_transformator_gui(player)
-
-    -- Create the GUI frame
-    local frame = player.gui.screen.add {
-        type = "frame",
-        name = "transformator_rating_selection_frame",
-        caption = "Rating",
-        direction = "vertical"
-    }
-    frame.auto_center = true
-
-    -- Table for layout
-    local table = frame.add {
-        type = "table",
-        column_count = 1
-    }
-
-    -- Determine the current rating of the selected transformator
-    local current_rating = nil
-    for unit, specs in pairs(constants.EG_TRANSFORMATORS) do
-        if specs.rating and unit == transformator.name then
-            current_rating = specs.rating
-            break
-        end
-    end
-
-    -- Loop through the transformators
-    for unit, specs in pairs(constants.EG_TRANSFORMATORS) do
-        if specs.rating and is_rating_researched(player, unit) then
-            table.add {
-                type = "checkbox",
-                name = "rating_checkbox_" .. specs.rating,
-                caption = specs.rating,
-                state = (specs.rating == current_rating)
-            }
-        end
-    end
-
-    -- Add confirm button below checkboxes
-    frame.add {
-        type = "button",
-        name = "confirm_transformator_rating",
-        caption = "Save"
-    }
-
-    -- Store the selected transformator in global for reference
-    --storage.selected_transformator[player.index] = transformator
-end
-
---- Event handler to update checkboxes and simulate radio button behavior.
--- Ensures only one checkbox is selected at a time.
--- @param event EventData The event data containing the GUI element information.
-script.on_event(defines.events.on_gui_checked_state_changed, function(event)
-    local element = event.element
-    if not (element and element.valid) then return end
-
-    if element.name:find("rating_checkbox_") then
-        local player = game.players[event.player_index]
-
-        local frame = player.gui.screen.transformator_rating_selection_frame
-        if frame then
-            for _, child in pairs(frame.children[1].children) do
-                if child.type == "checkbox" and child.name ~= element.name then
-                    child.state = false
-                end
-            end
-        end
-    end
-end)
-
---- Event handler for transformator interaction (e.g., GUI toggle).
--- Opens or closes the transformator rating selection GUI.
--- @param event EventData The event data containing the player and entity information.
-script.on_event("transformator_rating_selection", function(event)
-    local player = game.get_player(event.player_index)
-    if not player or not player.valid then return end
-
-    local selected_entity = player.selected
-    if selected_entity and selected_entity.valid and is_transformator(selected_entity.name) then
-        if player.gui.screen.transformator_rating_selection_frame then
-            close_transformator_gui(player)                 -- Close the GUI if it's already open
-        else
-            show_transformator_gui(player, selected_entity) -- Open the GUI if it’s not already open
-        end
-    end
-end)
-
---- Event handler for GUI button clicks (e.g., confirming rating selection).
--- Updates the transformator based on the selected rating and closes the GUI.
--- @param event EventData The event data containing the clicked GUI element.
-script.on_event(defines.events.on_gui_click, function(event)
-    local element = event.element
-    if not (element and element.valid) then return end
-
-    local player = game.get_player(event.player_index)
-    if not player or not player.valid then return end
-
-    if element.name == "confirm_transformator_rating" then
-        local frame = player.gui.screen.transformator_rating_selection_frame
-        if frame then
-            local selected_rating = nil
-
-            for _, child in pairs(frame.children[1].children) do
-                if child.type == "checkbox" and child.state then
-                    selected_rating = string.match(child.name, "rating_checkbox_(.+)")
-                    break
-                end
-            end
-            --[[
-            if selected_rating then
-                local transformator = storage.selected_transformator[player.index]
-                if transformator and transformator.valid then
-                    replace_transformator(transformator, selected_rating)
-                end
-            end
-]]
-            close_transformator_gui(player)
-        end
-    end
 end)

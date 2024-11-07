@@ -13,7 +13,6 @@ function create_transformator_boiler(tier)
         hidden = true,
         minable = nil,
         selectable_in_game = false,
-        hidden_in_factoriopedia = true,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         energy_source = {
             type = "electric",
@@ -28,10 +27,10 @@ function create_transformator_boiler(tier)
             { -0.4, -0.4 },
             { 0.4,  0.4 }
         },
-        --        selection_box = {
-        --            { -0.5, -0.5 },
-        --            { 0.5,  0.5 }
-        --        },
+        selection_box = {
+            { -0.5, -1.5 },
+            { 1.5,  0.5 }
+        },
         fluid_box = {
             filter = "eg-water-" .. tier,
             hide_connection_info = true,
