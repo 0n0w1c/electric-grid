@@ -251,20 +251,20 @@ end)
 
 ---BEGIN NEW HERE
 ---
---- Check if the given transformator tier is researched for the player's force.
+--- Check if the given transformator rating is researched for the player's force.
 -- @param player LuaPlayer The player to check for.
--- @param tier string The transformator tier to check.
--- @return boolean True if the tier is researched, otherwise false.
-local function is_tier_researched(player, tier)
+-- @param rating string The transformator rating to check.
+-- @return boolean True if the rating is researched, otherwise false.
+local function is_rating_researched(player, rating)
     --[[
-    if not player or not tier then return end
+    if not player or not rating then return end
 
     local force = player.force
-    local tier_num = tonumber(string.sub(tier, 7, 7))
+    local rating_num = tonumber(string.sub(rating, 7, 7))
 
-    if tier_num < 4 and force.technologies["trafo-1-tech"] and force.technologies["trafo-1-tech"].researched then
+    if rating_num < 4 and force.technologies["trafo-1-tech"] and force.technologies["trafo-1-tech"].researched then
         return true
-    elseif tier_num < 7 and force.technologies["trafo-2-tech"] and force.technologies["trafo-2-tech"].researched then
+    elseif rating_num < 7 and force.technologies["trafo-2-tech"] and force.technologies["trafo-2-tech"].researched then
         return true
     elseif force.technologies["trafo-3-tech"] and force.technologies["trafo-3-tech"].researched then
         return true
@@ -284,12 +284,12 @@ end
 --- Closes the transformator GUI if open.
 -- @param player LuaPlayer The player for whom the GUI is closed.
 local function close_transformator_gui(player)
-    if player.gui.screen.transformator_tier_selection_frame then
-        player.gui.screen.transformator_tier_selection_frame.destroy()
+    if player.gui.screen.transformator_rating_selection_frame then
+        player.gui.screen.transformator_rating_selection_frame.destroy()
     end
 end
 
---- Show the transformator GUI with tier selection checkboxes.
+--- Show the transformator GUI with rating selection checkboxes.
 -- @param player LuaPlayer The player for whom the GUI is shown.
 -- @param transformator LuaEntity The selected transformator entity.
 local function show_transformator_gui(player, transformator)
@@ -299,7 +299,7 @@ local function show_transformator_gui(player, transformator)
     -- Create the GUI frame
     local frame = player.gui.screen.add {
         type = "frame",
-        name = "transformator_tier_selection_frame",
+        name = "transformator_rating_selection_frame",
         caption = "Rating",
         direction = "vertical"
     }
@@ -322,10 +322,10 @@ local function show_transformator_gui(player, transformator)
 
     -- Loop through the transformators
     for unit, specs in pairs(constants.EG_TRANSFORMATORS) do
-        if specs.rating and is_tier_researched(player, unit) then
+        if specs.rating and is_rating_researched(player, unit) then
             table.add {
                 type = "checkbox",
-                name = "tier_checkbox_" .. specs.rating,
+                name = "rating_checkbox_" .. specs.rating,
                 caption = specs.rating,
                 state = (specs.rating == current_rating)
             }
@@ -335,7 +335,7 @@ local function show_transformator_gui(player, transformator)
     -- Add confirm button below checkboxes
     frame.add {
         type = "button",
-        name = "confirm_transformator_tier",
+        name = "confirm_transformator_rating",
         caption = "Save"
     }
 
@@ -350,10 +350,10 @@ script.on_event(defines.events.on_gui_checked_state_changed, function(event)
     local element = event.element
     if not (element and element.valid) then return end
 
-    if element.name:find("tier_checkbox_") then
+    if element.name:find("rating_checkbox_") then
         local player = game.players[event.player_index]
 
-        local frame = player.gui.screen.transformator_tier_selection_frame
+        local frame = player.gui.screen.transformator_rating_selection_frame
         if frame then
             for _, child in pairs(frame.children[1].children) do
                 if child.type == "checkbox" and child.name ~= element.name then
@@ -365,7 +365,7 @@ script.on_event(defines.events.on_gui_checked_state_changed, function(event)
 end)
 
 --- Event handler for transformator interaction (e.g., GUI toggle).
--- Opens or closes the transformator tier selection GUI.
+-- Opens or closes the transformator rating selection GUI.
 -- @param event EventData The event data containing the player and entity information.
 script.on_event("transformator_rating_selection", function(event)
     local player = game.get_player(event.player_index)
@@ -373,7 +373,7 @@ script.on_event("transformator_rating_selection", function(event)
 
     local selected_entity = player.selected
     if selected_entity and selected_entity.valid and is_transformator(selected_entity.name) then
-        if player.gui.screen.transformator_tier_selection_frame then
+        if player.gui.screen.transformator_rating_selection_frame then
             close_transformator_gui(player)                 -- Close the GUI if it's already open
         else
             show_transformator_gui(player, selected_entity) -- Open the GUI if it’s not already open
@@ -381,8 +381,8 @@ script.on_event("transformator_rating_selection", function(event)
     end
 end)
 
---- Event handler for GUI button clicks (e.g., confirming tier selection).
--- Updates the transformator based on the selected tier and closes the GUI.
+--- Event handler for GUI button clicks (e.g., confirming rating selection).
+-- Updates the transformator based on the selected rating and closes the GUI.
 -- @param event EventData The event data containing the clicked GUI element.
 script.on_event(defines.events.on_gui_click, function(event)
     local element = event.element
@@ -391,22 +391,22 @@ script.on_event(defines.events.on_gui_click, function(event)
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
 
-    if element.name == "confirm_transformator_tier" then
-        local frame = player.gui.screen.transformator_tier_selection_frame
+    if element.name == "confirm_transformator_rating" then
+        local frame = player.gui.screen.transformator_rating_selection_frame
         if frame then
-            local selected_tier = nil
+            local selected_rating = nil
 
             for _, child in pairs(frame.children[1].children) do
                 if child.type == "checkbox" and child.state then
-                    selected_tier = string.match(child.name, "tier_checkbox_(.+)")
+                    selected_rating = string.match(child.name, "rating_checkbox_(.+)")
                     break
                 end
             end
             --[[
-            if selected_tier then
+            if selected_rating then
                 local transformator = storage.selected_transformator[player.index]
                 if transformator and transformator.valid then
-                    replace_transformator(transformator, selected_tier)
+                    replace_transformator(transformator, selected_rating)
                 end
             end
 ]]
