@@ -8,6 +8,7 @@ local function initialize_globals()
     storage = storage or {}
     eg_transformators = storage.eg_transformators or {}
     storage.eg_transformators = eg_transformators -- Persist eg_transformators in storage
+    storage.eg_selected_transformator = storage.eg_selected_transformator or {}
 end
 
 -- Handle loading globals when the game is loaded
@@ -86,12 +87,12 @@ local function get_eg_low_voltage_pole_offset(direction)
 end
 
 -- Place the electric boiler and infinity pipe with direction handling
-local function on_eg_transformator_displayer_built(event)
+local function on_eg_transformator_built(event)
     local entity = event.entity
 
-    if not entity then return end
+    if not entity or not entity.name then return end
 
-    if entity.name ~= constants.EG_DISPLAYER and string.sub(entity.name, 1, -2) ~= "eg-unit-" then return end
+    if entity.name ~= constants.EG_DISPLAYER and not constants.EG_TRANSFORMATORS[entity.name] then return end
 
     -- Store surface, force, position and direction
     local surface = entity.surface
@@ -99,13 +100,7 @@ local function on_eg_transformator_displayer_built(event)
     local position = entity.position
     local direction = entity.direction
     local offset = { x = 0, y = 0 }
-    local quality = 1
-
-    local stack = event.stack
-
-    if stack and stack.valid_for_read and stack.tags and stack.tags.quality then
-        quality = stack.tags.quality
-    end
+    local quality = entity.quality or 1
 
     -- Remove the displayer
     entity.destroy()
@@ -196,8 +191,7 @@ local function on_eg_transformator_displayer_built(event)
         infinity_pipe = eg_infinity_pipe,
         generator = eg_steam_engine,
         high_voltage = eg_high_voltage_pole,
-        low_voltage = eg_low_voltage_pole,
-        quality = quality
+        low_voltage = eg_low_voltage_pole
     }
 
     -- Update storage
@@ -205,7 +199,7 @@ local function on_eg_transformator_displayer_built(event)
 end
 
 -- Remove all components of a transformer when the displayer is mined
-local function on_eg_transformator_displayer_mined(event)
+local function on_eg_transformator_mined(event)
     local entity = event.entity
     local unit_number = entity.unit_number
 
@@ -236,11 +230,11 @@ end
 
 -- Register events and load globals
 local function register_event_handlers()
-    script.on_event(defines.events.on_built_entity, on_eg_transformator_displayer_built)
-    script.on_event(defines.events.on_robot_built_entity, on_eg_transformator_displayer_built)
-    script.on_event(defines.events.on_player_mined_entity, on_eg_transformator_displayer_mined)
-    script.on_event(defines.events.on_robot_mined_entity, on_eg_transformator_displayer_mined)
-    script.on_event(defines.events.on_entity_died, on_eg_transformator_displayer_mined)
+    script.on_event(defines.events.on_built_entity, on_eg_transformator_built)
+    script.on_event(defines.events.on_robot_built_entity, on_eg_transformator_built)
+    script.on_event(defines.events.on_player_mined_entity, on_eg_transformator_mined)
+    script.on_event(defines.events.on_robot_mined_entity, on_eg_transformator_mined)
+    script.on_event(defines.events.on_entity_died, on_eg_transformator_mined)
 end
 
 -- Set up globals and event handlers on initialization
@@ -254,6 +248,38 @@ script.on_load(function()
     load_globals()
     register_event_handlers()
 end)
+
+---BEGIN NEW HERE
+---
+--- Check if the given transformator tier is researched for the player's force.
+-- @param player LuaPlayer The player to check for.
+-- @param tier string The transformator tier to check.
+-- @return boolean True if the tier is researched, otherwise false.
+local function is_tier_researched(player, tier)
+    --[[
+    if not player or not tier then return end
+
+    local force = player.force
+    local tier_num = tonumber(string.sub(tier, 7, 7))
+
+    if tier_num < 4 and force.technologies["trafo-1-tech"] and force.technologies["trafo-1-tech"].researched then
+        return true
+    elseif tier_num < 7 and force.technologies["trafo-2-tech"] and force.technologies["trafo-2-tech"].researched then
+        return true
+    elseif force.technologies["trafo-3-tech"] and force.technologies["trafo-3-tech"].researched then
+        return true
+    end
+
+    return false
+]]
+    return true
+end
+
+local function is_transformator(name)
+    if name == constants.EG_DISPLAYER or constants.EG_TRANSFORMATORS[name] then return true end
+
+    return false
+end
 
 --- Closes the transformator GUI if open.
 -- @param player LuaPlayer The player for whom the GUI is closed.
@@ -285,23 +311,23 @@ local function show_transformator_gui(player, transformator)
         column_count = 1
     }
 
-    -- Determine the current tier of the selected transformator
-    local current_tier = nil
-    for name, trafo in pairs(CONSTANTS.TRAFO_TRANSFORMATORS) do
-        if trafo.rating and name == transformator.name then
-            current_tier = trafo.rating
+    -- Determine the current rating of the selected transformator
+    local current_rating = nil
+    for unit, specs in pairs(constants.EG_TRANSFORMATORS) do
+        if specs.rating and unit == transformator.name then
+            current_rating = specs.rating
             break
         end
     end
 
-    -- Loop through each transformer unit in CONSTANTS.TRAFO_TRANSFORMATORS
-    for tier, trafo in pairs(CONSTANTS.TRAFO_TRANSFORMATORS) do
-        if trafo.rating and is_tier_researched(player, tier) then
+    -- Loop through the transformators
+    for unit, specs in pairs(constants.EG_TRANSFORMATORS) do
+        if specs.rating and is_tier_researched(player, unit) then
             table.add {
                 type = "checkbox",
-                name = "tier_checkbox_" .. trafo.rating,
-                caption = trafo.rating,
-                state = (trafo.rating == current_tier)
+                name = "tier_checkbox_" .. specs.rating,
+                caption = specs.rating,
+                state = (specs.rating == current_rating)
             }
         end
     end
@@ -314,7 +340,7 @@ local function show_transformator_gui(player, transformator)
     }
 
     -- Store the selected transformator in global for reference
-    storage.selected_transformator[player.index] = transformator
+    --storage.selected_transformator[player.index] = transformator
 end
 
 --- Event handler to update checkboxes and simulate radio button behavior.
@@ -346,7 +372,7 @@ script.on_event("transformator_rating_selection", function(event)
     if not player or not player.valid then return end
 
     local selected_entity = player.selected
-    if selected_entity and selected_entity.valid and transformators.is_transformator(selected_entity.name) then
+    if selected_entity and selected_entity.valid and is_transformator(selected_entity.name) then
         if player.gui.screen.transformator_tier_selection_frame then
             close_transformator_gui(player)                 -- Close the GUI if it's already open
         else
@@ -376,14 +402,14 @@ script.on_event(defines.events.on_gui_click, function(event)
                     break
                 end
             end
-
+            --[[
             if selected_tier then
                 local transformator = storage.selected_transformator[player.index]
                 if transformator and transformator.valid then
                     replace_transformator(transformator, selected_tier)
                 end
             end
-
+]]
             close_transformator_gui(player)
         end
     end
