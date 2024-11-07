@@ -175,7 +175,7 @@ local function create_transformator_unit(tier)
         name = "eg-unit-" .. tier,
         icon = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
         icon_size = 128,
-        flags = { "placeable-player", "player-creation" },
+        flags = { "placeable-player", "player-creation", "not-rotatable" },
         minable = { mining_time = 0.5, result = "eg-transformator-item" },
         corpse = "big-remnants",
         dying_explosion = "medium-explosion",
@@ -201,22 +201,24 @@ for _, flag in ipairs(constants.EG_INTERNAL_ENTITY_FLAGS) do
 end
 
 -- Loop to extend data with entities and fluids for each tier
--- Consider incorporating Quality!
 for tier = 1, constants.EG_NUM_TIERS do
     data:extend({
         create_transformator_unit(tier),
         create_transformator_water(tier),
         create_transformator_steam(tier),
         create_transformator_boiler(tier),
-        create_transformator_steam_engine(tier),
+        create_transformator_steam_engine("ne", tier),
+        create_transformator_steam_engine("sw", tier),
     })
 end
 
 local eg_transformator_displayer = {
     type = "simple-entity-with-force",
     name = constants.EG_DISPLAYER,
-    icon = constants.EG_GRAPHICS .. "/entities/trafo-sprites.png",
-    icon_size = 64,
+    --icon = constants.EG_GRAPHICS .. "/entities/trafo-sprites.png",
+    --icon_size = 64,
+    icon = constants.EG_GRAPHICS .. "/icons/trafo.png",
+    icon_size = 32,
     flags = { "placeable-player", "player-creation" },
     picture = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(), -- use picture not pictures, rotation works
     direction_count = 4

@@ -24,9 +24,13 @@ function create_transformator_boiler(tier)
         mode = "output-to-separate-pipe",
         burning_cooldown = 0.1,
         collision_box = {
-            { -0.4, -0.4 },
-            { 0.4,  0.4 }
+            { -0.5, -0.5 },
+            { 0.5,  0.5 }
         },
+        --selection_box = {
+        --    { -0.4, -0.4 },
+        --    { 0.4,  0.4 }
+        --},
         selection_box = {
             { -0.5, -1.5 },
             { 1.5,  0.5 }
@@ -36,14 +40,14 @@ function create_transformator_boiler(tier)
             hide_connection_info = true,
             pipe_connections = {
                 {
-                    direction = 12,
+                    direction = defines.direction.west,
                     flow_direction = "input-output",
-                    position = { 0.4, 0 }
+                    position = { 0, 0 }
                 },
                 {
-                    direction = 4,
+                    direction = defines.direction.east,
                     flow_direction = "input-output",
-                    position = { -0.4, 0 }
+                    position = { 0, 0 }
                 }
             },
             production_type = "input",
@@ -54,9 +58,9 @@ function create_transformator_boiler(tier)
             hide_connection_info = true,
             pipe_connections = {
                 {
-                    direction = 0,
+                    direction = defines.direction.north,
                     flow_direction = "output",
-                    position = { 0, -0.4 }
+                    position = { 0, 0 }
                 }
             },
             production_type = "output",

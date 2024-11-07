@@ -163,10 +163,17 @@ local function on_eg_transformator_built(event)
     -- Calculate the offset position for the eg-steam-engine based on direction
     offset = get_eg_steam_engine_offset(direction)
     local eg_steam_engine_position = { position.x + offset.x, position.y + offset.y }
+    local eg_steam_engine_variant = ""
+
+    if direction == defines.direction.north or direction == defines.direction.east then
+        eg_steam_engine_variant = "ne"
+    elseif direction == defines.direction.south or direction == defines.direction.west then
+        eg_steam_engine_variant = "sw"
+    end
 
     -- Place the eg-steam-engine with the same direction as the boiler
     local eg_steam_engine = surface.create_entity {
-        name = "eg-steam-engine-1",
+        name = "eg-steam-engine-".. eg_steam_engine_variant .. "-1",
         position = eg_steam_engine_position,
         force = force,
         direction = direction

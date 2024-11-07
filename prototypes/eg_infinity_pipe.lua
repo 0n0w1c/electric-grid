@@ -1,4 +1,3 @@
--- Electric Infinity Pipe Definition
 local eg_infinity_pipe = {
     type = "infinity-pipe",
     name = "eg-infinity-pipe",
@@ -12,39 +11,39 @@ local eg_infinity_pipe = {
     hidden_in_factoriopedia = true,
     flags = constants.EG_INTERNAL_ENTITY_FLAGS,
     collision_box = {
-        { -0.29, -0.29 },
-        { 0.29,  0.29 }
+        { -0.5, -0.5 },
+        { 0.5,  0.5 }
     },
     --    selection_box = {
     --        { -0.29, -0.29 },
     --        { 0.29,  0.29 }
     --    },
     horizontal_window_bounding_box = {
-        { -0.25, -0.28125 },
-        { 0.25,  0.15625 }
+        { 0, 0 },
+        { 0, 0 }
     },
     vertical_window_bounding_box = {
-        { -0.28125, -0.5 },
-        { 0.03125,  0.125 }
+        { 0, 0 },
+        { 0, 0 }
     },
     fluid_box = {
         hide_connection_info = true,
         max_pipeline_extent = 2,
         pipe_connections = {
             {
-                direction = 0,
+                direction = defines.direction.north,
                 position = { 0, 0 }
             },
             {
-                direction = 4,
+                direction = defines.direction.east,
                 position = { 0, 0 }
             },
             {
-                direction = 8,
+                direction = defines.direction.south,
                 position = { 0, 0 }
             },
             {
-                direction = 12,
+                direction = defines.direction.west,
                 position = { 0, 0 }
             }
         },
