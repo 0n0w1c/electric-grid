@@ -34,7 +34,7 @@ constants.EG_TRANSFORMATORS = {
     --["eg-unit-1"] = { rating = "1MW", heat_capacity = "20J" },
     ["eg-unit-1"] = { rating = "1MW", heat_capacity = "0.263kJ", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 } },  -- Tier 1: Pure Red
     ["eg-unit-2"] = { rating = "5MW", heat_capacity = "100J", tint = { r = 1.0, g = 0.0, b = 0.5, a = 1 } },     -- Tier 2: Magenta (Red + Blue)
-    ["eg-unit-3"] = { rating = "10MW", heat_capacity = "200J", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } },    -- Tier 3: Pure Magenta
+    ["eg-unit-3"] = { rating = "10MW", heat_capacity = "2.63kJ", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } },  -- Tier 3: Pure Magenta
     ["eg-unit-4"] = { rating = "50MW", heat_capacity = "1000J", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 } },   -- Tier 4: Purple (Blue + Magenta)
     ["eg-unit-5"] = { rating = "100MW", heat_capacity = "2000J", tint = { r = 0.0, g = 0.0, b = 1.0, a = 1 } },  -- Tier 5: Pure Blue
     ["eg-unit-6"] = { rating = "500MW", heat_capacity = "10000J", tint = { r = 0.0, g = 1.0, b = 1.0, a = 1 } }, -- Tier 6: Cyan (Green + Blue)
