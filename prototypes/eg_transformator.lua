@@ -215,11 +215,10 @@ end
 local eg_transformator_displayer = {
     type = "simple-entity-with-force",
     name = constants.EG_DISPLAYER,
-    --icon = constants.EG_GRAPHICS .. "/entities/trafo-sprites.png",
-    --icon_size = 64,
-    icon = constants.EG_GRAPHICS .. "/icons/trafo.png",
-    icon_size = 32,
+    icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
+    icon_size = 128,
     flags = { "placeable-player", "player-creation" },
+    hidden_in_factoriopedia = true,
     picture = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(), -- use picture not pictures, rotation works
     direction_count = 4
 }
@@ -227,8 +226,8 @@ local eg_transformator_displayer = {
 local eg_transformator_item = {
     type = "item",
     name = "eg-transformator-item",
-    icon = constants.EG_GRAPHICS .. "/icons/trafo.png",
-    icon_size = 32,
+    icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
+    icon_size = 128,
     subgroup = "energy-pipe-distribution",
     order = "b[pipe]-d[eg-transformator-item]",
     place_result = constants.EG_DISPLAYER,
@@ -239,14 +238,17 @@ local eg_transformator_recipe = {
     type = "recipe",
     name = "eg-transformator-recipe",
     ingredients = {
-        { type = "item", name = "boiler", amount = 1 },
+        { type = "item", name = "copper-plate", amount = 2 },
+        { type = "item", name = "steel-plate",  amount = 4 },
+        { type = "item", name = "iron-plate",   amount = 10 },
+        { type = "item", name = "copper-cable", amount = 200 }
     },
     results = {
         { type = "item", name = "eg-transformator-item", amount = 1 }
     },
     enabled = true,
-    allow_quality_upgrades = true,            -- Enables automatic quality handling
-    always_show_quality_in_description = true -- Optionally shows quality level in descriptions
+    --allow_quality_upgrades = true,            -- Enables automatic quality handling
+    --always_show_quality_in_description = true -- Optionally shows quality level in descriptions
 }
 
 data:extend({ eg_transformator_displayer, eg_transformator_item, eg_transformator_recipe })
