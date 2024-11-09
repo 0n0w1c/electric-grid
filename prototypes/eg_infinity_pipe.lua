@@ -8,15 +8,16 @@ local eg_infinity_pipe = {
     hidden = true,
     minable = nil,
     selectable_in_game = false,
-    hidden_in_factoriopedia = true,
     flags = constants.EG_INTERNAL_ENTITY_FLAGS,
+    localised_name = {"", "Infiinity Pipe"},
+    localised_description = {"", "Component of a Transformator"},
     collision_box = {
         { -0.5, -0.5 },
         { 0.5,  0.5 }
     },
     --    selection_box = {
-    --        { -0.29, -0.29 },
-    --        { 0.29,  0.29 }
+    --        { -0.5, -0.5 },
+    --        { 0.5,  0.5 }
     --    },
     horizontal_window_bounding_box = {
         { 0, 0 },

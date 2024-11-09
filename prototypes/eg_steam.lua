@@ -12,8 +12,9 @@ function create_transformator_steam(tier)
         base_color = { r = 0.5, g = 0.5, b = 0.5 },
         flow_color = { r = 1.0, g = 1.0, b = 1.0 },
         order = "a[fluid]-b[steam]",
-        --gas_temperature = 100,
         auto_barrel = false,
-        --hidden = true,
+        hidden = true,
+        localised_name = { "", "Steam - Tier ", tostring(tier) },
+        localised_description = { "", "Component of a Transformator, heat capcity of ", heat_capacity }
     }
 end

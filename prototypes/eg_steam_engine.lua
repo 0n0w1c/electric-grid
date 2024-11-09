@@ -35,6 +35,8 @@ function create_transformator_steam_engine(variant, tier)
         minable = nil,
         selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
+        localised_name = { "", "Steam Engine ", variant:upper(), " - Tier ", tostring(tier) },
+        localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
         collision_box = {
             { -0.5, -0.5 },
             { 0.5,  0.5 }
@@ -64,6 +66,13 @@ function create_transformator_steam_engine(variant, tier)
                     position = { 0, 0 }
                 }
             }
-        }
+        },
+        working_sound = {
+            match_speed_to_activity = true,
+            sound = {
+                filename = constants.EG_SOUND .. "/MainsBrum50Hz.ogg",
+                volume = constants.EG_VOLUME or 0,
+            },
+        },
     }
 end

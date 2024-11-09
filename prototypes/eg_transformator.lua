@@ -168,7 +168,7 @@ local function get_transformator_picture(tier)
 end
 
 local function create_transformator_unit(tier)
-    local power_consumption = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
+    local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
     return {
         type = "simple-entity-with-force",
@@ -187,6 +187,8 @@ local function create_transformator_unit(tier)
         selection_box = { { -1.0, -1.0 }, { 1.0, 1.0 } },
         drawing_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         picture = get_transformator_picture(tier),
+        localised_name = { "", "Transformator - ", rating },
+        localised_description = { "", "Regulates power distribution." }
     }
 end
 
@@ -220,7 +222,9 @@ local eg_transformator_displayer = {
     flags = { "placeable-player", "player-creation" },
     hidden_in_factoriopedia = true,
     picture = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(), -- use picture not pictures, rotation works
-    direction_count = 4
+    direction_count = 4,
+    localised_name = { "", "Transformator Displayer" },
+    localised_description = { "", "Transformator model used during placement." },
 }
 
 local eg_transformator_item = {
@@ -232,11 +236,16 @@ local eg_transformator_item = {
     order = "b[pipe]-d[eg-transformator-item]",
     place_result = constants.EG_DISPLAYER,
     stack_size = 50,
+    localised_name = { "", "Transformator" },
+    localised_description = { "", "Regulates power distribution." },
+    hidden_in_factoriopedia = true
 }
 
 local eg_transformator_recipe = {
     type = "recipe",
     name = "eg-transformator-recipe",
+    localised_name = { "", "Transformator" },
+    localised_description = { "", "Assembles components into a power regulating device." },
     ingredients = {
         { type = "item", name = "copper-plate", amount = 2 },
         { type = "item", name = "steel-plate",  amount = 4 },

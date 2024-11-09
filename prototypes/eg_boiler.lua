@@ -7,22 +7,25 @@ function create_transformator_boiler(tier)
         name = "eg-boiler-" .. tier,
         icon = "__base__/graphics/icons/boiler.png",
         icon_size = 64,
-        --energy_consumption = heat_capacity,
         energy_consumption = rating,
         target_temperature = 165,
         hidden = true,
         minable = nil,
         selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
+        localised_name = {"", "Boiler - Tier ", tostring(tier)},
+        localised_description = {"", "Component of a Transformator rated for ", rating, " of power output."},
+        max_health = constants.EG_MAX_HEALTH,
         energy_source = {
             type = "electric",
-            buffer_capacity = heat_capacity, -- Buffer capacity matching one second of consumption
-            input_flow_limit = rating,       -- Maximum input flow
+            buffer_capacity = "0kJ",
+            --buffer_capacity = heat_capacity, -- Buffer capacity matching one second of consumption
+            input_flow_limit = rating, -- Maximum input flow
             usage_priority = "secondary-input",
             emissions = 0
         },
         mode = "output-to-separate-pipe",
-        burning_cooldown = 0.1,
+        burning_cooldown = 0,
         collision_box = {
             { -0.5, -0.5 },
             { 0.5,  0.5 }
@@ -64,7 +67,7 @@ function create_transformator_boiler(tier)
                 }
             },
             production_type = "output",
-            volume = 100
+            volume = 200
         }
     }
 end

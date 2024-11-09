@@ -220,9 +220,6 @@ local function on_eg_transformator_built(event)
         high_voltage = eg_high_voltage_pole,
         low_voltage = eg_low_voltage_pole
     }
-
-    -- Update storage
-    --storage.eg_transformators = eg_transformators
 end
 
 -- Remove all components of a transformer when the unit is mined

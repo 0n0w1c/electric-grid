@@ -1,3 +1,20 @@
+local function parse_energy(data_string)
+    local value, unit = data_string:match("^(%d+%.?%d*)(%a+)$")
+    value = tonumber(value)
+
+    if unit == "W" then
+        return value
+    elseif unit == "kW" then
+        return value * 1e3
+    elseif unit == "MW" then
+        return value * 1e6
+    elseif unit == "GW" then
+        return value * 1e9
+    else
+        error("Unsupported energy unit: " .. tostring(unit))
+    end
+end
+
 local constants = {}
 
 constants.EG_MOD = "__electric-grid__"
@@ -7,6 +24,7 @@ constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
 
+constants.EG_VOLUME = 0.3
 constants.EG_CONSUMPTION_THRESHOLD = 0.98
 
 constants.EG_DIRECTION_TO_CARDINAL = {
@@ -31,17 +49,26 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
 }
 
 constants.EG_TRANSFORMATORS = {
-    --["eg-unit-1"] = { rating = "1MW", heat_capacity = "20J" },
-    ["eg-unit-1"] = { rating = "1MW", heat_capacity = "0.263kJ", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 } },  -- Tier 1: Pure Red
-    ["eg-unit-2"] = { rating = "5MW", heat_capacity = "100J", tint = { r = 1.0, g = 0.0, b = 0.5, a = 1 } },     -- Tier 2: Magenta (Red + Blue)
-    ["eg-unit-3"] = { rating = "10MW", heat_capacity = "2.63kJ", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } },  -- Tier 3: Pure Magenta
-    ["eg-unit-4"] = { rating = "50MW", heat_capacity = "1000J", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 } },   -- Tier 4: Purple (Blue + Magenta)
-    ["eg-unit-5"] = { rating = "100MW", heat_capacity = "2000J", tint = { r = 0.0, g = 0.0, b = 1.0, a = 1 } },  -- Tier 5: Pure Blue
-    ["eg-unit-6"] = { rating = "500MW", heat_capacity = "10000J", tint = { r = 0.0, g = 1.0, b = 1.0, a = 1 } }, -- Tier 6: Cyan (Green + Blue)
-    ["eg-unit-7"] = { rating = "1GW", heat_capacity = "20000J", tint = { r = 0.0, g = 1.0, b = 0.0, a = 1 } },   -- Tier 7: Pure Green
-    ["eg-unit-8"] = { rating = "5GW", heat_capacity = "100000J", tint = { r = 0.5, g = 1.0, b = 0.0, a = 1 } },  -- Tier 8: Yellow-Green (Green + Yellow)
-    ["eg-unit-9"] = { rating = "10GW", heat_capacity = "200000J", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } }  -- Tier 9: Yellow (Red + Green)
+    ["eg-unit-1"] = { rating = "1MW", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 } },   -- Tier 1: Pure Red
+    ["eg-unit-2"] = { rating = "5MW", tint = { r = 1.0, g = 0.0, b = 0.5, a = 1 } },   -- Tier 2: Magenta (Red + Blue)
+    ["eg-unit-3"] = { rating = "10MW", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } },  -- Tier 3: Pure Magenta
+    ["eg-unit-4"] = { rating = "50MW", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 } },  -- Tier 4: Purple (Blue + Magenta)
+    ["eg-unit-5"] = { rating = "100MW", tint = { r = 0.0, g = 0.0, b = 1.0, a = 1 } }, -- Tier 5: Pure Blue
+    ["eg-unit-6"] = { rating = "500MW", tint = { r = 0.0, g = 1.0, b = 1.0, a = 1 } }, -- Tier 6: Cyan (Green + Blue)
+    ["eg-unit-7"] = { rating = "1GW", tint = { r = 0.0, g = 1.0, b = 0.0, a = 1 } },   -- Tier 7: Pure Green
+    ["eg-unit-8"] = { rating = "5GW", tint = { r = 0.5, g = 1.0, b = 0.0, a = 1 } },   -- Tier 8: Yellow-Green (Green + Yellow)
+    ["eg-unit-9"] = { rating = "10GW", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } }   -- Tier 9: Yellow (Red + Green)
 }
+
+-- Unknown as to why this particular number, it just works
+constants.HEAT_CAPACITY_PER_MW = 0.257
+
+-- Calculate heat capacity based on rating
+for key, transformator in pairs(constants.EG_TRANSFORMATORS) do
+    local rating_in_watts = parse_energy(transformator.rating)
+    local rating_in_MW = rating_in_watts / 1e6
+    transformator.heat_capacity = (rating_in_MW * constants.HEAT_CAPACITY_PER_MW) .. "kJ"
+end
 
 constants.EG_NUM_TIERS = 0
 for _ in pairs(constants.EG_TRANSFORMATORS) do

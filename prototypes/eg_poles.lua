@@ -94,8 +94,12 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     eg_high_voltage_pole.minable = nil
     eg_high_voltage_pole.radius_visualisation_picture = nil
     eg_high_voltage_pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
+    eg_high_voltage_pole.max_health = constants.EG_MAX_HEALTH
     eg_high_voltage_pole.connection_points = eg_wireconnections("eg_high_voltage_pole", direction)
     eg_high_voltage_pole.selection_box = get_eg_high_voltage_pole_selection_box(direction)
+    eg_high_voltage_pole.localised_name = { "", "High Voltage Pole" }
+    eg_high_voltage_pole.localised_description = { "", "Connect to the electrical source" }
+    eg_high_voltage_pole.hidden_in_factoriopedia = true
 
     local eg_low_voltage_pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
 
@@ -107,8 +111,12 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     eg_low_voltage_pole.minable = nil
     eg_low_voltage_pole.radius_visualisation_picture = nil
     eg_low_voltage_pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
+    eg_low_voltage_pole.max_health = constants.EG_MAX_HEALTH
     eg_low_voltage_pole.connection_points = eg_wireconnections("eg_low_voltage_pole", direction)
     eg_low_voltage_pole.selection_box = get_eg_low_voltage_pole_selection_box(direction)
+    eg_low_voltage_pole.localised_name = { "", "Low Voltage Pole" }
+    eg_low_voltage_pole.localised_description = { "", "Connect to the electrical load" }
+    eg_low_voltage_pole.hidden_in_factoriopedia = true
 
     data:extend({ eg_high_voltage_pole, eg_low_voltage_pole })
 end
