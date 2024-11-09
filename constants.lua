@@ -23,6 +23,7 @@ constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
+constants.EG_ON_TICK_INTERVAL = 600
 
 constants.EG_VOLUME = 0.3
 constants.EG_CONSUMPTION_THRESHOLD = 0.98
@@ -36,6 +37,7 @@ constants.EG_DIRECTION_TO_CARDINAL = {
 
 constants.EG_INTERNAL_ENTITY_FLAGS = {
     "not-rotatable",
+    "hide-alt-info",
     "placeable-neutral",
     "not-repairable",
     "not-on-map",

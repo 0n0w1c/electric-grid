@@ -208,7 +208,10 @@ for tier = 1, constants.EG_NUM_TIERS do
         create_transformator_unit(tier),
         create_transformator_water(tier),
         create_transformator_steam(tier),
-        create_transformator_boiler(tier),
+        create_transformator_boiler("n", tier),
+        create_transformator_boiler("e", tier),
+        create_transformator_boiler("s", tier),
+        create_transformator_boiler("w", tier),
         create_transformator_steam_engine("ne", tier),
         create_transformator_steam_engine("sw", tier),
     })

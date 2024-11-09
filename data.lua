@@ -6,6 +6,7 @@ else
     constants.EG_ALTOVERLAY = nil
 end
 
+require("prototypes/eg_signals")
 require("prototypes/eg_water")
 require("prototypes/eg_infinity_pipe")
 require("prototypes/eg_steam")

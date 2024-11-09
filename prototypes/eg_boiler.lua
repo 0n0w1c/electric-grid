@@ -1,9 +1,24 @@
-function create_transformator_boiler(tier)
+function create_transformator_boiler(variant, tier)
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
+
+    local alert_icon_shift
+
+    -- Set alert_icon_shift based on direction
+    if variant == "n" then
+        alert_icon_shift = { x = 0.5, y = -0.5 }
+    elseif variant == "e" then
+        alert_icon_shift = { x = 0.5, y = 0.5 }
+    elseif variant == "s" then
+        alert_icon_shift = { x = -0.5, y = 0.5 }
+    elseif variant == "w" then
+        alert_icon_shift = { x = -0.5, y = -0.5 }
+    else
+        alert_icon_shift = { x = 0.0, y = 0.0 }
+    end
 
     return {
         type = "boiler",
-        name = "eg-boiler-" .. tier,
+        name = "eg-boiler-" .. variant .. "-" .. tier,
         icon = "__base__/graphics/icons/boiler.png",
         icon_size = 64,
         energy_consumption = rating,
@@ -15,8 +30,7 @@ function create_transformator_boiler(tier)
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name = { "", "Boiler - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
-        --It is worth making four boiler variants to adjust the position of the alert icons?
-        --alert_icon_shift = { x = 0.5, y = 0.0 },
+        alert_icon_shift = alert_icon_shift,
         energy_source = {
             type = "electric",
             buffer_capacity = "0kJ",

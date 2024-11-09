@@ -87,6 +87,28 @@ local function is_transformator(name)
     return false
 end
 
+-- Checks for short circuits among all transformers and alerts players if any are found
+local function short_circuit_check()
+    local transformators = storage.eg_transformators
+
+    for _, transformator in pairs(transformators) do
+        -- Check if high and low voltage poles are on the same network (indicating a short circuit)
+        local high_network_id = transformator.high_voltage.electric_network_id
+        local low_network_id = transformator.low_voltage.electric_network_id
+
+        if high_network_id and low_network_id and high_network_id == low_network_id then
+            for _, player in pairs(game.players) do
+                player.add_custom_alert(
+                    transformator.unit,
+                    { type = "virtual", name = "eg-alert" },
+                    { "", "Short circuit detected" },
+                    true
+                )
+            end
+        end
+    end
+end
+
 -- Place the electric boiler and infinity pipe with direction handling
 local function on_eg_transformator_built(event)
     local entity = event.entity
@@ -120,9 +142,20 @@ local function on_eg_transformator_built(event)
     offset = get_eg_boiler_offset(direction)
     local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
 
+    local eg_boiler_variant
+    if direction == defines.direction.north then
+        eg_boiler_variant = "n"
+    elseif direction == defines.direction.east then
+        eg_boiler_variant = "e"
+    elseif direction == defines.direction.south then
+        eg_boiler_variant = "s"
+    elseif direction == defines.direction.west then
+        eg_boiler_variant = "w"
+    end
+
     -- Place the eg-boiler with the same direction as the displayer
     local eg_boiler = surface.create_entity {
-        name = "eg-boiler-1",
+        name = "eg-boiler-" .. eg_boiler_variant .. "-1",
         position = eg_boiler_position,
         force = force,
         direction = direction
@@ -239,6 +272,8 @@ local function register_event_handlers()
     script.on_event(defines.events.on_player_mined_entity, on_eg_transformator_mined)
     script.on_event(defines.events.on_robot_mined_entity, on_eg_transformator_mined)
     script.on_event(defines.events.on_entity_died, on_eg_transformator_mined)
+
+    script.on_nth_tick(constants.EG_ON_TICK_INTERVAL, short_circuit_check)
 end
 
 -- Set up globals and event handlers on initialization
@@ -409,9 +444,20 @@ local function replace_transformator(old_transformator, new_rating)
     offset = get_eg_boiler_offset(direction)
     local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
 
-    -- Place the eg-boiler with the same direction as the displayer
+    local eg_boiler_variant
+    if direction == defines.direction.north then
+        eg_boiler_variant = "n"
+    elseif direction == defines.direction.east then
+        eg_boiler_variant = "e"
+    elseif direction == defines.direction.south then
+        eg_boiler_variant = "s"
+    elseif direction == defines.direction.west then
+        eg_boiler_variant = "w"
+    end
+
+    -- Place the eg-boiler with the same direction as the original unit
     local eg_boiler = surface.create_entity {
-        name = "eg-boiler-" .. tier,
+        name = "eg-boiler-" .. eg_boiler_variant .. "-" .. tier,
         position = eg_boiler_position,
         force = force,
         direction = direction
