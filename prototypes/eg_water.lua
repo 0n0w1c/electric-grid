@@ -16,6 +16,5 @@ function create_transformator_water(tier)
         hidden = true,
         localised_name = { "", "Water - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator, heat capcity of ", heat_capacity }
-
     }
 end

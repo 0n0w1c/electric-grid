@@ -1,5 +1,4 @@
 function create_transformator_boiler(tier)
-    local heat_capacity = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].heat_capacity
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
     return {
@@ -9,17 +8,18 @@ function create_transformator_boiler(tier)
         icon_size = 64,
         energy_consumption = rating,
         target_temperature = 165,
+        max_health = constants.EG_MAX_HEALTH,
         hidden = true,
         minable = nil,
         selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
-        localised_name = {"", "Boiler - Tier ", tostring(tier)},
-        localised_description = {"", "Component of a Transformator rated for ", rating, " of power output."},
-        max_health = constants.EG_MAX_HEALTH,
+        localised_name = { "", "Boiler - Tier ", tostring(tier) },
+        localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
+        --It is worth making four boiler variants to adjust the position of the alert icons?
+        --alert_icon_shift = { x = 0.5, y = 0.0 },
         energy_source = {
             type = "electric",
             buffer_capacity = "0kJ",
-            --buffer_capacity = heat_capacity, -- Buffer capacity matching one second of consumption
             input_flow_limit = rating, -- Maximum input flow
             usage_priority = "secondary-input",
             emissions = 0
