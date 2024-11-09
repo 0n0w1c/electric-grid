@@ -5,5 +5,7 @@ data:extend({
         setting_type = "startup",
         default_value = false,
         order = "a1",
+        localised_name = "Enable alternate power overlays",
+        localised_description = "Displays icons for source and load connections"
     }
 })

@@ -1,7 +1,7 @@
 function create_transformator_boiler(variant, tier)
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
-    local alert_icon_shift
+    local alert_icon_shift = { x = 0.0, y = 0.0 }
 
     -- Set alert_icon_shift based on direction
     if variant == "n" then
@@ -12,8 +12,6 @@ function create_transformator_boiler(variant, tier)
         alert_icon_shift = { x = -0.5, y = 0.5 }
     elseif variant == "w" then
         alert_icon_shift = { x = -0.5, y = -0.5 }
-    else
-        alert_icon_shift = { x = 0.0, y = 0.0 }
     end
 
     return {

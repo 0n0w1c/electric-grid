@@ -1,7 +1,10 @@
 function create_transformator_steam_engine(variant, tier)
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
-    local selection_box
+    local selection_box = {
+        { -0.5, -0.5 },
+        { 0.5,  0.5 }
+    }
 
     -- Set selection box based on direction
     if variant == "ne" then
@@ -12,11 +15,6 @@ function create_transformator_steam_engine(variant, tier)
     elseif variant == "sw" then
         selection_box = {
             { -1.5, -1.5 },
-            { 0.5,  0.5 }
-        }
-    else
-        selection_box = {
-            { -0.5, -0.5 },
             { 0.5,  0.5 }
         }
     end
