@@ -1,5 +1,11 @@
-local function parse_energy(data_string)
-    local value, unit = data_string:match("^(%d+%.?%d*)(%a+)$")
+--- Parses the rating string to extract the numeric value and converts it to watts (W).
+-- The input string should be formatted as a number followed by a unit (e.g., "5.5MW").
+-- This function converts the numeric value based on the unit to return the value in watts (W).
+-- Supported units are W, kW, MW, and GW. If an unsupported unit is provided, the function returns 0.
+-- @param rating string The energy string to parse, which should contain a number followed by an energy unit (e.g., "10MW", "5.5GW").
+-- @return number The numeric value converted to watts (W), or 0 if the unit is unsupported.
+local function normalize_rating(rating)
+    local value, unit = rating:match("^(%d+%.?%d*)(%a+)$")
     value = tonumber(value)
 
     if unit == "W" then
@@ -10,9 +16,9 @@ local function parse_energy(data_string)
         return value * 1e6
     elseif unit == "GW" then
         return value * 1e9
-    else
-        error("Unsupported energy unit: " .. tostring(unit))
     end
+
+    return 0
 end
 
 local constants = {}
@@ -21,12 +27,15 @@ constants.EG_MOD = "__electric-grid__"
 constants.EG_GRAPHICS = constants.EG_MOD .. "/graphics"
 constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
+constants.EG_VOLUME = 0.3
+
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
 constants.EG_ON_TICK_INTERVAL = 600
 
-constants.EG_VOLUME = 0.3
-constants.EG_CONSUMPTION_THRESHOLD = 0.98
+-- HEAT_CAPACITY_PER_MW is a calibration constant, it works well to at least 100 GW
+constants.HEAT_CAPACITY_PER_MW = 0.257
+--constants.EG_EFFICIENCY = 0.98
 
 constants.EG_DIRECTION_TO_CARDINAL = {
     [0] = "north",
@@ -62,12 +71,9 @@ constants.EG_TRANSFORMATORS = {
     ["eg-unit-9"] = { rating = "10GW", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } }   -- Tier 9: Yellow (Red + Green)
 }
 
--- Unknown as to why this particular number, it just works
-constants.HEAT_CAPACITY_PER_MW = 0.257
-
--- Calculate heat capacity based on rating
+-- Calculate the heat capacities based on rating, adding the "heat_capacity" field to constants.EG_TRANSFORMATORS
 for key, transformator in pairs(constants.EG_TRANSFORMATORS) do
-    local rating_in_watts = parse_energy(transformator.rating)
+    local rating_in_watts = normalize_rating(transformator.rating)
     local rating_in_MW = rating_in_watts / 1e6
     transformator.heat_capacity = (rating_in_MW * constants.HEAT_CAPACITY_PER_MW) .. "kJ"
 end
@@ -95,87 +101,29 @@ constants.EG_POLE_CONNECTIONS = {
     },
 }
 
-function constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES()
-    return {
-        north = {
-            layers = {
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
-                    x = 466,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.6, -0.45 },
-                    scale = 0.5,
-                },
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
-                    x = 466,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.6, -0.45 },
-                    scale = 0.5,
-                },
-            },
-        },
-        east = {
-            layers = {
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
-                    width = 466,
-                    height = 310,
-                    shift = { 1.5, -1.15 },
-                    scale = 0.5,
-                },
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
-                    width = 466,
-                    height = 310,
-                    shift = { 1.5, -1.15 },
-                    scale = 0.5,
-                },
-            },
-        },
-        south = {
-            layers = {
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
-                    x = 1398,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.6, -0.45 },
-                    scale = 0.5,
-                },
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
-                    x = 1398,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.6, -0.45 },
-                    scale = 0.5,
-                },
-            },
-        },
-        west = {
-            layers = {
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
-                    x = 932,
-                    width = 466,
-                    height = 310,
-                    shift = { 1.5, -1.15 },
-                    scale = 0.5,
-                },
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
-                    x = 932,
-                    width = 466,
-                    height = 310,
-                    shift = { 1.5, -1.15 },
-                    scale = 0.5,
-                },
-            },
-        },
+constants.EG_WIRE_CONNECTIONS = {
+    ["small-electric-pole"] = {
+        ["small-electric-pole"] = true,
+        ["medium-electric-pole"] = true,
+    },
+    ["medium-electric-pole"] = {
+        ["small-electric-pole"] = true,
+        ["medium-electric-pole"] = true,
+    },
+    ["big-electric-pole"] = {
+        ["big-electric-pole"] = true,
+        ["substation"] = true,
+        ["ugp-substation"] = true,
+    },
+    ["huge-electric-pole"] = {
+        ["huge-electric-pole"] = true,
+    },
+    ["substation"] = {
+        ["big-electric-pole"] = true,
+    },
+    ["ugp-substation"] = {
+        ["big-electric-pole"] = true,
     }
-end
+}
 
 return constants

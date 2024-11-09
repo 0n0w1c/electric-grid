@@ -1,3 +1,86 @@
+local function get_transformator_displayer_pictures()
+    return {
+        north = {
+            layers = {
+                {
+                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
+                    x = 466,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.6, -0.45 },
+                    scale = 0.5,
+                },
+                {
+                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
+                    x = 466,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.6, -0.45 },
+                    scale = 0.5,
+                },
+            },
+        },
+        east = {
+            layers = {
+                {
+                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
+                    width = 466,
+                    height = 310,
+                    shift = { 1.5, -1.15 },
+                    scale = 0.5,
+                },
+                {
+                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
+                    width = 466,
+                    height = 310,
+                    shift = { 1.5, -1.15 },
+                    scale = 0.5,
+                },
+            },
+        },
+        south = {
+            layers = {
+                {
+                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
+                    x = 1398,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.6, -0.45 },
+                    scale = 0.5,
+                },
+                {
+                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
+                    x = 1398,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.6, -0.45 },
+                    scale = 0.5,
+                },
+            },
+        },
+        west = {
+            layers = {
+                {
+                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
+                    x = 932,
+                    width = 466,
+                    height = 310,
+                    shift = { 1.5, -1.15 },
+                    scale = 0.5,
+                },
+                {
+                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
+                    x = 932,
+                    width = 466,
+                    height = 310,
+                    shift = { 1.5, -1.15 },
+                    scale = 0.5,
+                },
+            },
+        },
+    }
+end
+
 local function get_transformator_picture(tier)
     local altoverlay = {
         north = {
@@ -224,7 +307,7 @@ local eg_transformator_displayer = {
     icon_size = 128,
     flags = { "placeable-player", "player-creation" },
     hidden_in_factoriopedia = true,
-    picture = constants.EG_TRANSFORMATOR_DISPLAYER_PICTURES(), -- use picture not pictures, rotation works
+    picture = get_transformator_displayer_pictures(), -- use picture not pictures, rotation works
     direction_count = 4,
     localised_name = { "", "Transformator Displayer" },
     localised_description = { "", "Transformator model used during placement." },
