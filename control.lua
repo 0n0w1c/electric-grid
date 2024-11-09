@@ -1,19 +1,12 @@
 local util = require("util")
 constants = require("constants")
 
-local eg_transformators
+local eg_selected_transformator = {}
 
--- Initialize global memory structures and event handlers
+-- Initialize global memory structures
 local function initialize_globals()
     storage = storage or {}
-    eg_transformators = storage.eg_transformators or {}
-    storage.eg_transformators = eg_transformators -- Persist eg_transformators in storage
-    storage.eg_selected_transformator = storage.eg_selected_transformator or {}
-end
-
--- Handle loading globals when the game is loaded
-local function load_globals()
-    eg_transformators = storage.eg_transformators
+    storage.eg_transformators = storage.eg_transformators or {}
 end
 
 -- Define the position offset for the boiler based on direction
@@ -92,19 +85,6 @@ local function is_transformator(name)
     end
 
     return false
-end
-
-local function rating_to_unit(rating)
-    local unit = nil
-
-    for name, specs in pairs(constants.EG_TRANSFORMATORS) do
-        if specs.rating == rating then
-            unit = name
-            break
-        end
-    end
-
-    return unit
 end
 
 -- Place the electric boiler and infinity pipe with direction handling
@@ -269,13 +249,13 @@ end)
 
 -- Load globals and re-register event handlers when the game is loaded
 script.on_load(function()
-    load_globals()
+    initialize_globals()
     register_event_handlers()
 end)
 
---
---NEW CODE HERE
---
+--------------
+-- GUI Code --
+--------------
 
 --- Closes the transformator GUI if open.
 -- @param player LuaPlayer The player for whom the GUI is closed.
@@ -336,7 +316,7 @@ local function show_transformator_gui(player, transformator)
     }
 
     -- Store the selected transformator in global for reference
-    storage.eg_selected_transformator[player.index] = transformator
+    eg_selected_transformator[player.index] = transformator
 end
 
 --- Event handler to update checkboxes and simulate radio button behavior.
@@ -530,7 +510,7 @@ script.on_event(defines.events.on_gui_click, function(event)
             end
 
             if selected_rating then
-                local transformator = storage.eg_selected_transformator[player.index]
+                local transformator = eg_selected_transformator[player.index]
                 if transformator and transformator.valid then
                     replace_transformator(transformator, selected_rating)
                 end
