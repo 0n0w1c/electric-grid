@@ -1,5 +1,3 @@
---util = util or {}
-
 if not constants.EG_UGP_SUBSTATION then return end
 
 local ugp_substation                          = table.deepcopy(data.raw["electric-pole"]["substation"])
