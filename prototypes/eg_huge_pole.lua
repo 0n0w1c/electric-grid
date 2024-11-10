@@ -130,7 +130,7 @@ local huge_pole_recipe      = {
         { type = "item", name = "copper-plate", amount = 15 }
     },
     energy_required = 1,
-    enabled = true
+    enabled = false
 }
 
 data:extend { huge_pole, huge_pole_item, huge_pole_recipe }

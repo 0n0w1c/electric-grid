@@ -83,7 +83,7 @@ local ugp_substation_displayer_recipe               = {
     name                  = "eg-ugp-substation-displayer",
     localised_name        = "Underground substation",
     localised_description = "Underground power distribution",
-    enabled               = true,
+    enabled               = false,
     ingredients           = { { type = "item", name = "substation", amount = 1 } },
     results               = { { type = "item", name = "eg-ugp-substation-displayer", amount = 1 } }
 }

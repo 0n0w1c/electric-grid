@@ -341,7 +341,7 @@ local eg_transformator_recipe = {
     results = {
         { type = "item", name = "eg-transformator-item", amount = 1 }
     },
-    enabled = true,
+    enabled = false,
     --allow_quality_upgrades = true,            -- Enables automatic quality handling
     --always_show_quality_in_description = true -- Optionally shows quality level in descriptions
 }

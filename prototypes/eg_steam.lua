@@ -15,6 +15,6 @@ function create_transformator_steam(tier)
         auto_barrel = false,
         hidden = true,
         localised_name = { "", "Steam - Tier ", tostring(tier) },
-        localised_description = { "", "Component of a Transformator, heat capcity of ", heat_capacity }
+        localised_description = { "", "Component of a Transformator, heat capcity ", heat_capacity }
     }
 end
