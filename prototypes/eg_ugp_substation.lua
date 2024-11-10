@@ -74,6 +74,7 @@ local ugp_substation_displayer_item                 = table.deepcopy(data.raw["i
 ugp_substation_displayer_item.name                  = "eg-ugp-substation-displayer"
 ugp_substation_displayer_item.localised_name        = "Underground Substation"
 ugp_substation_displayer_item.localised_description = "Distributes power underground"
+ugp_substation_displayer_item.order                 = ugp_substation_displayer_item.order .. "z"
 ugp_substation_displayer_item.icon                  = constants.EG_GRAPHICS .. "/icons/ugp-substation.png"
 ugp_substation_displayer_item.icon_size             = 64
 ugp_substation_displayer_item.place_result          = "eg-ugp-substation-displayer"
