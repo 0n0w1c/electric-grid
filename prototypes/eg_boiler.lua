@@ -3,7 +3,6 @@ function create_transformator_boiler(variant, tier)
 
     local alert_icon_shift = { x = 0.0, y = 0.0 }
 
-    -- Set alert_icon_shift based on direction
     if variant == "n" then
         alert_icon_shift = { x = 0.5, y = -0.5 }
     elseif variant == "e" then
