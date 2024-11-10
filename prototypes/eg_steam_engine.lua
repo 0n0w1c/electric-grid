@@ -6,7 +6,6 @@ function create_transformator_steam_engine(variant, tier)
         { 0.5,  0.5 }
     }
 
-    -- Set selection box based on direction
     if variant == "ne" then
         selection_box = {
             { -0.5, -0.5 },

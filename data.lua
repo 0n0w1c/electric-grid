@@ -16,7 +16,7 @@ data:extend({
 data:extend({
     {
         type = "custom-input",
-        name = "transformator_rating_selection",   -- This is the custom input name we’re using
+        name = "transformator_rating_selection",
         key_sequence = "CONTROL + mouse-button-1", -- CTRL + left-click
         consuming = "none"
     }
