@@ -32,7 +32,7 @@ function create_transformator_boiler(variant, tier)
         energy_source = {
             type = "electric",
             buffer_capacity = "0kJ",
-            input_flow_limit = rating, -- Maximum input flow
+            input_flow_limit = rating,
             usage_priority = "secondary-input",
             emissions = 0
         },

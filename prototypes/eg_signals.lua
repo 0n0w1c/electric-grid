@@ -8,6 +8,9 @@ data:extend({
             icon_size = 32,
         } },
         icon_size = 32,
+        hidden = true,
+        localised_name = { "", "Power Alert" },
+        localised_description = { "", "Electric Grid Alert" }
     },
 
 })

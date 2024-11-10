@@ -2,6 +2,9 @@ local util = require("util")
 constants = require("constants")
 
 local eg_selected_transformator = {}
+local copper_wire_on_cursor = {}
+-- Table to track the last selected electric pole for each player
+local last_selected_pole = {}
 
 -- Initialize global memory structures
 local function initialize_globals()
@@ -235,6 +238,103 @@ local function on_eg_transformator_built(event)
     }
 end
 
+--- Replace the ugp-substation-displayer entity with ugp-substation.
+-- Simply destroys the displayer and creates a ugp-substation in the same position.
+-- @param displayer LuaEntity The ugp-substation-displayer to replace.
+local function replace_displayer_with_ugp_substation(displayer)
+    if not displayer or not displayer.valid then return end
+
+    -- Save the position, direction, force, and surface of the displayer
+    local position = displayer.position
+    local direction = displayer.direction
+    local force = displayer.force
+    local surface = displayer.surface
+
+    -- Destroy the displayer entity
+    displayer.destroy()
+
+    -- Create the ugp-substation at the same location
+    local new_entity = surface.create_entity {
+        name = "eg-ugp-substation",
+        position = position,
+        direction = direction,
+        force = force
+    }
+
+    return new_entity
+end
+
+--- Checks if a copper cable connection is allowed between two poles
+-- @param pole_a LuaEntity An electric pole
+-- @param pole_b LuaEntity Another electric pole
+-- @return boolean true if the connection is allowed, false otherwise
+local function is_copper_cable_connection_allowed(pole_a, pole_b)
+    -- Ensure both poles are valid and exist in the connections table
+    if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
+        return false
+    end
+
+    -- Check if the connection is allowed based on the defined rules
+    return constants.EG_WIRE_CONNECTIONS[pole_a.name] and constants.EG_WIRE_CONNECTIONS[pole_a.name][pole_b.name] or
+        false
+end
+
+local function enforce_pole_connections(pole)
+    if not pole or not pole.valid or pole.type ~= "electric-pole" then
+        return true
+    end
+
+    local allowed = true
+
+    -- Retrieve all wire connectors for the pole
+    local connectors = pole.get_wire_connectors()
+    if not connectors then
+        return true
+    end
+
+    -- debug
+    -- game.print(serpent.block(connectors))
+
+    -- Iterate over each connector and filter for copper connectors
+    for _, connector in pairs(connectors) do
+        if connector.wire_type == defines.wire_type.copper then
+            -- Iterate over all connections for this copper connector
+            for _, connection in pairs(connector.connections) do
+                local target_connector = connection.target
+                local target_pole = target_connector.owner
+
+                if target_pole and target_pole.valid and target_pole.type == "electric-pole" then
+                    -- Check if this connection is allowed based on the constants table
+                    if not is_copper_cable_connection_allowed(pole, target_pole) then
+                        -- Disconnect the unauthorized target pole
+                        connector.disconnect_from(target_connector)
+                        allowed = false
+                    end
+                end
+            end
+        end
+    end
+
+    return allowed
+end
+
+--- Handle the addition of a transformator or electric-pole entity.
+-- Adds a transformator entity to storage.transformators or enforces wiring rules if it's an electric-pole.
+-- @param entity LuaEntity The entity that was added.
+local function on_entity_built(event)
+    if not event or not event.entity or not event.entity.valid then return end
+    local entity = event.entity
+
+    if is_transformator(entity.name) then
+        on_eg_transformator_built(event)
+    elseif entity.name == "eg-ugp-substation-displayer" then
+        local new_entity = replace_displayer_with_ugp_substation(entity)
+        enforce_pole_connections(new_entity)
+    elseif entity.type == "electric-pole" then
+        enforce_pole_connections(entity)
+    end
+end
+
 -- Remove all components of a transformer when the unit is mined
 local function on_eg_transformator_mined(event)
     local entity = event.entity
@@ -265,13 +365,55 @@ local function on_eg_transformator_mined(event)
     end
 end
 
+--- Handle cursor stack change events to set or clear the copper wire flag.
+-- @param event EventData The event data containing the player information.
+local function on_cursor_stack_changed(event)
+    local player = game.players[event.player_index]
+    local cursor_stack = player.cursor_stack
+
+    -- Check if the player is holding copper wire
+    if cursor_stack and cursor_stack.valid_for_read and cursor_stack.name == "copper-wire" then
+        copper_wire_on_cursor[player.index] = true
+    else
+        copper_wire_on_cursor[player.index] = nil -- Clear the flag when not holding copper wire
+    end
+end
+
+--- Handle selection change events to track electric poles and enforce wiring rules.
+-- @param event EventData.on_selected_entity_changed The event data containing the player information.
+local function on_selected_entity_changed(event)
+    local player = game.get_player(event.player_index)
+    if not player then return end -- Guard clause for player existence
+
+    local selected_entity = player.selected
+    local player_index = event.player_index
+
+    -- Check if the player was holding copper wire and previously had an electric pole selected
+    if last_selected_pole[player_index] and (not selected_entity or selected_entity.type ~= "electric-pole") then
+        -- Enforce wiring rules for the last selected pole
+        enforce_pole_connections(last_selected_pole[player_index])
+        -- Clear the last selected pole tracking
+        last_selected_pole[player_index] = nil
+    end
+
+    -- Update last_selected_pole if the player selects a new electric pole while holding copper wire
+    if copper_wire_on_cursor[player_index] and selected_entity and selected_entity.valid and selected_entity.type == "electric-pole" then
+        last_selected_pole[player_index] = selected_entity
+    else
+        -- Clear last_selected_pole if they are no longer holding copper wire
+        last_selected_pole[player_index] = nil
+    end
+end
+
 -- Register events and load globals
 local function register_event_handlers()
-    script.on_event(defines.events.on_built_entity, on_eg_transformator_built)
-    script.on_event(defines.events.on_robot_built_entity, on_eg_transformator_built)
+    script.on_event(defines.events.on_built_entity, on_entity_built)
+    script.on_event(defines.events.on_robot_built_entity, on_entity_built)
     script.on_event(defines.events.on_player_mined_entity, on_eg_transformator_mined)
     script.on_event(defines.events.on_robot_mined_entity, on_eg_transformator_mined)
     script.on_event(defines.events.on_entity_died, on_eg_transformator_mined)
+    script.on_event(defines.events.on_player_cursor_stack_changed, on_cursor_stack_changed)
+    script.on_event(defines.events.on_selected_entity_changed, on_selected_entity_changed)
 
     script.on_nth_tick(constants.EG_ON_TICK_INTERVAL, short_circuit_check)
 end

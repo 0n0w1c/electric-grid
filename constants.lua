@@ -29,12 +29,17 @@ constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_VOLUME = 0.3
 
+-- startup setting?
+constants.EG_UGP_SUBSTATION = true
+
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
 constants.EG_ON_TICK_INTERVAL = 600
 
--- HEAT_CAPACITY_PER_MW is a calibration constant, it works well to at least 100 GW
+-- A calibration constant, it works well to at least 100 GW
 constants.HEAT_CAPACITY_PER_MW = 0.257
+
+--maybe quality effect here?
 --constants.EG_EFFICIENCY = 0.98
 
 constants.EG_DIRECTION_TO_CARDINAL = {
@@ -115,13 +120,13 @@ constants.EG_WIRE_CONNECTIONS = {
         ["substation"] = true,
         ["ugp-substation"] = true,
     },
-    ["huge-electric-pole"] = {
-        ["huge-electric-pole"] = true,
+    ["eg-huge-electric-pole"] = {
+        ["eg-huge-electric-pole"] = true,
     },
     ["substation"] = {
         ["big-electric-pole"] = true,
     },
-    ["ugp-substation"] = {
+    ["eg-ugp-substation"] = {
         ["big-electric-pole"] = true,
     }
 }
