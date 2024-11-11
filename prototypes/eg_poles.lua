@@ -84,51 +84,40 @@ end
 
 -- Loop to define high and low voltage poles for each direction
 for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
-    local eg_high_voltage_pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
+    for _, pole_type in ipairs({ "high", "low" }) do
+        local pole_name = "eg-" .. pole_type .. "-voltage-pole-" .. direction
+        local base_name = "big-electric-pole"
+        local connection_name = "eg_" .. pole_type .. "_voltage_pole"
+        local selection_box_func =
+            pole_type == "high" and get_eg_high_voltage_pole_selection_box or get_eg_low_voltage_pole_selection_box
+        local localised_name = pole_type == "high" and "High voltage pole" or "Low voltage pole"
+        local localised_description = pole_type == "high" and "Connect to the electrical source" or
+            "Connect to the electrical load"
 
-    eg_high_voltage_pole.name = "eg-high-voltage-pole-" .. direction
-    eg_high_voltage_pole.supply_area_distance = 0.8
-    eg_high_voltage_pole.pictures = nil
-    eg_high_voltage_pole.water_reflection = nil
-    eg_high_voltage_pole.auto_connect_up_to_n_wires = 0
-    eg_high_voltage_pole.minable = nil
-    eg_high_voltage_pole.radius_visualisation_picture = nil
-    eg_high_voltage_pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
-    eg_high_voltage_pole.max_health = constants.EG_MAX_HEALTH
-    eg_high_voltage_pole.connection_points = eg_wireconnections("eg_high_voltage_pole", direction)
-    eg_high_voltage_pole.selection_box = get_eg_high_voltage_pole_selection_box(direction)
-    eg_high_voltage_pole.localised_name = { "", "High voltage pole" }
-    eg_high_voltage_pole.localised_description = { "", "Connect to the electrical source" }
-    eg_high_voltage_pole.hidden = true
-    eg_high_voltage_pole.hidden_in_factoriopedia = true
-    eg_high_voltage_pole.collision_mask = {
-        layers = {
-            ["is_lower_object"] = true
+        local pole = table.deepcopy(data.raw["electric-pole"][base_name])
+
+        pole.name = pole_name
+        pole.supply_area_distance = constants.EG_SUPPLY_AREA_DISTANCE
+        pole.maximum_wire_distance = constants.EG_MAXIMUM_WIRE_DISTANCE
+        pole.pictures = nil
+        pole.water_reflection = nil
+        pole.auto_connect_up_to_n_wires = 0
+        pole.minable = nil
+        pole.radius_visualisation_picture = nil
+        pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
+        pole.max_health = constants.EG_MAX_HEALTH
+        pole.connection_points = eg_wireconnections(connection_name, direction)
+        pole.selection_box = selection_box_func(direction)
+        pole.localised_name = { "", localised_name }
+        pole.localised_description = { "", localised_description }
+        pole.hidden = true
+        pole.hidden_in_factoriopedia = true
+        pole.collision_mask = {
+            layers = {
+                ["is_lower_object"] = true
+            }
         }
-    }
 
-    local eg_low_voltage_pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
-
-    eg_low_voltage_pole.name = "eg-low-voltage-pole-" .. direction
-    eg_low_voltage_pole.supply_area_distance = 0.8
-    eg_low_voltage_pole.pictures = nil
-    eg_low_voltage_pole.water_reflection = nil
-    eg_low_voltage_pole.auto_connect_up_to_n_wires = 0
-    eg_low_voltage_pole.minable = nil
-    eg_low_voltage_pole.radius_visualisation_picture = nil
-    eg_low_voltage_pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
-    eg_low_voltage_pole.max_health = constants.EG_MAX_HEALTH
-    eg_low_voltage_pole.connection_points = eg_wireconnections("eg_low_voltage_pole", direction)
-    eg_low_voltage_pole.selection_box = get_eg_low_voltage_pole_selection_box(direction)
-    eg_low_voltage_pole.localised_name = { "", "Low voltage pole" }
-    eg_low_voltage_pole.localised_description = { "", "Connect to the electrical load" }
-    eg_low_voltage_pole.hidden = true
-    eg_low_voltage_pole.hidden_in_factoriopedia = true
-    eg_low_voltage_pole.collision_mask = {
-        layers = {
-            ["is_lower_object"] = true
-        }
-    }
-
-    data:extend({ eg_high_voltage_pole, eg_low_voltage_pole })
+        data:extend({ pole })
+    end
 end

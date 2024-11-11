@@ -89,7 +89,7 @@ for _ in pairs(constants.EG_TRANSFORMATORS) do
 end
 
 constants.EG_MAXIMUM_WIRE_DISTANCE = 4.5
-constants.EG_SUPPLY_AREA_DISTANCE = 1
+constants.EG_SUPPLY_AREA_DISTANCE = 0.8
 constants.EG_WIRE_CONNECTION_OFFSET = 0.1
 constants.EG_POLE_CONNECTIONS = {
     eg_high_voltage_pole = {

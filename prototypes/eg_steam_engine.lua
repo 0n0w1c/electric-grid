@@ -73,6 +73,7 @@ function create_transformator_steam_engine(variant, tier)
         },
         working_sound = {
             match_speed_to_activity = true,
+            use_doppler_shift = true,
             sound = {
                 filename = constants.EG_SOUND .. "/MainsBrum50Hz.ogg",
                 volume = constants.EG_VOLUME or 0,

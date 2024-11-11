@@ -264,7 +264,7 @@ local function create_transformator_unit(tier)
         dying_explosion = "medium-explosion",
         placeable_by = { item = "eg-transformator-item", count = 1 },
         max_health = constants.EG_MAX_HEALTH,
-        resistances = { { type = "fire", percent = 70 } },
+        resistances = data.raw["electric-pole"]["substation"].resistances,
         random_variation_on_create = false,
         collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         selection_box = { { -1.0, -1.0 }, { 1.0, 1.0 } },
@@ -324,6 +324,7 @@ local eg_transformator_item = {
     order = "b[pipe]-d[eg-transformator-item]",
     place_result = constants.EG_DISPLAYER,
     stack_size = 50,
+    weight = 20000,
     hidden_in_factoriopedia = true
 }
 
