@@ -268,6 +268,10 @@ end
 -- @param pole_b LuaEntity Another electric pole
 -- @return boolean true if the connection is allowed, false otherwise
 local function is_copper_cable_connection_allowed(pole_a, pole_b)
+    if true then
+        return true
+    end
+
     -- Ensure both poles are valid and exist in the connections table
     if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
         return false

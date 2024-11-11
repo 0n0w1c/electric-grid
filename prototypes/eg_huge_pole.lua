@@ -1,9 +1,10 @@
-local big_pole              = data.raw["electric-pole"]["big-electric-pole"]
+local big_pole                       = data.raw["electric-pole"]["big-electric-pole"]
 
-local scale                 = 1.2
-local translate             = -0.4
+local scale                          = 1.2
+local translate                      = -0.4
 
-local huge_pole             = {
+local huge_pole                      =
+{
     type                   = "electric-pole",
     name                   = "eg-huge-electric-pole",
     localised_name         = "Huge electric pole",
@@ -13,6 +14,7 @@ local huge_pole             = {
     icon_mipmaps           = 1,
     flags                  = big_pole.flags,
     minable                = { mining_time = big_pole.minable.mining_time, result = "eg-huge-electric-pole" },
+    light                  = { intensity = 0.8, size = 12, color = { r = 1.0, g = 1.0, b = 0.7 } },
     max_health             = 250,
     corpse                 = big_pole.corpse,
     dying_explosion        = big_pole.dying_explosion,
@@ -21,7 +23,7 @@ local huge_pole             = {
     selection_box          = big_pole.selection_box,
     damaged_trigger_effect = big_pole.damaged_trigger_effect,
     drawing_box            = { { -1 * scale, -3 * scale }, { 1 * scale, 0.5 * scale } },
-    maximum_wire_distance  = 50,
+    maximum_wire_distance  = 32,
     supply_area_distance   = 0,
     vehicle_impact_sound   = big_pole.vehicle_impact_sound,
     open_sound             = big_pole.open_sound,
@@ -112,25 +114,31 @@ local huge_pole             = {
     }
 }
 
-local huge_pole_item        = table.deepcopy(data.raw["item"]["big-electric-pole"])
-huge_pole_item.name         = "eg-huge-electric-pole"
-huge_pole_item.place_result = "eg-huge-electric-pole"
-huge_pole_item.icon         = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png"
-huge_pole_item.icon_size    = 32
-huge_pole_item.icon_mipmaps = 1
+local huge_pole_item                 = table.deepcopy(data.raw["item"]["big-electric-pole"])
+huge_pole_item.name                  = "eg-huge-electric-pole"
+huge_pole_item.localised_name        = "Huge electric pole"
+huge_pole_item.localised_description = "Huge electric pole"
+huge_pole_item.order                 = huge_pole_item.order .. "z"
+huge_pole_item.icon                  = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png"
+huge_pole_item.icon_size             = 32
+huge_pole_item.icon_mipmaps          = 1
+huge_pole_item.place_result          = "eg-huge-electric-pole"
 
-local huge_pole_recipe      = {
-    type = "recipe",
-    name = "eg-huge-electric-pole",
-    results = { { type = "item", name = "eg-huge-electric-pole", amount = 1 } },
-    ingredients =
+local huge_pole_recipe               =
+{
+    type                  = "recipe",
+    name                  = "eg-huge-electric-pole",
+    localised_name        = "Huge electric pole",
+    localised_description = "Huge electric pole",
+    results               = { { type = "item", name = "eg-huge-electric-pole", amount = 1 } },
+    ingredients           =
     {
         { type = "item", name = "iron-stick",   amount = 20 },
         { type = "item", name = "steel-plate",  amount = 15 },
         { type = "item", name = "copper-plate", amount = 15 }
     },
-    energy_required = 1,
-    enabled = false
+    energy_required       = 1,
+    enabled               = false
 }
 
 data:extend { huge_pole, huge_pole_item, huge_pole_recipe }

@@ -12,7 +12,8 @@ ugp_substation.hidden_in_factoriopedia        = true
 ugp_substation.draw_copper_wires              = false
 ugp_substation.draw_circuit_wires             = false
 ugp_substation.minable                        = { mining_time = 0.5, result = "substation" }
-ugp_substation.collision_mask                 = {
+ugp_substation.collision_mask                 =
+{
     colliding_with_tiles_only = true,
     layers = {
         ["eg-ugp-substation-layer"] = true,
@@ -21,8 +22,10 @@ ugp_substation.collision_mask                 = {
 }
 
 ugp_substation.integration_patch_render_layer = "ground-patch"
-ugp_substation.integration_patch              = {
-    layers = {
+ugp_substation.integration_patch              =
+{
+    layers =
+    {
         {
             filename = constants.EG_GRAPHICS .. "/entities/hr-ugp-substation.png",
             priority = "extra-high",
@@ -33,8 +36,10 @@ ugp_substation.integration_patch              = {
     }
 }
 
-ugp_substation.pictures                       = {
-    layers = {
+ugp_substation.pictures                       =
+{
+    layers =
+    {
         {
             filename = constants.EG_GRAPHICS .. "/entities/hr-empty.png",
             priority = "extra-high",
@@ -46,7 +51,8 @@ ugp_substation.pictures                       = {
     }
 }
 
-ugp_substation.connection_points              = {
+ugp_substation.connection_points              =
+{
     {
         shadow = {
             copper = util.by_pixel_hr(0, 0),
@@ -79,7 +85,8 @@ ugp_substation_displayer_item.icon                  = constants.EG_GRAPHICS .. "
 ugp_substation_displayer_item.icon_size             = 64
 ugp_substation_displayer_item.place_result          = "eg-ugp-substation-displayer"
 
-local ugp_substation_displayer_recipe               = {
+local ugp_substation_displayer_recipe               =
+{
     type                  = "recipe",
     name                  = "eg-ugp-substation-displayer",
     localised_name        = "Underground substation",
@@ -90,3 +97,4 @@ local ugp_substation_displayer_recipe               = {
 }
 
 data:extend({ ugp_substation_displayer, ugp_substation_displayer_item, ugp_substation_displayer_recipe })
+
