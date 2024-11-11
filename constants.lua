@@ -32,10 +32,12 @@ constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
 constants.EG_ON_TICK_INTERVAL = 60
 
--- Works well to at least 1000 GW
+-- 0.256 is too low for 1 MW
+-- 0.257 is too high for 500 MW
+-- Works well to at least 1000 GW (for gui)
 constants.HEAT_CAPACITY_PER_MW = 0.2565
 
---maybe quality effect here?
+--Maybe quality effect here?
 --constants.EG_EFFICIENCY = 0.98
 constants.EG_EFFICIENCY = 1
 
