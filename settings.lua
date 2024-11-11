@@ -14,7 +14,7 @@ data:extend({
         setting_type = "startup",
         default_value = false,
         order = "a2",
-        localised_name = "Enable alternate power overlays",
+        localised_name = "Enable Transformator connection icons",
         localised_description = "Displays icons for source and load connections"
     }
 })

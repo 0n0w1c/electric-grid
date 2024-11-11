@@ -30,7 +30,7 @@ function create_transformator_boiler(variant, tier)
         alert_icon_shift = alert_icon_shift,
         energy_source = {
             type = "electric",
-            buffer_capacity = "0kJ",
+            effectivity = constants.EG_EFFICIENCY,
             input_flow_limit = rating,
             usage_priority = "secondary-input",
             emissions = 0

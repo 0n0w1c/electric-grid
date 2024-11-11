@@ -22,7 +22,7 @@ function create_transformator_steam_engine(variant, tier)
         type = "generator",
         name = "eg-steam-engine-" .. variant .. "-" .. tier,
         energy_production = rating,
-        maximum_temperature = 500,
+        maximum_temperature = 165,
         fluid_usage_per_tick = 1,
         icon = "__base__/graphics/icons/steam-engine.png",
         icon_size = 64,

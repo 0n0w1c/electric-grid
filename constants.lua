@@ -32,11 +32,12 @@ constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
 constants.EG_ON_TICK_INTERVAL = 60
 
--- A calibration constant, it works well to at least 100 GW
+-- Works well to at least 100 GW
 constants.HEAT_CAPACITY_PER_MW = 0.257
 
 --maybe quality effect here?
 --constants.EG_EFFICIENCY = 0.98
+constants.EG_EFFICIENCY = 1
 
 constants.EG_DIRECTION_TO_CARDINAL = {
     [0] = "north",
