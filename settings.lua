@@ -13,7 +13,7 @@ data:extend({
         name = "eg-hide-alt-overlay",
         setting_type = "startup",
         default_value = false,
-        order = "a1",
+        order = "a2",
         localised_name = "Enable alternate power overlays",
         localised_description = "Displays icons for source and load connections"
     }
