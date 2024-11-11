@@ -29,12 +29,9 @@ constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_VOLUME = 0.3
 
--- startup setting?
-constants.EG_UGP_SUBSTATION = true
-
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
-constants.EG_ON_TICK_INTERVAL = 600
+constants.EG_ON_TICK_INTERVAL = 60
 
 -- A calibration constant, it works well to at least 100 GW
 constants.HEAT_CAPACITY_PER_MW = 0.257
@@ -88,7 +85,7 @@ for _ in pairs(constants.EG_TRANSFORMATORS) do
     constants.EG_NUM_TIERS = constants.EG_NUM_TIERS + 1
 end
 
-constants.EG_MAXIMUM_WIRE_DISTANCE = 4.5
+constants.EG_MAXIMUM_WIRE_DISTANCE = 6
 constants.EG_SUPPLY_AREA_DISTANCE = 0.8
 constants.EG_WIRE_CONNECTION_OFFSET = 0.1
 constants.EG_POLE_CONNECTIONS = {
@@ -118,7 +115,7 @@ constants.EG_WIRE_CONNECTIONS = {
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
         ["substation"] = true,
-        ["ugp-substation"] = true,
+        ["eg-ugp-substation"] = true,
     },
     ["eg-huge-electric-pole"] = {
         ["eg-huge-electric-pole"] = true,

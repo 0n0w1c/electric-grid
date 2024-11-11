@@ -1,5 +1,3 @@
-if not constants.EG_UGP_SUBSTATION then return end
-
 local ugp_substation                          = table.deepcopy(data.raw["electric-pole"]["substation"])
 ugp_substation.name                           = "eg-ugp-substation"
 ugp_substation.localised_name                 = "Underground substation"
