@@ -97,10 +97,15 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     eg_high_voltage_pole.max_health = constants.EG_MAX_HEALTH
     eg_high_voltage_pole.connection_points = eg_wireconnections("eg_high_voltage_pole", direction)
     eg_high_voltage_pole.selection_box = get_eg_high_voltage_pole_selection_box(direction)
-    eg_high_voltage_pole.localised_name = { "", "High Voltage Pole" }
+    eg_high_voltage_pole.localised_name = { "", "High voltage pole" }
     eg_high_voltage_pole.localised_description = { "", "Connect to the electrical source" }
     eg_high_voltage_pole.hidden = true
     eg_high_voltage_pole.hidden_in_factoriopedia = true
+    eg_high_voltage_pole.collision_mask = {
+        layers = {
+            ["is_lower_object"] = true
+        }
+    }
 
     local eg_low_voltage_pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
 
@@ -115,10 +120,15 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     eg_low_voltage_pole.max_health = constants.EG_MAX_HEALTH
     eg_low_voltage_pole.connection_points = eg_wireconnections("eg_low_voltage_pole", direction)
     eg_low_voltage_pole.selection_box = get_eg_low_voltage_pole_selection_box(direction)
-    eg_low_voltage_pole.localised_name = { "", "Low Voltage Pole" }
+    eg_low_voltage_pole.localised_name = { "", "Low voltage pole" }
     eg_low_voltage_pole.localised_description = { "", "Connect to the electrical load" }
     eg_low_voltage_pole.hidden = true
     eg_low_voltage_pole.hidden_in_factoriopedia = true
+    eg_low_voltage_pole.collision_mask = {
+        layers = {
+            ["is_lower_object"] = true
+        }
+    }
 
     data:extend({ eg_high_voltage_pole, eg_low_voltage_pole })
 end

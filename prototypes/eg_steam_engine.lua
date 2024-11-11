@@ -32,7 +32,7 @@ function create_transformator_steam_engine(variant, tier)
         minable = nil,
         selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
-        localised_name = { "", "Steam Engine ", variant:upper(), " - Tier ", tostring(tier) },
+        localised_name = { "", "Steam engine ", variant:upper(), " - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
         collision_mask = {
             layers = {

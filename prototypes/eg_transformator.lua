@@ -303,27 +303,27 @@ end
 local eg_transformator_displayer = {
     type = "simple-entity-with-force",
     name = constants.EG_DISPLAYER,
+    localised_name = { "", "Transformator displayer" },
+    localised_description = { "", "Transformator model used during placement." },
     icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
     icon_size = 128,
     flags = { "placeable-player", "player-creation" },
     hidden_in_factoriopedia = true,
     picture = get_transformator_displayer_pictures(), -- use picture not pictures, rotation works
     direction_count = 4,
-    localised_name = { "", "Transformator Displayer" },
-    localised_description = { "", "Transformator model used during placement." },
 }
 
 local eg_transformator_item = {
     type = "item",
     name = "eg-transformator-item",
+    localised_name = { "", "Transformator" },
+    localised_description = { "", "Regulates power distribution." },
     icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
     icon_size = 128,
     subgroup = "energy-pipe-distribution",
     order = "b[pipe]-d[eg-transformator-item]",
     place_result = constants.EG_DISPLAYER,
     stack_size = 50,
-    localised_name = { "", "Transformator" },
-    localised_description = { "", "Regulates power distribution." },
     hidden_in_factoriopedia = true
 }
 
