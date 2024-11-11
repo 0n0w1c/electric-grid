@@ -86,7 +86,6 @@ end
 for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     for _, pole_type in ipairs({ "high", "low" }) do
         local pole_name = "eg-" .. pole_type .. "-voltage-pole-" .. direction
-        local base_name = "big-electric-pole"
         local connection_name = "eg_" .. pole_type .. "_voltage_pole"
         local selection_box_func =
             pole_type == "high" and get_eg_high_voltage_pole_selection_box or get_eg_low_voltage_pole_selection_box
@@ -94,7 +93,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         local localised_description = pole_type == "high" and "Connect to the electrical source" or
             "Connect to the electrical load"
 
-        local pole = table.deepcopy(data.raw["electric-pole"][base_name])
+        local pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
 
         pole.name = pole_name
         pole.supply_area_distance = constants.EG_SUPPLY_AREA_DISTANCE

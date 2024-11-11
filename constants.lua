@@ -85,6 +85,7 @@ for _ in pairs(constants.EG_TRANSFORMATORS) do
     constants.EG_NUM_TIERS = constants.EG_NUM_TIERS + 1
 end
 
+constants.EG_HUGE_POLE_LIGHT = { r = 1.0, g = 1.0, b = 0.7 }
 constants.EG_MAXIMUM_WIRE_DISTANCE = 6
 constants.EG_SUPPLY_AREA_DISTANCE = 0.8
 constants.EG_WIRE_CONNECTION_OFFSET = 0.1

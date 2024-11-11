@@ -95,4 +95,3 @@ local ugp_substation_displayer_recipe               =
 }
 
 data:extend({ ugp_substation_displayer, ugp_substation_displayer_item, ugp_substation_displayer_recipe })
-

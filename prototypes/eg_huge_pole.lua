@@ -14,8 +14,8 @@ local huge_pole                      =
     icon_mipmaps           = 1,
     flags                  = big_pole.flags,
     minable                = { mining_time = big_pole.minable.mining_time, result = "eg-huge-electric-pole" },
-    light                  = { intensity = 0.8, size = 12, color = { r = 1.0, g = 1.0, b = 0.7 } },
-    max_health             = 250,
+    light                  = { intensity = 0.8, size = 12, color = constants.EG_HUGE_POLE_LIGHT },
+    max_health             = big_pole.max_health + 100,
     corpse                 = big_pole.corpse,
     dying_explosion        = big_pole.dying_explosion,
     resistances            = big_pole.resistances,
@@ -137,7 +137,6 @@ local huge_pole_recipe               =
         { type = "item", name = "steel-plate",  amount = 15 },
         { type = "item", name = "copper-plate", amount = 15 }
     },
-    energy_required       = 1,
     enabled               = false
 }
 
