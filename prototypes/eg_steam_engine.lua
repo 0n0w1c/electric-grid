@@ -50,7 +50,7 @@ function create_transformator_steam_engine(variant, tier)
             hide_connection_info = true,
             minimum_temperature = 100,
             production_type = "input",
-            volume = 100,
+            volume = 200,
             pipe_connections = {
                 {
                     direction = defines.direction.north,

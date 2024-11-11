@@ -9,8 +9,8 @@ local eg_infinity_pipe = {
     minable = nil,
     selectable_in_game = false,
     flags = constants.EG_INTERNAL_ENTITY_FLAGS,
-    localised_name = {"", "Infinity Pipe"},
-    localised_description = {"", "Component of a Transformator"},
+    localised_name = { "", "Infinity Pipe" },
+    localised_description = { "", "Component of a Transformator" },
     collision_box = {
         { -0.5, -0.5 },
         { 0.5,  0.5 }
@@ -49,7 +49,7 @@ local eg_infinity_pipe = {
             }
         },
         production_type = "output",
-        volume = 100
+        volume = 200
     }
 }
 
