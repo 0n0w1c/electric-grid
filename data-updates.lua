@@ -1,8 +1,8 @@
 data.raw["electric-pole"]["small-electric-pole"].maximum_wire_distance = 8.5
 data.raw["electric-pole"]["small-electric-pole"].supply_area_distance = 3
 
-data.raw["electric-pole"]["medium-electric-pole"].medium.maximum_wire_distance = 10
-data.raw["electric-pole"]["medium-electric-pole"].medium.supply_area_distance = 0
+data.raw["electric-pole"]["medium-electric-pole"].maximum_wire_distance = 10
+data.raw["electric-pole"]["medium-electric-pole"].supply_area_distance = 0
 
 data.raw["electric-pole"]["big-electric-pole"].maximum_wire_distance = 18
 data.raw["electric-pole"]["big-electric-pole"].supply_area_distance = 0
