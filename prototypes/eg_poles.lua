@@ -82,7 +82,6 @@ local function get_eg_low_voltage_pole_selection_box(direction)
     }
 end
 
--- Loop to define high and low voltage poles for each direction
 for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     for _, pole_type in ipairs({ "high", "low" }) do
         local pole_name = "eg-" .. pole_type .. "-voltage-pole-" .. direction

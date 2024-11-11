@@ -32,8 +32,8 @@ constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
 constants.EG_ON_TICK_INTERVAL = 60
 
--- Works well to at least 100 GW
-constants.HEAT_CAPACITY_PER_MW = 0.257
+-- Works well to at least 1000 GW
+constants.HEAT_CAPACITY_PER_MW = 0.2565
 
 --maybe quality effect here?
 --constants.EG_EFFICIENCY = 0.98
@@ -73,7 +73,7 @@ constants.EG_TRANSFORMATORS = {
     ["eg-unit-9"] = { rating = "10GW", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } }   -- Tier 9: Yellow (Red + Green)
 }
 
--- Calculate the heat capacities based on rating, adding the "heat_capacity" field to constants.EG_TRANSFORMATORS
+-- Calculate the heat capacities based on rating, adding the heat_capacity field to constants.EG_TRANSFORMATORS
 for key, transformator in pairs(constants.EG_TRANSFORMATORS) do
     local rating_in_watts = normalize_rating(transformator.rating)
     local rating_in_MW = rating_in_watts / 1e6
