@@ -263,16 +263,46 @@ local function replace_displayer_with_ugp_substation(displayer)
     return new_entity
 end
 
+local function is_copper_cable_connection_allowed(pole_a, pole_b)
+    if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
+        return false
+    end
+
+    local name_a, name_b = pole_a.name, pole_b.name
+
+    -- Rule set 1: Check if the connection is allowed in the standard connection table
+    if constants.EG_WIRE_CONNECTIONS[name_a] and constants.EG_WIRE_CONNECTIONS[name_a][name_b] then
+        return true
+    end
+
+    -- Rule set 2: Generated poles can connect to each other
+    if name_a:match("^eg%-[high%-low]+%-voltage%-pole%-") and name_b:match("^eg%-[high%-low]+%-voltage%-pole%-") then
+        return true
+    end
+
+    -- Rule set 3: Generated poles can connect to eg-huge-electric-pole and vice-versa
+    if (name_a == "eg-huge-electric-pole" and name_b:match("^eg%-[high%-low]+%-voltage%-pole%-")) or
+       (name_b == "eg-huge-electric-pole" and name_a:match("^eg%-[high%-low]+%-voltage%-pole%-")) then
+        return true
+    end
+
+    -- Rule set 4: Generated poles can connect to big-electric-pole and medium-electric-pole, and vice-versa
+    local standard_poles = { ["big-electric-pole"] = true, ["medium-electric-pole"] = true }
+    if (name_a:match("^eg%-[high%-low]+%-voltage%-pole%-") and standard_poles[name_b]) or
+       (name_b:match("^eg%-[high%-low]+%-voltage%-pole%-") and standard_poles[name_a]) then
+        return true
+    end
+
+    -- If no rule matches, the connection is not allowed
+    return false
+end
+
+--[[
 --- Checks if a copper cable connection is allowed between two poles
 -- @param pole_a LuaEntity An electric pole
 -- @param pole_b LuaEntity Another electric pole
 -- @return boolean true if the connection is allowed, false otherwise
 local function is_copper_cable_connection_allowed(pole_a, pole_b)
-    if true then
-        return true
-    end
-
-    -- Ensure both poles are valid and exist in the connections table
     if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
         return false
     end
@@ -281,6 +311,7 @@ local function is_copper_cable_connection_allowed(pole_a, pole_b)
     return constants.EG_WIRE_CONNECTIONS[pole_a.name] and constants.EG_WIRE_CONNECTIONS[pole_a.name][pole_b.name] or
         false
 end
+]]
 
 local function enforce_pole_connections(pole)
     if not pole or not pole.valid or pole.type ~= "electric-pole" then

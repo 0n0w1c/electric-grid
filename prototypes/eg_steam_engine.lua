@@ -2,19 +2,19 @@ function create_transformator_steam_engine(variant, tier)
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
     local selection_box = {
-        { -0.5, -0.5 },
-        { 0.5,  0.5 }
+        { -0.49, -0.49 },
+        { 0.49,  0.49 }
     }
 
     if variant == "ne" then
         selection_box = {
-            { -0.5, -0.5 },
-            { 1.5,  1.5 }
+            { -0.49, -0.49 },
+            { 1.49,  1.49 }
         }
     elseif variant == "sw" then
         selection_box = {
-            { -1.5, -1.5 },
-            { 0.5,  0.5 }
+            { -1.49, -1.49 },
+            { 0.49,  0.49 }
         }
     end
 
@@ -34,9 +34,14 @@ function create_transformator_steam_engine(variant, tier)
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name = { "", "Steam Engine ", variant:upper(), " - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
+        collision_mask = {
+            layers = {
+                ["is_lower_object"] = true
+            }
+        },
         collision_box = {
-            { -0.5, -0.5 },
-            { 0.5,  0.5 }
+            { -0.49, -0.49 },
+            { 0.49,  0.49 }
         },
         selection_box = selection_box,
 
@@ -53,11 +58,13 @@ function create_transformator_steam_engine(variant, tier)
             volume = 200,
             pipe_connections = {
                 {
+                    connection_category = "eg-guts-category",
                     direction = defines.direction.north,
                     flow_direction = "input-output",
                     position = { 0, 0 }
                 },
                 {
+                    connection_category = "eg-guts-category",
                     direction = defines.direction.south,
                     flow_direction = "input-output",
                     position = { 0, 0 }

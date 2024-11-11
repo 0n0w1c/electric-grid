@@ -11,13 +11,18 @@ local eg_infinity_pipe = {
     flags = constants.EG_INTERNAL_ENTITY_FLAGS,
     localised_name = { "", "Infinity Pipe" },
     localised_description = { "", "Component of a Transformator" },
+    collision_mask = {
+        layers = {
+            ["is_lower_object"] = true
+        }
+    },
     collision_box = {
-        { -0.5, -0.5 },
-        { 0.5,  0.5 }
+        { -0.49, -0.49 },
+        { 0.49,  0.49 }
     },
     --    selection_box = {
-    --        { -0.5, -0.5 },
-    --        { 0.5,  0.5 }
+    --        { -0.49, -0.49 },
+    --        { 0.49,  0.49 }
     --    },
     horizontal_window_bounding_box = {
         { 0, 0 },
@@ -29,21 +34,24 @@ local eg_infinity_pipe = {
     },
     fluid_box = {
         hide_connection_info = true,
-        max_pipeline_extent = 2,
         pipe_connections = {
             {
+                connection_category = "eg-guts-category",
                 direction = defines.direction.north,
                 position = { 0, 0 }
             },
             {
+                connection_category = "eg-guts-category",
                 direction = defines.direction.east,
                 position = { 0, 0 }
             },
             {
+                connection_category = "eg-guts-category",
                 direction = defines.direction.south,
                 position = { 0, 0 }
             },
             {
+                connection_category = "eg-guts-category",
                 direction = defines.direction.west,
                 position = { 0, 0 }
             }

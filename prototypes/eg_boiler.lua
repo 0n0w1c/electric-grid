@@ -37,28 +37,35 @@ function create_transformator_boiler(variant, tier)
         },
         mode = "output-to-separate-pipe",
         burning_cooldown = 0,
+        collision_mask = {
+            layers = {
+                ["is_lower_object"] = true
+            }
+        },
         collision_box = {
-            { -0.5, -0.5 },
-            { 0.5,  0.5 }
+            { -0.49, -0.49 },
+            { 0.49,  0.49 }
         },
         --selection_box = {
-        --    { -0.4, -0.4 },
-        --    { 0.4,  0.4 }
+        --    { -0.49, -0.49 },
+        --    { 0.49,  0.49 }
         --},
         selection_box = {
-            { -0.5, -1.5 },
-            { 1.5,  0.5 }
+            { -0.49, -1.49 },
+            { 1.49,  0.49 }
         },
         fluid_box = {
             filter = "eg-water-" .. tier,
             hide_connection_info = true,
             pipe_connections = {
                 {
+                    connection_category = "eg-guts-category",
                     direction = defines.direction.west,
                     flow_direction = "input-output",
                     position = { 0, 0 }
                 },
                 {
+                    connection_category = "eg-guts-category",
                     direction = defines.direction.east,
                     flow_direction = "input-output",
                     position = { 0, 0 }
@@ -72,6 +79,7 @@ function create_transformator_boiler(variant, tier)
             hide_connection_info = true,
             pipe_connections = {
                 {
+                    connection_category = "eg-guts-category",
                     direction = defines.direction.north,
                     flow_direction = "output",
                     position = { 0, 0 }
