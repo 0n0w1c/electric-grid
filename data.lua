@@ -6,6 +6,12 @@ else
     constants.EG_ALTOVERLAY = nil
 end
 
+if settings.startup["eg-transformator-sound"].value then
+    constants.EG_TRANSFORMATOR_VOLUME = 0.175
+else
+    constants.EG_TRANSFORMATOR_VOLUME = 0
+end
+
 data:extend({
     {
         type = "collision-layer",
