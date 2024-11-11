@@ -46,10 +46,6 @@ function create_transformator_boiler(variant, tier)
             { -0.49, -0.49 },
             { 0.49,  0.49 }
         },
-        --selection_box = {
-        --    { -0.49, -0.49 },
-        --    { 0.49,  0.49 }
-        --},
         selection_box = {
             { -0.49, -1.49 },
             { 1.49,  0.49 }
