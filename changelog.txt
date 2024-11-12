@@ -5,3 +5,10 @@ Date: 12.11.2024
     - Changed description and thumbnail
   Changes:
     - None
+---------------------------------------------------------------------------------------------------
+Version: 0.0.1
+Date: 12.11.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Initial release
