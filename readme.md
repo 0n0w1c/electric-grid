@@ -6,6 +6,7 @@ A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.
 Important notes:
 This is a work in progress, in the proof of concept stage, but believed to be reasonably playable.  
 This mod should only be added to a new or early game, it significantly modifies the electric poles.  
+Comments and suggestions welcome.  
 
 May not be useful or functional on Fulgora (to be determined, possible future development).  
 The wiring rules should still be valid. However, the use of transformators, maybe not so much.  
@@ -37,5 +38,5 @@ Objective:
 Build an electric network infrastructure that more closely follows the Factorio way:  
 Build a main power grid using huge poles, to operate similar to a main bus.  
 Transformators separate the high voltage main bus from low voltage distribution, think splitters.  
-Medium, big and huge poles transmit power, function is similar to that of belts.  
-Small poles and substations function as inserters.  
+Medium, big and huge poles transmit power, function similar to that of belts.  
+And small poles and substations function as inserters.  
