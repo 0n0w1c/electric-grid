@@ -1,11 +1,11 @@
-Electric Grid:  
+#### Electric Grid  
 A Factorio 2.0 mod to bring more structure to the electric network.  
 See license.txt for credits to the developers and their work that came before me.  
 A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.  
 
 Important notes:
 This is a work in progress, in the proof of concept stage, but believed to be reasonably playable.  
-This mod should only be added to a new or early games, it significantly modifies the electric poles.  
+This mod should only be added to a new or early game, it significantly modifies the electric poles.  
 
 May not be useful or functional on Fulgora (to be determined, possible future development).  
 The wiring rules should still be valid. However, the use of transformators, maybe not so much.  
