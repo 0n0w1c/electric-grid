@@ -268,7 +268,6 @@ local function create_transformator_unit(tier)
         random_variation_on_create = false,
         collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         selection_box = { { -1.0, -1.0 }, { 1.0, 1.0 } },
-        drawing_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
         picture = get_transformator_picture(tier),
         localised_name = { "", "Transformator - ", rating },
         localised_description = { "", "Regulates power distribution." }
