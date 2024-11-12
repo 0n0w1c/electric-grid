@@ -34,6 +34,10 @@ Transformators can only connect to medium, big and huge poles
 Small poles and substations are for power distribution and collection  
 Medium, big and huge poles are for power transmission only  
 
+Transformators do function as expected if connected in parallel.  
+Very similair to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
+Do not place the transformator in the supply area of an electric pole.  
+
 Objective:  
 Build an electric network infrastructure that more closely follows the Factorio way:  
 Build a main power grid using huge poles, to operate similar to a main bus.  

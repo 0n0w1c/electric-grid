@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.2
-Date: 12.11.2024
+Date: 12.12.2024
   Bugfixes:
-    - Changed description and thumbnail
+    - Changed description and added a thumbnail
   Changes:
     - None
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.1
-Date: 12.11.2024
+Date: 12.12.2024
   Bugfixes:
     - None
   Changes:
