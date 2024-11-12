@@ -1,8 +1,7 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.0.1
-Date: 29.10.2024
-  Issues:
+Version: 0.0.2
+Date: 12.11.2024
   Bugfixes:
-    - None
+    - Changed description and thumbnail
   Changes:
     - None
