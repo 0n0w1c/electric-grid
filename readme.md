@@ -43,4 +43,9 @@ Build an electric network infrastructure that more closely follows the Factorio 
 Build a main power grid using huge poles, to operate similar to a main bus.  
 Transformators separate the high voltage main bus from low voltage distribution, think splitters.  
 Medium, big and huge poles transmit power, function similar to that of belts.  
-And small poles and substations function as inserters.  
+And small poles and substations function as the inserters.  
+
+ToDo:
+Check if transformator is placed in an electric pole supply area. api call to check if powered.
+try again to add pump
+test minus the copper connections, should work.
