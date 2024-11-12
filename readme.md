@@ -11,7 +11,7 @@ May not be useful or functional on Fulgora (to be determined, possible future de
 The wiring rules should still be valid. However, the use of transformators, maybe not so much.  
 
 Adds:  
-Transformators (ctrl + left-click to select power rating)  
+Transformators - [Ctrl] + [Left] to select the power rating (1MW to 10GW)  
 Huge electric pole (lighted)  
 Underground substations  
 
