@@ -1,6 +1,6 @@
 #### Electric Grid  
 A Factorio 2.0 mod to bring more structure to the electric network.  
-See license.txt for credits to the developers and their work that came before me.  
+See license.txt for credits to the developers and their work that came before.  
 A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.  
 
 Important notes:
@@ -38,4 +38,4 @@ Build an electric network infrastructure that more closely follows the Factorio 
 Build a main power grid using huge poles, to operate similar to a main bus.  
 Transformators separate the high voltage main bus from low voltage distribution, think splitters.  
 Medium, big and huge poles transmit power, function is similar to that of belts.  
-Small poles and substations function as the inserters.  
+Small poles and substations function as inserters.  
