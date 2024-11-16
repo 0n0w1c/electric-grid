@@ -1,5 +1,7 @@
 #### Electric Grid  
-A Factorio 2.0 mod to bring more structure to the electric network.  
+A work in progress, but should be reasonbly playable.
+An overhaul of the electric network, engineer an Electric Grid.
+
 See license.txt for credits to the developers and their work that came before.  
 A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.  
 
@@ -17,7 +19,7 @@ Huge electric pole (lighted)
 Underground substations  
 
 Removes:  
-Power switch  
+Power switch
 
 Changes:  
 Small poles are the new medium poles  
@@ -34,6 +36,7 @@ Transformators can only connect to medium, big and huge poles
 Small poles and substations are for power distribution and collection  
 Medium, big and huge poles are for power transmission only  
 
+Transformators can be controlled via the circuit and/or logistic networks.  
 Transformators do function as expected if connected in parallel.  
 Very similair to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
 Do not place the transformator in the supply area of an electric pole.  
@@ -44,8 +47,3 @@ Build a main power grid using huge poles, to operate similar to a main bus.
 Transformators separate the high voltage main bus from low voltage distribution, think splitters.  
 Medium, big and huge poles transmit power, function similar to that of belts.  
 And small poles and substations function as the inserters.  
-
-ToDo:
-Check if transformator is placed in an electric pole supply area. api call to check if powered.
-try again to add pump
-test minus the copper connections, should work.

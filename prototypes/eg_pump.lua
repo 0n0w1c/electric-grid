@@ -2,38 +2,26 @@ function create_transformator_pump(variant)
     if not variant then return nil end
 
     local alert_icon_shift = { x = 0.0, y = 0.0 }
-    local selection_box = {}
 
     if variant == defines.direction.north then
         alert_icon_shift = { x = -0.5, y = -0.5 }
-        selection_box = {
-            { -1.49, -1.49 },
-            { 0.49,  0.49 }
-        }
     elseif variant == defines.direction.east then
         alert_icon_shift = { x = 0.5, y = -0.5 }
-        selection_box = {
-            { -1.49, -1.49 },
-            { 0.49,  0.49 }
-        }
     elseif variant == defines.direction.south then
         alert_icon_shift = { x = 0.5, y = 0.5 }
-        selection_box = {
-            { -1.49, -1.49 },
-            { 0.49,  0.49 }
-        }
     elseif variant == defines.direction.west then
         alert_icon_shift = { x = -0.5, y = 0.5 }
-        selection_box = {
-            { -1.49, -1.49 },
-            { 0.49,  0.49 }
-        }
     else
         return nil
     end
 
     local collision_box = {
         { -0.49, -0.49 },
+        { 0.49,  0.49 }
+    }
+
+    local selection_box = {
+        { -1.49, -1.49 },
         { 0.49,  0.49 }
     }
 
@@ -89,6 +77,11 @@ function create_transformator_pump(variant)
             circuit_enable_disable = true,
             connect_to_logistic_network = true,
         },
+        circuit_wire_max_distance = 9,
+        close_sound = {
+            filename = "__base__/sound/machine-close.ogg",
+            volume = 0.5
+        },
         circuit_connector = {
             {
                 points = {
@@ -128,7 +121,9 @@ function create_transformator_pump(variant)
                             -0.234375
                         },
                         width = 52,
-                        x = 0,
+                        --x = 0,
+                        --y = 150
+                        x = 104,
                         y = 150
                     },
                     led_blue = {
@@ -497,12 +492,12 @@ function create_transformator_pump(variant)
                     },
                     wire = {
                         green = {
-                            0.734375,
-                            0.390625
+                            1.734375,
+                            1.190625
                         },
                         red = {
-                            0.671875,
-                            0.171875
+                            1.671875,
+                            0.971875
                         }
                     }
                 },
@@ -517,11 +512,11 @@ function create_transformator_pump(variant)
                         priority = "low",
                         scale = 0.5,
                         shift = {
-                            0.421875,
-                            0.171875
+                            1.521875,
+                            0.81875
                         },
                         width = 52,
-                        x = 104,
+                        x = 208,
                         y = 150
                     },
                     connector_shadow = {
@@ -532,8 +527,8 @@ function create_transformator_pump(variant)
                         priority = "low",
                         scale = 0.5,
                         shift = {
-                            -0.140625,
-                            -0.3125
+                            1.640625,
+                            0.9125
                         },
                         width = 60,
                         x = 120,
@@ -610,8 +605,8 @@ function create_transformator_pump(variant)
                         priority = "low",
                         scale = 0.5,
                         shift = {
-                            0.421875,
-                            0.171875
+                            1.441875,
+                            0.931875
                         },
                         width = 62,
                         x = 124,
@@ -625,8 +620,8 @@ function create_transformator_pump(variant)
                         priority = "low",
                         scale = 0.5,
                         shift = {
-                            -0.0625,
-                            -0.28125
+                            1.441875,
+                            0.931875
                         },
                         width = 68,
                         x = 136,
@@ -634,11 +629,6 @@ function create_transformator_pump(variant)
                     }
                 }
             }
-        },
-        circuit_wire_max_distance = 9,
-        close_sound = {
-            filename = "__base__/sound/machine-close.ogg",
-            volume = 0.5
         },
     }
 end

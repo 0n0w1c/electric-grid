@@ -63,6 +63,7 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
     "not-selectable-in-game",
     "not-upgradable",
     "not-in-kill-statistics",
+    "not-in-made-in"
 }
 
 constants.EG_TRANSFORMATORS = {

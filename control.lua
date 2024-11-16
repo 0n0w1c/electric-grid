@@ -592,14 +592,13 @@ local function replace_transformator(old_transformator, new_rating)
         end
     end
 
-    if not new_unit or old_transformator.name == new_unit then return end
+    if not new_unit or storage.eg_transformators[old_transformator.unit_number].unit.name == new_unit then return end
 
     local force = old_transformator.force
     local surface = old_transformator.surface
     local direction = old_transformator.direction
     local position = old_transformator.position
 
-    -- adjust the position based on direction
     if direction == defines.direction.north then
         position = { x = position.x + 0, y = position.y + 0 }
     elseif direction == defines.direction.east then
@@ -637,7 +636,7 @@ local function replace_transformator(old_transformator, new_rating)
             eg_transformator.generator.destroy()
         end
     else
-        game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
+        --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
     end
 
     local offset = { x = 0, y = 0 }
@@ -790,7 +789,8 @@ script.on_event(defines.events.on_gui_closed, function(event)
 
     -- Check if the closed GUI is related to an entity
     if event.entity and event.entity.valid and string.sub(event.entity.name, 1, 8) == "eg-pump-" then
-        game.print("Pump GUI closed for " .. tostring(event.entity.name))
-        event.entity.fluidbox.set_filter(1, { name = "eg-water-1" })
+        --game.print("Pump GUI closed for " .. tostring(event.entity.name))
+        event.entity.fluidbox.set_filter(1,
+            { name = "eg-water-" .. string.sub(storage.eg_transformators[event.entity.unit_number].unit.name, -1) })
     end
 end)

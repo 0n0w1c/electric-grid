@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+Date: 12.16.2024
+  Bugfixes:
+    - None
+  Changes:
+    - IMPORTANT: The internal structure of a transformator has changed and is not compatible.
+      Remove the previous version, start game and save, exit and then re-activate the mod.
+    - Transformators can now be controlled via the circuit and/or logistic networks.
+      Connect the circuit wire to the middle of the transformator.
+---------------------------------------------------------------------------------------------------
 Version: 0.0.2
 Date: 12.12.2024
   Bugfixes:
