@@ -1,6 +1,6 @@
 #### Electric Grid  
-A work in progress, but should be reasonbly playable.
-An overhaul of the electric network, engineer an Electric Grid.
+An overhaul of the electric network, engineer an Electric Grid.  
+A work in progress, but should be reasonably playable.  
 
 See license.txt for credits to the developers and their work that came before.  
 A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.  
@@ -8,7 +8,7 @@ A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.
 Important notes:
 This is a work in progress, in the proof of concept stage, but believed to be reasonably playable.  
 This mod should only be added to a new or early game, it significantly modifies the electric poles.  
-Comments and suggestions welcome.  
+Comments and suggestions are welcome.  
 
 May not be useful or functional on Fulgora (to be determined, possible future development).  
 The wiring rules should still be valid. However, the use of transformators, maybe not so much.  
