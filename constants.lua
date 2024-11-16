@@ -23,6 +23,8 @@ end
 
 local constants = {}
 
+constants.EG_DEBUG_TRANSFORMATOR = false
+
 constants.EG_MOD = "__electric-grid__"
 constants.EG_GRAPHICS = constants.EG_MOD .. "/graphics"
 constants.EG_SOUND = constants.EG_MOD .. "/sound"

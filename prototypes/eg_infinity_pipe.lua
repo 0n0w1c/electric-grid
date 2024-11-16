@@ -5,9 +5,9 @@ local eg_infinity_pipe = {
     gui_mode = "all",
     max_health = constants.EG_MAX_HEALTH,
     corpse = "small-remnants",
-    hidden = true,
+    hidden = not constants.EG_DEBUG_TRANSFORMATOR,
     minable = nil,
-    selectable_in_game = false,
+    selectable_in_game = constants.EG_DEBUG_TRANSFORMATOR,
     flags = constants.EG_INTERNAL_ENTITY_FLAGS,
     localised_name = { "", "Infinity pipe" },
     localised_description = { "", "Component of a Transformator" },
@@ -20,6 +20,10 @@ local eg_infinity_pipe = {
         { -0.49, -0.49 },
         { 0.49,  0.49 }
     },
+    selection_box = {
+        { -0.49, -0.49 },
+        { 0.49,  0.49 }
+    },
     horizontal_window_bounding_box = {
         { 0, 0 },
         { 0, 0 }
@@ -29,7 +33,9 @@ local eg_infinity_pipe = {
         { 0, 0 }
     },
     fluid_box = {
-        hide_connection_info = true,
+        hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
+        production_type = "output",
+        volume = 200,
         pipe_connections = {
             {
                 connection_category = "eg-guts-category",
@@ -51,9 +57,7 @@ local eg_infinity_pipe = {
                 direction = defines.direction.west,
                 position = { 0, 0 }
             }
-        },
-        production_type = "output",
-        volume = 200
+        }
     }
 }
 

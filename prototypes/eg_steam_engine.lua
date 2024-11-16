@@ -28,9 +28,9 @@ function create_transformator_steam_engine(variant, tier)
         icon_size = 64,
         impact_category = "metal-large",
         max_health = constants.EG_MAX_HEALTH,
-        hidden = true,
+        hidden = not constants.EG_DEBUG_TRANSFORMATOR,
         minable = nil,
-        selectable_in_game = false,
+        selectable_in_game = constants.EG_DEBUG_TRANSFORMATOR,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name = { "", "Steam engine ", variant:upper(), " - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
@@ -43,6 +43,10 @@ function create_transformator_steam_engine(variant, tier)
             { -0.49, -0.49 },
             { 0.49,  0.49 }
         },
+        --selection_box = {
+        --    { -0.49, -0.49 },
+        --    { 0.49,  0.49 }
+        --},
         selection_box = selection_box,
 
         effectivity = 1,
@@ -52,7 +56,7 @@ function create_transformator_steam_engine(variant, tier)
         },
         fluid_box = {
             filter = "eg-steam-" .. tier,
-            hide_connection_info = true,
+            hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             minimum_temperature = 100,
             production_type = "input",
             volume = 200,

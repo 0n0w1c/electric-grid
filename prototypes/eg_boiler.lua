@@ -3,15 +3,37 @@ function create_transformator_boiler(variant, tier)
 
     local alert_icon_shift = { x = 0.0, y = 0.0 }
 
-    if variant == "n" then
+    local selection_box
+    if variant == defines.direction.north then
         alert_icon_shift = { x = 0.5, y = -0.5 }
-    elseif variant == "e" then
+        selection_box = {
+            { -0.49, -1.49 },
+            { 1.49,  0.49 }
+        }
+    elseif variant == defines.direction.east then
         alert_icon_shift = { x = 0.5, y = 0.5 }
-    elseif variant == "s" then
+        selection_box = {
+            { -0.49, -1.49 },
+            { 1.49,  0.49 }
+        }
+    elseif variant == defines.direction.south then
         alert_icon_shift = { x = -0.5, y = 0.5 }
-    elseif variant == "w" then
+        selection_box = {
+            { -0.49, -1.49 },
+            { 1.49,  0.49 }
+        }
+    elseif variant == defines.direction.west then
         alert_icon_shift = { x = -0.5, y = -0.5 }
+        selection_box = {
+            { -0.49, -1.49 },
+            { 1.49,  0.49 }
+        }
     end
+
+    local collision_box = {
+        { -0.49, -0.49 },
+        { 0.49,  0.49 }
+    }
 
     return {
         type = "boiler",
@@ -21,9 +43,9 @@ function create_transformator_boiler(variant, tier)
         energy_consumption = rating,
         target_temperature = 165,
         max_health = constants.EG_MAX_HEALTH,
-        hidden = true,
+        hidden = not constants.EG_DEBUG_TRANSFORMATOR,
         minable = nil,
-        selectable_in_game = false,
+        selectable_in_game = constants.EG_DEBUG_TRANSFORMATOR,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name = { "", "Boiler - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
@@ -42,17 +64,11 @@ function create_transformator_boiler(variant, tier)
                 ["is_lower_object"] = true
             }
         },
-        collision_box = {
-            { -0.49, -0.49 },
-            { 0.49,  0.49 }
-        },
-        selection_box = {
-            { -0.49, -1.49 },
-            { 1.49,  0.49 }
-        },
+        selection_box = selection_box,
+        collision_box = collision_box,
         fluid_box = {
             filter = "eg-water-" .. tier,
-            hide_connection_info = true,
+            hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             pipe_connections = {
                 {
                     connection_category = "eg-guts-category",
@@ -72,7 +88,7 @@ function create_transformator_boiler(variant, tier)
         },
         output_fluid_box = {
             filter = "eg-steam-" .. tier,
-            hide_connection_info = true,
+            hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             pipe_connections = {
                 {
                     connection_category = "eg-guts-category",

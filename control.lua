@@ -12,6 +12,20 @@ local function initialize_globals()
 end
 
 -- Define the position offset for the boiler based on direction
+local function get_eg_unit_offset(direction)
+    if direction == defines.direction.north then
+        return { x = -1, y = -1 }
+    elseif direction == defines.direction.east then
+        return { x = -1, y = -1 }
+    elseif direction == defines.direction.south then
+        return { x = -1, y = -1 }
+    elseif direction == defines.direction.west then
+        return { x = -1, y = -1 }
+    end
+    return { x = 0, y = 0 }
+end
+
+-- Define the position offset for the boiler based on direction
 local function get_eg_boiler_offset(direction)
     if direction == defines.direction.north then
         return { x = -1, y = 0 }
@@ -25,8 +39,8 @@ local function get_eg_boiler_offset(direction)
     return { x = 0, y = 0 }
 end
 
--- Define the position offset for the infinity pipe based on direction
-local function get_eg_infinity_pipe_offset(direction)
+-- Define the position offset for the pump based on direction
+local function get_eg_pump_offset(direction)
     if direction == defines.direction.north then
         return { x = 0, y = 0 }
     elseif direction == defines.direction.east then
@@ -35,6 +49,20 @@ local function get_eg_infinity_pipe_offset(direction)
         return { x = -1, y = -1 }
     elseif direction == defines.direction.west then
         return { x = 0, y = -1 }
+    end
+    return { x = 0, y = 0 }
+end
+
+-- Define the position offset for the infinity pipe based on direction
+local function get_eg_infinity_pipe_offset(direction)
+    if direction == defines.direction.north then
+        return { x = 0, y = -1 }
+    elseif direction == defines.direction.east then
+        return { x = -0, y = 0 }
+    elseif direction == defines.direction.south then
+        return { x = -1, y = 0 }
+    elseif direction == defines.direction.west then
+        return { x = -1, y = -1 }
     end
     return { x = 0, y = 0 }
 end
@@ -82,7 +110,7 @@ local function get_eg_low_voltage_pole_offset(direction)
 end
 
 local function is_transformator(name)
-    if name == constants.EG_DISPLAYER or constants.EG_TRANSFORMATORS[name] then
+    if name == constants.EG_DISPLAYER or constants.EG_TRANSFORMATORS[name] or string.sub(name, 1, 8) == "eg-pump-" then
         return true
     end
 
@@ -111,7 +139,6 @@ local function short_circuit_check()
     end
 end
 
--- Place the electric boiler and infinity pipe with direction handling
 local function on_eg_transformator_built(event)
     local entity = event.entity
 
@@ -119,14 +146,12 @@ local function on_eg_transformator_built(event)
 
     if not is_transformator(entity.name) then return end
 
-    -- Store surface, force, position and direction
     local surface = entity.surface
     local force = entity.force
     local position = entity.position
     local direction = entity.direction
     local offset = { x = 0, y = 0 }
 
-    -- Remove the displayer
     entity.destroy()
 
     -- Use the same position, no offset
@@ -144,23 +169,24 @@ local function on_eg_transformator_built(event)
     offset = get_eg_boiler_offset(direction)
     local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
 
-    local eg_boiler_variant
-    if direction == defines.direction.north then
-        eg_boiler_variant = "n"
-    elseif direction == defines.direction.east then
-        eg_boiler_variant = "e"
-    elseif direction == defines.direction.south then
-        eg_boiler_variant = "s"
-    elseif direction == defines.direction.west then
-        eg_boiler_variant = "w"
-    end
-
     -- Place the eg-boiler with the same direction as the displayer
     local eg_boiler = surface.create_entity {
-        name = "eg-boiler-" .. eg_boiler_variant .. "-1",
+        name = "eg-boiler-" .. direction .. "-1",
         position = eg_boiler_position,
         force = force,
         direction = direction
+    }
+
+    -- Calculate the offset position for the eg-pump
+    offset = get_eg_pump_offset(direction)
+    local eg_pump_position = { position.x + offset.x, position.y + offset.y }
+
+    -- Place the eg-pump with the same direction as the boiler
+    local eg_pump = surface.create_entity {
+        name = "eg-pump-" .. direction,
+        position = eg_pump_position,
+        force = force,
+        direction = direction,
     }
 
     -- Calculate the offset position for the eg-infinity-pipe based on direction
@@ -226,15 +252,22 @@ local function on_eg_transformator_built(event)
         mode = "at-least"
     })
 
-    -- Track the eg_transformator components by the unit_number
-    storage.eg_transformators[eg_unit.unit_number] = {
+    -- Track the eg_transformator components by the pump's unit_number
+    storage.eg_transformators[eg_pump.unit_number] = {
         unit = eg_unit,
         boiler = eg_boiler,
+        pump = eg_pump,
         infinity_pipe = eg_infinity_pipe,
         generator = eg_steam_engine,
         high_voltage = eg_high_voltage_pole,
         low_voltage = eg_low_voltage_pole
     }
+
+    --eg_unit.destroy()
+    --eg_boiler.destroy()
+    --eg_steam_engine.destroy()
+    --eg_high_voltage_pole.destroy()
+    --eg_low_voltage_pole.destroy()
 end
 
 --- Replace the ugp-substation-displayer entity with ugp-substation.
@@ -282,36 +315,20 @@ local function is_copper_cable_connection_allowed(pole_a, pole_b)
 
     -- Rule set 3: Generated poles can connect to eg-huge-electric-pole and vice-versa
     if (name_a == "eg-huge-electric-pole" and name_b:match("^eg%-[high%-low]+%-voltage%-pole%-")) or
-       (name_b == "eg-huge-electric-pole" and name_a:match("^eg%-[high%-low]+%-voltage%-pole%-")) then
+        (name_b == "eg-huge-electric-pole" and name_a:match("^eg%-[high%-low]+%-voltage%-pole%-")) then
         return true
     end
 
     -- Rule set 4: Generated poles can connect to big-electric-pole and medium-electric-pole, and vice-versa
     local standard_poles = { ["big-electric-pole"] = true, ["medium-electric-pole"] = true }
     if (name_a:match("^eg%-[high%-low]+%-voltage%-pole%-") and standard_poles[name_b]) or
-       (name_b:match("^eg%-[high%-low]+%-voltage%-pole%-") and standard_poles[name_a]) then
+        (name_b:match("^eg%-[high%-low]+%-voltage%-pole%-") and standard_poles[name_a]) then
         return true
     end
 
     -- If no rule matches, the connection is not allowed
     return false
 end
-
---[[
---- Checks if a copper cable connection is allowed between two poles
--- @param pole_a LuaEntity An electric pole
--- @param pole_b LuaEntity Another electric pole
--- @return boolean true if the connection is allowed, false otherwise
-local function is_copper_cable_connection_allowed(pole_a, pole_b)
-    if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
-        return false
-    end
-
-    -- Check if the connection is allowed based on the defined rules
-    return constants.EG_WIRE_CONNECTIONS[pole_a.name] and constants.EG_WIRE_CONNECTIONS[pole_a.name][pole_b.name] or
-        false
-end
-]]
 
 local function enforce_pole_connections(pole)
     if not pole or not pole.valid or pole.type ~= "electric-pole" then
@@ -378,8 +395,14 @@ local function on_eg_transformator_mined(event)
         local eg_transformator = storage.eg_transformators[unit_number]
 
         -- Destroy each component if it still exists
+        if eg_transformator.unit and eg_transformator.unit.valid then
+            eg_transformator.unit.destroy()
+        end
         if eg_transformator.boiler and eg_transformator.boiler.valid then
             eg_transformator.boiler.destroy()
+        end
+        if eg_transformator.pump and eg_transformator.pump.valid then
+            eg_transformator.pump.destroy()
         end
         if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
             eg_transformator.infinity_pipe.destroy()
@@ -499,9 +522,10 @@ local function show_transformator_gui(player, transformator)
     }
 
     -- Determine the current rating of the selected transformator
+    local unit_name = storage.eg_transformators[transformator.unit_number].unit.name
     local current_rating = nil
     for name, specs in pairs(constants.EG_TRANSFORMATORS) do
-        if specs.rating and name == transformator.name then
+        if specs.rating and name == unit_name then
             current_rating = specs.rating
             break
         end
@@ -572,8 +596,19 @@ local function replace_transformator(old_transformator, new_rating)
 
     local force = old_transformator.force
     local surface = old_transformator.surface
-    local position = old_transformator.position
     local direction = old_transformator.direction
+    local position = old_transformator.position
+
+    -- adjust the position based on direction
+    if direction == defines.direction.north then
+        position = { x = position.x + 0, y = position.y + 0 }
+    elseif direction == defines.direction.east then
+        position = { x = position.x + 1, y = position.y + 0 }
+    elseif direction == defines.direction.south then
+        position = { x = position.x + 1, y = position.y + 1 }
+    elseif direction == defines.direction.west then
+        position = { x = position.x + 0, y = position.y + 1 }
+    end
 
     local unit_number = old_transformator.unit_number
     local eg_high_voltage_pole = nil
@@ -592,6 +627,9 @@ local function replace_transformator(old_transformator, new_rating)
         if eg_transformator.boiler and eg_transformator.boiler.valid then
             eg_transformator.boiler.destroy()
         end
+        if eg_transformator.pump and eg_transformator.pump.valid then
+            eg_transformator.pump.destroy()
+        end
         if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
             eg_transformator.infinity_pipe.destroy()
         end
@@ -599,14 +637,15 @@ local function replace_transformator(old_transformator, new_rating)
             eg_transformator.generator.destroy()
         end
     else
-        game.print("EG_Error: Transformator with unit_number " .. unit_number .. " not found.")
+        game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
     end
 
     local offset = { x = 0, y = 0 }
     local tier = string.sub(new_unit, -1)
 
     -- Use the same position, no offset
-    local eg_unit_position = { position.x, position.y }
+    offset = get_eg_unit_offset(direction)
+    local eg_unit_position = { position.x + offset.x, position.y + offset.y }
 
     -- Replace with the unit, same positon and direction
     local eg_unit = surface.create_entity {
@@ -620,23 +659,24 @@ local function replace_transformator(old_transformator, new_rating)
     offset = get_eg_boiler_offset(direction)
     local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
 
-    local eg_boiler_variant
-    if direction == defines.direction.north then
-        eg_boiler_variant = "n"
-    elseif direction == defines.direction.east then
-        eg_boiler_variant = "e"
-    elseif direction == defines.direction.south then
-        eg_boiler_variant = "s"
-    elseif direction == defines.direction.west then
-        eg_boiler_variant = "w"
-    end
-
     -- Place the eg-boiler with the same direction as the original unit
     local eg_boiler = surface.create_entity {
-        name = "eg-boiler-" .. eg_boiler_variant .. "-" .. tier,
+        name = "eg-boiler-" .. direction .. "-" .. tier,
         position = eg_boiler_position,
         force = force,
         direction = direction
+    }
+
+    -- Calculate the offset position for the eg-pump
+    offset = get_eg_pump_offset(direction)
+    local eg_pump_position = { position.x + offset.x, position.y + offset.y }
+
+    -- Place the eg-pump with the same direction as the boiler
+    local eg_pump = surface.create_entity {
+        name = "eg-pump-" .. direction,
+        position = eg_pump_position,
+        force = force,
+        direction = direction,
     }
 
     -- Calculate the offset position for the eg-infinity-pipe based on direction
@@ -679,9 +719,10 @@ local function replace_transformator(old_transformator, new_rating)
     })
 
     -- Track the eg_transformator components by the unit_number
-    storage.eg_transformators[eg_unit.unit_number] = {
+    storage.eg_transformators[eg_pump.unit_number] = {
         unit = eg_unit,
         boiler = eg_boiler,
+        pump = eg_pump,
         infinity_pipe = eg_infinity_pipe,
         generator = eg_steam_engine,
         high_voltage = eg_high_voltage_pole,
@@ -740,5 +781,16 @@ script.on_event(defines.events.on_gui_click, function(event)
 
             close_transformator_gui(player)
         end
+    end
+end)
+
+script.on_event(defines.events.on_gui_closed, function(event)
+    local player = game.get_player(event.player_index)
+    if not player or not player.valid then return end
+
+    -- Check if the closed GUI is related to an entity
+    if event.entity and event.entity.valid and string.sub(event.entity.name, 1, 8) == "eg-pump-" then
+        game.print("Pump GUI closed for " .. tostring(event.entity.name))
+        event.entity.fluidbox.set_filter(1, { name = "eg-water-1" })
     end
 end)

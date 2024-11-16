@@ -267,7 +267,8 @@ local function create_transformator_unit(tier)
         resistances = data.raw["electric-pole"]["substation"].resistances,
         random_variation_on_create = false,
         collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
-        selection_box = { { -1.0, -1.0 }, { 1.0, 1.0 } },
+        --selection_box = { { -1.0, -1.0 }, { 1.0, 1.0 } },
+        --collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
         picture = get_transformator_picture(tier),
         localised_name = { "", "Transformator - ", rating },
         localised_description = { "", "Regulates power distribution." }
@@ -290,14 +291,21 @@ for tier = 1, constants.EG_NUM_TIERS do
         create_transformator_unit(tier),
         create_transformator_water(tier),
         create_transformator_steam(tier),
-        create_transformator_boiler("n", tier),
-        create_transformator_boiler("e", tier),
-        create_transformator_boiler("s", tier),
-        create_transformator_boiler("w", tier),
+        create_transformator_boiler(defines.direction.north, tier),
+        create_transformator_boiler(defines.direction.east, tier),
+        create_transformator_boiler(defines.direction.south, tier),
+        create_transformator_boiler(defines.direction.west, tier),
         create_transformator_steam_engine("ne", tier),
         create_transformator_steam_engine("sw", tier),
     })
 end
+
+data:extend({
+    create_transformator_pump(defines.direction.north),
+    create_transformator_pump(defines.direction.east),
+    create_transformator_pump(defines.direction.south),
+    create_transformator_pump(defines.direction.west),
+})
 
 local eg_transformator_displayer = {
     type = "simple-entity-with-force",
@@ -307,6 +315,8 @@ local eg_transformator_displayer = {
     icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
     icon_size = 128,
     flags = { "placeable-player", "player-creation" },
+    collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
+    collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
     hidden_in_factoriopedia = true,
     picture = get_transformator_displayer_pictures(), -- use picture not pictures, rotation works
     direction_count = 4,
