@@ -36,6 +36,7 @@ data:extend({
 })
 
 require("prototypes/eg_signals")
+require("prototypes/eg_null")
 require("prototypes/eg_water")
 require("prototypes/eg_infinity_pipe")
 require("prototypes/eg_pump")

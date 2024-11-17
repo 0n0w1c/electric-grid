@@ -23,7 +23,7 @@ Power switch
 
 Changes:  
 Small poles are the new medium poles  
-Medium, big and huge poles have no supply area, used for power transmission only  
+Medium, big and huge poles have no supply area and are lighted, used for power transmission only  
 
 New wiring rules:  
 Small poles can connect to small and medium poles  

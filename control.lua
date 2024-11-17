@@ -575,6 +575,54 @@ script.on_event(defines.events.on_gui_checked_state_changed, function(event)
     end
 end)
 
+local function replace_boiler_steam_engine(transformator, tier)
+    if not transformator then return end
+    if not tier then return end
+
+    local force = transformator.force
+    local surface = transformator.surface
+    local unit_number = transformator.unit_number
+
+    if storage.eg_transformators[unit_number] then
+        local eg_transformator = storage.eg_transformators[unit_number]
+
+        local name = eg_transformator.boiler.name
+        local direction = eg_transformator.boiler.direction
+        local position = eg_transformator.boiler.position
+
+        if eg_transformator.boiler and eg_transformator.boiler.valid then
+            eg_transformator.boiler.destroy()
+        end
+
+        local eg_boiler = surface.create_entity {
+            name = name,
+            position = position,
+            force = force,
+            direction = direction
+        }
+
+        name = eg_transformator.generator.name
+        direction = eg_transformator.generator.direction
+        position = eg_transformator.generator.position
+
+        if eg_transformator.generator and eg_transformator.generator.valid then
+            eg_transformator.generator.destroy()
+        end
+
+        local eg_steam_engine = surface.create_entity {
+            name = name,
+            position = position,
+            force = force,
+            direction = direction
+        }
+
+        storage.eg_transformators[unit_number].boiler = eg_boiler
+        storage.eg_transformators[unit_number].generator = eg_steam_engine
+    else
+        --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
+    end
+end
+
 --- Replace the old transformator entity with a new one based on the selected rating.
 -- Restores wire connections and ensures smooth replacement of the transformator.
 -- @param old_transformator LuaEntity The transformator to replace.
@@ -592,7 +640,7 @@ local function replace_transformator(old_transformator, new_rating)
         end
     end
 
-    if not new_unit or storage.eg_transformators[old_transformator.unit_number].unit.name == new_unit then return end
+    --if not new_unit or storage.eg_transformators[old_transformator.unit_number].unit.name == new_unit then return end
 
     local force = old_transformator.force
     local surface = old_transformator.surface
@@ -784,13 +832,27 @@ script.on_event(defines.events.on_gui_click, function(event)
 end)
 
 script.on_event(defines.events.on_gui_closed, function(event)
+    local entity = event.entity
+    if not entity or not entity.valid then return end
+
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
 
-    -- Check if the closed GUI is related to an entity
-    if event.entity and event.entity.valid and string.sub(event.entity.name, 1, 8) == "eg-pump-" then
-        --game.print("Pump GUI closed for " .. tostring(event.entity.name))
-        event.entity.fluidbox.set_filter(1,
-            { name = "eg-water-" .. string.sub(storage.eg_transformators[event.entity.unit_number].unit.name, -1) })
+    if string.sub(entity.name, 1, 8) == "eg-pump-" then
+        local filter = entity.fluidbox.get_filter(1)
+        if filter and filter.name then
+            local unit_name = storage.eg_transformators[entity.unit_number].unit.name
+            local tier = string.sub(unit_name, -1)
+
+            if filter.name == "eg-null-disable" then
+                -- on nth_tick can check cicuit/logistc conditions, clear guts?
+                entity.clear_fluid_inside()
+                entity.fluidbox.set_filter(1, { name = "eg-null-disable" })
+                replace_boiler_steam_engine(entity, tier)
+            else
+                entity.clear_fluid_inside()
+                entity.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
+            end
+        end
     end
 end)
