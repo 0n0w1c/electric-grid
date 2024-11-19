@@ -40,11 +40,12 @@ function create_transformator_pump(variant)
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         alert_icon_shift = alert_icon_shift,
         minable = { mining_time = 0.5, result = "eg-transformator-item" },
-        collision_mask = {
-            layers = {
-                ["is_lower_object"] = true,
-            }
-        },
+        collision_mask = { layers = {} },
+        --collision_mask = {
+        --    layers = {
+        --        ["is_lower_object"] = true,
+        --    }
+        --},
         selection_box = selection_box,
         collision_box = collision_box,
         localised_name = { "", "Transformator" },

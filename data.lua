@@ -12,10 +12,11 @@ else
     constants.EG_TRANSFORMATOR_VOLUME = 0
 end
 
+--[[
 data:extend({
     {
         type = "collision-layer",
-        name = "eg-ugp-substation-layer"
+        name = "eg_ugp_substation_layer"
     }
 })
 
@@ -25,6 +26,7 @@ data:extend({
         name = "eg-guts-layer"
     }
 })
+]]
 
 data:extend({
     {

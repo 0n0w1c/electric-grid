@@ -34,11 +34,12 @@ function create_transformator_steam_engine(variant, tier)
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name = { "", "Steam engine ", variant:upper(), " - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
-        collision_mask = {
-            layers = {
-                ["is_lower_object"] = true
-            }
-        },
+        collision_mask = { layers = {} },
+        --collision_mask = {},
+        --    layers = {
+        --        ["is_lower_object"] = true
+        --    }
+        --},
         collision_box = {
             { -0.49, -0.49 },
             { 0.49,  0.49 }

@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.2
+Date: 12.18.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Significantly improved the perceived "power off" response time (circuit and logistic control)
+      Do not select "Set Filter" when setting circuit conditions
+---------------------------------------------------------------------------------------------------
 Version: 0.1.1
 Date: 12.17.2024
   Bugfixes:

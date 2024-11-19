@@ -10,12 +10,15 @@ ugp_substation.hidden_in_factoriopedia        = true
 ugp_substation.draw_copper_wires              = false
 ugp_substation.draw_circuit_wires             = false
 ugp_substation.minable                        = { mining_time = 0.5, result = "substation" }
+ugp_substation.collision_box                  = {
+    { -0.9, -0.9 },
+    { 0.9,  0.9 }
+}
 ugp_substation.collision_mask                 =
 {
     colliding_with_tiles_only = true,
     layers = {
-        ["eg-ugp-substation-layer"] = true,
-        ["water_tile"] = true
+        water_tile = true,
     }
 }
 

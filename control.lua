@@ -117,8 +117,213 @@ local function is_transformator(name)
     return false
 end
 
+local function replace_boiler_steam_engine(transformator, tier)
+    if not transformator then return end
+    if not tier then return end
+
+    local force = transformator.force
+    local surface = transformator.surface
+    local unit_number = transformator.unit_number
+
+    if storage.eg_transformators[unit_number] then
+        local eg_transformator = storage.eg_transformators[unit_number]
+
+        local name = eg_transformator.boiler.name
+        local direction = eg_transformator.boiler.direction
+        local position = eg_transformator.boiler.position
+
+        if eg_transformator.boiler and eg_transformator.boiler.valid then
+            eg_transformator.boiler.destroy()
+        end
+
+        local eg_boiler = surface.create_entity {
+            name = name,
+            position = position,
+            force = force,
+            direction = direction
+        }
+
+        name = eg_transformator.generator.name
+        direction = eg_transformator.generator.direction
+        position = eg_transformator.generator.position
+
+        if eg_transformator.generator and eg_transformator.generator.valid then
+            eg_transformator.generator.destroy()
+        end
+
+        local eg_steam_engine = surface.create_entity {
+            name = name,
+            position = position,
+            force = force,
+            direction = direction
+        }
+
+        storage.eg_transformators[unit_number].boiler = eg_boiler
+        storage.eg_transformators[unit_number].generator = eg_steam_engine
+    else
+        --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
+    end
+end
+
+--- Replace the old transformator entity with a new one based on the selected rating.
+-- Restores wire connections and ensures smooth replacement of the transformator.
+-- @param old_transformator LuaEntity The transformator to replace.
+-- @param new_rating string The selected new rating for the transformator.
+local function replace_transformator(old_transformator, new_rating)
+    if not old_transformator then return end
+    if not new_rating then return end
+
+    local new_unit = nil
+
+    for unit, specs in pairs(constants.EG_TRANSFORMATORS) do
+        if specs.rating == new_rating then
+            new_unit = unit
+            break
+        end
+    end
+
+    --if not new_unit or storage.eg_transformators[old_transformator.unit_number].unit.name == new_unit then return end
+
+    local force = old_transformator.force
+    local surface = old_transformator.surface
+    local direction = old_transformator.direction
+    local position = old_transformator.position
+
+    if direction == defines.direction.north then
+        position = { x = position.x + 0, y = position.y + 0 }
+    elseif direction == defines.direction.east then
+        position = { x = position.x + 1, y = position.y + 0 }
+    elseif direction == defines.direction.south then
+        position = { x = position.x + 1, y = position.y + 1 }
+    elseif direction == defines.direction.west then
+        position = { x = position.x + 0, y = position.y + 1 }
+    end
+
+    local unit_number = old_transformator.unit_number
+    local eg_high_voltage_pole = nil
+    local eg_low_voltage_pole = nil
+
+    if storage.eg_transformators[unit_number] then
+        local eg_transformator = storage.eg_transformators[unit_number]
+
+        eg_high_voltage_pole = storage.eg_transformators[unit_number].high_voltage
+        eg_low_voltage_pole = storage.eg_transformators[unit_number].low_voltage
+
+        -- Destroy all but the poles, perserve existing wire connections
+        if eg_transformator.unit and eg_transformator.unit.valid then
+            eg_transformator.unit.destroy()
+        end
+        if eg_transformator.boiler and eg_transformator.boiler.valid then
+            eg_transformator.boiler.destroy()
+        end
+        if eg_transformator.pump and eg_transformator.pump.valid then
+            eg_transformator.pump.destroy()
+        end
+        if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
+            eg_transformator.infinity_pipe.destroy()
+        end
+        if eg_transformator.generator and eg_transformator.generator.valid then
+            eg_transformator.generator.destroy()
+        end
+    else
+        --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
+    end
+
+    local offset = { x = 0, y = 0 }
+    local tier = string.sub(new_unit, -1)
+
+    -- Use the same position, no offset
+    offset = get_eg_unit_offset(direction)
+    local eg_unit_position = { position.x + offset.x, position.y + offset.y }
+
+    -- Replace with the unit, same positon and direction
+    local eg_unit = surface.create_entity {
+        name = "eg-unit-" .. tier,
+        position = eg_unit_position,
+        force = force,
+        direction = direction
+    }
+
+    -- Calculate the offset position for the eg-infinity-pipe based on direction
+    offset = get_eg_boiler_offset(direction)
+    local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
+
+    -- Place the eg-boiler with the same direction as the original unit
+    local eg_boiler = surface.create_entity {
+        name = "eg-boiler-" .. direction .. "-" .. tier,
+        position = eg_boiler_position,
+        force = force,
+        direction = direction
+    }
+
+    -- Calculate the offset position for the eg-pump
+    offset = get_eg_pump_offset(direction)
+    local eg_pump_position = { position.x + offset.x, position.y + offset.y }
+
+    -- Place the eg-pump with the same direction as the boiler
+    local eg_pump = surface.create_entity {
+        name = "eg-pump-" .. direction,
+        position = eg_pump_position,
+        force = force,
+        direction = direction,
+    }
+
+    -- Calculate the offset position for the eg-infinity-pipe based on direction
+    offset = get_eg_infinity_pipe_offset(direction)
+    local eg_infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
+
+    -- Place the eg-infinity-pipe with the same direction as the boiler
+    local eg_infinity_pipe = surface.create_entity {
+        name = "eg-infinity-pipe",
+        position = eg_infinity_pipe_position,
+        force = force,
+        direction = direction,
+    }
+
+    -- Calculate the offset position for the eg-steam-engine based on direction
+    offset = get_eg_steam_engine_offset(direction)
+    local eg_steam_engine_position = { position.x + offset.x, position.y + offset.y }
+    local eg_steam_engine_variant = ""
+
+    if direction == defines.direction.north or direction == defines.direction.east then
+        eg_steam_engine_variant = "ne"
+    elseif direction == defines.direction.south or direction == defines.direction.west then
+        eg_steam_engine_variant = "sw"
+    end
+
+    -- Place the eg-steam-engine with the same direction as the boiler
+    local eg_steam_engine = surface.create_entity {
+        name = "eg-steam-engine-" .. eg_steam_engine_variant .. "-" .. tier,
+        position = eg_steam_engine_position,
+        force = force,
+        direction = direction
+    }
+
+    -- Set eg-water to be actively flowing
+    eg_infinity_pipe.set_infinity_pipe_filter({
+        name = "eg-water-" .. tier,
+        percentage = 1,
+        temperature = 15,
+        mode = "at-least"
+    })
+
+    -- Track the eg_transformator components by the unit_number
+    storage.eg_transformators[eg_pump.unit_number] = {
+        unit = eg_unit,
+        boiler = eg_boiler,
+        pump = eg_pump,
+        infinity_pipe = eg_infinity_pipe,
+        generator = eg_steam_engine,
+        high_voltage = eg_high_voltage_pole,
+        low_voltage = eg_low_voltage_pole
+    }
+
+    -- Remove old_transformator from storage
+    storage.eg_transformators[unit_number] = nil
+end
+
 -- Checks for short circuits among all transformers and alerts players if any are found
-local function short_circuit_check()
+local function nth_tick_checks()
     local transformators = storage.eg_transformators
 
     for _, transformator in pairs(transformators) do
@@ -135,6 +340,17 @@ local function short_circuit_check()
                     true
                 )
             end
+        end
+
+        -- Check if pump has been disabled (dump buffers, quick power off)
+        local pump = transformator.pump
+        local control_behavior = pump.get_control_behavior()
+        if control_behavior and control_behavior.disabled and pump.fluidbox[1] ~= nil then
+            local unit_name = transformators[pump.unit_number].unit.name
+            local tier = string.sub(unit_name, -1)
+            pump.clear_fluid_inside()
+            replace_boiler_steam_engine(pump, tier)
+            --game.print("replaced")
         end
     end
 end
@@ -472,7 +688,7 @@ local function register_event_handlers()
     script.on_event(defines.events.on_player_cursor_stack_changed, on_cursor_stack_changed)
     script.on_event(defines.events.on_selected_entity_changed, on_selected_entity_changed)
 
-    script.on_nth_tick(constants.EG_ON_TICK_INTERVAL, short_circuit_check)
+    script.on_nth_tick(constants.EG_ON_TICK_INTERVAL, nth_tick_checks)
 end
 
 -- Set up globals and event handlers on initialization
@@ -554,6 +770,23 @@ local function show_transformator_gui(player, transformator)
     eg_selected_transformator[player.index] = transformator
 end
 
+--- Event handler for transformator interaction (e.g., GUI toggle).
+-- Opens or closes the transformator rating selection GUI.
+-- @param event EventData The event data containing the player and entity information.
+script.on_event("transformator_rating_selection", function(event)
+    local player = game.get_player(event.player_index)
+    if not player or not player.valid then return end
+
+    local selected_entity = player.selected
+    if selected_entity and selected_entity.valid and is_transformator(selected_entity.name) then
+        if player.gui.screen.transformator_rating_selection_frame then
+            close_transformator_gui(player)                 -- Close the GUI if it's already open
+        else
+            show_transformator_gui(player, selected_entity) -- Open the GUI if it’s not already open
+        end
+    end
+end)
+
 --- Event handler to update checkboxes and simulate radio button behavior.
 -- Ensures only one checkbox is selected at a time.
 -- @param event EventData The event data containing the GUI element information.
@@ -571,228 +804,6 @@ script.on_event(defines.events.on_gui_checked_state_changed, function(event)
                     child.state = false
                 end
             end
-        end
-    end
-end)
-
-local function replace_boiler_steam_engine(transformator, tier)
-    if not transformator then return end
-    if not tier then return end
-
-    local force = transformator.force
-    local surface = transformator.surface
-    local unit_number = transformator.unit_number
-
-    if storage.eg_transformators[unit_number] then
-        local eg_transformator = storage.eg_transformators[unit_number]
-
-        local name = eg_transformator.boiler.name
-        local direction = eg_transformator.boiler.direction
-        local position = eg_transformator.boiler.position
-
-        if eg_transformator.boiler and eg_transformator.boiler.valid then
-            eg_transformator.boiler.destroy()
-        end
-
-        local eg_boiler = surface.create_entity {
-            name = name,
-            position = position,
-            force = force,
-            direction = direction
-        }
-
-        name = eg_transformator.generator.name
-        direction = eg_transformator.generator.direction
-        position = eg_transformator.generator.position
-
-        if eg_transformator.generator and eg_transformator.generator.valid then
-            eg_transformator.generator.destroy()
-        end
-
-        local eg_steam_engine = surface.create_entity {
-            name = name,
-            position = position,
-            force = force,
-            direction = direction
-        }
-
-        storage.eg_transformators[unit_number].boiler = eg_boiler
-        storage.eg_transformators[unit_number].generator = eg_steam_engine
-    else
-        --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
-    end
-end
-
---- Replace the old transformator entity with a new one based on the selected rating.
--- Restores wire connections and ensures smooth replacement of the transformator.
--- @param old_transformator LuaEntity The transformator to replace.
--- @param new_rating string The selected new rating for the transformator.
-local function replace_transformator(old_transformator, new_rating)
-    if not old_transformator then return end
-    if not new_rating then return end
-
-    local new_unit = nil
-
-    for unit, specs in pairs(constants.EG_TRANSFORMATORS) do
-        if specs.rating == new_rating then
-            new_unit = unit
-            break
-        end
-    end
-
-    --if not new_unit or storage.eg_transformators[old_transformator.unit_number].unit.name == new_unit then return end
-
-    local force = old_transformator.force
-    local surface = old_transformator.surface
-    local direction = old_transformator.direction
-    local position = old_transformator.position
-
-    if direction == defines.direction.north then
-        position = { x = position.x + 0, y = position.y + 0 }
-    elseif direction == defines.direction.east then
-        position = { x = position.x + 1, y = position.y + 0 }
-    elseif direction == defines.direction.south then
-        position = { x = position.x + 1, y = position.y + 1 }
-    elseif direction == defines.direction.west then
-        position = { x = position.x + 0, y = position.y + 1 }
-    end
-
-    local unit_number = old_transformator.unit_number
-    local eg_high_voltage_pole = nil
-    local eg_low_voltage_pole = nil
-
-    if storage.eg_transformators[unit_number] then
-        local eg_transformator = storage.eg_transformators[unit_number]
-
-        eg_high_voltage_pole = storage.eg_transformators[unit_number].high_voltage
-        eg_low_voltage_pole = storage.eg_transformators[unit_number].low_voltage
-
-        -- Destroy all but the poles, perserve existing wire connections
-        if eg_transformator.unit and eg_transformator.unit.valid then
-            eg_transformator.unit.destroy()
-        end
-        if eg_transformator.boiler and eg_transformator.boiler.valid then
-            eg_transformator.boiler.destroy()
-        end
-        if eg_transformator.pump and eg_transformator.pump.valid then
-            eg_transformator.pump.destroy()
-        end
-        if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
-            eg_transformator.infinity_pipe.destroy()
-        end
-        if eg_transformator.generator and eg_transformator.generator.valid then
-            eg_transformator.generator.destroy()
-        end
-    else
-        --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
-    end
-
-    local offset = { x = 0, y = 0 }
-    local tier = string.sub(new_unit, -1)
-
-    -- Use the same position, no offset
-    offset = get_eg_unit_offset(direction)
-    local eg_unit_position = { position.x + offset.x, position.y + offset.y }
-
-    -- Replace with the unit, same positon and direction
-    local eg_unit = surface.create_entity {
-        name = "eg-unit-" .. tier,
-        position = eg_unit_position,
-        force = force,
-        direction = direction
-    }
-
-    -- Calculate the offset position for the eg-infinity-pipe based on direction
-    offset = get_eg_boiler_offset(direction)
-    local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
-
-    -- Place the eg-boiler with the same direction as the original unit
-    local eg_boiler = surface.create_entity {
-        name = "eg-boiler-" .. direction .. "-" .. tier,
-        position = eg_boiler_position,
-        force = force,
-        direction = direction
-    }
-
-    -- Calculate the offset position for the eg-pump
-    offset = get_eg_pump_offset(direction)
-    local eg_pump_position = { position.x + offset.x, position.y + offset.y }
-
-    -- Place the eg-pump with the same direction as the boiler
-    local eg_pump = surface.create_entity {
-        name = "eg-pump-" .. direction,
-        position = eg_pump_position,
-        force = force,
-        direction = direction,
-    }
-
-    -- Calculate the offset position for the eg-infinity-pipe based on direction
-    offset = get_eg_infinity_pipe_offset(direction)
-    local eg_infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
-
-    -- Place the eg-infinity-pipe with the same direction as the boiler
-    local eg_infinity_pipe = surface.create_entity {
-        name = "eg-infinity-pipe",
-        position = eg_infinity_pipe_position,
-        force = force,
-        direction = direction,
-    }
-
-    -- Calculate the offset position for the eg-steam-engine based on direction
-    offset = get_eg_steam_engine_offset(direction)
-    local eg_steam_engine_position = { position.x + offset.x, position.y + offset.y }
-    local eg_steam_engine_variant = ""
-
-    if direction == defines.direction.north or direction == defines.direction.east then
-        eg_steam_engine_variant = "ne"
-    elseif direction == defines.direction.south or direction == defines.direction.west then
-        eg_steam_engine_variant = "sw"
-    end
-
-    -- Place the eg-steam-engine with the same direction as the boiler
-    local eg_steam_engine = surface.create_entity {
-        name = "eg-steam-engine-" .. eg_steam_engine_variant .. "-" .. tier,
-        position = eg_steam_engine_position,
-        force = force,
-        direction = direction
-    }
-
-    -- Set eg-water to be actively flowing
-    eg_infinity_pipe.set_infinity_pipe_filter({
-        name = "eg-water-" .. tier,
-        percentage = 1,
-        temperature = 15,
-        mode = "at-least"
-    })
-
-    -- Track the eg_transformator components by the unit_number
-    storage.eg_transformators[eg_pump.unit_number] = {
-        unit = eg_unit,
-        boiler = eg_boiler,
-        pump = eg_pump,
-        infinity_pipe = eg_infinity_pipe,
-        generator = eg_steam_engine,
-        high_voltage = eg_high_voltage_pole,
-        low_voltage = eg_low_voltage_pole
-    }
-
-    -- Remove old_transformator from storage
-    storage.eg_transformators[unit_number] = nil
-end
-
---- Event handler for transformator interaction (e.g., GUI toggle).
--- Opens or closes the transformator rating selection GUI.
--- @param event EventData The event data containing the player and entity information.
-script.on_event("transformator_rating_selection", function(event)
-    local player = game.get_player(event.player_index)
-    if not player or not player.valid then return end
-
-    local selected_entity = player.selected
-    if selected_entity and selected_entity.valid and is_transformator(selected_entity.name) then
-        if player.gui.screen.transformator_rating_selection_frame then
-            close_transformator_gui(player)                 -- Close the GUI if it's already open
-        else
-            show_transformator_gui(player, selected_entity) -- Open the GUI if it’s not already open
         end
     end
 end)

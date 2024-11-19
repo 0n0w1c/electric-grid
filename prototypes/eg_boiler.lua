@@ -59,11 +59,12 @@ function create_transformator_boiler(variant, tier)
         },
         mode = "output-to-separate-pipe",
         burning_cooldown = 0,
-        collision_mask = {
-            layers = {
-                ["is_lower_object"] = true
-            }
-        },
+        collision_mask = { layers = {} },
+        --collision_mask = {
+        --    layers = {
+        --        ["is_lower_object"] = true
+        --    }
+        --},
         selection_box = selection_box,
         collision_box = collision_box,
         fluid_box = {

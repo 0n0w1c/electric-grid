@@ -11,11 +11,12 @@ local eg_infinity_pipe = {
     flags = constants.EG_INTERNAL_ENTITY_FLAGS,
     localised_name = { "", "Infinity pipe" },
     localised_description = { "", "Component of a Transformator" },
-    collision_mask = {
-        layers = {
-            ["is_lower_object"] = true
-        }
-    },
+    collision_mask = { layers = {} },
+    --collision_mask = {
+    --    layers = {
+    --        ["is_lower_object"] = true
+    --    }
+    --},
     collision_box = {
         { -0.49, -0.49 },
         { 0.49,  0.49 }
