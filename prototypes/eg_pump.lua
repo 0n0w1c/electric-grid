@@ -20,14 +20,18 @@ function create_transformator_pump(variant)
         { 0.49,  0.49 }
     }
 
-    local selection_box = {
-        { -0.49, -0.49 },
-        { 0.49,  0.49 }
-    }
+    --local selection_box = {
+    --    { -0.49, -0.49 },
+    --    { 0.49,  0.49 }
+    --}
     --local selection_box = {
     --    { -1.49, -1.49 },
     --    { 0.49,  0.49 }
     --}
+    local selection_box = {
+        { -1.49, -0.49 },
+        { 0.49,  0.49 }
+    }
 
     return {
         type                      = "pump",

@@ -9,11 +9,11 @@ function create_transformator_steam_engine(variant, tier)
     if variant == "ne" then
         selection_box = {
             { -0.49, -0.49 },
-            { 1.49,  1.49 }
+            { 1.49,  0.49 }
         }
     elseif variant == "sw" then
         selection_box = {
-            { -1.49, -1.49 },
+            { -0.49, -1.49 },
             { 0.49,  0.49 }
         }
     end

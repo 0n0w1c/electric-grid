@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.5
+Date: 12.19.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Modified selection areas for the tranformator
+      Circuit wires now connect to middle (high-voltage) side, blue triangle appears when selected
+      Mining and changing the transformator's rating is now middle (low-voltage) side
+---------------------------------------------------------------------------------------------------
 Version: 0.1.4
 Date: 12.19.2024
   Bugfixes:

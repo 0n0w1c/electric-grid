@@ -269,7 +269,7 @@ local function create_transformator_unit(tier)
         resistances = data.raw["electric-pole"]["substation"].resistances,
         random_variation_on_create = false,
         collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
-        selection_box = { { -1.0, -1.0 }, { 1.0, 1.0 } },
+        selection_box = { { -1.0, -1.0 }, { 1.0, 0.0 } },
         collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
         picture = get_transformator_picture(tier),
         localised_name = { "", "Transformator - ", rating },
