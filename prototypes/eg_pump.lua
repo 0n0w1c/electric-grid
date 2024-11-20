@@ -21,42 +21,41 @@ function create_transformator_pump(variant)
     }
 
     local selection_box = {
-        { -1.49, -1.49 },
+        { -0.49, -0.49 },
         { 0.49,  0.49 }
     }
+    --local selection_box = {
+    --    { -1.49, -1.49 },
+    --    { 0.49,  0.49 }
+    --}
 
     return {
-        type = "pump",
-        name = "eg-pump-" .. variant,
-        icon = "__base__/graphics/icons/pump.png",
-        icon_size = 64,
-        corpse = "big-remnants",
-        dying_explosion = "medium-explosion",
-        resistances = data.raw["electric-pole"]["substation"].resistances,
-        max_health = constants.EG_MAX_HEALTH,
-        hidden = not constants.EG_DEBUG_TRANSFORMATOR,
-        hidden_in_factoriopedia = true,
-        selectable_in_game = true,
-        flags = constants.EG_INTERNAL_ENTITY_FLAGS,
-        alert_icon_shift = alert_icon_shift,
-        minable = { mining_time = 0.5, result = "eg-transformator-item" },
-        collision_mask = { layers = {} },
-        --collision_mask = {
-        --    layers = {
-        --        ["is_lower_object"] = true,
-        --    }
-        --},
-        selection_box = selection_box,
-        collision_box = collision_box,
-        localised_name = { "", "Transformator" },
-        localised_description = { "", "Transformator" },
-        pumping_speed = 1000,
-        energy_usage = "0.001W",
-        energy_source = {
+        type                      = "pump",
+        name                      = "eg-pump-" .. variant,
+        icon                      = "__base__/graphics/icons/pump.png",
+        icon_size                 = 64,
+        corpse                    = "big-remnants",
+        dying_explosion           = "medium-explosion",
+        resistances               = data.raw["electric-pole"]["substation"].resistances,
+        max_health                = constants.EG_MAX_HEALTH,
+        hidden                    = false,
+        hidden_in_factoriopedia   = true,
+        selectable_in_game        = true,
+        flags                     = constants.EG_INTERNAL_ENTITY_FLAGS,
+        alert_icon_shift          = alert_icon_shift,
+        minable                   = nil,
+        collision_mask            = { layers = {} },
+        selection_box             = selection_box,
+        collision_box             = collision_box,
+        localised_name            = { "", "Transformator" },
+        localised_description     = { "", "Transformator" },
+        pumping_speed             = 1000,
+        energy_usage              = "0.001W",
+        energy_source             = {
             type = "electric",
             usage_priority = "secondary-input"
         },
-        fluid_box = {
+        fluid_box                 = {
             volume = 200,
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             pipe_connections = {
@@ -74,16 +73,16 @@ function create_transformator_pump(variant)
                 }
             }
         },
-        control_behavior = {
+        control_behavior          = {
             circuit_enable_disable = true,
             connect_to_logistic_network = true,
         },
         circuit_wire_max_distance = 9,
-        close_sound = {
+        close_sound               = {
             filename = "__base__/sound/machine-close.ogg",
             volume = 0.5
         },
-        circuit_connector = {
+        circuit_connector         = {
             {
                 points = {
                     shadow = {

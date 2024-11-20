@@ -105,8 +105,8 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
         pole.max_health = constants.EG_MAX_HEALTH
         pole.connection_points = eg_wireconnections(connection_name, direction)
+        --pole.selection_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
         pole.selection_box = selection_box(direction)
-        --pole.selection_box = { { -0.49, 0.49 }, { 0.49, 0.49 } }
         pole.localised_name = { "", localised_name }
         pole.localised_description = { "", localised_description }
         pole.hidden = true

@@ -35,6 +35,11 @@ function create_transformator_boiler(variant, tier)
         { 0.49,  0.49 }
     }
 
+    --selection_box = {
+    --    { -0.49, -0.49 },
+    --    { 0.49,  0.49 }
+    --}
+
     return {
         type = "boiler",
         name = "eg-boiler-" .. variant .. "-" .. tier,
@@ -45,7 +50,7 @@ function create_transformator_boiler(variant, tier)
         max_health = constants.EG_MAX_HEALTH,
         hidden = not constants.EG_DEBUG_TRANSFORMATOR,
         minable = nil,
-        selectable_in_game = constants.EG_DEBUG_TRANSFORMATOR,
+        selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name = { "", "Boiler - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
@@ -67,6 +72,7 @@ function create_transformator_boiler(variant, tier)
         --},
         selection_box = selection_box,
         collision_box = collision_box,
+
         fluid_box = {
             filter = "eg-water-" .. tier,
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,

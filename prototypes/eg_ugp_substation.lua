@@ -5,12 +5,17 @@ ugp_substation.localised_description          = "Distributes power underground"
 ugp_substation.icon                           = constants.EG_GRAPHICS .. "/entities/ugp-substation.png"
 ugp_substation.icon_size                      = 128
 ugp_substation.icon_mipmaps                   = 1
-ugp_substation.hidden                         = true
-ugp_substation.hidden_in_factoriopedia        = true
+ugp_substation.hidden                         = false
+ugp_substation.hidden_in_factoriopedia        = false
 ugp_substation.draw_copper_wires              = false
 ugp_substation.draw_circuit_wires             = false
+ugp_substation.placeable_by                   = { item = "eg-ugp-substation-displayer", count = 1 }
 ugp_substation.minable                        = { mining_time = 0.5, result = "substation" }
 ugp_substation.collision_box                  = {
+    { -0.9, -0.9 },
+    { 0.9,  0.9 }
+}
+ugp_substation.selection_box                  = {
     { -0.9, -0.9 },
     { 0.9,  0.9 }
 }

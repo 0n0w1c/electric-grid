@@ -1,28 +1,12 @@
 constants = require("constants")
 
-local eg_selected_transformator = {}
-local copper_wire_on_cursor = {}
--- Table to track the last selected electric pole for each player
-local last_selected_pole = {}
-
 -- Initialize global memory structures
 local function initialize_globals()
     storage = storage or {}
     storage.eg_transformators = storage.eg_transformators or {}
-end
-
--- Define the position offset for the boiler based on direction
-local function get_eg_unit_offset(direction)
-    if direction == defines.direction.north then
-        return { x = -1, y = -1 }
-    elseif direction == defines.direction.east then
-        return { x = -1, y = -1 }
-    elseif direction == defines.direction.south then
-        return { x = -1, y = -1 }
-    elseif direction == defines.direction.west then
-        return { x = -1, y = -1 }
-    end
-    return { x = 0, y = 0 }
+    storage.eg_selected_transformator = storage.eg_selected_transformator or {}
+    storage.eg_copper_wire_on_cursor = storage.eg_copper_wire_on_cursor or {}
+    storage.eg_last_selected_pole = storage.eg_last_selected_pole or {}
 end
 
 -- Define the position offset for the boiler based on direction
@@ -110,20 +94,39 @@ local function get_eg_low_voltage_pole_offset(direction)
 end
 
 local function is_transformator(name)
-    if name == constants.EG_DISPLAYER or constants.EG_TRANSFORMATORS[name] or string.sub(name, 1, 8) == "eg-pump-" then
+    --if name == constants.EG_DISPLAYER or constants.EG_TRANSFORMATORS[name] or string.sub(name, 1, 8) == "eg-pump-" then
+    if name == constants.EG_DISPLAYER or constants.EG_TRANSFORMATORS[name] then
         return true
     end
 
     return false
 end
 
-local function replace_boiler_steam_engine(transformator, tier)
+local function find_transformator_by_pump(pump)
+    if not (pump and pump.valid) then
+        return nil -- Ensure the pump is valid
+    end
+
+    for _, transformator in pairs(storage.eg_transformators) do
+        if transformator.pump and transformator.pump.valid and transformator.pump == pump then
+            return transformator -- Found the matching transformator
+        end
+    end
+
+    return nil -- No matching transformator found
+end
+
+
+local function replace_boiler_steam_engine(transformator)
     if not transformator then return end
+
+    local unit_name = transformator.unit.name
+    local tier = string.sub(unit_name, -1)
     if not tier then return end
 
-    local force = transformator.force
-    local surface = transformator.surface
-    local unit_number = transformator.unit_number
+    local force = transformator.unit.force
+    local surface = transformator.unit.surface
+    local unit_number = transformator.unit.unit_number
 
     if storage.eg_transformators[unit_number] then
         local eg_transformator = storage.eg_transformators[unit_number]
@@ -187,21 +190,22 @@ local function replace_transformator(old_transformator, new_rating)
     local force = old_transformator.force
     local surface = old_transformator.surface
     local direction = old_transformator.direction
-    local position = old_transformator.position
-
-    if direction == defines.direction.north then
-        position = { x = position.x + 0, y = position.y + 0 }
-    elseif direction == defines.direction.east then
-        position = { x = position.x + 1, y = position.y + 0 }
-    elseif direction == defines.direction.south then
-        position = { x = position.x + 1, y = position.y + 1 }
-    elseif direction == defines.direction.west then
-        position = { x = position.x + 0, y = position.y + 1 }
-    end
 
     local unit_number = old_transformator.unit_number
     local eg_high_voltage_pole = nil
     local eg_low_voltage_pole = nil
+
+    local eg_unit_position
+    local eg_unit_direction
+    local eg_boiler_position
+    local eg_boiler_direction
+    local eg_pump_position
+    local eg_pump_direction
+    local eg_infinity_pipe_position
+    local eg_infinity_pipe_direction
+    local eg_steam_engine_position
+    local eg_steam_engine_direction
+
 
     if storage.eg_transformators[unit_number] then
         local eg_transformator = storage.eg_transformators[unit_number]
@@ -211,78 +215,68 @@ local function replace_transformator(old_transformator, new_rating)
 
         -- Destroy all but the poles, perserve existing wire connections
         if eg_transformator.unit and eg_transformator.unit.valid then
+            eg_unit_position = eg_transformator.unit.position
+            eg_unit_direction = eg_transformator.unit.direction
             eg_transformator.unit.destroy()
         end
         if eg_transformator.boiler and eg_transformator.boiler.valid then
+            eg_boiler_position = eg_transformator.boiler.position
+            eg_boiler_direction = eg_transformator.boiler.direction
             eg_transformator.boiler.destroy()
         end
         if eg_transformator.pump and eg_transformator.pump.valid then
+            eg_pump_position = eg_transformator.pump.position
+            eg_pump_direction = eg_transformator.pump.direction
             eg_transformator.pump.destroy()
         end
         if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
+            eg_infinity_pipe_position = eg_transformator.infinity_pipe.position
+            eg_infinity_pipe_direction = eg_transformator.infinity_pipe.direction
             eg_transformator.infinity_pipe.destroy()
         end
         if eg_transformator.generator and eg_transformator.generator.valid then
+            eg_steam_engine_position = eg_transformator.generator.position
+            eg_steam_engine_direction = eg_transformator.generator.direction
             eg_transformator.generator.destroy()
         end
     else
         --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
     end
 
-    local offset = { x = 0, y = 0 }
     local tier = string.sub(new_unit, -1)
-
-    -- Use the same position, no offset
-    offset = get_eg_unit_offset(direction)
-    local eg_unit_position = { position.x + offset.x, position.y + offset.y }
 
     -- Replace with the unit, same positon and direction
     local eg_unit = surface.create_entity {
         name = "eg-unit-" .. tier,
         position = eg_unit_position,
         force = force,
-        direction = direction
+        direction = eg_unit_direction
     }
-
-    -- Calculate the offset position for the eg-infinity-pipe based on direction
-    offset = get_eg_boiler_offset(direction)
-    local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
 
     -- Place the eg-boiler with the same direction as the original unit
     local eg_boiler = surface.create_entity {
         name = "eg-boiler-" .. direction .. "-" .. tier,
         position = eg_boiler_position,
         force = force,
-        direction = direction
+        direction = eg_boiler_direction
     }
-
-    -- Calculate the offset position for the eg-pump
-    offset = get_eg_pump_offset(direction)
-    local eg_pump_position = { position.x + offset.x, position.y + offset.y }
 
     -- Place the eg-pump with the same direction as the boiler
     local eg_pump = surface.create_entity {
         name = "eg-pump-" .. direction,
         position = eg_pump_position,
         force = force,
-        direction = direction,
+        direction = eg_pump_direction,
     }
-
-    -- Calculate the offset position for the eg-infinity-pipe based on direction
-    offset = get_eg_infinity_pipe_offset(direction)
-    local eg_infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
 
     -- Place the eg-infinity-pipe with the same direction as the boiler
     local eg_infinity_pipe = surface.create_entity {
         name = "eg-infinity-pipe",
         position = eg_infinity_pipe_position,
         force = force,
-        direction = direction,
+        direction = eg_infinity_pipe_direction,
     }
 
-    -- Calculate the offset position for the eg-steam-engine based on direction
-    offset = get_eg_steam_engine_offset(direction)
-    local eg_steam_engine_position = { position.x + offset.x, position.y + offset.y }
     local eg_steam_engine_variant = ""
 
     if direction == defines.direction.north or direction == defines.direction.east then
@@ -296,7 +290,7 @@ local function replace_transformator(old_transformator, new_rating)
         name = "eg-steam-engine-" .. eg_steam_engine_variant .. "-" .. tier,
         position = eg_steam_engine_position,
         force = force,
-        direction = direction
+        direction = eg_steam_engine_direction
     }
 
     -- Set eg-water to be actively flowing
@@ -307,8 +301,8 @@ local function replace_transformator(old_transformator, new_rating)
         mode = "at-least"
     })
 
-    -- Track the eg_transformator components by the unit_number
-    storage.eg_transformators[eg_pump.unit_number] = {
+    -- Track the eg_transformator components by the unit's unit_number
+    storage.eg_transformators[eg_unit.unit_number] = {
         unit = eg_unit,
         boiler = eg_boiler,
         pump = eg_pump,
@@ -346,11 +340,9 @@ local function nth_tick_checks()
         local pump = transformator.pump
         local control_behavior = pump.get_control_behavior()
         if control_behavior and control_behavior.disabled and pump.fluidbox[1] ~= nil then
-            local unit_name = transformators[pump.unit_number].unit.name
-            local tier = string.sub(unit_name, -1)
+            local tier = string.sub(transformator.unit.name, -1)
             pump.clear_fluid_inside()
-            replace_boiler_steam_engine(pump, tier)
-            --game.print("replaced")
+            replace_boiler_steam_engine(transformator)
         end
     end
 end
@@ -468,8 +460,8 @@ local function on_eg_transformator_built(event)
         mode = "at-least"
     })
 
-    -- Track the eg_transformator components by the pump's unit_number
-    storage.eg_transformators[eg_pump.unit_number] = {
+    -- Track the eg_transformator components by the unit's unit_number
+    storage.eg_transformators[eg_unit.unit_number] = {
         unit = eg_unit,
         boiler = eg_boiler,
         pump = eg_pump,
@@ -524,18 +516,18 @@ local function is_copper_cable_connection_allowed(pole_a, pole_b)
         return true
     end
 
-    -- Rule set 2: Generated poles can connect to each other
+    -- Rule set 2: Transformator poles can connect to each other
     if name_a:match("^eg%-[high%-low]+%-voltage%-pole%-") and name_b:match("^eg%-[high%-low]+%-voltage%-pole%-") then
         return true
     end
 
-    -- Rule set 3: Generated poles can connect to eg-huge-electric-pole and vice-versa
+    -- Rule set 3: Transformator poles can connect to eg-huge-electric-pole and vice-versa
     if (name_a == "eg-huge-electric-pole" and name_b:match("^eg%-[high%-low]+%-voltage%-pole%-")) or
         (name_b == "eg-huge-electric-pole" and name_a:match("^eg%-[high%-low]+%-voltage%-pole%-")) then
         return true
     end
 
-    -- Rule set 4: Generated poles can connect to big-electric-pole and medium-electric-pole, and vice-versa
+    -- Rule set 4: Transformator poles can connect to big-electric-pole and medium-electric-pole, and vice-versa
     local standard_poles = { ["big-electric-pole"] = true, ["medium-electric-pole"] = true }
     if (name_a:match("^eg%-[high%-low]+%-voltage%-pole%-") and standard_poles[name_b]) or
         (name_b:match("^eg%-[high%-low]+%-voltage%-pole%-") and standard_poles[name_a]) then
@@ -605,6 +597,8 @@ end
 -- Remove all components of a transformer when the unit is mined
 local function on_eg_transformator_mined(event)
     local entity = event.entity
+    if not entity then return end
+
     local unit_number = entity.unit_number
 
     if storage.eg_transformators[unit_number] then
@@ -646,9 +640,9 @@ local function on_cursor_stack_changed(event)
 
     -- Check if the player is holding copper wire
     if cursor_stack and cursor_stack.valid_for_read and cursor_stack.name == "copper-wire" then
-        copper_wire_on_cursor[player.index] = true
+        storage.eg_copper_wire_on_cursor[player.index] = true
     else
-        copper_wire_on_cursor[player.index] = nil -- Clear the flag when not holding copper wire
+        storage.eg_copper_wire_on_cursor[player.index] = nil -- Clear the flag when not holding copper wire
     end
 end
 
@@ -662,19 +656,19 @@ local function on_selected_entity_changed(event)
     local player_index = event.player_index
 
     -- Check if the player was holding copper wire and previously had an electric pole selected
-    if last_selected_pole[player_index] and (not selected_entity or selected_entity.type ~= "electric-pole") then
+    if storage.eg_last_selected_pole[player_index] and (not selected_entity or selected_entity.type ~= "electric-pole") then
         -- Enforce wiring rules for the last selected pole
-        enforce_pole_connections(last_selected_pole[player_index])
+        enforce_pole_connections(storage.eg_last_selected_pole[player_index])
         -- Clear the last selected pole tracking
-        last_selected_pole[player_index] = nil
+        storage.eg_last_selected_pole[player_index] = nil
     end
 
-    -- Update last_selected_pole if the player selects a new electric pole while holding copper wire
-    if copper_wire_on_cursor[player_index] and selected_entity and selected_entity.valid and selected_entity.type == "electric-pole" then
-        last_selected_pole[player_index] = selected_entity
+    -- Update storage.eg_last_selected_pole if the player selects a new electric pole while holding copper wire
+    if storage.eg_copper_wire_on_cursor[player_index] and selected_entity and selected_entity.valid and selected_entity.type == "electric-pole" then
+        storage.eg_last_selected_pole[player_index] = selected_entity
     else
-        -- Clear last_selected_pole if they are no longer holding copper wire
-        last_selected_pole[player_index] = nil
+        -- Clear storage.eg_last_selected_pole if they are no longer holding copper wire
+        storage.eg_last_selected_pole[player_index] = nil
     end
 end
 
@@ -682,9 +676,16 @@ end
 local function register_event_handlers()
     script.on_event(defines.events.on_built_entity, on_entity_built)
     script.on_event(defines.events.on_robot_built_entity, on_entity_built)
+    script.on_event(defines.events.on_space_platform_built_entity, on_entity_built)
+    script.on_event(defines.events.on_entity_cloned, on_entity_built)
+    script.on_event(defines.events.script_raised_built, on_entity_built)
+    script.on_event(defines.events.script_raised_revive, on_entity_built)
+
     script.on_event(defines.events.on_player_mined_entity, on_eg_transformator_mined)
     script.on_event(defines.events.on_robot_mined_entity, on_eg_transformator_mined)
+    script.on_event(defines.events.on_space_platform_mined_entity, on_eg_transformator_mined)
     script.on_event(defines.events.on_entity_died, on_eg_transformator_mined)
+
     script.on_event(defines.events.on_player_cursor_stack_changed, on_cursor_stack_changed)
     script.on_event(defines.events.on_selected_entity_changed, on_selected_entity_changed)
 
@@ -767,7 +768,7 @@ local function show_transformator_gui(player, transformator)
     }
 
     -- Store the selected transformator in global for reference
-    eg_selected_transformator[player.index] = transformator
+    storage.eg_selected_transformator[player.index] = transformator
 end
 
 --- Event handler for transformator interaction (e.g., GUI toggle).
@@ -831,7 +832,7 @@ script.on_event(defines.events.on_gui_click, function(event)
             end
 
             if selected_rating then
-                local transformator = eg_selected_transformator[player.index]
+                local transformator = storage.eg_selected_transformator[player.index]
                 if transformator and transformator.valid then
                     replace_transformator(transformator, selected_rating)
                 end
@@ -849,21 +850,24 @@ script.on_event(defines.events.on_gui_closed, function(event)
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
 
-    if string.sub(entity.name, 1, 8) == "eg-pump-" then
-        local filter = entity.fluidbox.get_filter(1)
-        if filter and filter.name then
-            local unit_name = storage.eg_transformators[entity.unit_number].unit.name
-            local tier = string.sub(unit_name, -1)
+    local transformator = find_transformator_by_pump(entity)
+    if not transformator then return end
 
-            if filter.name == "eg-null-disable" then
-                -- on nth_tick can check cicuit/logistc conditions, clear guts?
-                entity.clear_fluid_inside()
-                entity.fluidbox.set_filter(1, { name = "eg-null-disable" })
-                replace_boiler_steam_engine(entity, tier)
-            else
-                entity.clear_fluid_inside()
-                entity.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
-            end
+    local pump = transformator.pump
+
+    local filter = pump.fluidbox.get_filter(1)
+    if filter and filter.name then
+        local unit_name = transformator.unit.name
+        local tier = string.sub(unit_name, -1)
+
+        if filter.name == "eg-null-disable" then
+            -- on nth_tick can check cicuit/logistc conditions, clear guts?
+            pump.clear_fluid_inside()
+            pump.fluidbox.set_filter(1, { name = "eg-null-disable" })
+            replace_boiler_steam_engine(transformator)
+        else
+            pump.clear_fluid_inside()
+            pump.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
         end
     end
 end)

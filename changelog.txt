@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.4
+Date: 12.19.2024
+  Bugfixes:
+    - Reverted previous design decsion to index transformators based on the pump, back to the unit
+    - Robot deconstruction did not remove the hidden composite entities
+    - Copying transformators works properly
+    - Transformator blueprints works properly
+    - Underground pole blueprints work properly
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
+Version: 0.1.3
+Date: 12.19.2024
+  Bugfixes:
+    - Per player memory structures moved to storage
+  Changes:
+    - Added event handlers for space platforms, script and cloned events
+---------------------------------------------------------------------------------------------------
 Version: 0.1.2
 Date: 12.18.2024
   Bugfixes:
