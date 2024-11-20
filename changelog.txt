@@ -2,7 +2,7 @@
 Version: 0.1.4
 Date: 12.19.2024
   Bugfixes:
-    - Reverted previous design decsion to index transformators based on the pump, back to the unit
+    - Reverted previous design decision to index transformators based on the pump, back to the unit
     - Robot deconstruction did not remove the hidden composite entities
     - Copying transformators works properly
     - Transformator blueprints works properly
