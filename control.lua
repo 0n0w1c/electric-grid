@@ -176,7 +176,7 @@ local function replace_transformator(old_transformator, new_rating)
     if not old_transformator then return end
     if not new_rating then return end
 
-    local new_unit = nil
+    local new_unit = "eg-unit-1"
 
     for unit, specs in pairs(constants.EG_TRANSFORMATORS) do
         if specs.rating == new_rating then
@@ -319,32 +319,42 @@ end
 -- Checks for short circuits among all transformers and alerts players if any are found
 local function nth_tick_checks()
     local transformators = storage.eg_transformators
+    local updated_transformators = {}
 
-    for _, transformator in pairs(transformators) do
-        -- Check if high and low voltage poles are on the same network (indicating a short circuit)
-        local high_network_id = transformator.high_voltage.electric_network_id
-        local low_network_id = transformator.low_voltage.electric_network_id
+    for id, transformator in pairs(transformators) do
+        -- Validate the transformator components
+        if transformator.pump.valid and transformator.high_voltage.valid and transformator.low_voltage.valid then
+            -- Preserve valid transformators in the updated table
+            updated_transformators[id] = transformator
 
-        if high_network_id and low_network_id and high_network_id == low_network_id then
-            for _, player in pairs(game.players) do
-                player.add_custom_alert(
-                    transformator.unit,
-                    { type = "virtual", name = "eg-alert" },
-                    { "", "Short circuit detected" },
-                    true
-                )
+            -- Short circuit detection
+            local high_network_id = transformator.high_voltage.electric_network_id
+            local low_network_id = transformator.low_voltage.electric_network_id
+
+            if high_network_id and low_network_id and high_network_id == low_network_id then
+                for _, player in pairs(game.players) do
+                    player.add_custom_alert(
+                        transformator.unit,
+                        { type = "virtual", name = "eg-alert" },
+                        { "", "Short circuit detected" },
+                        true
+                    )
+                end
+            end
+
+            -- Check if pump is disabled
+            local pump = transformator.pump
+            local control_behavior = pump.get_control_behavior()
+            if control_behavior and control_behavior.disabled and pump.fluidbox[1] ~= nil then
+                local tier = string.sub(transformator.unit.name, -1)
+                pump.clear_fluid_inside()
+                replace_boiler_steam_engine(transformator)
             end
         end
-
-        -- Check if pump has been disabled (dump buffers, quick power off)
-        local pump = transformator.pump
-        local control_behavior = pump.get_control_behavior()
-        if control_behavior and control_behavior.disabled and pump.fluidbox[1] ~= nil then
-            local tier = string.sub(transformator.unit.name, -1)
-            pump.clear_fluid_inside()
-            replace_boiler_steam_engine(transformator)
-        end
     end
+
+    -- Replace the storage table with the updated one
+    storage.eg_transformators = updated_transformators
 end
 
 local function on_eg_transformator_built(event)
@@ -817,11 +827,11 @@ script.on_event(defines.events.on_gui_click, function(event)
     if not (element and element.valid) then return end
 
     local player = game.get_player(event.player_index)
-    if not player or not player.valid then return end
+    if not (player and player.valid) then return end
 
     if element.name == "confirm_transformator_rating" then
         local frame = player.gui.screen.transformator_rating_selection_frame
-        if frame then
+        if frame and frame.children[1] then
             local selected_rating = nil
 
             for _, child in pairs(frame.children[1].children) do
@@ -832,7 +842,7 @@ script.on_event(defines.events.on_gui_click, function(event)
             end
 
             if selected_rating then
-                local transformator = storage.eg_selected_transformator[player.index]
+                local transformator = storage.eg_selected_transformator and storage.eg_selected_transformator[player.index]
                 if transformator and transformator.valid then
                     replace_transformator(transformator, selected_rating)
                 end

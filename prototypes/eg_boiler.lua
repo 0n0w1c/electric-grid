@@ -6,28 +6,12 @@ function create_transformator_boiler(variant, tier)
     local selection_box
     if variant == defines.direction.north then
         alert_icon_shift = { x = 0.5, y = -0.5 }
-        selection_box = {
-            { -0.49, -1.49 },
-            { 1.49,  0.49 }
-        }
     elseif variant == defines.direction.east then
         alert_icon_shift = { x = 0.5, y = 0.5 }
-        selection_box = {
-            { -0.49, -1.49 },
-            { 1.49,  0.49 }
-        }
     elseif variant == defines.direction.south then
         alert_icon_shift = { x = -0.5, y = 0.5 }
-        selection_box = {
-            { -0.49, -1.49 },
-            { 1.49,  0.49 }
-        }
     elseif variant == defines.direction.west then
         alert_icon_shift = { x = -0.5, y = -0.5 }
-        selection_box = {
-            { -0.49, -1.49 },
-            { 1.49,  0.49 }
-        }
     end
 
     local collision_box = {
@@ -53,7 +37,7 @@ function create_transformator_boiler(variant, tier)
         energy_consumption = rating,
         target_temperature = 165,
         max_health = constants.EG_MAX_HEALTH,
-        hidden = not constants.EG_DEBUG_TRANSFORMATOR,
+        hidden = true,
         minable = nil,
         selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
@@ -70,11 +54,6 @@ function create_transformator_boiler(variant, tier)
         mode = "output-to-separate-pipe",
         burning_cooldown = 0,
         collision_mask = { layers = {} },
-        --collision_mask = {
-        --    layers = {
-        --        ["is_lower_object"] = true
-        --    }
-        --},
         selection_box = selection_box,
         collision_box = collision_box,
 

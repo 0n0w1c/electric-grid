@@ -11,8 +11,6 @@ function create_transformator_pump(variant)
         alert_icon_shift = { x = 0.5, y = 0.5 }
     elseif variant == defines.direction.west then
         alert_icon_shift = { x = -0.5, y = 0.5 }
-    else
-        return nil
     end
 
     local collision_box = {
@@ -20,18 +18,15 @@ function create_transformator_pump(variant)
         { 0.49,  0.49 }
     }
 
-    --local selection_box = {
-    --    { -0.49, -0.49 },
-    --    { 0.49,  0.49 }
-    --}
-    --local selection_box = {
-    --    { -1.49, -1.49 },
-    --    { 0.49,  0.49 }
-    --}
     local selection_box = {
         { -1.49, -0.49 },
         { 0.49,  0.49 }
     }
+
+    --local selection_box = {
+    --    { -0.49, -0.49 },
+    --    { 0.49,  0.49 }
+    --}
 
     return {
         type                      = "pump",

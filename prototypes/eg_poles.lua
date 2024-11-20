@@ -4,8 +4,8 @@
 -- @param direction 0, 4, 8, 12
 -- @return table An array of connection points with positions for each wire type.
 local function eg_wireconnections(pole, direction)
-    if not pole then return end
-    if not direction then return end
+    if not pole then return {} end
+    if not direction then return {} end
 
     local base_position = constants.EG_POLE_CONNECTIONS[pole][constants.EG_DIRECTION_TO_CARDINAL[direction]]
     local offset = constants.EG_WIRE_CONNECTION_OFFSET
@@ -101,6 +101,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.water_reflection = nil
         pole.auto_connect_up_to_n_wires = 0
         pole.minable = nil
+        pole.selectable_in_game = true
         pole.radius_visualisation_picture = nil
         pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
         pole.max_health = constants.EG_MAX_HEALTH
@@ -112,11 +113,6 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.hidden = true
         pole.hidden_in_factoriopedia = true
         pole.collision_mask = { layers = {} }
-        --pole.collision_mask = {
-        --    layers = {
-        --        ["is_lower_object"] = true
-        --    }
-        -- }
 
         data:extend({ pole })
     end

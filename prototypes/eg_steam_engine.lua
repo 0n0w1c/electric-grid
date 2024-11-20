@@ -1,10 +1,7 @@
 function create_transformator_steam_engine(variant, tier)
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
-    local selection_box = {
-        { -0.49, -0.49 },
-        { 0.49,  0.49 }
-    }
+    local selection_box
 
     if variant == "ne" then
         selection_box = {
@@ -13,14 +10,25 @@ function create_transformator_steam_engine(variant, tier)
         }
     elseif variant == "sw" then
         selection_box = {
-            { -0.49, -1.49 },
+            { -1.49, -0.49 },
+            { 0.49,  0.49 }
+        }
+    else
+        selection_box = {
+            { -0.49, -0.49 },
             { 0.49,  0.49 }
         }
     end
+
     --selection_box         = {
     --    { -0.49, -0.49 },
     --    { 0.49,  0.49 }
     --}
+
+    local collision_box = {
+        { -0.49, -0.49 },
+        { 0.49,  0.49 }
+    }
 
     return {
         type                  = "generator",
@@ -39,15 +47,7 @@ function create_transformator_steam_engine(variant, tier)
         localised_name        = { "", "Steam engine ", variant:upper(), " - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
         collision_mask        = { layers = {} },
-        --collision_mask = {},
-        --    layers = {
-        --        ["is_lower_object"] = true
-        --    }
-        --},
-        collision_box         = {
-            { -0.49, -0.49 },
-            { 0.49,  0.49 }
-        },
+        collision_box         = collision_box,
         selection_box         = selection_box,
         effectivity           = 1,
         energy_source         = {

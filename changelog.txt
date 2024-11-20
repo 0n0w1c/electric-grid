@@ -1,12 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.6
+Date: 12.20.2024
+  Bugfixes:
+    - Incorrect selection area displayed when transformator was placed in south or west directions
+    - Internal component positional issue when changing transformator rating or enabling/disabling
+    - Crash if a transformator was removed (voided) with Big Pink Eraser
+  Changes:
+    - Added Big Pink Eraser as an optional dependency, a hidden entity clean-up tool
+---------------------------------------------------------------------------------------------------
 Version: 0.1.5
-Date: 12.19.2024
+Date: 12.20.2024
   Bugfixes:
     - None
   Changes:
-    - Modified selection areas for the tranformator
-      Circuit wires now connect to middle (high-voltage) side, blue triangle appears when selected
-      Mining and changing the transformator's rating is now middle (low-voltage) side
+    - Modified selection areas for the transformator, divided into four 1x2 areas
+      Circuit wires now connect to the middle (high-voltage) side, blue triangle when selected
+      Mining and changing the transformator's rating is now the middle (low-voltage) side
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.4
 Date: 12.19.2024
