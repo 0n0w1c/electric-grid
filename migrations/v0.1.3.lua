@@ -1,5 +1,5 @@
 if storage then
-    if not storage.eg_selected_transformator then storage.eg_selected_transformator = {} end
-    if not storage.eg_copper_wire_on_cursor then storage.eg_copper_wire_on_cursor = {} end
-    if not storage.eg_last_selected_pole then storage.eg_last_selected_pole = {} end
+    storage.eg_selected_transformator = storage.eg_selected_transformator or {}
+    storage.eg_copper_wire_on_cursor = storage.eg_copper_wire_on_cursor or {}
+    storage.eg_last_selected_pole = storage.eg_last_selected_pole or {}
 end

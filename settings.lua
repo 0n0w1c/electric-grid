@@ -16,5 +16,15 @@ data:extend({
         order = "a2",
         localised_name = "Enable Transformator connection icons",
         localised_description = "Displays icons for source and load connections"
+    },
+    {
+        type = "string-setting",
+        name = "eg-on-tick-interval",
+        setting_type = "startup",
+        default_value = "1",
+        allowed_values = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" },
+        order = "a3",
+        localised_name = "On tick interval",
+        localised_description = "Number of seconds between Transformator checks"
     }
 })

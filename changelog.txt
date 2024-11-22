@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.7
+Date: 12.20.2024
+  Bugfixes:
+    - General refactoring: structure, comments, null checks, and clean-up.
+  Changes:
+    - Added startup setting to change the on tick interval, between 1 and 10 seconds (default = 1)
+---------------------------------------------------------------------------------------------------
 Version: 0.1.6
 Date: 12.20.2024
   Bugfixes:

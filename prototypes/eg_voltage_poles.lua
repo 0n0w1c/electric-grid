@@ -1,8 +1,3 @@
--- Calculates wire connection points with specified offset for visual separation.
--- Determines positions for copper, red, and green wires around an electric pole.
--- @param pole string The type of the pole ("eg-high-voltage-pole" or "eg-low-voltage-pole").
--- @param direction 0, 4, 8, 12
--- @return table An array of connection points with positions for each wire type.
 local function eg_wireconnections(pole, direction)
     if not pole then return {} end
     if not direction then return {} end

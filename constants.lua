@@ -32,7 +32,6 @@ constants.EG_TIER_BLEND_MODE = "additive"
 
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
-constants.EG_ON_TICK_INTERVAL = 60
 
 -- 0.256 is too low for 1 MW
 -- 0.257 is too high for 500 MW

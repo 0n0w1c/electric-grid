@@ -303,8 +303,8 @@ for tier = 1, constants.EG_NUM_TIERS do
 end
 
 data:extend({
-    create_transformator_null_disable(),
-    create_transformator_null_enable(),
+    create_transformator_fluid_disable(),
+    create_transformator_fluid_enable(),
     create_transformator_pump(defines.direction.north),
     create_transformator_pump(defines.direction.east),
     create_transformator_pump(defines.direction.south),
