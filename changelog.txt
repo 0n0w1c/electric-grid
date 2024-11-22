@@ -1,6 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.8
+Date: 12.22.2024
+  Bugfixes:
+    - Transformators can now be placed in adjacent positions
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 0.1.7
-Date: 12.20.2024
+Date: 12.21.2024
   Bugfixes:
     - General refactoring: structure, comments, null checks, and clean-up.
   Changes:

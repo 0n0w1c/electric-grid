@@ -268,7 +268,7 @@ local function create_transformator_unit(tier)
         max_health = constants.EG_MAX_HEALTH,
         resistances = data.raw["electric-pole"]["substation"].resistances,
         random_variation_on_create = false,
-        collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
+        collision_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
         selection_box = { { -1.0, -1.0 }, { 1.0, 0.0 } },
         collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
         picture = get_transformator_picture(tier),
@@ -319,7 +319,7 @@ local eg_transformator_displayer = {
     icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
     icon_size = 128,
     flags = { "placeable-player", "player-creation" },
-    collision_box = { { -1.0, -2.0 }, { 1.0, 2.0 } },
+    collision_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
     collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
     hidden_in_factoriopedia = true,
     picture = get_transformator_displayer_pictures(), -- use picture not pictures, rotation works

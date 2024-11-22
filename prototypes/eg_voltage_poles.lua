@@ -21,68 +21,67 @@ local function eg_wireconnections(pole, direction)
     }
 end
 
-local function get_eg_high_voltage_pole_selection_box(direction)
+local function hv_selection_box(direction)
+    local selection_box = {}
+
     if direction == defines.direction.north then
-        return {
+        selection_box = {
             { -1, 0 },
             { 1,  1 }
         }
     elseif direction == defines.direction.east then
-        return {
+        selection_box = {
             { -1, -1 },
             { 0,  1 }
         }
     elseif direction == defines.direction.south then
-        return {
+        selection_box = {
             { -1, -1 },
             { 1,  0 }
         }
     elseif direction == defines.direction.west then
-        return {
+        selection_box = {
             { 0, -1 },
             { 1, 1 }
         }
     end
-    return {
-        { -1, -1 },
-        { 1,  1 }
-    }
+
+    return selection_box
 end
 
-local function get_eg_low_voltage_pole_selection_box(direction)
+local function lv_selection_box(direction)
+    local selection_box = {}
+
     if direction == defines.direction.north then
-        return {
+        selection_box = {
             { -1, -1 },
             { 1,  0 }
         }
     elseif direction == defines.direction.east then
-        return {
+        selection_box = {
             { 0, -1 },
             { 1, 1 }
         }
     elseif direction == defines.direction.south then
-        return {
+        selection_box = {
             { -1, 0 },
             { 1,  1 }
         }
     elseif direction == defines.direction.west then
-        return {
+        selection_box = {
             { -1, -1 },
             { 0,  1 }
         }
     end
-    return {
-        { -1, -1 },
-        { 1,  1 }
-    }
+
+    return selection_box
 end
 
 for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     for _, pole_type in ipairs({ "high", "low" }) do
         local pole_name = "eg-" .. pole_type .. "-voltage-pole-" .. direction
         local connection_name = "eg_" .. pole_type .. "_voltage_pole"
-        local selection_box =
-            pole_type == "high" and get_eg_high_voltage_pole_selection_box or get_eg_low_voltage_pole_selection_box
+        local selection_box = pole_type == "high" and hv_selection_box(direction) or lv_selection_box(direction)
         local localised_name = pole_type == "high" and "High voltage pole" or "Low voltage pole"
         local localised_description = pole_type == "high" and "Connect to the electrical source" or
             "Connect to the electrical load"
@@ -102,7 +101,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.max_health = constants.EG_MAX_HEALTH
         pole.connection_points = eg_wireconnections(connection_name, direction)
         --pole.selection_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
-        pole.selection_box = selection_box(direction)
+        pole.selection_box = selection_box
         pole.localised_name = { "", localised_name }
         pole.localised_description = { "", localised_description }
         pole.hidden = true
