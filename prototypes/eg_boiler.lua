@@ -1,49 +1,36 @@
-function create_transformator_boiler(variant, tier)
+function create_transformator_boiler(tier)
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
-
-    local alert_icon_shift = { x = 0.0, y = 0.0 }
-
-    local selection_box
-    if variant == defines.direction.north then
-        alert_icon_shift = { x = 0.5, y = -0.5 }
-    elseif variant == defines.direction.east then
-        alert_icon_shift = { x = 0.5, y = 0.5 }
-    elseif variant == defines.direction.south then
-        alert_icon_shift = { x = -0.5, y = 0.5 }
-    elseif variant == defines.direction.west then
-        alert_icon_shift = { x = -0.5, y = -0.5 }
-    end
 
     local collision_box = {
         { -0.49, -0.49 },
         { 0.49,  0.49 }
     }
 
-    --selection_box = {
+    --local selection_box = {
     --    { -0.49, -0.49 },
     --    { 0.49,  0.49 }
     --}
 
-    selection_box = {
+    local selection_box = {
         { -0.49, -0.49 },
         { 1.49,  0.49 }
     }
 
     return {
         type = "boiler",
-        name = "eg-boiler-" .. variant .. "-" .. tier,
+        name = "eg-boiler-" .. tier,
         icon = "__base__/graphics/icons/boiler.png",
         icon_size = 64,
         energy_consumption = rating,
         target_temperature = 165,
         max_health = constants.EG_MAX_HEALTH,
+        alert_icon_scale = 0,
         hidden = true,
         minable = nil,
         selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name = { "", "Boiler - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
-        alert_icon_shift = alert_icon_shift,
         energy_source = {
             type = "electric",
             effectivity = constants.EG_EFFICIENCY,

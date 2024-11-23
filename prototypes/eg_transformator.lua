@@ -293,10 +293,7 @@ for tier = 1, constants.EG_NUM_TIERS do
         create_transformator_unit(tier),
         create_transformator_water(tier),
         create_transformator_steam(tier),
-        create_transformator_boiler(defines.direction.north, tier),
-        create_transformator_boiler(defines.direction.east, tier),
-        create_transformator_boiler(defines.direction.south, tier),
-        create_transformator_boiler(defines.direction.west, tier),
+        create_transformator_boiler(tier),
         create_transformator_steam_engine("ne", tier),
         create_transformator_steam_engine("sw", tier),
     })
@@ -305,10 +302,7 @@ end
 data:extend({
     create_transformator_fluid_disable(),
     create_transformator_fluid_enable(),
-    create_transformator_pump(defines.direction.north),
-    create_transformator_pump(defines.direction.east),
-    create_transformator_pump(defines.direction.south),
-    create_transformator_pump(defines.direction.west),
+    create_transformator_pump(),
 })
 
 local eg_transformator_displayer = {

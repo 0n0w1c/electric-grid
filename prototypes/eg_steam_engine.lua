@@ -20,7 +20,7 @@ function create_transformator_steam_engine(variant, tier)
         }
     end
 
-    --selection_box         = {
+    --selection_box       = {
     --    { -0.49, -0.49 },
     --    { 0.49,  0.49 }
     --}
@@ -43,6 +43,7 @@ function create_transformator_steam_engine(variant, tier)
         hidden                = true,
         minable               = nil,
         selectable_in_game    = false,
+        alert_icon_scale      = 0,
         flags                 = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name        = { "", "Steam engine ", variant:upper(), " - Tier ", tostring(tier) },
         localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },

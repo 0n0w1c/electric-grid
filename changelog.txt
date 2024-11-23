@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.9
+Date: 12.23.2024
+  Bugfixes:
+    - Refactored transformator placement
+    - Significant reduction in the number of entities defined
+  Changes:
+    - Transformators no longer display "No power" alerts
+---------------------------------------------------------------------------------------------------
 Version: 0.1.8
 Date: 12.22.2024
   Bugfixes:

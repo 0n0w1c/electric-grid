@@ -16,10 +16,10 @@ local eg_infinity_pipe = {
         { -0.49, -0.49 },
         { 0.49,  0.49 }
     },
-    selection_box = {
-        { -0.49, -0.49 },
-        { 0.49,  0.49 }
-    },
+    --selection_box = {
+    --    { -0.49, -0.49 },
+    --    { 0.49,  0.49 }
+    --},
     horizontal_window_bounding_box = {
         { 0, 0 },
         { 0, 0 }

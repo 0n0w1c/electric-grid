@@ -1,18 +1,4 @@
-function create_transformator_pump(variant)
-    if not variant then return nil end
-
-    local alert_icon_shift = { x = 0.0, y = 0.0 }
-
-    if variant == defines.direction.north then
-        alert_icon_shift = { x = -0.5, y = -0.5 }
-    elseif variant == defines.direction.east then
-        alert_icon_shift = { x = 0.5, y = -0.5 }
-    elseif variant == defines.direction.south then
-        alert_icon_shift = { x = 0.5, y = 0.5 }
-    elseif variant == defines.direction.west then
-        alert_icon_shift = { x = -0.5, y = 0.5 }
-    end
-
+function create_transformator_pump()
     local collision_box = {
         { -0.49, -0.49 },
         { 0.49,  0.49 }
@@ -30,7 +16,7 @@ function create_transformator_pump(variant)
 
     return {
         type                      = "pump",
-        name                      = "eg-pump-" .. variant,
+        name                      = "eg-pump",
         icon                      = "__base__/graphics/icons/pump.png",
         icon_size                 = 64,
         corpse                    = "big-remnants",
@@ -41,7 +27,7 @@ function create_transformator_pump(variant)
         hidden_in_factoriopedia   = true,
         selectable_in_game        = true,
         flags                     = constants.EG_INTERNAL_ENTITY_FLAGS,
-        alert_icon_shift          = alert_icon_shift,
+        alert_icon_scale          = 0,
         minable                   = nil,
         collision_mask            = { layers = {} },
         selection_box             = selection_box,

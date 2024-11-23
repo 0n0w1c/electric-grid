@@ -1,97 +1,16 @@
---- Get the position offset for the boiler based on direction.
--- @param direction defines.direction The direction of the transformator.
--- @return table The position offset as {x, y}.
-function get_eg_boiler_offset(direction)
-    if direction == defines.direction.north then
-        return { x = -1, y = 0 }
-    elseif direction == defines.direction.east then
-        return { x = -1, y = -1 }
-    elseif direction == defines.direction.south then
-        return { x = 0, y = -1 }
-    elseif direction == defines.direction.west then
-        return { x = 0, y = 0 }
-    end
-    return { x = 0, y = 0 }
-end
-
---- Get the position offset for the pump based on direction.
--- @param direction defines.direction The direction of the transformator.
--- @return table The position offset as {x, y}.
-function get_eg_pump_offset(direction)
-    if direction == defines.direction.north then
-        return { x = 0, y = 0 }
-    elseif direction == defines.direction.east then
-        return { x = -1, y = 0 }
-    elseif direction == defines.direction.south then
-        return { x = -1, y = -1 }
-    elseif direction == defines.direction.west then
-        return { x = 0, y = -1 }
-    end
-    return { x = 0, y = 0 }
-end
-
---- Get the position offset for the infinity pipe based on direction.
--- @param direction defines.direction The direction of the transformator.
--- @return table The position offset as {x, y}.
-function get_eg_infinity_pipe_offset(direction)
-    if direction == defines.direction.north then
-        return { x = 0, y = -1 }
-    elseif direction == defines.direction.east then
-        return { x = -0, y = 0 }
-    elseif direction == defines.direction.south then
-        return { x = -1, y = 0 }
-    elseif direction == defines.direction.west then
-        return { x = -1, y = -1 }
-    end
-    return { x = 0, y = 0 }
-end
-
---- Get the position offset for the steam engine based on direction.
--- @param direction defines.direction The direction of the transformator.
--- @return table The position offset as {x, y}.
-function get_eg_steam_engine_offset(direction)
-    if direction == defines.direction.north then
-        return { x = -1, y = -1 }
-    elseif direction == defines.direction.east then
-        return { x = 0, y = -1 }
-    elseif direction == defines.direction.south then
-        return { x = 0, y = 0 }
-    elseif direction == defines.direction.west then
-        return { x = -1, y = 0 }
-    end
-    return { x = 0, y = 0 }
-end
-
---- Get the position offset for the high-voltage pole based on direction.
--- @param direction defines.direction The direction of the transformator.
--- @return table The position offset as {x, y}.
-function get_eg_high_voltage_pole_offset(direction)
-    if direction == defines.direction.north then
-        return { x = 0, y = 1 }
-    elseif direction == defines.direction.east then
-        return { x = -1, y = 0 }
-    elseif direction == defines.direction.south then
-        return { x = 0, y = -1 }
-    elseif direction == defines.direction.west then
-        return { x = 1, y = 0 }
-    end
-    return { x = 0, y = 0 }
-end
-
---- Get the position offset for the low-voltage pole based on direction.
--- @param direction defines.direction The direction of the transformator.
--- @return table The position offset as {x, y}.
-function get_eg_low_voltage_pole_offset(direction)
-    if direction == defines.direction.north then
-        return { x = 0, y = -1 }
-    elseif direction == defines.direction.east then
-        return { x = 1, y = 0 }
-    elseif direction == defines.direction.south then
-        return { x = 0, y = 1 }
-    elseif direction == defines.direction.west then
-        return { x = -1, y = 0 }
-    end
-    return { x = 0, y = 0 }
+-- Rotate a position vector around the center based on direction.
+-- Handles 90° clockwise rotation for the cardinal directions.
+local function rotate_position(position, direction)
+    local rotation_matrices = {
+        [defines.direction.north] = { { 1, 0 }, { 0, 1 } },   -- No rotation
+        [defines.direction.east]  = { { 0, -1 }, { 1, 0 } },  -- 90° clockwise
+        [defines.direction.south] = { { -1, 0 }, { 0, -1 } }, -- 180° clockwise
+        [defines.direction.west]  = { { 0, 1 }, { -1, 0 } }   -- 270° clockwise
+    }
+    local matrix = rotation_matrices[direction]
+    local x = position.x * matrix[1][1] + position.y * matrix[1][2]
+    local y = position.x * matrix[2][1] + position.y * matrix[2][2]
+    return { x = x, y = y }
 end
 
 --- Check if the given name corresponds to a transformator.
@@ -182,11 +101,11 @@ function eg_transformator_built(entity)
     local force = entity.force
     local position = entity.position
     local direction = entity.direction
-    local offset = { x = 0, y = 0 }
+    local rotated_offset = { x = 0, y = 0 }
 
     entity.destroy()
 
-    local eg_unit_position = { position.x, position.y }
+    local eg_unit_position = { x = position.x, y = position.y }
 
     local eg_unit = surface.create_entity {
         name = "eg-unit-1",
@@ -195,28 +114,37 @@ function eg_transformator_built(entity)
         direction = direction
     }
 
-    offset = get_eg_boiler_offset(direction)
-    local eg_boiler_position = { position.x + offset.x, position.y + offset.y }
+    rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.boiler, direction)
+    local eg_boiler_position = {
+        x = eg_unit_position.x + rotated_offset.x,
+        y = eg_unit_position.y + rotated_offset.y
+    }
 
     local eg_boiler = surface.create_entity {
-        name = "eg-boiler-" .. direction .. "-1",
+        name = "eg-boiler-1",
         position = eg_boiler_position,
         force = force,
         direction = direction
     }
 
-    offset = get_eg_pump_offset(direction)
-    local eg_pump_position = { position.x + offset.x, position.y + offset.y }
+    rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.pump, direction)
+    local eg_pump_position = {
+        x = eg_unit_position.x + rotated_offset.x,
+        y = eg_unit_position.y + rotated_offset.y
+    }
 
     local eg_pump = surface.create_entity {
-        name = "eg-pump-" .. direction,
+        name = "eg-pump",
         position = eg_pump_position,
         force = force,
         direction = direction,
     }
 
-    offset = get_eg_infinity_pipe_offset(direction)
-    local eg_infinity_pipe_position = { position.x + offset.x, position.y + offset.y }
+    rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.infinity_pipe, direction)
+    local eg_infinity_pipe_position = {
+        x = eg_unit_position.x + rotated_offset.x,
+        y = eg_unit_position.y + rotated_offset.y
+    }
 
     local eg_infinity_pipe = surface.create_entity {
         name = "eg-infinity-pipe",
@@ -225,10 +153,13 @@ function eg_transformator_built(entity)
         direction = direction,
     }
 
-    offset = get_eg_steam_engine_offset(direction)
-    local eg_steam_engine_position = { position.x + offset.x, position.y + offset.y }
-    local eg_steam_engine_variant = ""
+    rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.steam_engine, direction)
+    local eg_steam_engine_position = {
+        x = eg_unit_position.x + rotated_offset.x,
+        y = eg_unit_position.y + rotated_offset.y
+    }
 
+    local eg_steam_engine_variant = "ne"
     if direction == defines.direction.north or direction == defines.direction.east then
         eg_steam_engine_variant = "ne"
     elseif direction == defines.direction.south or direction == defines.direction.west then
@@ -242,22 +173,28 @@ function eg_transformator_built(entity)
         direction = direction
     }
 
-    offset = get_eg_high_voltage_pole_offset(direction)
-    local eg_high_voltage_pole_position = { position.x + offset.x, position.y + offset.y }
+    rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.high_voltage_pole, direction)
+    local eg_high_voltage_pole_position = {
+        x = eg_unit_position.x + rotated_offset.x,
+        y = eg_unit_position.y + rotated_offset.y
+    }
 
     local eg_high_voltage_pole = surface.create_entity {
         name = "eg-high-voltage-pole-" .. direction,
-        position = eg_high_voltage_pole_position, --place on top of eg-boiler
+        position = eg_high_voltage_pole_position,
         force = force,
         direction = direction
     }
 
-    offset = get_eg_low_voltage_pole_offset(direction)
-    local eg_low_voltage_pole_position = { position.x + offset.x, position.y + offset.y }
+    rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.low_voltage_pole, direction)
+    local eg_low_voltage_pole_position = {
+        x = eg_unit_position.x + rotated_offset.x,
+        y = eg_unit_position.y + rotated_offset.y
+    }
 
     local eg_low_voltage_pole = surface.create_entity {
         name = "eg-low-voltage-pole-" .. direction,
-        position = eg_low_voltage_pole_position, --place on top of eg-steam-engine
+        position = eg_low_voltage_pole_position,
         force = force,
         direction = direction
     }
@@ -369,14 +306,14 @@ function replace_transformator(old_transformator, new_rating)
     }
 
     local eg_boiler = surface.create_entity {
-        name = "eg-boiler-" .. direction .. "-" .. tier,
+        name = "eg-boiler-" .. tier,
         position = eg_boiler_position,
         force = force,
         direction = eg_boiler_direction
     }
 
     local eg_pump = surface.create_entity {
-        name = "eg-pump-" .. direction,
+        name = "eg-pump",
         position = eg_pump_position,
         force = force,
         direction = eg_pump_direction,
@@ -389,8 +326,7 @@ function replace_transformator(old_transformator, new_rating)
         direction = eg_infinity_pipe_direction,
     }
 
-    local eg_steam_engine_variant = ""
-
+    local eg_steam_engine_variant = "ne"
     if direction == defines.direction.north or direction == defines.direction.east then
         eg_steam_engine_variant = "ne"
     elseif direction == defines.direction.south or direction == defines.direction.west then

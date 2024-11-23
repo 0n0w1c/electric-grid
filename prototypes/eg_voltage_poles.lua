@@ -93,13 +93,16 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.maximum_wire_distance = constants.EG_MAXIMUM_WIRE_DISTANCE
         pole.pictures = nil
         pole.water_reflection = nil
+        pole.radius_visualisation_picture = nil
+        pole.drawing_box_vertical_extension = 0
         pole.auto_connect_up_to_n_wires = 0
         pole.minable = nil
         pole.selectable_in_game = true
-        pole.radius_visualisation_picture = nil
         pole.flags = constants.EG_INTERNAL_ENTITY_FLAGS
         pole.max_health = constants.EG_MAX_HEALTH
         pole.connection_points = eg_wireconnections(connection_name, direction)
+        pole.collision_box = { { -0.9, -0.9 }, { 0.9, 0.9 } }
+        --pole.collision_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
         --pole.selection_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
         pole.selection_box = selection_box
         pole.localised_name = { "", localised_name }
