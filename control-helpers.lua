@@ -1,11 +1,18 @@
--- Rotate a position vector around the center based on direction.
--- Handles 90° clockwise rotation for the cardinal directions.
+--- Rotates a position vector around the origin based on a given direction.
+--- Applies a 90 clockwise rotation matrix for each cardinal direction.
+--- @param position table A table containing x and y coordinates of the position to rotate.
+--- @param direction defines.direction The cardinal direction for the rotation.
+---     defines.direction.north (0 rotation, no change)
+---     defines.direction.east (90 clockwise rotation)
+---     defines.direction.south (180 rotation)
+---     defines.direction.west (270 clockwise rotation)
+--- @return table The rotated position as a table with x and y coordinates.
 local function rotate_position(position, direction)
     local rotation_matrices = {
         [defines.direction.north] = { { 1, 0 }, { 0, 1 } },   -- No rotation
-        [defines.direction.east]  = { { 0, -1 }, { 1, 0 } },  -- 90° clockwise
-        [defines.direction.south] = { { -1, 0 }, { 0, -1 } }, -- 180° clockwise
-        [defines.direction.west]  = { { 0, 1 }, { -1, 0 } }   -- 270° clockwise
+        [defines.direction.east]  = { { 0, -1 }, { 1, 0 } },  -- 90 clockwise
+        [defines.direction.south] = { { -1, 0 }, { 0, -1 } }, -- 180 clockwise
+        [defines.direction.west]  = { { 0, 1 }, { -1, 0 } }   -- 270 clockwise
     }
     local matrix = rotation_matrices[direction]
     local x = position.x * matrix[1][1] + position.y * matrix[1][2]
@@ -385,10 +392,10 @@ end
 
 --- Check if a copper cable connection is allowed between two poles.
 -- The rules for allowed connections include:
--- 1. Checking the standard connection table (`EG_WIRE_CONNECTIONS`).
+-- 1. Checking the standard connection table (EG_WIRE_CONNECTIONS).
 -- 2. Allowing transformator poles to connect to each other.
--- 3. Allowing transformator poles to connect to `eg-huge-electric-pole` and vice-versa.
--- 4. Allowing transformator poles to connect to `big-electric-pole` and `medium-electric-pole` and vice-versa.
+-- 3. Allowing transformator poles to connect to eg-huge-electric-pole and vice-versa.
+-- 4. Allowing transformator poles to connect to big-electric-pole and medium-electric-pole and vice-versa.
 -- @param pole_a LuaEntity The first electric pole.
 -- @param pole_b LuaEntity The second electric pole.
 -- @return boolean True if the connection is allowed, false otherwise.
@@ -424,7 +431,7 @@ end
 
 --- Enforce copper cable connection rules for a given electric pole.
 -- Iterates through all wire connectors for the pole and disconnects unauthorized connections
--- based on the rules defined in `is_copper_cable_connection_allowed`.
+-- based on the rules defined in is_copper_cable_connection_allowed.
 -- @param pole LuaEntity The electric pole to enforce connections for.
 -- @return boolean True if all connections are valid or no connections exist, false otherwise.
 function enforce_pole_connections(pole)
