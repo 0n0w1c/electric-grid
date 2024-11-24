@@ -259,12 +259,12 @@ local function create_transformator_unit(tier)
         icon = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
         icon_size = 128,
         flags = { "placeable-player", "player-creation", "not-rotatable" },
-        minable = { mining_time = 0.5, result = "eg-transformator-item" },
+        minable = { mining_time = 0.5, result = "eg-transformator" },
         selectable_in_game = true,
         selection_priority = 1,
         corpse = "big-remnants",
         dying_explosion = "medium-explosion",
-        placeable_by = { item = "eg-transformator-item", count = 1 },
+        placeable_by = { item = "eg-transformator", count = 1 },
         max_health = constants.EG_MAX_HEALTH,
         resistances = data.raw["electric-pole"]["substation"].resistances,
         random_variation_on_create = false,
@@ -322,7 +322,7 @@ local eg_transformator_displayer = {
 
 local eg_transformator_item = {
     type = "item",
-    name = "eg-transformator-item",
+    name = "eg-transformator",
     localised_name = { "", "Transformator" },
     localised_description = { "", "Regulates power distribution." },
     icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
@@ -337,9 +337,10 @@ local eg_transformator_item = {
 
 local eg_transformator_recipe = {
     type = "recipe",
-    name = "eg-transformator-recipe",
+    name = "eg-transformator",
     localised_name = { "", "Transformator" },
     localised_description = { "", "Assembles components into a power regulating device." },
+    category = "electronics",
     ingredients = {
         { type = "item", name = "copper-plate", amount = 2 },
         { type = "item", name = "steel-plate",  amount = 4 },
@@ -347,7 +348,7 @@ local eg_transformator_recipe = {
         { type = "item", name = "copper-cable", amount = 200 }
     },
     results = {
-        { type = "item", name = "eg-transformator-item", amount = 1 }
+        { type = "item", name = "eg-transformator", amount = 1 }
     },
     enabled = false,
     allow_quality = false,

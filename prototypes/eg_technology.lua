@@ -9,7 +9,7 @@ data:extend({
         order = "c-e-c",
         prerequisites = { "electric-energy-distribution-1" },
         effects = {
-            { type = "unlock-recipe", recipe = "eg-transformator-recipe" }
+            { type = "unlock-recipe", recipe = "eg-transformator" }
         },
         unit = {
             count = 200,

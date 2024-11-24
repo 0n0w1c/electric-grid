@@ -128,6 +128,7 @@ local huge_pole_recipe               =
     name                  = "eg-huge-electric-pole",
     localised_name        = "Huge electric pole",
     localised_description = "Huge electric pole",
+    category              = "electronics",
     results               = { { type = "item", name = "eg-huge-electric-pole", amount = 1 } },
     ingredients           =
     {

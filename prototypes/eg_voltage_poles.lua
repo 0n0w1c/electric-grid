@@ -25,25 +25,13 @@ local function hv_selection_box(direction)
     local selection_box = {}
 
     if direction == defines.direction.north then
-        selection_box = {
-            { -1, 0 },
-            { 1,  1 }
-        }
+        selection_box = { { -1, 0 }, { 1, 1 } }
     elseif direction == defines.direction.east then
-        selection_box = {
-            { -1, -1 },
-            { 0,  1 }
-        }
+        selection_box = { { -1, -1 }, { 0, 1 } }
     elseif direction == defines.direction.south then
-        selection_box = {
-            { -1, -1 },
-            { 1,  0 }
-        }
+        selection_box = { { -1, -1 }, { 1, 0 } }
     elseif direction == defines.direction.west then
-        selection_box = {
-            { 0, -1 },
-            { 1, 1 }
-        }
+        selection_box = { { 0, -1 }, { 1, 1 } }
     end
 
     return selection_box
@@ -53,25 +41,13 @@ local function lv_selection_box(direction)
     local selection_box = {}
 
     if direction == defines.direction.north then
-        selection_box = {
-            { -1, -1 },
-            { 1,  0 }
-        }
+        selection_box = { { -1, -1 }, { 1, 0 } }
     elseif direction == defines.direction.east then
-        selection_box = {
-            { 0, -1 },
-            { 1, 1 }
-        }
+        selection_box = { { 0, -1 }, { 1, 1 } }
     elseif direction == defines.direction.south then
-        selection_box = {
-            { -1, 0 },
-            { 1,  1 }
-        }
+        selection_box = { { -1, 0 }, { 1, 1 } }
     elseif direction == defines.direction.west then
-        selection_box = {
-            { -1, -1 },
-            { 0,  1 }
-        }
+        selection_box = { { -1, -1 }, { 0, 1 } }
     end
 
     return selection_box

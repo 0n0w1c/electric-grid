@@ -16,7 +16,7 @@ data:extend({
     {
         type = "custom-input",
         name = "transformator_rating_selection",
-        key_sequence = "CONTROL + mouse-button-1", -- CTRL + left-click
+        key_sequence = "mouse-button-1",
         consuming = "none"
     }
 })

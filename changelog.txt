@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.10
+Date: 12.23.2024
+  Bugfixes:
+    - Changed transformator recipe name, migration created
+    - Modified Factoriopedia related settings
+  Changes:
+    - Transformator rating selection changed from (ctrl) + (left click) to (left click)
+---------------------------------------------------------------------------------------------------
 Version: 0.1.9
 Date: 12.23.2024
   Bugfixes:
