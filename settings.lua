@@ -18,13 +18,24 @@ data:extend({
         localised_description = "Displays icons for source and load connections"
     },
     {
-        type = "string-setting",
+        type = "int-setting",
         name = "eg-on-tick-interval",
         setting_type = "startup",
-        default_value = "1",
-        allowed_values = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" },
+        default_value = 1,
+        allowed_values = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
         order = "a3",
         localised_name = "On tick interval",
-        localised_description = "Number of seconds between Transformator checks"
+        localised_description = "Number of seconds between electric grid checks"
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-wire-huge",
+        setting_type = "startup",
+        default_value = 36.0,
+        minimum_value = 30.0,
+        maximum_value = 64.0,
+        order = "a4",
+        localised_name = "Huge pole wire reach",
+        localised_description = "Min: 30.0  Max: 64.0"
     }
 })

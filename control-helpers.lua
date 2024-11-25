@@ -378,13 +378,15 @@ function replace_displayer_with_ugp_substation(displayer)
     local force = displayer.force
     local surface = displayer.surface
 
+    local quality = displayer.quality
     displayer.destroy()
 
     local new_entity = surface.create_entity {
         name = "eg-ugp-substation",
         position = position,
         direction = direction,
-        force = force
+        force = force,
+        quality = quality
     }
 
     return new_entity

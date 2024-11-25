@@ -1,6 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.11
+Date: 24.11.2024
+  Bugfixes:
+    - Underground substations did not properly support quality
+    - Corrected dates in changelog.txt
+  Changes:
+    - Huge pole maximum wire distance is now adjustable via startup setting (default 36)
+    - Startup setting for "On tick interval" now accepts 0, to disable runtime checks
+---------------------------------------------------------------------------------------------------
 Version: 0.1.10
-Date: 12.23.2024
+Date: 23.11.2024
   Bugfixes:
     - Changed transformator recipe name, migration created
     - Modified Factoriopedia related settings
@@ -8,7 +17,7 @@ Date: 12.23.2024
     - Transformator rating selection changed from (ctrl) + (left click) to (left click)
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.9
-Date: 12.23.2024
+Date: 23.11.2024
   Bugfixes:
     - Refactored transformator placement
     - Significant reduction in the number of entities defined
@@ -16,21 +25,21 @@ Date: 12.23.2024
     - Transformators no longer display "No power" alerts
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.8
-Date: 12.22.2024
+Date: 22.11.2024
   Bugfixes:
     - Transformators can now be placed in adjacent positions
   Changes:
     - None
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.7
-Date: 12.21.2024
+Date: 21.11.2024
   Bugfixes:
     - General refactoring: structure, comments, null checks, and clean-up.
   Changes:
     - Added startup setting to change the on tick interval, between 1 and 10 seconds (default = 1)
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.6
-Date: 12.20.2024
+Date: 20.11.2024
   Bugfixes:
     - Incorrect selection area displayed when transformator was placed in south or west directions
     - Internal component positional issue when changing transformator rating or enabling/disabling
@@ -39,7 +48,7 @@ Date: 12.20.2024
     - Added Big Pink Eraser as an optional dependency, a hidden entity clean-up tool
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.5
-Date: 12.20.2024
+Date: 20.11.2024
   Bugfixes:
     - None
   Changes:
@@ -48,7 +57,7 @@ Date: 12.20.2024
       Mining and changing the transformator's rating is now the middle (low-voltage) side
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.4
-Date: 12.19.2024
+Date: 19.11.2024
   Bugfixes:
     - Reverted previous design decision to index transformators based on the pump, back to the unit
     - Robot deconstruction did not remove the hidden composite entities
@@ -59,14 +68,14 @@ Date: 12.19.2024
     - None
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.3
-Date: 12.19.2024
+Date: 19.11.2024
   Bugfixes:
     - Per player memory structures moved to storage
   Changes:
     - Added event handlers for space platforms, script and cloned events
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.2
-Date: 12.18.2024
+Date: 18.11.2024
   Bugfixes:
     - None
   Changes:
@@ -74,7 +83,7 @@ Date: 12.18.2024
       Do not select "Set Filter" when setting circuit conditions
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.1
-Date: 12.17.2024
+Date: 17.11.2024
   Bugfixes:
     - None
   Changes:
@@ -82,7 +91,7 @@ Date: 12.17.2024
     - Medium and big electric poles are lighted (might make lights an optional setting)
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.0
-Date: 12.16.2024
+Date: 16.11.2024
   Bugfixes:
     - None
   Changes:
@@ -92,14 +101,14 @@ Date: 12.16.2024
       Connect the circuit wire to the middle of the transformator.
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.2
-Date: 12.12.2024
+Date: 12.11.2024
   Bugfixes:
     - Changed description and added a thumbnail
   Changes:
     - None
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.1
-Date: 12.12.2024
+Date: 12.11.2024
   Bugfixes:
     - None
   Changes:

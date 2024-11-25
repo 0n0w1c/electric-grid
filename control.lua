@@ -254,6 +254,8 @@ local function register_event_handlers()
 
     if storage.eg_check_interval and storage.eg_check_interval > 0 then
         script.on_nth_tick(storage.eg_check_interval, nth_tick_checks)
+    else
+        script.on_nth_tick(nil)
     end
 
     script.on_event("transformator_rating_selection", on_transformator_rating_selection)
@@ -272,7 +274,7 @@ script.on_load(function()
 end)
 
 script.on_configuration_changed(function()
-    if settings.startup["eg-on-tick-interval"] then
+    if settings.startup["eg-on-tick-interval"] and settings.startup["eg-on-tick-interval"].value then
         storage.eg_check_interval = tonumber(settings.startup["eg-on-tick-interval"].value) * 60
     end
 
