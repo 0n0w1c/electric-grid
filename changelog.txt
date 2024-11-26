@@ -6,6 +6,14 @@ Date: 26.11.2024
   Changes:
     - None
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.12
+Date: 25.11.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Big pole maximum wire distance is now adjustable via startup setting (default 18)
+      Consider carefully changing this value, ramifications caused by auto-connect of copper wires
+---------------------------------------------------------------------------------------------------
 Version: 0.1.11
 Date: 24.11.2024
   Bugfixes:
