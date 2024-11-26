@@ -17,6 +17,7 @@ end
 if settings.startup["eg-max-wire-substation"] and settings.startup["eg-max-wire-substation"].value then
     data.raw["electric-pole"]["substation"].maximum_wire_distance =
         tonumber(settings.startup["eg-max-wire-substation"].value)
+
     data.raw["electric-pole"]["eg-ugp-substation"].maximum_wire_distance =
         data.raw["electric-pole"]["substation"].maximum_wire_distance
 end

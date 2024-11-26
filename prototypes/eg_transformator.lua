@@ -258,6 +258,7 @@ local function create_transformator_unit(tier)
         name = "eg-unit-" .. tier,
         icon = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
         icon_size = 128,
+        hidden_in_factoriopedia = true,
         flags = { "placeable-player", "player-creation", "not-rotatable" },
         minable = { mining_time = 0.5, result = "eg-transformator" },
         selectable_in_game = true,
@@ -340,7 +341,7 @@ local eg_transformator_recipe = {
     name = "eg-transformator",
     localised_name = { "", "Transformator" },
     localised_description = { "", "Assembles components into a power regulating device." },
-    category = "electronics",
+    category = constants.EG_CATEGORY,
     ingredients = {
         { type = "item", name = "copper-plate", amount = 2 },
         { type = "item", name = "steel-plate",  amount = 4 },

@@ -12,6 +12,12 @@ else
     constants.EG_TRANSFORMATOR_VOLUME = 0
 end
 
+if mods["space-age"] then
+    constants.EG_CATEGORY = "electronics"
+else
+    constants.EG_CATEGORY = data.raw["recipe"]["substation"].category
+end
+
 data:extend({
     {
         type = "custom-input",
