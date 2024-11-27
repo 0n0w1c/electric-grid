@@ -116,25 +116,30 @@ constants.EG_POLE_CONNECTIONS = {
 constants.EG_WIRE_CONNECTIONS = {
     ["small-electric-pole"] = {
         ["small-electric-pole"] = true,
-        ["medium-electric-pole"] = true,
+        ["medium-electric-pole"] = true
     },
     ["medium-electric-pole"] = {
         ["small-electric-pole"] = true,
-        ["medium-electric-pole"] = true,
+        ["medium-electric-pole"] = true
     },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
         ["substation"] = true,
         ["eg-ugp-substation"] = true,
+        ["connection-box"] = true
     },
     ["eg-huge-electric-pole"] = {
-        ["eg-huge-electric-pole"] = true,
+        ["eg-huge-electric-pole"] = true
     },
     ["substation"] = {
-        ["big-electric-pole"] = true,
+        ["big-electric-pole"] = true
     },
     ["eg-ugp-substation"] = {
-        ["big-electric-pole"] = true,
+        ["big-electric-pole"] = true
+    },
+    ["connection-box"] = {
+        ["connection-box"] = true,
+        ["big-electric-pole"] = true
     }
 }
 

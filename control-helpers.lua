@@ -427,7 +427,6 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         return true
     end
 
-    -- If no rule matches, the connection is not allowed
     return false
 end
 

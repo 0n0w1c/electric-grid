@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.2.0
+Date: 27.11.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Added support for Connection Box: circuit wires and transmission only, no supply area
+      For performance, it is better to connect a copper wire
+---------------------------------------------------------------------------------------------------
 Version: 0.1.14
 Date: 26.11.2024
   Bugfixes:
