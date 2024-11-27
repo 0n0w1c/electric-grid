@@ -337,22 +337,23 @@ local eg_transformator_item = {
 }
 
 local eg_transformator_recipe = {
-    type = "recipe",
-    name = "eg-transformator",
-    localised_name = { "", "Transformator" },
+    type                  = "recipe",
+    name                  = "eg-transformator",
+    localised_name        = { "", "Transformator" },
     localised_description = { "", "Assembles components into a power regulating device." },
-    category = constants.EG_CATEGORY,
-    ingredients = {
+    category              = data.raw["recipe"]["substation"].category,
+
+    ingredients           = {
         { type = "item", name = "copper-plate", amount = 2 },
         { type = "item", name = "steel-plate",  amount = 4 },
         { type = "item", name = "iron-plate",   amount = 10 },
         { type = "item", name = "copper-cable", amount = 200 }
     },
-    results = {
+    results               = {
         { type = "item", name = "eg-transformator", amount = 1 }
     },
-    enabled = false,
-    allow_quality = false,
+    enabled               = false,
+    allow_quality         = false,
 }
 
 data:extend({ eg_transformator_displayer, eg_transformator_item, eg_transformator_recipe })

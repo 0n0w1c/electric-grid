@@ -128,15 +128,15 @@ local huge_pole_recipe               =
     name                  = "eg-huge-electric-pole",
     localised_name        = "Huge electric pole",
     localised_description = "Huge electric pole",
-    category              = constants.EG_CATEGORY,
+    category              = data.raw["recipe"]["big-electric-pole"].category,
+    enabled               = false,
     results               = { { type = "item", name = "eg-huge-electric-pole", amount = 1 } },
     ingredients           =
     {
         { type = "item", name = "iron-stick",   amount = 20 },
         { type = "item", name = "steel-plate",  amount = 15 },
         { type = "item", name = "copper-plate", amount = 15 }
-    },
-    enabled               = false
+    }
 }
 
 data:extend { huge_pole, huge_pole_item, huge_pole_recipe }
