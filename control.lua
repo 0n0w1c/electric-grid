@@ -2,8 +2,6 @@ constants = require("constants")
 
 require("control-helpers")
 
---- Initialize global memory structures.
--- Ensures that all necessary global tables and variables exist, creating them if they do not.
 local function initialize_globals()
     storage = storage or {}
     storage.eg_transformators = storage.eg_transformators or {}
@@ -13,35 +11,122 @@ local function initialize_globals()
     storage.eg_check_interval = storage.eg_check_interval or 60
 end
 
---- Periodic checks on all transformers
--- Detects short circuits and alerts players if any short circuits are found,
--- Replaces buffered components if pump is disabled, quick power on/off switch.
-local function nth_tick_checks()
+local function remove_invalid_transformators()
     local transformators = storage.eg_transformators
+    local invalid_transformators = {}
 
-    for _, transformator in pairs(transformators) do
-        if transformator.pump.valid and transformator.high_voltage.valid and transformator.low_voltage.valid then
-            local high_network_id = transformator.high_voltage.electric_network_id
-            local low_network_id = transformator.low_voltage.electric_network_id
+    for unit_number, _ in pairs(transformators) do
+        if not is_transformator_valid(unit_number) then
+            table.insert(invalid_transformators, unit_number)
+        end
+    end
 
-            if high_network_id and low_network_id and high_network_id == low_network_id then
-                for _, player in pairs(game.players) do
-                    player.add_custom_alert(
-                        transformator.unit,
-                        { type = "virtual", name = "eg-alert" },
-                        { "", "Short circuit detected" },
-                        true
-                    )
-                end
-            end
+    for _, unit_number in pairs(invalid_transformators) do
+        game.print("Invalid transformator detected: " .. unit_number)
+        remove_transformator(unit_number)
+    end
+end
 
-            local pump = transformator.pump
-            local control_behavior = pump.get_control_behavior()
-            if control_behavior and control_behavior.disabled and pump.fluidbox[1] ~= nil then
-                pump.clear_fluid_inside()
-                replace_boiler_steam_engine(transformator)
+local function get_usage(pole)
+    if not (pole and pole.valid and pole.type == "electric-pole" and pole.electric_network_statistics) then
+        return 0
+    end
+
+    local stats = pole.electric_network_statistics
+    local total_usage = 0
+
+    for prototype_name, count in pairs(stats.input_counts) do
+        if count > 0 and string.sub(prototype_name, 1, 3) ~= "eg-" then
+            for _, quality in ipairs(constants.EG_QUALITIES) do
+                local flow = stats.get_flow_count {
+                    name = { name = prototype_name, quality = quality },
+                    precision_index = defines.flow_precision_index.five_seconds,
+                    count = false,
+                    category = "input"
+                }
+
+                total_usage = total_usage + flow
             end
         end
+    end
+
+    return total_usage * 60 -- Convert from per tick to per second
+end
+
+local function get_production(pole)
+    if not (pole and pole.valid and pole.type == "electric-pole" and pole.electric_network_statistics) then
+        return 0
+    end
+
+    local stats = pole.electric_network_statistics
+    local total_production = 0
+
+    for prototype_name, count in pairs(stats.output_counts) do
+        if count > 0 and string.sub(prototype_name, 1, 3) ~= "eg-" then
+            for _, quality in ipairs(constants.EG_QUALITIES) do
+                local flow = stats.get_flow_count {
+                    name = { name = prototype_name, quality = quality },
+                    precision_index = defines.flow_precision_index.five_seconds,
+                    count = false,
+                    category = "output"
+                }
+
+                total_production = total_production + flow
+            end
+        end
+    end
+
+    return total_production * 60 -- Convert from per tick to per second
+end
+
+local function check_short_circuit(transformator)
+    if not (transformator.high_voltage.valid and transformator.low_voltage.valid and transformator.unit.valid) then return end
+
+    local high_network_id = transformator.high_voltage.electric_network_id
+    local low_network_id = transformator.low_voltage.electric_network_id
+
+    if not (high_network_id and low_network_id) then return end
+
+    if high_network_id == low_network_id then
+        if transformator.alert_tick == 0 then
+            for _, player in pairs(game.players) do
+                transformator.alert_tick = game.tick
+                player.add_custom_alert(
+                    transformator.unit,
+                    { type = "virtual", name = "eg-alert" },
+                    { "", "Short circuit detected" },
+                    true
+                )
+            end
+        end
+    else
+        if transformator.alert_tick ~= 0 then
+            transformator.alert_tick = 0
+            for _, player in pairs(game.players) do
+                player.remove_alert({ entity = transformator.unit })
+            end
+        end
+    end
+end
+
+local function check_pump_disabled(transformator)
+    local pump = transformator.pump
+    if not (pump and pump.valid) then return end
+
+    local control_behavior = pump.get_control_behavior()
+
+    if control_behavior and control_behavior.disabled and pump.fluidbox[1] ~= nil then
+        pump.clear_fluid_inside()
+        replace_boiler_steam_engine(transformator)
+    end
+end
+
+--- Periodic checks on all transformers
+-- Replaces buffered components if pump is disabled, quick power on/off
+local function nth_tick_checks()
+    local transformators = storage.eg_transformators
+    for _, transformator in pairs(transformators) do
+        check_pump_disabled(transformator)
     end
 end
 
@@ -57,33 +142,67 @@ local function on_entity_built(event)
     elseif entity.name == "eg-ugp-substation-displayer" then
         local new_entity = replace_displayer_with_ugp_substation(entity)
         enforce_pole_connections(new_entity)
+
+        local transformators = storage.eg_transformators
+        for _, transformator in pairs(transformators) do
+            check_short_circuit(transformator)
+        end
     elseif entity.type == "electric-pole" then
         enforce_pole_connections(entity)
+
+        local transformators = storage.eg_transformators
+        for _, transformator in pairs(transformators) do
+            check_short_circuit(transformator)
+        end
     end
 end
 
--- This function cleans up all components associated with the mined transformator.
--- Each component of the transformator (unit, boiler, pump, infinity pipe, steam engine, high voltage pole, low voltage pole)
--- is destroyed, and the transformator is removed from the global storage.
--- @param event EventData The event data containing the entity that was mined.
-local function on_eg_transformator_mined(event)
+--- Find all electric poles within a radius around a mined entity's position.
+-- @param entity LuaEntity The mined electric pole entity.
+-- @param radius number The radius to search (default: 64).
+-- @return table A list of electric poles within the radius.
+local function get_poles_nearby_poles(entity)
+    if not (entity and entity.valid and entity.type == "electric-pole") then return end
+
+    local position = entity.position
+    local surface = entity.surface
+    local radius = 64
+
+    local area = {
+        { position.x - radius, position.y - radius }, -- Top-left corner
+        { position.x + radius, position.y + radius }  -- Bottom-right corner
+    }
+
+    return surface.find_entities_filtered {
+        area = area,
+        type = "electric-pole",
+    }
+end
+
+--- Handles the event triggered when an entity is mined by a player or a robot.
+-- If the mined entity is a transformator, it removes it from the mod's internal storage.
+-- If the entity is an electric pole, it optionally enforces connection rules for nearby poles.
+-- @param event EventData.on_entity_mined The event data containing information about the mined entity.
+local function on_entity_mined(event)
     local entity = event.entity
-    if not entity then return end
+    if not (entity and entity.valid) then return end
 
-    local unit_number = entity.unit_number
+    if is_transformator(entity.name) then
+        local unit_number = entity.unit_number
+        remove_transformator(unit_number)
+    elseif entity.type == "electric-pole" then
+        local transformators = storage.eg_transformators
+        for _, transformator in pairs(transformators) do
+            check_short_circuit(transformator)
+        end
 
-    if storage.eg_transformators[unit_number] then
-        local eg_transformator = storage.eg_transformators[unit_number]
-
-        if eg_transformator.unit then eg_transformator.unit.destroy() end
-        if eg_transformator.boiler then eg_transformator.boiler.destroy() end
-        if eg_transformator.pump then eg_transformator.pump.destroy() end
-        if eg_transformator.infinity_pipe then eg_transformator.infinity_pipe.destroy() end
-        if eg_transformator.steam_engine then eg_transformator.steam_engine.destroy() end
-        if eg_transformator.high_voltage then eg_transformator.high_voltage.destroy() end
-        if eg_transformator.low_voltage then eg_transformator.low_voltage.destroy() end
-
-        storage.eg_transformators[unit_number] = nil
+        -- Auto-reconnect seems to preserve the wiring rules, so this may not be necessary.
+        local poles = get_poles_nearby_poles(entity)
+        if poles then
+            for _, pole in pairs(poles) do
+                enforce_pole_connections(pole)
+            end
+        end
     end
 end
 
@@ -113,6 +232,11 @@ local function on_selected_entity_changed(event)
     if storage.eg_last_selected_pole[player_index] and (not selected_entity or selected_entity.type ~= "electric-pole") then
         enforce_pole_connections(storage.eg_last_selected_pole[player_index])
         storage.eg_last_selected_pole[player_index] = nil
+
+        local transformators = storage.eg_transformators
+        for _, transformator in pairs(transformators) do
+            check_short_circuit(transformator)
+        end
     end
 
     -- Update storage.eg_last_selected_pole if the player selects a new electric pole while holding copper wire
@@ -236,6 +360,11 @@ local function on_gui_closed(event)
     end
 end
 
+local function on_first_tick()
+    remove_invalid_transformators()
+    script.on_nth_tick(1, nil)
+end
+
 local function register_event_handlers()
     script.on_event(defines.events.on_built_entity, on_entity_built)
     script.on_event(defines.events.on_robot_built_entity, on_entity_built)
@@ -244,10 +373,10 @@ local function register_event_handlers()
     script.on_event(defines.events.script_raised_built, on_entity_built)
     script.on_event(defines.events.script_raised_revive, on_entity_built)
 
-    script.on_event(defines.events.on_player_mined_entity, on_eg_transformator_mined)
-    script.on_event(defines.events.on_robot_mined_entity, on_eg_transformator_mined)
-    script.on_event(defines.events.on_space_platform_mined_entity, on_eg_transformator_mined)
-    script.on_event(defines.events.on_entity_died, on_eg_transformator_mined)
+    script.on_event(defines.events.on_player_mined_entity, on_entity_mined)
+    script.on_event(defines.events.on_robot_mined_entity, on_entity_mined)
+    script.on_event(defines.events.on_space_platform_mined_entity, on_entity_mined)
+    script.on_event(defines.events.on_entity_died, on_entity_mined)
 
     script.on_event(defines.events.on_player_cursor_stack_changed, on_cursor_stack_changed)
     script.on_event(defines.events.on_selected_entity_changed, on_selected_entity_changed)
@@ -257,6 +386,8 @@ local function register_event_handlers()
     else
         script.on_nth_tick(nil)
     end
+
+    script.on_nth_tick(1, on_first_tick)
 
     script.on_event("transformator_rating_selection", on_transformator_rating_selection)
     script.on_event(defines.events.on_gui_checked_state_changed, on_gui_checked_state_changed)

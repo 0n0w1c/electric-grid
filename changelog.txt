@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.0
+Date: 28.11.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Refactored for performance enhancements
+      If quick on/off is not a priority, set the "On tick interval" to 0 for near zero UPS impact
+    - Short circuit alerts are now promptly cleared
+    - Enforce wiring rules on nearby poles when an electric pole is mined (auto-reconnects)
+---------------------------------------------------------------------------------------------------
 Version: 0.2.0
 Date: 27.11.2024
   Bugfixes:

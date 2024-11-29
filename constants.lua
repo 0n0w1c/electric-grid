@@ -33,6 +33,14 @@ constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 200
 
+constants.EG_QUALITIES = {
+    "normal",
+    "uncommon",
+    "rare",
+    "epic",
+    "legendary"
+}
+
 --Maybe quality effect here?
 --constants.EG_EFFICIENCY = 0.98
 constants.EG_EFFICIENCY = 1

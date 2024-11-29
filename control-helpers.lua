@@ -1,3 +1,42 @@
+--- Removes a transformator and safely destroys all its associated entities.
+-- This function ensures that all components of a transformator are properly destroyed,
+-- and the transformator is removed from storage.
+-- @param unit_number number The unit number of the transformator to remove.
+function remove_transformator(unit_number)
+    local eg_transformator = storage.eg_transformators[unit_number]
+    if not eg_transformator then return end
+
+    if eg_transformator.unit then eg_transformator.unit.destroy() end
+    if eg_transformator.boiler then eg_transformator.boiler.destroy() end
+    if eg_transformator.pump then eg_transformator.pump.destroy() end
+    if eg_transformator.infinity_pipe then eg_transformator.infinity_pipe.destroy() end
+    if eg_transformator.steam_engine then eg_transformator.steam_engine.destroy() end
+    if eg_transformator.high_voltage then eg_transformator.high_voltage.destroy() end
+    if eg_transformator.low_voltage then eg_transformator.low_voltage.destroy() end
+
+    storage.eg_transformators[unit_number] = nil
+end
+
+--- Checks if a transformator and all its components are valid.
+-- This function verifies the validity of all associated entities in a transformator.
+-- If any component is invalid, it returns false. If all components are valid, it returns true.
+-- @param unit_number number The unit number of the transformator to check.
+-- @return boolean True if the transformator and all components are valid, false otherwise.
+function is_transformator_valid(unit_number)
+    local eg_transformator = storage.eg_transformators[unit_number]
+    if not eg_transformator then return false end
+
+    if eg_transformator.unit and not eg_transformator.unit.valid then return false end
+    if eg_transformator.boiler and not eg_transformator.boiler.valid then return false end
+    if eg_transformator.pump and not eg_transformator.pump.valid then return false end
+    if eg_transformator.infinity_pipe and not eg_transformator.infinity_pipe.valid then return false end
+    if eg_transformator.steam_engine and not eg_transformator.steam_engine.valid then return false end
+    if eg_transformator.high_voltage and not eg_transformator.high_voltage.valid then return false end
+    if eg_transformator.low_voltage and not eg_transformator.low_voltage.valid then return false end
+
+    return true
+end
+
 --- Rotates a position vector around the origin based on a given direction.
 --- Applies a 90 clockwise rotation matrix for each cardinal direction.
 --- @param position table A table containing x and y coordinates of the position to rotate.
@@ -7,7 +46,7 @@
 ---     defines.direction.south (180 rotation)
 ---     defines.direction.west (270 clockwise rotation)
 --- @return table The rotated position as a table with x and y coordinates.
-local function rotate_position(position, direction)
+function rotate_position(position, direction)
     local rotation_matrices = {
         [defines.direction.north] = { { 1, 0 }, { 0, 1 } },   -- No rotation
         [defines.direction.east]  = { { 0, -1 }, { 1, 0 } },  -- 90 clockwise
@@ -220,7 +259,8 @@ function eg_transformator_built(entity)
         infinity_pipe = eg_infinity_pipe,
         steam_engine = eg_steam_engine,
         high_voltage = eg_high_voltage_pole,
-        low_voltage = eg_low_voltage_pole
+        low_voltage = eg_low_voltage_pole,
+        alert_tick = 0
     }
 
     --eg_unit.destroy()
@@ -361,7 +401,8 @@ function replace_transformator(old_transformator, new_rating)
         infinity_pipe = eg_infinity_pipe,
         steam_engine = eg_steam_engine,
         high_voltage = eg_high_voltage_pole,
-        low_voltage = eg_low_voltage_pole
+        low_voltage = eg_low_voltage_pole,
+        alert_tick = 0
     }
 
     storage.eg_transformators[unit_number] = nil
