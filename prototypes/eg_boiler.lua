@@ -19,8 +19,8 @@ function create_transformator_boiler(tier)
     return {
         type = "boiler",
         name = "eg-boiler-" .. tier,
-        icon = "__base__/graphics/icons/boiler.png",
-        icon_size = 64,
+        icon = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
+        icon_size = 128,
         energy_consumption = rating,
         target_temperature = 165,
         max_health = constants.EG_MAX_HEALTH,
@@ -29,8 +29,9 @@ function create_transformator_boiler(tier)
         minable = nil,
         selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
-        localised_name = { "", "Boiler - Tier ", tostring(tier) },
-        localised_description = { "", "Component of a Transformator rated for ", rating, " of power output." },
+        --localised_name = { "", "Boiler - Tier ", tostring(tier) },
+        localised_name = { "", "Transformator ", tostring(rating) },
+        localised_description = { "", "Transformator rated for ", rating, " of power output." },
         energy_source = {
             type = "electric",
             effectivity = constants.EG_EFFICIENCY,

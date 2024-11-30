@@ -6,8 +6,8 @@ function create_transformator_pump()
     return {
         type                      = "pump",
         name                      = "eg-pump",
-        icon                      = "__base__/graphics/icons/pump.png",
-        icon_size                 = 64,
+        icon                      = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
+        icon_size                 = 128,
         corpse                    = "big-remnants",
         dying_explosion           = "medium-explosion",
         resistances               = data.raw["electric-pole"]["substation"].resistances,
@@ -23,6 +23,7 @@ function create_transformator_pump()
         collision_box             = collision_box,
         localised_name            = { "", "Transformator" },
         localised_description     = { "", "Transformator" },
+
         pumping_speed             = 1000,
         energy_usage              = "0.001W",
         energy_source             = {

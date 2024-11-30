@@ -365,7 +365,7 @@ function replace_transformator(old_transformator, new_rating)
 
     eg_pump.clear_fluid_inside()
     local filter = eg_pump.fluidbox.get_filter(1)
-    if filter.name ~= "eg-fluid-disable" then
+    if filter and filter.name and filter.name ~= "eg-fluid-disable" then
         eg_pump.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
     end
 

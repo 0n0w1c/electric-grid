@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.4
+Date: 30.11.2024
+  Bugfixes:
+    - Crash when rating changed for new transformator
+  Changes:
+    - Transformator components now use transformator icon and localized string
+---------------------------------------------------------------------------------------------------
 Version: 0.3.3
 Date: 29.11.2024
   Bugfixes:
