@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "This is a work in progress, in the proof of concept stage, but believed to be reasonably playable.",
@@ -14,6 +14,6 @@
         "? space-age",
         "? big-pink-eraser",
         "? ConnectionBox >= 2.1.3",
-        "! noangledcables"
+        "? noangledcables"
     ]
 }

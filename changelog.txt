@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.2
+Date: 29.11.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Electric Grid Enforcer dependency changed from incompatible to optional
+---------------------------------------------------------------------------------------------------
 Version: 0.3.1
 Date: 29.11.2024
   Bugfixes:
