@@ -6,7 +6,7 @@ function remove_transformator(unit_number)
     local eg_transformator = storage.eg_transformators[unit_number]
     if not eg_transformator then return end
 
-    if eg_transformator.unit then eg_transformator.unit.destroy() end
+    if eg_transformator.unit then eg_transformator.unit.destroy({ raise_destroy = true }) end
     if eg_transformator.boiler then eg_transformator.boiler.destroy() end
     if eg_transformator.pump then eg_transformator.pump.destroy() end
     if eg_transformator.infinity_pipe then eg_transformator.infinity_pipe.destroy() end
@@ -149,15 +149,16 @@ function eg_transformator_built(entity)
     local direction = entity.direction
     local rotated_offset = { x = 0, y = 0 }
 
-    entity.destroy()
-
     local eg_unit_position = { x = position.x, y = position.y }
+
+    entity.destroy({ raise_destroy = true })
 
     local eg_unit = surface.create_entity {
         name = "eg-unit-1",
         position = eg_unit_position,
         force = force,
-        direction = direction
+        direction = direction,
+        raise_built = true
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.boiler, direction)
@@ -307,7 +308,7 @@ function replace_transformator(old_transformator, new_rating)
     if not (eg_transformator.unit and eg_transformator.unit.valid) then return end
     local eg_unit_position = eg_transformator.unit.position
     local eg_unit_direction = eg_transformator.unit.direction
-    eg_transformator.unit.destroy()
+    eg_transformator.unit.destroy({ raise_destroy = true })
 
     if not (eg_transformator.boiler and eg_transformator.boiler.valid) then return end
     local eg_boiler_position = eg_transformator.boiler.position
@@ -330,7 +331,8 @@ function replace_transformator(old_transformator, new_rating)
         name = "eg-unit-" .. tier,
         position = eg_unit_position,
         force = force,
-        direction = eg_unit_direction
+        direction = eg_unit_direction,
+        raise_built = true
     }
 
     local eg_boiler = surface.create_entity {
@@ -362,14 +364,10 @@ function replace_transformator(old_transformator, new_rating)
     }
 
     eg_pump.clear_fluid_inside()
-
-    local fluid_name
-    if eg_pump.fluidbox[1] == "eg-fluid-disable" then
-        fluid_name = "eg-fluid-disable"
-    else
-        fluid_name = "eg-water-" .. tier
+    local filter = eg_pump.fluidbox.get_filter(1)
+    if filter.name ~= "eg-fluid-disable" then
+        eg_pump.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
     end
-    eg_pump.fluidbox.set_filter(1, { name = fluid_name })
 
     eg_infinity_pipe.set_infinity_pipe_filter({
         name = "eg-water-" .. tier,
@@ -404,13 +402,15 @@ function replace_displayer_with_ugp_substation(displayer)
     local surface = displayer.surface
 
     local quality = displayer.quality
-    displayer.destroy()
+
+    displayer.destroy({ raise_destroy = true })
 
     local new_entity = surface.create_entity {
         name = "eg-ugp-substation",
         position = position,
         direction = direction,
         force = force,
+        raise_built = true,
         quality = quality
     }
 
