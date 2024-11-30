@@ -270,8 +270,7 @@ function eg_transformator_built(entity)
     --eg_low_voltage_pole.destroy()
 end
 
---- Replace the old transformator entity with a new one based on the selected rating.
--- Preserves existing wire connections during the replacement of the transformator components.
+--- Replace the old_transformator components with a new ones based on the selected rating.
 -- @param old_transformator LuaEntity The transformator to replace.
 -- @param new_rating string The selected new rating for the transformator.
 function replace_transformator(old_transformator, new_rating)
@@ -292,56 +291,38 @@ function replace_transformator(old_transformator, new_rating)
     local direction = old_transformator.direction
 
     local unit_number = old_transformator.unit_number
-    local eg_high_voltage_pole = nil
-    local eg_low_voltage_pole = nil
 
-    local eg_unit_position
-    local eg_unit_direction
-    local eg_boiler_position
-    local eg_boiler_direction
-    local eg_pump_position
-    local eg_pump_direction
-    local eg_infinity_pipe_position
-    local eg_infinity_pipe_direction
-    local eg_steam_engine_position
-    local eg_steam_engine_direction
+    if not storage.eg_transformators[unit_number] then return end
+    local eg_transformator = storage.eg_transformators[unit_number]
 
-    if storage.eg_transformators[unit_number] then
-        local eg_transformator = storage.eg_transformators[unit_number]
+    if not (eg_transformator.high_voltage and eg_transformator.high_voltage.valid) then return end
+    local eg_high_voltage_pole = eg_transformator.high_voltage
 
-        eg_high_voltage_pole = storage.eg_transformators[unit_number].high_voltage
-        eg_low_voltage_pole = storage.eg_transformators[unit_number].low_voltage
+    if not (eg_transformator.low_voltage and eg_transformator.low_voltage.valid) then return end
+    local eg_low_voltage_pole = eg_transformator.low_voltage
 
-        -- Destroy all but the poles, perserve existing wire connections
-        if eg_transformator.unit and eg_transformator.unit.valid then
-            eg_unit_position = eg_transformator.unit.position
-            eg_unit_direction = eg_transformator.unit.direction
-            eg_transformator.unit.destroy()
-        end
-        if eg_transformator.boiler and eg_transformator.boiler.valid then
-            eg_boiler_position = eg_transformator.boiler.position
-            eg_boiler_direction = eg_transformator.boiler.direction
-            eg_transformator.boiler.destroy()
-        end
-        if eg_transformator.pump and eg_transformator.pump.valid then
-            eg_pump_position = eg_transformator.pump.position
-            eg_pump_direction = eg_transformator.pump.direction
-            eg_transformator.pump.destroy()
-        end
-        if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
-            eg_infinity_pipe_position = eg_transformator.infinity_pipe.position
-            eg_infinity_pipe_direction = eg_transformator.infinity_pipe.direction
-            eg_transformator.infinity_pipe.destroy()
-        end
-        if eg_transformator.steam_engine and eg_transformator.steam_engine.valid then
-            eg_steam_engine_position = eg_transformator.steam_engine.position
-            eg_steam_engine_direction = eg_transformator.steam_engine.direction
-            eg_transformator.steam_engine.destroy()
-        end
-    else
-        --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
-        return
-    end
+    if not (eg_transformator.pump and eg_transformator.pump.valid) then return end
+    local eg_pump = eg_transformator.pump
+
+    if not (eg_transformator.unit and eg_transformator.unit.valid) then return end
+    local eg_unit_position = eg_transformator.unit.position
+    local eg_unit_direction = eg_transformator.unit.direction
+    eg_transformator.unit.destroy()
+
+    if not (eg_transformator.boiler and eg_transformator.boiler.valid) then return end
+    local eg_boiler_position = eg_transformator.boiler.position
+    local eg_boiler_direction = eg_transformator.boiler.direction
+    eg_transformator.boiler.destroy()
+
+    if not (eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid) then return end
+    local eg_infinity_pipe_position = eg_transformator.infinity_pipe.position
+    local eg_infinity_pipe_direction = eg_transformator.infinity_pipe.direction
+    eg_transformator.infinity_pipe.destroy()
+
+    if not (eg_transformator.steam_engine and eg_transformator.steam_engine.valid) then return end
+    local eg_steam_engine_position = eg_transformator.steam_engine.position
+    local eg_steam_engine_direction = eg_transformator.steam_engine.direction
+    eg_transformator.steam_engine.destroy()
 
     local tier = string.sub(new_unit, -1)
 
@@ -359,13 +340,6 @@ function replace_transformator(old_transformator, new_rating)
         direction = eg_boiler_direction
     }
 
-    local eg_pump = surface.create_entity {
-        name = "eg-pump",
-        position = eg_pump_position,
-        force = force,
-        direction = eg_pump_direction,
-    }
-
     local eg_infinity_pipe = surface.create_entity {
         name = "eg-infinity-pipe",
         position = eg_infinity_pipe_position,
@@ -373,11 +347,11 @@ function replace_transformator(old_transformator, new_rating)
         direction = eg_infinity_pipe_direction,
     }
 
-    local eg_steam_engine_variant = "ne"
-    if direction == defines.direction.north or direction == defines.direction.east then
-        eg_steam_engine_variant = "ne"
-    elseif direction == defines.direction.south or direction == defines.direction.west then
+    local eg_steam_engine_variant
+    if direction == defines.direction.south or direction == defines.direction.west then
         eg_steam_engine_variant = "sw"
+    else
+        eg_steam_engine_variant = "ne"
     end
 
     local eg_steam_engine = surface.create_entity {
@@ -386,6 +360,16 @@ function replace_transformator(old_transformator, new_rating)
         force = force,
         direction = eg_steam_engine_direction
     }
+
+    eg_pump.clear_fluid_inside()
+
+    local fluid_name
+    if eg_pump.fluidbox[1] == "eg-fluid-disable" then
+        fluid_name = "eg-fluid-disable"
+    else
+        fluid_name = "eg-water-" .. tier
+    end
+    eg_pump.fluidbox.set_filter(1, { name = fluid_name })
 
     eg_infinity_pipe.set_infinity_pipe_filter({
         name = "eg-water-" .. tier,
