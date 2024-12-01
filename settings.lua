@@ -29,17 +29,6 @@ data:extend({
     },
     {
         type = "double-setting",
-        name = "eg-max-wire-big",
-        setting_type = "startup",
-        default_value = 18.0,
-        minimum_value = 18.0,
-        maximum_value = 64.0,
-        order = "a4",
-        localised_name = "Huge pole wire reach",
-        localised_description = "Min: 18.0  Max: 64.0"
-    },
-    {
-        type = "double-setting",
         name = "eg-max-wire-huge",
         setting_type = "startup",
         default_value = 36.0,

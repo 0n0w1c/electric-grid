@@ -262,7 +262,6 @@ local function create_transformator_unit(tier)
         flags = { "placeable-player", "player-creation", "not-rotatable" },
         minable = { mining_time = 0.5, result = "eg-transformator" },
         selectable_in_game = true,
-        selection_priority = 1,
         corpse = "big-remnants",
         dying_explosion = "medium-explosion",
         placeable_by = { item = "eg-transformator", count = 1 },

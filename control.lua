@@ -130,6 +130,28 @@ local function nth_tick_checks()
     end
 end
 
+--- Find all electric poles within a radius around a mined entity's position.
+-- @param entity LuaEntity The mined electric pole entity.
+-- @param radius number The radius to search (default: 64).
+-- @return table A list of electric poles within the radius.
+local function get_poles_nearby_poles(entity)
+    if not (entity and entity.valid and entity.type == "electric-pole") then return end
+
+    local position = entity.position
+    local surface = entity.surface
+    local distance = constants.EG_WIRE_CHECK_DISTANCE
+
+    local area = {
+        { position.x - distance, position.y - distance }, -- Top-left corner
+        { position.x + distance, position.y + distance }  -- Bottom-right corner
+    }
+
+    return surface.find_entities_filtered {
+        area = area,
+        type = "electric-pole",
+    }
+end
+
 -- Places transformator or ugp_substation entities
 -- or enforces wiring rules if it's an electric-pole.
 -- @param entity LuaEntity The entity that was added.
@@ -143,6 +165,13 @@ local function on_entity_built(event)
         local new_entity = replace_displayer_with_ugp_substation(entity)
         enforce_pole_connections(new_entity)
 
+        local poles = get_poles_nearby_poles(new_entity)
+        if poles then
+            for _, pole in pairs(poles) do
+                enforce_pole_connections(pole)
+            end
+        end
+
         local transformators = storage.eg_transformators
         for _, transformator in pairs(transformators) do
             check_short_circuit(transformator)
@@ -150,33 +179,18 @@ local function on_entity_built(event)
     elseif entity.type == "electric-pole" then
         enforce_pole_connections(entity)
 
+        local poles = get_poles_nearby_poles(entity)
+        if poles then
+            for _, pole in pairs(poles) do
+                enforce_pole_connections(pole)
+            end
+        end
+
         local transformators = storage.eg_transformators
         for _, transformator in pairs(transformators) do
             check_short_circuit(transformator)
         end
     end
-end
-
---- Find all electric poles within a radius around a mined entity's position.
--- @param entity LuaEntity The mined electric pole entity.
--- @param radius number The radius to search (default: 64).
--- @return table A list of electric poles within the radius.
-local function get_poles_nearby_poles(entity)
-    if not (entity and entity.valid and entity.type == "electric-pole") then return end
-
-    local position = entity.position
-    local surface = entity.surface
-    local radius = 64
-
-    local area = {
-        { position.x - radius, position.y - radius }, -- Top-left corner
-        { position.x + radius, position.y + radius }  -- Bottom-right corner
-    }
-
-    return surface.find_entities_filtered {
-        area = area,
-        type = "electric-pole",
-    }
 end
 
 --- Handles the event triggered when an entity is mined by a player or a robot.

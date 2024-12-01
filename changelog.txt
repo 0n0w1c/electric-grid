@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.6
+Date: 30.11.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Added support for aai-industry's small iron electric pole, same as small electric pole
+---------------------------------------------------------------------------------------------------
+Version: 0.3.5
+Date: 30.11.2024
+  Bugfixes:
+    - Underground substation's collision mask modified to water, resource, cliff, meltable, doodad
+      Now it collides for placement but does not collide once placed
+  Changes:
+    - Removed the startup setting for the big electric pole's maximum wire connection distance
+    - Enforce wiring rules on nearby poles when an electric pole is placed (auto-connect)
+---------------------------------------------------------------------------------------------------
 Version: 0.3.4
 Date: 30.11.2024
   Bugfixes:

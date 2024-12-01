@@ -121,14 +121,17 @@ constants.EG_POLE_CONNECTIONS = {
     },
 }
 
+constants.EG_WIRE_CHECK_DISTANCE = 20
 constants.EG_WIRE_CONNECTIONS = {
     ["small-electric-pole"] = {
         ["small-electric-pole"] = true,
-        ["medium-electric-pole"] = true
+        ["medium-electric-pole"] = true,
+        ["small-iron-electric-pole"] = true,
     },
     ["medium-electric-pole"] = {
         ["small-electric-pole"] = true,
-        ["medium-electric-pole"] = true
+        ["medium-electric-pole"] = true,
+        ["small-iron-electric-pole"] = true,
     },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
@@ -148,6 +151,11 @@ constants.EG_WIRE_CONNECTIONS = {
     ["connection-box"] = {
         ["connection-box"] = true,
         ["big-electric-pole"] = true
+    },
+    ["small-iron-electric-pole"] = {
+        ["small-iron-electric-pole"] = true,
+        ["small-electric-pole"] = true,
+        ["medium-electric-pole"] = true
     }
 }
 

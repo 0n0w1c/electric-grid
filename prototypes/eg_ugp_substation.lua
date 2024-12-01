@@ -4,21 +4,16 @@ ugp_substation.localised_name                 = "Underground substation"
 ugp_substation.localised_description          = "Distributes power underground"
 ugp_substation.icon                           = constants.EG_GRAPHICS .. "/entities/ugp-substation.png"
 ugp_substation.icon_size                      = 128
-ugp_substation.icon_mipmaps                   = 1
 ugp_substation.hidden                         = false
 ugp_substation.hidden_in_factoriopedia        = true
 ugp_substation.draw_copper_wires              = false
 ugp_substation.draw_circuit_wires             = false
-ugp_substation.placeable_by                   = { item = "eg-ugp-substation-displayer", count = 1 }
 ugp_substation.minable                        = { mining_time = 0.5, result = "substation" }
-ugp_substation.collision_box                  = { { -0.9, -0.9 }, { 0.9, 0.9 } }
-ugp_substation.selection_box                  = { { -0.9, -0.9 }, { 0.9, 0.9 } }
+ugp_substation.selection_priority             = 1
 ugp_substation.collision_mask                 =
 {
     colliding_with_tiles_only = true,
-    layers = {
-        water_tile = true,
-    }
+    layers = {}
 }
 
 ugp_substation.integration_patch_render_layer = "ground-patch"
@@ -55,14 +50,14 @@ ugp_substation.connection_points              =
 {
     {
         shadow = {
-            copper = util.by_pixel_hr(0, 0),
-            red = util.by_pixel_hr(0, 0),
-            green = util.by_pixel_hr(0, 0)
+            copper = { 0, 0 },
+            red = { 0, 0 },
+            green = { 0, 0 }
         },
         wire = {
-            copper = util.by_pixel_hr(0, 0),
-            red = util.by_pixel_hr(0, 0),
-            green = util.by_pixel_hr(0, 0)
+            copper = { 0, 0 },
+            red = { 0, 0 },
+            green = { 0, 0 }
         }
     }
 }
@@ -75,6 +70,12 @@ ugp_substation_displayer.name                         = "eg-ugp-substation-displ
 ugp_substation_displayer.hidden                       = false
 ugp_substation_displayer.hidden_in_factoriopedia      = false
 ugp_substation_displayer.draw_copper_wires            = true
+ugp_substation_displayer.collision_mask               =
+{
+    layers = {
+        water_tile = true, cliff = true, meltable = true, resource = true, doodad = true
+    }
+}
 
 local ugp_substation_displayer_item                   = table.deepcopy(data.raw["item"]["substation"])
 
