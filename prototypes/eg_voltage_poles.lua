@@ -2,7 +2,7 @@ local function eg_wireconnections(pole, direction)
     if not pole then return {} end
     if not direction then return {} end
 
-    local base_position = constants.EG_POLE_CONNECTIONS[pole][constants.EG_DIRECTION_TO_CARDINAL[direction]]
+    local base_position = constants.EG_WIRE_CONNECTION_POINTS[pole][constants.EG_DIRECTION_TO_CARDINAL[direction]]
     local offset = constants.EG_WIRE_CONNECTION_OFFSET
 
     return {

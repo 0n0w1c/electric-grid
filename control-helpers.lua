@@ -183,7 +183,7 @@ function eg_transformator_built(entity)
         name = "eg-pump",
         position = eg_pump_position,
         force = force,
-        direction = direction,
+        direction = direction
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.infinity_pipe, direction)
@@ -196,7 +196,7 @@ function eg_transformator_built(entity)
         name = "eg-infinity-pipe",
         position = eg_infinity_pipe_position,
         force = force,
-        direction = direction,
+        direction = direction
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.steam_engine, direction)
@@ -417,11 +417,6 @@ function replace_displayer_with_ugp_substation(displayer)
 end
 
 --- Check if a copper cable connection is allowed between two poles.
--- The rules for allowed connections include:
--- 1. Checking the standard connection table (EG_WIRE_CONNECTIONS).
--- 2. Allowing transformator poles to connect to each other.
--- 3. Allowing transformator poles to connect to eg-huge-electric-pole and vice-versa.
--- 4. Allowing transformator poles to connect to big-electric-pole and medium-electric-pole and vice-versa.
 -- @param pole_a LuaEntity The first electric pole.
 -- @param pole_b LuaEntity The second electric pole.
 -- @return boolean True if the connection is allowed, false otherwise.
@@ -436,18 +431,12 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         return true
     end
 
-    if name_a:match("^eg%-[high%-low]+%-voltage%-pole%-") and name_b:match("^eg%-[high%-low]+%-voltage%-pole%-") then
+    if name_a:match(constants.EG_TRANSFORMATOR_POLES) and name_b:match(constants.EG_TRANSFORMATOR_POLES) then
         return true
     end
 
-    if (name_a == "eg-huge-electric-pole" and name_b:match("^eg%-[high%-low]+%-voltage%-pole%-")) or
-        (name_b == "eg-huge-electric-pole" and name_a:match("^eg%-[high%-low]+%-voltage%-pole%-")) then
-        return true
-    end
-
-    local standard_poles = { ["big-electric-pole"] = true, ["medium-electric-pole"] = true }
-    if (name_a:match("^eg%-[high%-low]+%-voltage%-pole%-") and standard_poles[name_b]) or
-        (name_b:match("^eg%-[high%-low]+%-voltage%-pole%-") and standard_poles[name_a]) then
+    if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and constants.EG_TRANSMISSION_POLES[name_b]) or
+        (name_b:match(constants.EG_TRANSFORMATOR_POLES) and constants.EG_TRANSMISSION_POLES[name_a]) then
         return true
     end
 
@@ -470,9 +459,6 @@ function enforce_pole_connections(pole)
     if not connectors then
         return true
     end
-
-    -- debug
-    -- game.print(serpent.block(connectors))
 
     for _, connector in pairs(connectors) do
         if connector.wire_type == defines.wire_type.copper then

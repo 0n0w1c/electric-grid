@@ -134,16 +134,16 @@ end
 -- @param entity LuaEntity The mined electric pole entity.
 -- @param radius number The radius to search (default: 64).
 -- @return table A list of electric poles within the radius.
-local function get_poles_nearby_poles(entity)
+local function get_nearby_poles(entity)
     if not (entity and entity.valid and entity.type == "electric-pole") then return end
 
     local position = entity.position
     local surface = entity.surface
-    local distance = constants.EG_WIRE_CHECK_DISTANCE
+    local distance = prototypes.entity[entity.name].get_max_wire_distance(entity.quality)
 
     local area = {
-        { position.x - distance, position.y - distance }, -- Top-left corner
-        { position.x + distance, position.y + distance }  -- Bottom-right corner
+        { position.x - distance, position.y - distance },
+        { position.x + distance, position.y + distance }
     }
 
     return surface.find_entities_filtered {
@@ -165,7 +165,7 @@ local function on_entity_built(event)
         local new_entity = replace_displayer_with_ugp_substation(entity)
         enforce_pole_connections(new_entity)
 
-        local poles = get_poles_nearby_poles(new_entity)
+        local poles = get_nearby_poles(new_entity)
         if poles then
             for _, pole in pairs(poles) do
                 enforce_pole_connections(pole)
@@ -179,7 +179,7 @@ local function on_entity_built(event)
     elseif entity.type == "electric-pole" then
         enforce_pole_connections(entity)
 
-        local poles = get_poles_nearby_poles(entity)
+        local poles = get_nearby_poles(entity)
         if poles then
             for _, pole in pairs(poles) do
                 enforce_pole_connections(pole)
@@ -211,7 +211,7 @@ local function on_entity_mined(event)
         end
 
         -- Auto-reconnect seems to preserve the wiring rules, so this may not be necessary.
-        local poles = get_poles_nearby_poles(entity)
+        local poles = get_nearby_poles(entity)
         if poles then
             for _, pole in pairs(poles) do
                 enforce_pole_connections(pole)
@@ -376,7 +376,7 @@ end
 
 local function on_first_tick()
     remove_invalid_transformators()
-    script.on_nth_tick(1, nil)
+    script.on_nth_tick(constants.EG_FIRST_TICK, nil)
 end
 
 local function register_event_handlers()
@@ -399,7 +399,7 @@ local function register_event_handlers()
         script.on_nth_tick(nil)
     end
 
-    script.on_nth_tick(1, on_first_tick)
+    script.on_nth_tick(constants.EG_FIRST_TICK, on_first_tick)
 
     script.on_event("transformator_rating_selection", on_transformator_rating_selection)
     script.on_event(defines.events.on_gui_checked_state_changed, on_gui_checked_state_changed)

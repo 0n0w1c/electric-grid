@@ -23,6 +23,7 @@ end
 
 local constants = {}
 
+constants.EG_FIRST_TICK = 1
 constants.EG_DEBUG_TRANSFORMATOR = false
 
 constants.EG_MOD = "__electric-grid__"
@@ -31,7 +32,7 @@ constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
 
 constants.EG_DISPLAYER = "eg-transformator-displayer"
-constants.EG_MAX_HEALTH = 200
+constants.EG_MAX_HEALTH = 500
 
 constants.EG_QUALITIES = {
     "normal",
@@ -41,8 +42,6 @@ constants.EG_QUALITIES = {
     "legendary"
 }
 
---Maybe quality effect here?
---constants.EG_EFFICIENCY = 0.98
 constants.EG_EFFICIENCY = 1
 constants.HEAT_CAPACITY_PER_MW = 0.2565
 
@@ -109,7 +108,7 @@ constants.EG_LIGHT_SIZE = 12
 constants.EG_MAXIMUM_WIRE_DISTANCE = 6
 constants.EG_SUPPLY_AREA_DISTANCE = 0.8
 constants.EG_WIRE_CONNECTION_OFFSET = 0.1
-constants.EG_POLE_CONNECTIONS = {
+constants.EG_WIRE_CONNECTION_POINTS = {
     eg_high_voltage_pole = {
         north = { wire = { 0.0, -1.8 }, shadow = { 2.2, 0.7 } },
         east  = { wire = { -0.4, -1.6 }, shadow = { 1.5, -1.2 } },
@@ -124,17 +123,25 @@ constants.EG_POLE_CONNECTIONS = {
     },
 }
 
-constants.EG_WIRE_CHECK_DISTANCE = 20
+constants.EG_TRANSFORMATOR_POLES = "^eg%-[high%-low]+%-voltage%-pole%-"
+
+constants.EG_TRANSMISSION_POLES =
+{
+    ["big-electric-pole"] = true,
+    ["medium-electric-pole"] = true,
+    ["eg-huge-electric-pole"] = true,
+}
+
 constants.EG_WIRE_CONNECTIONS = {
     ["small-electric-pole"] = {
         ["small-electric-pole"] = true,
         ["medium-electric-pole"] = true,
-        ["small-iron-electric-pole"] = true,
+        ["small-iron-electric-pole"] = true
     },
     ["medium-electric-pole"] = {
         ["small-electric-pole"] = true,
         ["medium-electric-pole"] = true,
-        ["small-iron-electric-pole"] = true,
+        ["small-iron-electric-pole"] = true
     },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
@@ -156,9 +163,9 @@ constants.EG_WIRE_CONNECTIONS = {
         ["big-electric-pole"] = true
     },
     ["small-iron-electric-pole"] = {
-        ["small-iron-electric-pole"] = true,
         ["small-electric-pole"] = true,
-        ["medium-electric-pole"] = true
+        ["medium-electric-pole"] = true,
+        ["small-iron-electric-pole"] = true
     }
 }
 
