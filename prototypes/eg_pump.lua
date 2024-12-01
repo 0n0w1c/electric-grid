@@ -8,9 +8,6 @@ function create_transformator_pump()
         name                      = "eg-pump",
         icon                      = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
         icon_size                 = 128,
-        corpse                    = "big-remnants",
-        dying_explosion           = "medium-explosion",
-        resistances               = data.raw["electric-pole"]["substation"].resistances,
         max_health                = constants.EG_MAX_HEALTH,
         hidden                    = false,
         hidden_in_factoriopedia   = true,
@@ -24,7 +21,7 @@ function create_transformator_pump()
         localised_name            = { "", "Transformator" },
         localised_description     = { "", "Transformator" },
 
-        pumping_speed             = 1000,
+        pumping_speed             = 100,
         energy_usage              = "0.001W",
         energy_source             = {
             type = "electric",

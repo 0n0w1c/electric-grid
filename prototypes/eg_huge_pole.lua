@@ -11,10 +11,14 @@ local huge_pole                      =
     localised_description  = "Huge electric pole",
     icon                   = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png",
     icon_size              = 32,
-    icon_mipmaps           = 1,
     flags                  = big_pole.flags,
     minable                = { mining_time = big_pole.minable.mining_time, result = "eg-huge-electric-pole" },
-    light                  = { intensity = 0.8, size = 12, color = constants.EG_POLE_LIGHT },
+    light                  =
+    {
+        intensity = constants.EG_LIGHT_INTENSITY,
+        size = constants.EG_LIGHT_SIZE,
+        color = constants.EG_LIGHT_COLOR
+    },
     max_health             = big_pole.max_health + 100,
     corpse                 = big_pole.corpse,
     dying_explosion        = big_pole.dying_explosion,

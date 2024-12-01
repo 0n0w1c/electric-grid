@@ -6,7 +6,6 @@ function remove_transformator(unit_number)
     local eg_transformator = storage.eg_transformators[unit_number]
     if not eg_transformator then return end
 
-    if eg_transformator.unit then eg_transformator.unit.destroy({ raise_destroy = true }) end
     if eg_transformator.boiler then eg_transformator.boiler.destroy() end
     if eg_transformator.pump then eg_transformator.pump.destroy() end
     if eg_transformator.infinity_pipe then eg_transformator.infinity_pipe.destroy() end

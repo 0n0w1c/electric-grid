@@ -34,7 +34,7 @@ data:extend({
         default_value = 36.0,
         minimum_value = 30.0,
         maximum_value = 64.0,
-        order = "a5",
+        order = "a4",
         localised_name = "Huge pole wire reach",
         localised_description = "Min: 30.0  Max: 64.0"
     }
