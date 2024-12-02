@@ -55,7 +55,7 @@ Medium, big and huge poles transmit power, function similar to that of belts.
 And small poles and substations function as the inserters.  
 
 *Limitations:*
-Underground substations do place properly while dragging, use substations and fast-replace.  
+Underground substations do not place properly while dragging, use substations and fast-replace.  
 *Quality adds a supply area to poles intended to have zero supply area (medium, big and huge).*  
 Hopefully future API development and/or my knowledge will allow for a better solution.  
 The [No Quality](https://mods.factorio.com/mod/no-quality) mod removes the effects of Quality and is recommended.  
