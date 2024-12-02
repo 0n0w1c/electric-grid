@@ -5,9 +5,10 @@ A work in progress, but should be reasonably playable.
 See license.txt for credits to the developers and their work that came before.  
 A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.  
 
-*Important notes:*  
-This is a work in progress, in the proof of concept stage, but believed to be reasonably playable.  
+*Important notes:*
 This mod should only be added to a new or early game, it significantly modifies the electric poles.  
+Version 0.3.0 has been refactored with performance as the priority. If quick on/off via the circuit  
+or logistic networks is not a priority, set "On tick interval" setting to 0 for near zero UPS impact.  
 Comments and suggestions are welcome.  
 
 May not be useful or functional on Fulgora (to be determined, possible future development).  
@@ -29,12 +30,13 @@ Medium, big and huge poles have no supply area and are lighted
 Small poles can connect to small and medium poles  
 Medium poles can connect to small and medium poles  
 Big poles can connect to big poles, substations, and underground substations  
-Huge poles can connect to huge poles  
+Huge poles can only connect to huge poles  
 Substations and underground substations can only connect to big poles  
 Transformators can only connect to medium, big and huge poles  
 
 Small poles and substations are for power distribution and collection  
 Medium, big and huge poles are for power transmission only  
+Substations and underground substations are fast-replaceable  
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
 
@@ -51,3 +53,9 @@ Build a main power grid using huge poles, to operate similar to a main bus.
 Transformators separate the high voltage main bus from low voltage distribution, think splitters.  
 Medium, big and huge poles transmit power, function similar to that of belts.  
 And small poles and substations function as the inserters.  
+
+*Limitations:*
+Underground substations do place properly while dragging, use substations and fast-replace.  
+*Quality adds a supply area to poles intended to have zero supply area (medium, big and huge).*  
+Hopefully future API development and/or my knowledge will allow for a better solution.  
+The [No Quality](https://mods.factorio.com/mod/no-quality) mod removes the effects of Quality and is recommended.  
