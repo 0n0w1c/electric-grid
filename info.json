@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "0.4.0",
+    "version": "0.4.2",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "This is a work in progress, in the proof of concept stage, but believed to be reasonably playable.",
@@ -11,10 +11,11 @@
     "freezing_required": false,
     "segmented_units_required": false,
     "dependencies": [
+        "? space-age",
+        "? no-quality >= 0.1.3",
         "? aai-industry",
         "? big-pink-eraser",
         "? ConnectionBox >= 2.1.3",
-        "? noangledcables >= 0.2.8",
-        "! quality"
+        "? noangledcables >= 0.2.8"
     ]
 }
