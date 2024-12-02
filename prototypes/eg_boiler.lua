@@ -29,7 +29,6 @@ function create_transformator_boiler(tier)
         minable = nil,
         selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
-        --localised_name = { "", "Boiler - Tier ", tostring(tier) },
         localised_name = { "", "Transformator ", tostring(rating) },
         localised_description = { "", "Transformator rated for ", rating, " of power output." },
         energy_source = {

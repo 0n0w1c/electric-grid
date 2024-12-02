@@ -1,9 +1,9 @@
 {
     "name": "electric-grid",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "title": "Electric Grid",
     "author": "0n0w1c",
-    "description": "This is a work in progress, in the proof of concept stage, but believed to be reasonably playable.",
+    "description": "An overhaul of the electric network, engineer an Electric Grid! A work in progress, but believed to be reasonably playable.",
     "factorio_version": "2.0",
     "quality_required": false,
     "space_travel_required": false,

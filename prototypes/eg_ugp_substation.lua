@@ -64,18 +64,15 @@ ugp_substation.connection_points              =
 
 data:extend({ ugp_substation })
 
-local ugp_substation_displayer                        = table.deepcopy(ugp_substation)
+local collision_mask                             = data.raw["electric-pole"]["substation"].collision_mask
+local ugp_substation_displayer                   = table.deepcopy(ugp_substation)
 
-ugp_substation_displayer.name                         = "eg-ugp-substation-displayer"
-ugp_substation_displayer.hidden                       = false
-ugp_substation_displayer.hidden_in_factoriopedia      = false
-ugp_substation_displayer.draw_copper_wires            = true
-ugp_substation_displayer.collision_mask               =
-{
-    layers = {
-        water_tile = true, cliff = true, meltable = true, resource = true, doodad = true
-    }
-}
+ugp_substation_displayer.name                    = "eg-ugp-substation-displayer"
+ugp_substation_displayer.hidden                  = false
+ugp_substation_displayer.hidden_in_factoriopedia = false
+ugp_substation_displayer.draw_copper_wires       = true
+ugp_substation_displayer.collision_mask          = collision_mask
+
 
 local ugp_substation_displayer_item                   = table.deepcopy(data.raw["item"]["substation"])
 
@@ -84,19 +81,22 @@ ugp_substation_displayer_item.localised_name          = "Underground Substation"
 ugp_substation_displayer_item.localised_description   = "Distributes power underground"
 ugp_substation_displayer_item.order                   = ugp_substation_displayer_item.order .. "z"
 ugp_substation_displayer_item.icon                    = constants.EG_GRAPHICS .. "/icons/ugp-substation.png"
-ugp_substation_displayer_item.hidden                  = true
-ugp_substation_displayer_item.hidden_in_factoriopedia = false
 ugp_substation_displayer_item.icon_size               = 64
+ugp_substation_displayer_item.hidden                  = false
+ugp_substation_displayer_item.hidden_in_factoriopedia = false
 ugp_substation_displayer_item.place_result            = "eg-ugp-substation-displayer"
 
-local ugp_substation_displayer_recipe                 =
+
+local category = data.raw["recipe"]["substation"].category
+
+local ugp_substation_displayer_recipe =
 {
     type                  = "recipe",
     name                  = "eg-ugp-substation-displayer",
     localised_name        = "Underground substation",
     localised_description = "Underground power distribution",
+    category              = category,
     enabled               = false,
-    category              = data.raw["recipe"]["substation"].category,
     ingredients           = { { type = "item", name = "substation", amount = 1 } },
     results               = { { type = "item", name = "eg-ugp-substation-displayer", amount = 1 } }
 }

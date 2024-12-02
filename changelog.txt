@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.4.3
+Date: 1.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Substations can be upgraded to underground substations via the upgrade planner
+---------------------------------------------------------------------------------------------------
 Version: 0.4.2
 Date: 1.12.2024
   Bugfixes:
@@ -23,7 +30,7 @@ Date: 1.12.2024
   Changes:
     - Removed Space Age as an optional dependency
     - Added the Quality mod as incompatible
-      Unfortunately, the Quality bonuses as they are implemented for electric poles, is breaking
+      Unfortunately, the Quality bonuses as they are implemented for electric poles, are breaking
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.7
 Date: 30.11.2024
