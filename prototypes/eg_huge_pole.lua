@@ -13,7 +13,7 @@ local huge_pole                      =
     icon_size              = 32,
     flags                  = big_pole.flags,
     minable                = { mining_time = big_pole.minable.mining_time, result = "eg-huge-electric-pole" },
-    light                  = constants.EG_POLE_LIGHT,
+    light                  = constants.EG_HUGE_POLE_LIGHT,
     max_health             = big_pole.max_health + 100,
     corpse                 = big_pole.corpse,
     dying_explosion        = big_pole.dying_explosion,

@@ -105,11 +105,32 @@ constants.EG_LIGHT_COLOR            = { r = 1.0, g = 1.0, b = 0.7 }
 constants.EG_LIGHT_INTENSITY        = 0.8
 constants.EG_LIGHT_SIZE             = 12
 
-constants.EG_POLE_LIGHT             =
+constants.EG_HUGE_POLE_LIGHT        =
 {
     color = constants.EG_LIGHT_COLOR,
     intensity = constants.EG_LIGHT_INTENSITY,
     size = constants.EG_LIGHT_SIZE
+}
+
+constants.EG_BIG_POLE_LIGHT         =
+{
+    color = constants.EG_LIGHT_COLOR,
+    intensity = constants.EG_LIGHT_INTENSITY / 1.1,
+    size = constants.EG_LIGHT_SIZE / 1.2
+}
+
+constants.EG_MEDIUM_POLE_LIGHT      =
+{
+    color = constants.EG_LIGHT_COLOR,
+    intensity = constants.EG_LIGHT_INTENSITY / 1.25,
+    size = constants.EG_LIGHT_SIZE / 1.5
+}
+
+constants.EG_MINI_POLE_LIGHT        =
+{
+    color = constants.EG_LIGHT_COLOR,
+    intensity = constants.EG_LIGHT_INTENSITY / 2,
+    size = constants.EG_LIGHT_SIZE / 3
 }
 
 constants.EG_MAXIMUM_WIRE_DISTANCE  = 6

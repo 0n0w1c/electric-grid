@@ -12,6 +12,8 @@ else
     constants.EG_TRANSFORMATOR_VOLUME = 0
 end
 
+constants.EG_EVEN_ALIGN_RADAR = settings.startup["eg-even-align-radar"].value
+
 data:extend({
     {
         type = "custom-input",

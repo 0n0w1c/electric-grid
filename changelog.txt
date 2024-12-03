@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.4.4
+Date: 2.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Startup setting to even-align radars, improves alignment with roboports, rails, and turrets
+      Effectively makes them 4x4 entities, no graphical or functional change, placement only
+    - Modified the Connection Box recipe ingredients and locked it until circuit-network researched
+    - Adjusted and scaled the light on transmission only poles
+---------------------------------------------------------------------------------------------------
 Version: 0.4.3
 Date: 1.12.2024
   Bugfixes:

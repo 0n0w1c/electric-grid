@@ -37,5 +37,14 @@ data:extend({
         order = "a4",
         localised_name = "Huge pole wire reach",
         localised_description = "Min: 30.0  Max: 64.0"
+    },
+    {
+        type = "bool-setting",
+        name = "eg-even-align-radar",
+        setting_type = "startup",
+        default_value = false,
+        order = "a5",
+        localised_name = "Even-align radar placement",
+        localised_description = "Effectively resizes the radar to be 4x4"
     }
 })
