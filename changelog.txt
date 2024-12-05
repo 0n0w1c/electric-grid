@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 4.12.2024
+  Bugfixes:
+    - Connection Box recycling recipe was not updated for the change to iron sticks
+  Changes:
+    - First stable release, the basics are in place
+    - Refactored data-updates.lua
+    - Updated the optional dependencism, mod home page and readme.md
+---------------------------------------------------------------------------------------------------
 Version: 0.4.4
 Date: 2.12.2024
   Bugfixes:

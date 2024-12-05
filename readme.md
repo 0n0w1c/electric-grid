@@ -52,9 +52,7 @@ Hopefully future API development and/or my knowledge will allow for a better sol
 
 *Recommended Mods:*
 [No Quality](https://mods.factorio.com/mod/no-quality) - Removes Quality which resolves the issue with transmission only poles. 
-[ConnectionBox](https://mods.factorio.com/mod/ConnectionBox) - For running visible circuit wires in areas using underground substations. 
-[Electric Grid Enforcer](https://mods.factorio.com/mod/noangledcables) - For extra clean grid alignment. 
-[Big Pink Eraser](https://mods.factorio.com/mod/big-pink-eraser) - In the event things go terribly wrong, removes hidden entities (Transformator components). 
+[ConnectionBox](https://mods.factorio.com/mod/ConnectionBox) - For visible circuit wires in areas using underground substations. 
 
 *Supported Mods:*
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole. 

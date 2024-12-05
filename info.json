@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "0.4.4",
+    "version": "1.0.0",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid! A work in progress, but believed to be reasonably playable.",
@@ -12,10 +12,8 @@
     "segmented_units_required": false,
     "dependencies": [
         "? space-age",
-        "? no-quality >= 0.1.3",
         "? aai-industry",
-        "? big-pink-eraser",
-        "? ConnectionBox >= 2.1.3",
-        "? noangledcables >= 0.2.8"
+        "? no-quality >= 0.1.3",
+        "? ConnectionBox >= 2.1.3"
     ]
 }
