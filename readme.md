@@ -1,14 +1,12 @@
 #### Electric Grid  
 An overhaul of the electric network, engineer an Electric Grid.  
-A work in progress, but should be reasonably playable.  
 
 See license.txt for credits to the developers and their work that came before.  
 A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.  
 
 *Important notes:*
 This mod should only be added to a new or early game, it significantly modifies the electric poles.  
-Version 0.3.0 has been refactored with performance as the priority. If quick on/off via the circuit  
-or logistic networks is not a priority, set "On tick interval" setting to 0 for near zero UPS impact.  
+If quick on/off via the circuit or logistic networks is not a priority, set "On tick interval" setting to 0 for near zero UPS impact.  
 Comments and suggestions are welcome.  
 
 May not be useful or functional on Fulgora (to be determined, possible future development).  
@@ -47,15 +45,16 @@ Transformators do function as expected if connected in parallel.
 Very similair to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
 Do not place the transformator in the supply area of an electric pole.  
 
-*Objective:*   
-Build an electric network infrastructure that more closely follows the Factorio way:  
-Build a main power grid using huge poles, to operate similar to a main bus.  
-Transformators separate the high voltage main bus from low voltage distribution, think splitters.  
-Medium, big and huge poles transmit power, function similar to that of belts.  
-And small poles and substations function as the inserters.  
-
 *Limitations:*
 Underground substations do not place properly while dragging, use substations and fast-replace or upgrade planner.  
 *Quality adds a supply area to poles intended to have zero supply area (medium, big and huge).*  
 Hopefully future API development and/or my knowledge will allow for a better solution.  
-The [No Quality](https://mods.factorio.com/mod/no-quality) mod removes the effects of Quality and is recommended.  
+
+*Recommended Mods:*
+[No Quality](https://mods.factorio.com/mod/no-quality) - Removes Quality which resolves the issue with transmission only poles. 
+[ConnectionBox](https://mods.factorio.com/mod/ConnectionBox) - For running visible circuit wires in areas using underground substations. 
+[Electric Grid Enforcer](https://mods.factorio.com/mod/noangledcables) - For extra clean grid alignment. 
+[Big Pink Eraser](https://mods.factorio.com/mod/big-pink-eraser) - In the event things go terribly wrong, removes hidden entities (Transformator components). 
+
+*Supported Mods:*
+[AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole. 
