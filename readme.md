@@ -45,14 +45,14 @@ Transformators do function as expected if connected in parallel.
 Very similair to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
 Do not place the transformator in the supply area of an electric pole.  
 
-*Limitations:*
+*Limitations:*  
 Underground substations do not place properly while dragging, use substations and fast-replace or upgrade planner.  
 *Quality adds a supply area to poles intended to have zero supply area (medium, big and huge).*  
 Hopefully future API development and/or my knowledge will allow for a better solution.  
 
-*Recommended Mods:*
-[No Quality](https://mods.factorio.com/mod/no-quality) - Removes Quality which resolves the issue with transmission only poles. 
-[ConnectionBox](https://mods.factorio.com/mod/ConnectionBox) - For visible circuit wires in areas using underground substations. 
+*Recommended Mods:*  
+[No Quality](https://mods.factorio.com/mod/no-quality) - Removes Quality which resolves the issue with transmission only poles.  
+[ConnectionBox](https://mods.factorio.com/mod/ConnectionBox) - For visible circuit wires in areas using underground substations.  
 
-*Supported Mods:*
-[AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole. 
+*Supported Mods:*  
+[AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole.  
