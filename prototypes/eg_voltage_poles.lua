@@ -85,6 +85,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.localised_description = { "", localised_description }
         pole.hidden = true
         pole.hidden_in_factoriopedia = true
+        pole.light = constants.EG_MINI_POLE_LIGHT
         pole.collision_mask = { layers = {} }
 
         data:extend({ pole })

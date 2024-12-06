@@ -36,8 +36,8 @@ table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
 if mods["aai-industry"] then
     local iron_pole = data.raw["electric-pole"]["small-iron-electric-pole"]
 
-    iron_pole.maximum_wire_distance = medium_pole.maximum_wire_distance
-    iron_pole.supply_area_distance = medium_pole.supply_area_distance
+    iron_pole.maximum_wire_distance = small_pole.maximum_wire_distance
+    iron_pole.supply_area_distance = small_pole.supply_area_distance
 end
 
 if mods["ConnectionBox"] then

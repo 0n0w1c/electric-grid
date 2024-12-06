@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 6.12.2024
+  Bugfixes:
+    - AAI Industry's small iron electric pole was transmission only, restored to distribution pole
+  Changes:
+    - Transformators are more distingishable at night
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 4.12.2024
   Bugfixes:
