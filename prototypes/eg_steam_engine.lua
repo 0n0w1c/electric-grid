@@ -46,7 +46,7 @@ function create_transformator_steam_engine(variant, tier)
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             minimum_temperature = 100,
             production_type = "input",
-            volume = 200,
+            volume = constants.EG_FLUID_VOLUME,
             pipe_connections = {
                 {
                     connection_category = "eg-guts-category",

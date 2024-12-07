@@ -62,7 +62,7 @@ function create_transformator_boiler(tier)
                 }
             },
             production_type = "input",
-            volume = 200,
+            volume = constants.EG_FLUID_VOLUME,
         },
         output_fluid_box = {
             filter = "eg-steam-" .. tier,
@@ -76,7 +76,7 @@ function create_transformator_boiler(tier)
                 }
             },
             production_type = "output",
-            volume = 200
+            volume = constants.EG_FLUID_VOLUME
         }
     }
 end

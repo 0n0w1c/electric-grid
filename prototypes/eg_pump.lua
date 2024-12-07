@@ -27,7 +27,7 @@ function create_transformator_pump()
             usage_priority = "secondary-input"
         },
         fluid_box                 = {
-            volume = 200,
+            volume = constants.EG_FLUID_VOLUME,
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             pipe_connections = {
                 {

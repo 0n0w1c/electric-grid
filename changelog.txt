@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+Date: 7.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Decreased internal volumes to improve the power off delay when "On tick interval" is set to 0
+---------------------------------------------------------------------------------------------------
 Version: 1.0.3
 Date: 6.12.2024
   Bugfixes:
