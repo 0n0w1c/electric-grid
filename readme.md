@@ -16,6 +16,7 @@ The wiring rules should still be valid. However, the use of transformators, mayb
 Transformator  
 Huge electric pole  
 Underground substation  
+Circuit pole
 
 *Removes:*  
 Power switch  
@@ -27,14 +28,16 @@ Medium, big and huge poles have no supply area and are lighted
 *Wiring rules:*  
 Small poles can connect to small and medium poles  
 Medium poles can connect to small and medium poles  
-Big poles can connect to big poles, substations, and underground substations  
+Big poles can connect to big poles, substations, underground substations, and circuit poles
 Huge poles can only connect to huge poles  
 Substations and underground substations can only connect to big poles  
+Circuit poles can connect to circuit poles and big electric poles
 Transformators can only connect to medium, big and huge poles  
 
 Small poles and substations are for power distribution and collection  
 Medium, big and huge poles are for power transmission only  
 Substations and underground substations are fast-replaceable  
+Circuit poles create copper wire connections for performance considerations, but are hidden
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
 
