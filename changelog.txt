@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 6.12.2024
+  Bugfixes:
+    - Set max_power_output, resolves displayed maximum power production and the 1MW transformator
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 6.12.2024
   Bugfixes:

@@ -18,7 +18,7 @@ function create_transformator_steam_engine(variant, tier)
     return {
         type                  = "generator",
         name                  = "eg-steam-engine-" .. variant .. "-" .. tier,
-        energy_production     = rating,
+        max_power_output      = rating,
         maximum_temperature   = 165,
         fluid_usage_per_tick  = 1,
         icon                  = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
