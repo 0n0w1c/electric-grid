@@ -52,7 +52,6 @@ Hopefully future API development and/or my knowledge will allow for a better sol
 
 *Recommended Mods:*  
 [No Quality](https://mods.factorio.com/mod/no-quality) - Removes Quality which resolves the issue with transmission only poles.  
-[ConnectionBox](https://mods.factorio.com/mod/ConnectionBox) - For visible circuit wires in areas using underground substations.  
 
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole.  

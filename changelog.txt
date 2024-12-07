@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 7.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Added the Circuit pole, for visible circuit wires when using underground substations
+    - Added a new wiring rule: Circuit poles can connect to circuit poles and big electric poles
+    - Removed the optional dependency and support for ConnectionBox
+---------------------------------------------------------------------------------------------------
 Version: 1.0.5
 Date: 7.12.2024
   Bugfixes:

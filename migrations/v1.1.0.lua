@@ -3,8 +3,8 @@ for _, force in pairs(game.forces) do
     local recipes = force.recipes
 
     if recipes and technologies then
-        if technologies["circuit-network"] and recipes["connection-box"] then
-            recipes["connection-box"].enabled = technologies["circuit-network"].researched
+        if technologies["circuit-network"] and recipes["eg-circuit-pole"] then
+            recipes["eg-circuit-pole"].enabled = technologies["circuit-network"].researched
         end
     end
 end

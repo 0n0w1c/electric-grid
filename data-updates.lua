@@ -32,40 +32,13 @@ table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
 table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
     { type = "unlock-recipe", recipe = "eg-ugp-substation-displayer" })
 
--- Mod the mods
+table.insert(data.raw["technology"]["circuit-network"].effects,
+    { type = "unlock-recipe", recipe = "eg-circuit-pole" })
+
+-- Mod support
 if mods["aai-industry"] then
     local iron_pole = data.raw["electric-pole"]["small-iron-electric-pole"]
 
     iron_pole.maximum_wire_distance = small_pole.maximum_wire_distance
     iron_pole.supply_area_distance = small_pole.supply_area_distance
-end
-
-if mods["ConnectionBox"] then
-    local connection_box = data.raw["electric-pole"]["connection-box"]
-
-    connection_box.supply_area_distance = 0
-    connection_box.maximum_wire_distance = substation.maximum_wire_distance / 2
-    connection_box.minable.mining_time = substation.minable.mining_time
-    connection_box.light = constants.EG_MINI_POLE_LIGHT
-
-    data.raw["item"]["connection-box"].icon = constants.EG_GRAPHICS .. "/icons/eg-connection-box.png"
-    data.raw["item"]["connection-box"].icon_size = 256
-
-    data.raw["recipe"]["connection-box"].ingredients =
-    {
-        { type = "item", name = "iron-stick",   amount = 3 },
-        { type = "item", name = "copper-cable", amount = 3 }
-    }
-
-    if mods["quality"] and data.raw["recipe"]["connection-box-recycling"] then
-        data.raw["recipe"]["connection-box-recycling"].results =
-        {
-            { type = "item", name = "iron-stick",   amount = 0.125, extra_count_fraction = 0.125 },
-            { type = "item", name = "copper-cable", amount = 0.125, extra_count_fraction = 0.125 },
-        }
-    end
-
-    -- Lock recipe due to iron stick ingredient
-    data.raw["recipe"]["connection-box"].enabled = false
-    table.insert(data.raw["technology"]["circuit-network"].effects, { recipe = "connection-box", type = "unlock-recipe" })
 end
