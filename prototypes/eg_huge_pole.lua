@@ -5,27 +5,28 @@ local translate                      = -0.4
 
 local huge_pole                      =
 {
-    type                   = "electric-pole",
-    name                   = "eg-huge-electric-pole",
-    localised_name         = "Huge electric pole",
-    localised_description  = "Huge electric pole",
-    icon                   = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png",
-    icon_size              = 32,
-    flags                  = big_pole.flags,
-    minable                = { mining_time = big_pole.minable.mining_time, result = "eg-huge-electric-pole" },
-    light                  = constants.EG_HUGE_POLE_LIGHT,
-    max_health             = big_pole.max_health + 100,
-    corpse                 = big_pole.corpse,
-    dying_explosion        = big_pole.dying_explosion,
-    resistances            = big_pole.resistances,
-    collision_box          = big_pole.collision_box,
-    selection_box          = big_pole.selection_box,
-    damaged_trigger_effect = big_pole.damaged_trigger_effect,
-    maximum_wire_distance  = tonumber(settings.startup["eg-max-wire-huge"].value),
-    supply_area_distance   = 0,
-    open_sound             = big_pole.open_sound,
-    close_sound            = big_pole.close_sound,
-    pictures               =
+    type                           = "electric-pole",
+    name                           = "eg-huge-electric-pole",
+    localised_name                 = "Huge electric pole",
+    localised_description          = "Huge electric pole",
+    icon                           = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png",
+    icon_size                      = 32,
+    drawing_box_vertical_extension = 3,
+    flags                          = big_pole.flags,
+    minable                        = { mining_time = big_pole.minable.mining_time, result = "eg-huge-electric-pole" },
+    light                          = constants.EG_HUGE_POLE_LIGHT,
+    max_health                     = big_pole.max_health + 100,
+    corpse                         = big_pole.corpse,
+    dying_explosion                = big_pole.dying_explosion,
+    resistances                    = big_pole.resistances,
+    collision_box                  = big_pole.collision_box,
+    selection_box                  = big_pole.selection_box,
+    damaged_trigger_effect         = big_pole.damaged_trigger_effect,
+    maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value),
+    supply_area_distance           = 0,
+    open_sound                     = big_pole.open_sound,
+    close_sound                    = big_pole.close_sound,
+    pictures                       =
     {
         filename = constants.EG_GRAPHICS .. "/entities/huge-electric-pole.png",
         priority = "extra-high",
@@ -35,7 +36,7 @@ local huge_pole                      =
         shift = { 1.6 * scale, (-1.1 + translate) * scale }, -- {1.6, -1.1},
         scale = scale,
     },
-    connection_points      =
+    connection_points              =
     {
         {
             shadow =
@@ -94,7 +95,7 @@ local huge_pole                      =
             }
         }
     },
-    water_reflection       =
+    water_reflection               =
     {
         pictures =
         {
@@ -118,10 +119,11 @@ huge_pole_item.localised_description = "Huge electric pole"
 huge_pole_item.order                 = huge_pole_item.order .. "z"
 huge_pole_item.icon                  = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png"
 huge_pole_item.icon_size             = 32
-huge_pole_item.icon_mipmaps          = 1
 huge_pole_item.place_result          = "eg-huge-electric-pole"
+huge_pole_item.weight                = 20000
 
-local huge_pole_recipe               =
+
+local huge_pole_recipe =
 {
     type                  = "recipe",
     name                  = "eg-huge-electric-pole",

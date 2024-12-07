@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.5
+Date: 7.12.2024
+  Bugfixes:
+    - Huge electric pole displays properly in Factoriopedia
+  Changes:
+    - Modified the rocket capacity for huge poles, increased from 32 to 50, same as other poles
+---------------------------------------------------------------------------------------------------
 Version: 1.0.4
 Date: 7.12.2024
   Bugfixes:
