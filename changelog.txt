@@ -1,8 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 6.12.2024
+  Bugfixes:
+    - Modified pumping_speed and added scale_fluid_usage
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.0.2
 Date: 6.12.2024
   Bugfixes:
-    - Set max_power_output, resolves displayed maximum power production and the 1MW transformator
+    - Set max_power_output
   Changes:
     - None
 ---------------------------------------------------------------------------------------------------

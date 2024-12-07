@@ -20,8 +20,7 @@ function create_transformator_pump()
         collision_box             = collision_box,
         localised_name            = { "", "Transformator" },
         localised_description     = { "", "Transformator" },
-
-        pumping_speed             = 100,
+        pumping_speed             = 1,
         energy_usage              = "0.001W",
         energy_source             = {
             type = "electric",

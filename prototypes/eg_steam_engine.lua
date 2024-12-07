@@ -21,6 +21,7 @@ function create_transformator_steam_engine(variant, tier)
         max_power_output      = rating,
         maximum_temperature   = 165,
         fluid_usage_per_tick  = 1,
+        scale_fluid_usage     = true,
         icon                  = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
         icon_size             = 128,
         impact_category       = "metal-large",
