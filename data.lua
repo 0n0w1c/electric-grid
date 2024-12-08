@@ -12,6 +12,10 @@ else
     constants.EG_TRANSFORMATOR_VOLUME = 0
 end
 
+constants.EG_MEDIUM_POLE_LIGHTS = settings.startup["eg-medium-pole-lights"].value
+constants.EG_BIG_POLE_LIGHTS = settings.startup["eg-big-pole-lights"].value
+constants.EG_HUGE_POLE_LIGHTS = settings.startup["eg-huge-pole-lights"].value
+constants.EG_CIRCUIT_POLE_LIGHTS = settings.startup["eg-circuit-pole-lights"].value
 constants.EG_EVEN_ALIGN_RADAR = settings.startup["eg-even-align-radar"].value
 
 data:extend({

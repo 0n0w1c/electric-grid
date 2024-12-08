@@ -317,7 +317,7 @@ local eg_transformator_displayer = {
     collision_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
     collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
     hidden_in_factoriopedia = true,
-    picture = get_transformator_displayer_pictures(), -- use picture not pictures, rotation works
+    picture = get_transformator_displayer_pictures(),
     direction_count = 4,
 }
 
@@ -333,27 +333,24 @@ local eg_transformator_item = {
     place_result = constants.EG_DISPLAYER,
     stack_size = 50,
     weight = 20000,
-    hidden_in_factoriopedia = true
 }
 
 local eg_transformator_recipe = {
-    type                  = "recipe",
-    name                  = "eg-transformator",
-    localised_name        = { "", "Transformator" },
-    localised_description = { "", "Assembles components into a power regulating device." },
-    category              = data.raw["recipe"]["substation"].category,
+    type          = "recipe",
+    name          = "eg-transformator",
+    category      = data.raw["recipe"]["substation"].category,
 
-    ingredients           = {
+    ingredients   = {
         { type = "item", name = "copper-plate", amount = 2 },
         { type = "item", name = "steel-plate",  amount = 4 },
         { type = "item", name = "iron-plate",   amount = 10 },
         { type = "item", name = "copper-cable", amount = 200 }
     },
-    results               = {
+    results       = {
         { type = "item", name = "eg-transformator", amount = 1 }
     },
-    enabled               = false,
-    allow_quality         = false,
+    enabled       = false,
+    allow_quality = false,
 }
 
 data:extend({ eg_transformator_displayer, eg_transformator_item, eg_transformator_recipe })

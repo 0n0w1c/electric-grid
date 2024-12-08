@@ -8,7 +8,7 @@ local eg_circuit_pole        =
     icon                       = constants.EG_GRAPHICS .. "/icons/hr-circuit-pole.png",
     icon_size                  = 32,
     localised_name             = "Circuit pole",
-    localised_description      = "Circuit pole",
+    localised_description      = "Specialized for circuit networks",
     flags                      = { "placeable-neutral", "player-creation" },
     minable                    = { mining_time = big_pole.minable.mining_time, result = "eg-circuit-pole" },
     max_health                 = big_pole.max_health + 100,
@@ -25,7 +25,7 @@ local eg_circuit_pole        =
     draw_circuit_wires         = true,
     supply_area_distance       = 0,
     maximum_wire_distance      = substation.maximum_wire_distance / 2,
-    light                      = constants.EG_MINI_POLE_LIGHT,
+    light                      = constants.EG_CIRCUIT_POLE_LIGHTS and constants.EG_MINI_POLE_LIGHT or nil,
     pictures                   =
     {
         filename = constants.EG_GRAPHICS .. "/entities/hr-circuit-pole.png",
@@ -59,7 +59,7 @@ local eg_circuit_pole_item   =
     type                  = "item",
     name                  = "eg-circuit-pole",
     localised_name        = "Circuit pole",
-    localised_description = "Circuit pole",
+    localised_description = "Specialized for circuit networks",
     icon                  = constants.EG_GRAPHICS .. "/icons/hr-circuit-pole.png",
     icon_size             = 256,
     subgroup              = "circuit-network",
@@ -70,18 +70,16 @@ local eg_circuit_pole_item   =
 
 local eg_circuit_pole_recipe =
 {
-    type                  = "recipe",
-    name                  = "eg-circuit-pole",
-    localised_name        = "Circuit pole",
-    localised_description = "Circuit pole",
-    category              = data.raw["recipe"]["big-electric-pole"].category,
-    enabled               = false,
-    ingredients           =
+    type        = "recipe",
+    name        = "eg-circuit-pole",
+    category    = data.raw["recipe"]["big-electric-pole"].category,
+    enabled     = false,
+    ingredients =
     {
         { type = "item", name = "iron-stick",   amount = 3 },
         { type = "item", name = "copper-cable", amount = 3 }
     },
-    results               = {
+    results     = {
         { type = "item", name = "eg-circuit-pole", amount = 2 },
     },
 }

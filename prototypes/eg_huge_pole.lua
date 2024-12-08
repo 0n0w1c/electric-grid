@@ -8,13 +8,13 @@ local huge_pole                      =
     type                           = "electric-pole",
     name                           = "eg-huge-electric-pole",
     localised_name                 = "Huge electric pole",
-    localised_description          = "Huge electric pole",
+    localised_description          = "High voltage transmission poles",
     icon                           = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png",
     icon_size                      = 32,
     drawing_box_vertical_extension = 3,
     flags                          = big_pole.flags,
     minable                        = { mining_time = big_pole.minable.mining_time, result = "eg-huge-electric-pole" },
-    light                          = constants.EG_HUGE_POLE_LIGHT,
+    light                          = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil,
     max_health                     = big_pole.max_health + 100,
     corpse                         = big_pole.corpse,
     dying_explosion                = big_pole.dying_explosion,
@@ -115,7 +115,7 @@ local huge_pole                      =
 local huge_pole_item                 = table.deepcopy(data.raw["item"]["big-electric-pole"])
 huge_pole_item.name                  = "eg-huge-electric-pole"
 huge_pole_item.localised_name        = "Huge electric pole"
-huge_pole_item.localised_description = "Huge electric pole"
+huge_pole_item.localised_description = "High voltage transmission poles"
 huge_pole_item.order                 = huge_pole_item.order .. "z"
 huge_pole_item.icon                  = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png"
 huge_pole_item.icon_size             = 32
@@ -125,14 +125,12 @@ huge_pole_item.weight                = 20000
 
 local huge_pole_recipe =
 {
-    type                  = "recipe",
-    name                  = "eg-huge-electric-pole",
-    localised_name        = "Huge electric pole",
-    localised_description = "Huge electric pole",
-    category              = data.raw["recipe"]["big-electric-pole"].category,
-    enabled               = false,
-    results               = { { type = "item", name = "eg-huge-electric-pole", amount = 1 } },
-    ingredients           =
+    type        = "recipe",
+    name        = "eg-huge-electric-pole",
+    category    = data.raw["recipe"]["big-electric-pole"].category,
+    enabled     = false,
+    results     = { { type = "item", name = "eg-huge-electric-pole", amount = 1 } },
+    ingredients =
     {
         { type = "item", name = "iron-stick",   amount = 20 },
         { type = "item", name = "steel-plate",  amount = 15 },

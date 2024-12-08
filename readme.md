@@ -23,7 +23,7 @@ Power switch
 
 *Changes:*  
 Small poles are the new medium poles  
-Medium, big, huge and circuit poles have no supply area and are lighted  
+Medium, big, huge and circuit poles have no supply area (lights optional)  
 
 *Wiring rules:*  
 Small poles can connect to small and medium poles  

@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.2
+Date: 7.12.2024
+  Bugfixes:
+    - Improved some Factoriopedia entries
+  Changes:
+    - Startup settings to enable/disable the lights on transmission only poles (default: enabled)
+---------------------------------------------------------------------------------------------------
 Version: 1.1.1
 Date: 7.12.2024
   Bugfixes:

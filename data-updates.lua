@@ -7,11 +7,11 @@ small_pole.maximum_wire_distance = medium_pole.maximum_wire_distance
 small_pole.supply_area_distance = medium_pole.supply_area_distance
 
 medium_pole.supply_area_distance = 0
-medium_pole.light = constants.EG_MEDIUM_POLE_LIGHT
+medium_pole.light = constants.EG_MEDIUM_POLE_LIGHTS and constants.EG_MEDIUM_POLE_LIGHT or nil
 
 big_pole.supply_area_distance = 0
 big_pole.maximum_wire_distance = substation.maximum_wire_distance
-big_pole.light = constants.EG_BIG_POLE_LIGHT
+big_pole.light = constants.EG_BIG_POLE_LIGHTS and constants.EG_BIG_POLE_LIGHT or nil
 
 substation.next_upgrade = "eg-ugp-substation-displayer"
 
