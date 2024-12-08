@@ -1,86 +1,3 @@
-local function get_transformator_displayer_pictures()
-    return {
-        north = {
-            layers = {
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
-                    x = 466,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.6, -0.45 },
-                    scale = 0.5,
-                },
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
-                    x = 466,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.6, -0.45 },
-                    scale = 0.5,
-                },
-            },
-        },
-        east = {
-            layers = {
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
-                    width = 466,
-                    height = 310,
-                    shift = { 1.5, -1.15 },
-                    scale = 0.5,
-                },
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
-                    width = 466,
-                    height = 310,
-                    shift = { 1.5, -1.15 },
-                    scale = 0.5,
-                },
-            },
-        },
-        south = {
-            layers = {
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
-                    x = 1398,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.6, -0.45 },
-                    scale = 0.5,
-                },
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
-                    x = 1398,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.6, -0.45 },
-                    scale = 0.5,
-                },
-            },
-        },
-        west = {
-            layers = {
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
-                    x = 932,
-                    width = 466,
-                    height = 310,
-                    shift = { 1.5, -1.15 },
-                    scale = 0.5,
-                },
-                {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-arrows-hr.png",
-                    x = 932,
-                    width = 466,
-                    height = 310,
-                    shift = { 1.5, -1.15 },
-                    scale = 0.5,
-                },
-            },
-        },
-    }
-end
-
 local function get_transformator_picture(tier)
     local altoverlay = {
         north = {
@@ -93,6 +10,7 @@ local function get_transformator_picture(tier)
         },
         east = {
             filename = constants.EG_GRAPHICS .. "/entities/trafo-altoverlay-hr.png",
+            x = 0,
             width = 466,
             height = 310,
             shift = { 1.5, -1.15 },
@@ -152,6 +70,7 @@ local function get_transformator_picture(tier)
             layers = {
                 {
                     filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
+                    x = 0,
                     width = 466,
                     height = 310,
                     shift = { 1.5, -1.15 },
@@ -159,6 +78,7 @@ local function get_transformator_picture(tier)
                 },
                 {
                     filename = constants.EG_GRAPHICS .. "/entities/trafo-shadows-hr.png",
+                    x = 0,
                     width = 466,
                     height = 310,
                     shift = { 1.5, -1.15 },
@@ -167,6 +87,7 @@ local function get_transformator_picture(tier)
                 },
                 {
                     filename = constants.EG_GRAPHICS .. "/entities/trafo-mask-hr.png",
+                    x = 0,
                     width = 466,
                     height = 310,
                     shift = { 1.5, -1.15 },
@@ -317,8 +238,7 @@ local eg_transformator_displayer = {
     collision_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
     collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
     hidden_in_factoriopedia = true,
-    picture = get_transformator_displayer_pictures(),
-    direction_count = 4,
+    picture = get_transformator_picture(1)
 }
 
 local eg_transformator_item = {
@@ -332,7 +252,7 @@ local eg_transformator_item = {
     order = "b[pipe]-d[eg-transformator-item]",
     place_result = constants.EG_DISPLAYER,
     stack_size = 50,
-    weight = 20000,
+    weight = 20000
 }
 
 local eg_transformator_recipe = {
@@ -350,7 +270,7 @@ local eg_transformator_recipe = {
         { type = "item", name = "eg-transformator", amount = 1 }
     },
     enabled       = false,
-    allow_quality = false,
+    allow_quality = false
 }
 
 data:extend({ eg_transformator_displayer, eg_transformator_item, eg_transformator_recipe })

@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.3
+Date: 7.12.2024
+  Bugfixes:
+    - Refactored the transformator displayer picture defintions, use the entity picture defintions
+  Changes:
+    - Transformator Factoriopedia entry displays the correct image
+---------------------------------------------------------------------------------------------------
 Version: 1.1.2
 Date: 7.12.2024
   Bugfixes:
