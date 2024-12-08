@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.4
+Date: 7.12.2024
+  Bugfixes:
+    - Removed on_nth_tick() event registration that violated multi-player requirements
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.1.3
 Date: 7.12.2024
   Bugfixes:

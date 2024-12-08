@@ -374,11 +374,6 @@ local function on_gui_closed(event)
     end
 end
 
-local function on_first_tick()
-    remove_invalid_transformators()
-    script.on_nth_tick(constants.EG_FIRST_TICK, nil)
-end
-
 local function register_event_handlers()
     script.on_event(defines.events.on_built_entity, on_entity_built)
     script.on_event(defines.events.on_robot_built_entity, on_entity_built)
@@ -395,11 +390,7 @@ local function register_event_handlers()
 
     if storage.eg_check_interval and storage.eg_check_interval > 0 then
         script.on_nth_tick(storage.eg_check_interval, nth_tick_checks)
-    else
-        script.on_nth_tick(nil)
     end
-
-    script.on_nth_tick(constants.EG_FIRST_TICK, on_first_tick)
 
     script.on_event("transformator_rating_selection", on_transformator_rating_selection)
     script.on_event(defines.events.on_gui_checked_state_changed, on_gui_checked_state_changed)
@@ -422,5 +413,6 @@ script.on_configuration_changed(function()
     end
 
     initialize_globals()
+    remove_invalid_transformators()
     register_event_handlers()
 end)
