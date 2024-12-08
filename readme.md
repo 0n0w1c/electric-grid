@@ -39,7 +39,7 @@ Medium, big and huge poles are for power transmission only
 Substations and underground substations are fast-replaceable  
 Circuit poles create copper wire connections for performance considerations, but are hidden
 
-*Startup setting to disable the electric network overhaul*
+*Startup setting to disable the electric network overhaul.*
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
 
