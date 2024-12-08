@@ -58,3 +58,4 @@ Hopefully future API development and/or my knowledge will allow for a better sol
 
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole.  
+[Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the floating electric pole.  

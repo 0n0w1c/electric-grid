@@ -1,6 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.5
+Date: 8.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Added support for Cargo Ships' floating electric pole, can connect to huge poles
+---------------------------------------------------------------------------------------------------
 Version: 1.1.4
-Date: 7.12.2024
+Date: 8.12.2024
   Bugfixes:
     - Removed on_nth_tick() event registration that violated multi-player requirements
   Changes:

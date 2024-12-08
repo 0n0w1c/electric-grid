@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid!",
@@ -14,6 +14,7 @@
     "dependencies": [
         "? space-age",
         "? aai-industry",
+        "? cargo-ships",
         "? no-quality >= 0.1.3"
     ]
 }
