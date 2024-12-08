@@ -453,6 +453,10 @@ function enforce_pole_connections(pole)
         return true
     end
 
+    if storage.eg_transformators_only then
+        return true
+    end
+
     local allowed = true
 
     local connectors = pole.get_wire_connectors()

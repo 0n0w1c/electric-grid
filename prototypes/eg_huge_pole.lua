@@ -1,3 +1,5 @@
+if constants.EG_TRANSFORMATORS_ONLY then return end
+
 local big_pole                       = data.raw["electric-pole"]["big-electric-pole"]
 
 local scale                          = 1.2

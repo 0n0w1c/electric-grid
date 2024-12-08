@@ -1,3 +1,5 @@
+if constants.EG_TRANSFORMATORS_ONLY then return end
+
 local small_pole = data.raw["electric-pole"]["small-electric-pole"]
 local medium_pole = data.raw["electric-pole"]["medium-electric-pole"]
 local big_pole = data.raw["electric-pole"]["big-electric-pole"]

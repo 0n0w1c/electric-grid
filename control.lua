@@ -9,6 +9,15 @@ local function initialize_globals()
     storage.eg_copper_wire_on_cursor = storage.eg_copper_wire_on_cursor or {}
     storage.eg_last_selected_pole = storage.eg_last_selected_pole or {}
     storage.eg_check_interval = storage.eg_check_interval or 60
+    storage.eg_transformators_only = storage.eg_transformators_only or false
+
+    if settings.startup["eg-on-tick-interval"] and settings.startup["eg-on-tick-interval"].value then
+        storage.eg_check_interval = tonumber(settings.startup["eg-on-tick-interval"].value) * 60
+    end
+
+    if settings.startup["eg-transformators-only"] then
+        storage.eg_transformators_only = settings.startup["eg-transformators-only"].value
+    end
 end
 
 local function remove_invalid_transformators()
@@ -163,12 +172,14 @@ local function on_entity_built(event)
         eg_transformator_built(entity)
     elseif entity.name == "eg-ugp-substation-displayer" then
         local new_entity = replace_displayer_with_ugp_substation(entity)
-        enforce_pole_connections(new_entity)
+        if not storage.eg_transformators_only then
+            enforce_pole_connections(new_entity)
 
-        local poles = get_nearby_poles(new_entity)
-        if poles then
-            for _, pole in pairs(poles) do
-                enforce_pole_connections(pole)
+            local poles = get_nearby_poles(new_entity)
+            if poles then
+                for _, pole in pairs(poles) do
+                    enforce_pole_connections(pole)
+                end
             end
         end
 
@@ -177,12 +188,14 @@ local function on_entity_built(event)
             check_short_circuit(transformator)
         end
     elseif entity.type == "electric-pole" then
-        enforce_pole_connections(entity)
+        if not storage.eg_transformators_only then
+            enforce_pole_connections(entity)
 
-        local poles = get_nearby_poles(entity)
-        if poles then
-            for _, pole in pairs(poles) do
-                enforce_pole_connections(pole)
+            local poles = get_nearby_poles(entity)
+            if poles then
+                for _, pole in pairs(poles) do
+                    enforce_pole_connections(pole)
+                end
             end
         end
 
@@ -210,11 +223,13 @@ local function on_entity_mined(event)
             check_short_circuit(transformator)
         end
 
-        -- Auto-reconnect seems to preserve the wiring rules, so this may not be necessary.
-        local poles = get_nearby_poles(entity)
-        if poles then
-            for _, pole in pairs(poles) do
-                enforce_pole_connections(pole)
+        if not storage.eg_transformators_only then
+            -- Auto-reconnect seems to preserve the wiring rules, so this may not be necessary.
+            local poles = get_nearby_poles(entity)
+            if poles then
+                for _, pole in pairs(poles) do
+                    enforce_pole_connections(pole)
+                end
             end
         end
     end
@@ -408,10 +423,6 @@ script.on_load(function()
 end)
 
 script.on_configuration_changed(function()
-    if settings.startup["eg-on-tick-interval"] and settings.startup["eg-on-tick-interval"].value then
-        storage.eg_check_interval = tonumber(settings.startup["eg-on-tick-interval"].value) * 60
-    end
-
     initialize_globals()
     remove_invalid_transformators()
     register_event_handlers()

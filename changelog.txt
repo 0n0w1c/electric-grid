@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+Date: 8.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Added startup setting to disable the electric network overhaul, becomes transformator only
+---------------------------------------------------------------------------------------------------
 Version: 1.1.5
 Date: 8.12.2024
   Bugfixes:
