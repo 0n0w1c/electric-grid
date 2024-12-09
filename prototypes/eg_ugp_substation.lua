@@ -8,6 +8,8 @@ ugp_substation.icon                           = constants.EG_GRAPHICS .. "/entit
 ugp_substation.icon_size                      = 128
 ugp_substation.hidden                         = false
 ugp_substation.hidden_in_factoriopedia        = true
+ugp_substation.flags                          = { "placeable-player", "player-creation", "not-rotatable" }
+ugp_substation.placeable_by                   = { item = "eg-ugp-substation-displayer", count = 1 }
 ugp_substation.draw_copper_wires              = false
 ugp_substation.draw_circuit_wires             = false
 ugp_substation.drawing_box_vertical_extension = 0
@@ -80,7 +82,7 @@ ugp_substation_displayer.collision_mask          = collision_mask
 local ugp_substation_displayer_item                   = table.deepcopy(data.raw["item"]["substation"])
 
 ugp_substation_displayer_item.name                    = "eg-ugp-substation-displayer"
-ugp_substation_displayer_item.localised_name          = "Underground Substation"
+ugp_substation_displayer_item.localised_name          = "Underground substation"
 ugp_substation_displayer_item.localised_description   = "Distributes power underground"
 ugp_substation_displayer_item.order                   = ugp_substation_displayer_item.order .. "z"
 ugp_substation_displayer_item.icon                    = constants.EG_GRAPHICS .. "/icons/ugp-substation.png"
