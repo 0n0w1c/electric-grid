@@ -125,6 +125,24 @@ huge_pole_item.place_result          = "eg-huge-electric-pole"
 huge_pole_item.weight                = 20000
 
 
+local ingredients
+if mods["aai-industry"] then
+    ingredients =
+    {
+        { type = "item", name = "steel-plate",  amount = 8 },
+        { type = "item", name = "iron-stick",   amount = 12 },
+        { type = "item", name = "copper-cable", amount = 20 },
+        { type = "item", name = "concrete",     amount = 2 }
+    }
+else
+    ingredients =
+    {
+        { type = "item", name = "iron-stick",   amount = 12 },
+        { type = "item", name = "steel-plate",  amount = 8 },
+        { type = "item", name = "copper-cable", amount = 8 }
+    }
+end
+
 local huge_pole_recipe =
 {
     type        = "recipe",
@@ -132,12 +150,7 @@ local huge_pole_recipe =
     category    = data.raw["recipe"]["big-electric-pole"].category,
     enabled     = false,
     results     = { { type = "item", name = "eg-huge-electric-pole", amount = 1 } },
-    ingredients =
-    {
-        { type = "item", name = "iron-stick",   amount = 20 },
-        { type = "item", name = "steel-plate",  amount = 15 },
-        { type = "item", name = "copper-plate", amount = 15 }
-    }
+    ingredients = ingredients
 }
 
 data:extend { huge_pole, huge_pole_item, huge_pole_recipe }

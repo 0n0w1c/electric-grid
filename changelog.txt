@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.1
+Date: 9.12.2024
+  Bugfixes:
+    - Modified the huge pole recipe to be more appropriate for 2.0
+  Changes:
+    - Added a modified huge pole recipe for AAI Industry
+---------------------------------------------------------------------------------------------------
 Version: 1.2.0
 Date: 8.12.2024
   Bugfixes:
