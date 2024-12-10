@@ -193,8 +193,8 @@ local function create_transformator_unit(tier)
         selection_box = { { -1.0, -1.0 }, { 1.0, 0.0 } },
         collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
         picture = get_transformator_picture(tier),
-        localised_name = { "", "Transformator - ", rating },
-        localised_description = { "", "Regulates power distribution." }
+        localised_name = { "entity-name.eg-unit" },
+        localised_description = { "", { "entity-description.eg-unit" }, " ", rating }
     }
 end
 
@@ -228,9 +228,9 @@ data:extend({
 
 local eg_transformator_displayer = {
     type = "simple-entity-with-force",
-    name = constants.EG_DISPLAYER,
-    localised_name = { "", "Transformator displayer" },
-    localised_description = { "", "Transformator model used during placement." },
+    name = "eg-transformator-displayer",
+    localised_name = { "entity-name.eg-transformator-displayer" },
+    localised_description = { "entity-description.eg-transformator-displayer" },
     icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
     icon_size = 128,
     flags = { "placeable-player", "player-creation" },
@@ -244,13 +244,13 @@ local eg_transformator_displayer = {
 local eg_transformator_item = {
     type = "item",
     name = "eg-transformator",
-    localised_name = { "", "Transformator" },
-    localised_description = { "", "Regulates power distribution." },
+    localised_name = { "item-name.eg-transformator" },
+    localised_description = { "item-description.eg-transformator" },
     icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
     icon_size = 128,
     subgroup = "energy-pipe-distribution",
     order = "b[pipe]-d[eg-transformator-item]",
-    place_result = constants.EG_DISPLAYER,
+    place_result = "eg-transformator-displayer",
     stack_size = 50,
     weight = 20000
 }

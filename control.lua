@@ -2,6 +2,11 @@ constants = require("constants")
 
 require("control-helpers")
 
+--- Initializes global storage variables for managing transformators and related state.
+-- Ensures all required global variables are initialized with default values if not already set.
+-- Configures `storage` based on startup settings.
+-- @global storage table A global table used to store persistent game state related to transformators.
+-- @return nil
 local function initialize_globals()
     storage = storage or {}
     storage.eg_transformators = storage.eg_transformators or {}
@@ -20,6 +25,10 @@ local function initialize_globals()
     end
 end
 
+--- Removes invalid transformators from the global storage.
+-- Checks each transformator in the `storage.eg_transformators` table, determines its validity,
+-- and removes those deemed invalid. Invalid transformators are logged to the game console.
+-- @return nil
 local function remove_invalid_transformators()
     local transformators = storage.eg_transformators
     local invalid_transformators = {}
@@ -88,16 +97,19 @@ local function get_production(pole)
     return total_production * 60 -- Convert from per tick to per second
 end
 
-local function check_short_circuit(transformator)
-    if not (transformator.high_voltage.valid and transformator.low_voltage.valid and transformator.unit.valid) then return end
+--- Checks for short circuits and issues alerts to players if detected
+-- Clears the alert if the short circuit condition resolves
+-- @return nil
+local function short_circuit_check()
+    local transformators = storage.eg_transformators
 
-    local high_network_id = transformator.high_voltage.electric_network_id
-    local low_network_id = transformator.low_voltage.electric_network_id
+    for _, transformator in pairs(transformators) do
+        local high_network_id = transformator.high_voltage.electric_network_id
+        local low_network_id = transformator.low_voltage.electric_network_id
 
-    if not (high_network_id and low_network_id) then return end
+        if not (high_network_id and low_network_id) then return end
 
-    if high_network_id == low_network_id then
-        if transformator.alert_tick == 0 then
+        if high_network_id == low_network_id then
             for _, player in pairs(game.players) do
                 transformator.alert_tick = game.tick
                 player.add_custom_alert(
@@ -107,17 +119,21 @@ local function check_short_circuit(transformator)
                     true
                 )
             end
-        end
-    else
-        if transformator.alert_tick ~= 0 then
-            transformator.alert_tick = 0
-            for _, player in pairs(game.players) do
-                player.remove_alert({ entity = transformator.unit })
+        else
+            if transformator.alert_tick ~= 0 then
+                transformator.alert_tick = 0
+                for _, player in pairs(game.players) do
+                    player.remove_alert({ entity = transformator.unit })
+                end
             end
         end
     end
 end
 
+--- Checks if the pump in the transformator is disabled, and if so, clears its fluid and triggers a replacement of boiler/steam engine.
+-- @param transformator table The transformator entity containing the pump reference.
+-- @field pump LuaEntity The pump entity associated with the transformator.
+-- @return nil
 local function check_pump_disabled(transformator)
     local pump = transformator.pump
     if not (pump and pump.valid) then return end
@@ -183,10 +199,7 @@ local function on_entity_built(event)
             end
         end
 
-        local transformators = storage.eg_transformators
-        for _, transformator in pairs(transformators) do
-            check_short_circuit(transformator)
-        end
+        short_circuit_check()
     elseif entity.type == "electric-pole" then
         if not storage.eg_transformators_only then
             enforce_pole_connections(entity)
@@ -199,10 +212,7 @@ local function on_entity_built(event)
             end
         end
 
-        local transformators = storage.eg_transformators
-        for _, transformator in pairs(transformators) do
-            check_short_circuit(transformator)
-        end
+        short_circuit_check()
     end
 end
 
@@ -218,10 +228,7 @@ local function on_entity_mined(event)
         local unit_number = entity.unit_number
         remove_transformator(unit_number)
     elseif entity.type == "electric-pole" then
-        local transformators = storage.eg_transformators
-        for _, transformator in pairs(transformators) do
-            check_short_circuit(transformator)
-        end
+        short_circuit_check()
 
         if not storage.eg_transformators_only then
             -- Auto-reconnect seems to preserve the wiring rules, so this may not be necessary.
@@ -262,10 +269,7 @@ local function on_selected_entity_changed(event)
         enforce_pole_connections(storage.eg_last_selected_pole[player_index])
         storage.eg_last_selected_pole[player_index] = nil
 
-        local transformators = storage.eg_transformators
-        for _, transformator in pairs(transformators) do
-            check_short_circuit(transformator)
-        end
+        short_circuit_check()
     end
 
     -- Update storage.eg_last_selected_pole if the player selects a new electric pole while holding copper wire

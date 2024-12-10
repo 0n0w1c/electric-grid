@@ -13,8 +13,10 @@ function create_transformator_fluid_disable()
         hidden = false,
         order = "a[eg]-a[fluid]-a[disable]",
         subgroup = "fluid",
-        localised_name = { "", "Disable" },
-        localised_description = { "", "Select to disable a Transformator" }
+        localised_name = { "entity-name.eg-fluid-disable" },
+        localised_description = { "entity-description.eg-fluid-disable" },
+        --localised_name = { "", "Disable" },
+        --localised_description = { "", "Select to disable a Transformator" }
     }
 end
 
@@ -33,17 +35,20 @@ function create_transformator_fluid_enable()
         hidden = false,
         order = "a[eg]-a[fluid]-a[enable]",
         subgroup = "fluid",
-        localised_name = { "", "Enable" },
-        localised_description = { "", "Select to enable a Transformator" }
+        localised_name = { "entity-name.eg-fluid-enable" },
+        localised_description = { "entity-description.eg-fluid-enable" },
+        --localised_name = { "", "Enable" },
+        --localised_description = { "", "Select to enable a Transformator" }
     }
 end
 
 function create_transformator_water(tier)
+    local fluid_name = "eg-water-" .. tier
     local heat_capacity = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].heat_capacity
 
     return {
         type = "fluid",
-        name = "eg-water-" .. tier,
+        name = fluid_name,
         default_temperature = 15,
         max_temperature = 100,
         heat_capacity = heat_capacity,
@@ -54,17 +59,18 @@ function create_transformator_water(tier)
         order = "a[fluid]-a[water]",
         auto_barrel = false,
         hidden = true,
-        localised_name = { "", "Water - Tier ", tostring(tier) },
-        localised_description = { "", "Component of a Transformator, heat capcity of ", heat_capacity }
+        localised_name = { "entity-name.eg-water" },
+        localised_description = { "", { "entity-description.eg-water" }, " ", tostring(heat_capacity) }
     }
 end
 
 function create_transformator_steam(tier)
+    local fluid_name = "eg-steam-" .. tier
     local heat_capacity = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].heat_capacity
 
     return {
         type = "fluid",
-        name = "eg-steam-" .. tier,
+        name = fluid_name,
         default_temperature = 100,
         max_temperature = 165,
         heat_capacity = heat_capacity,
@@ -75,7 +81,7 @@ function create_transformator_steam(tier)
         order = "a[fluid]-b[steam]",
         auto_barrel = false,
         hidden = true,
-        localised_name = { "", "Steam - Tier ", tostring(tier) },
-        localised_description = { "", "Component of a Transformator, heat capcity ", heat_capacity }
+        localised_name = { "entity-name.eg-steam" },
+        localised_description = { "", { "entity-description.eg-steam" }, " ", tostring(heat_capacity) }
     }
 end

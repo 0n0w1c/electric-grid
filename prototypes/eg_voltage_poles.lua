@@ -58,10 +58,8 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         local pole_name = "eg-" .. pole_type .. "-voltage-pole-" .. direction
         local connection_name = "eg_" .. pole_type .. "_voltage_pole"
         local selection_box = pole_type == "high" and hv_selection_box(direction) or lv_selection_box(direction)
-        local localised_name = pole_type == "high" and "High voltage pole" or "Low voltage pole"
-        local localised_description = pole_type == "high" and "Connect to the electrical source" or
-            "Connect to the electrical load"
-
+        local localised_name = { "entity-name.eg-" .. pole_type .. "-voltage-pole" }
+        local localised_description = { "entity-description.eg-" .. pole_type .. "-voltage-pole" }
         local pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
 
         pole.name = pole_name

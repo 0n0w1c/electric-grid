@@ -9,8 +9,8 @@ local huge_pole                      =
 {
     type                           = "electric-pole",
     name                           = "eg-huge-electric-pole",
-    localised_name                 = "Huge electric pole",
-    localised_description          = "High voltage transmission poles",
+    localised_name                 = { "entity-name.eg-huge-electric-pole" },
+    localised_description          = { "entity-description.eg-huge-electric-pole" },
     icon                           = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png",
     icon_size                      = 32,
     drawing_box_vertical_extension = 3,
@@ -116,8 +116,8 @@ local huge_pole                      =
 
 local huge_pole_item                 = table.deepcopy(data.raw["item"]["big-electric-pole"])
 huge_pole_item.name                  = "eg-huge-electric-pole"
-huge_pole_item.localised_name        = "Huge electric pole"
-huge_pole_item.localised_description = "High voltage transmission poles"
+huge_pole_item.localised_name        = { "item-name.eg-huge-electric-pole" }
+huge_pole_item.localised_description = { "item-description.eg-huge-electric-pole" }
 huge_pole_item.order                 = huge_pole_item.order .. "z"
 huge_pole_item.icon                  = constants.EG_GRAPHICS .. "/icons/huge-electric-pole.png"
 huge_pole_item.icon_size             = 32

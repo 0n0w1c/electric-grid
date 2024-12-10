@@ -18,8 +18,8 @@ function create_transformator_pump()
         collision_mask            = { layers = {} },
         selection_box             = selection_box,
         collision_box             = collision_box,
-        localised_name            = { "", "Transformator" },
-        localised_description     = { "", "Transformator" },
+        localised_name            = { "entity-name.eg-pump" },
+        localised_description     = { "entity-description.eg-pump" },
         pumping_speed             = 1,
         energy_usage              = "0.001W",
         energy_source             = {

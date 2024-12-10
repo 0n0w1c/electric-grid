@@ -31,7 +31,6 @@ constants.EG_GRAPHICS = constants.EG_MOD .. "/graphics"
 constants.EG_SOUND = constants.EG_MOD .. "/sound"
 constants.EG_TIER_BLEND_MODE = "additive"
 
-constants.EG_DISPLAYER = "eg-transformator-displayer"
 constants.EG_MAX_HEALTH = 500
 constants.EG_FLUID_VOLUME = 100
 

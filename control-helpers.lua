@@ -62,7 +62,7 @@ end
 -- @param name string The name of the entity to check.
 -- @return boolean True if the entity is a transformator, false otherwise.
 function is_transformator(name)
-    if name == constants.EG_DISPLAYER or constants.EG_TRANSFORMATORS[name] then
+    if name == "eg-transformator-displayer" or constants.EG_TRANSFORMATORS[name] then
         return true
     end
     return false

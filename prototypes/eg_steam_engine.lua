@@ -1,4 +1,5 @@
 function create_transformator_steam_engine(variant, tier)
+    local name = "eg-steam-engine-" .. variant .. "-" .. tier
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
     local selection_box
@@ -17,7 +18,7 @@ function create_transformator_steam_engine(variant, tier)
 
     return {
         type                  = "generator",
-        name                  = "eg-steam-engine-" .. variant .. "-" .. tier,
+        name                  = name,
         max_power_output      = rating,
         maximum_temperature   = 165,
         fluid_usage_per_tick  = 1,
@@ -31,8 +32,8 @@ function create_transformator_steam_engine(variant, tier)
         selectable_in_game    = false,
         alert_icon_scale      = 0,
         flags                 = constants.EG_INTERNAL_ENTITY_FLAGS,
-        localised_name        = { "", "Transformator " .. tostring(tier) },
-        localised_description = { "", "Transformator rated for ", rating, " of power output." },
+        localised_name        = { "entity-name.eg-steam-engine" },
+        localised_description = { "", { "entity-description.eg-steam-engine" }, " ", rating },
         collision_mask        = { layers = {} },
         collision_box         = collision_box,
         selection_box         = selection_box,
