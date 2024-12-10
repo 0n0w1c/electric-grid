@@ -2,7 +2,7 @@
 Version: 1.2.3
 Date: 10.12.2024
   Bugfixes:
-    - Implemented proper localized strings, added en/locale.cfg
+    - Implemented proper localised strings, added en/locale.cfg
     - Refactored the short circuit check
   Changes:
     - None
