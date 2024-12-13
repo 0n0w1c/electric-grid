@@ -12,8 +12,8 @@ data:extend({
         setting_type = "startup",
         default_value = false,
         order = get_next_order(),
-        localised_name = "Disable electric network overhaul",
-        localised_description = "No wiring rules or electric pole modifications"
+        localised_name = { "setting-name.eg-transformators-only" },
+        localised_description = { "setting-description.eg-transformators-only" }
     },
     {
         type = "bool-setting",
@@ -21,8 +21,8 @@ data:extend({
         setting_type = "startup",
         default_value = true,
         order = get_next_order(),
-        localised_name = "Enable medium pole lights",
-        localised_description = "Add a light to medium poles"
+        localised_name = { "setting-name.eg-medium-pole-lights" },
+        localised_description = { "setting-description.eg-medium-pole-lights" }
     },
     {
         type = "bool-setting",
@@ -30,8 +30,8 @@ data:extend({
         setting_type = "startup",
         default_value = true,
         order = get_next_order(),
-        localised_name = "Enable big pole lights",
-        localised_description = "Add a light to big poles"
+        localised_name = { "setting-name.eg-big-pole-lights" },
+        localised_description = { "setting-description.eg-big-pole-lights" }
     },
     {
         type = "bool-setting",
@@ -39,8 +39,8 @@ data:extend({
         setting_type = "startup",
         default_value = true,
         order = get_next_order(),
-        localised_name = "Enable huge pole lights",
-        localised_description = "Add a light to huge poles"
+        localised_name = { "setting-name.eg-huge-pole-lights" },
+        localised_description = { "setting-description.eg-huge-pole-lights" }
     },
     {
         type = "bool-setting",
@@ -48,8 +48,8 @@ data:extend({
         setting_type = "startup",
         default_value = true,
         order = get_next_order(),
-        localised_name = "Enable circuit pole lights",
-        localised_description = "Add a light to circuit poles"
+        localised_name = { "setting-name.eg-circuit-pole-lights" },
+        localised_description = { "setting-description.eg-circuit-pole-lights" }
     },
     {
         type = "bool-setting",
@@ -57,8 +57,8 @@ data:extend({
         setting_type = "startup",
         default_value = true,
         order = get_next_order(),
-        localised_name = "Enable Transformator sound",
-        localised_description = "Generates a 50Hz Main's hum"
+        localised_name = { "setting-name.eg-transformator-sound" },
+        localised_description = { "setting-description.eg-transformator-sound" }
     },
     {
         type = "bool-setting",
@@ -66,8 +66,8 @@ data:extend({
         setting_type = "startup",
         default_value = false,
         order = get_next_order(),
-        localised_name = "Enable Transformator connection icons",
-        localised_description = "Displays icons for source and load connections"
+        localised_name = { "setting-name.eg-hide-alt-overlay" },
+        localised_description = { "setting-description.eg-hide-alt-overlay" }
     },
     {
         type = "int-setting",
@@ -76,8 +76,8 @@ data:extend({
         default_value = 1,
         allowed_values = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
         order = get_next_order(),
-        localised_name = "On tick interval",
-        localised_description = "Number of seconds between electric grid checks"
+        localised_name = { "setting-name.eg-on-tick-interval" },
+        localised_description = { "setting-description.eg-on-tick-interval" }
     },
     {
         type = "double-setting",
@@ -87,8 +87,8 @@ data:extend({
         minimum_value = 30.0,
         maximum_value = 64.0,
         order = get_next_order(),
-        localised_name = "Huge pole wire reach",
-        localised_description = "Min: 30.0  Max: 64.0"
+        localised_name = { "setting-name.eg-max-wire-huge" },
+        localised_description = { "setting-description.eg-max-wire-huge" }
     },
     {
         type = "bool-setting",
@@ -96,7 +96,7 @@ data:extend({
         setting_type = "startup",
         default_value = false,
         order = get_next_order(),
-        localised_name = "Even-align radar placement",
-        localised_description = "Effectively resizes the radar to be 4x4"
+        localised_name = { "setting-name.eg-even-align-radar" },
+        localised_description = { "setting-description.eg-even-align-radar" }
     }
 })

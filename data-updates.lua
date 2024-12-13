@@ -43,4 +43,13 @@ if mods["aai-industry"] then
 
     iron_pole.maximum_wire_distance = small_pole.maximum_wire_distance
     iron_pole.supply_area_distance = small_pole.supply_area_distance
+
+    local huge_pole_recipe = data.raw["recipe"]["eg-huge-electric-pole"]
+    huge_pole_recipe.ingredients =
+    {
+        { type = "item", name = "steel-plate",  amount = 8 },
+        { type = "item", name = "iron-stick",   amount = 12 },
+        { type = "item", name = "copper-cable", amount = 20 },
+        { type = "item", name = "concrete",     amount = 2 }
+    }
 end

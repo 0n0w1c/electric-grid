@@ -3,14 +3,14 @@ local job_queue = {}
 -- Registry for functions
 local function_registry = {}
 
---- Initializes the job queue storage.
+--- Initializes the job queue storage
 function job_queue.init()
     storage.jobs = storage.jobs or {}
 end
 
---- Registers a function in the function registry.
--- @param name string The unique name of the function.
--- @param function_pointer function The function to register.
+--- Registers a function in the function registry
+-- @param name string The unique name of the function
+-- @param function_pointer function The function to register
 function job_queue.register_function(name, function_pointer)
     assert(type(name) == "string", "Function name must be a string")
     assert(type(function_pointer) == "function", "Only functions can be registered")
@@ -18,10 +18,10 @@ function job_queue.register_function(name, function_pointer)
     function_registry[name] = function_pointer
 end
 
---- Schedules a job to execute at a specific tick.
--- @param tick number The tick when the job should run.
--- @param function_name string The name of the registered function to call.
--- @param arguments table Arguments to pass to the function, including the entity.
+--- Schedules a job to execute at a specific tick
+-- @param tick number The tick when the job should run
+-- @param function_name string The name of the registered function to call
+-- @param arguments table Arguments to pass to the function, including the entity
 function job_queue.schedule(tick, function_name, arguments)
     assert(type(tick) == "number", "Tick must be a number")
     assert(function_registry[function_name], "Function name must reference a registered function")

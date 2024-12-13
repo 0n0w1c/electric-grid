@@ -47,6 +47,7 @@ local function remove_invalid_transformators()
     end
 end
 
+--[[
 local function get_usage(pole)
     if not (pole and pole.valid and pole.type == "electric-pole" and pole.electric_network_statistics) then
         return 0
@@ -99,38 +100,30 @@ local function get_production(pole)
     return total_production * 60 -- Convert from per tick to per second
 end
 
---- Checks for short circuits and issues alerts to players if detected
--- Clears the alert if the short circuit condition resolves
--- @return nil
-local function short_circuit_check()
-    local transformators = storage.eg_transformators
+local function get_maximum_production(pole)
+    if not (pole and pole.valid and pole.type == "electric-pole" and pole.electric_network_statistics) then
+        return 0
+    end
 
-    for _, transformator in pairs(transformators) do
-        local high_network_id = transformator.high_voltage.electric_network_id
-        local low_network_id = transformator.low_voltage.electric_network_id
+    local stats = pole.electric_network_statistics
+    local total_max_production = 0
 
-        if not (high_network_id and low_network_id) then return end
-
-        if high_network_id == low_network_id then
-            for _, player in pairs(game.players) do
-                transformator.alert_tick = game.tick
-                player.add_custom_alert(
-                    transformator.unit,
-                    { type = "virtual", name = "eg-alert" },
-                    { "", "Short circuit detected" },
-                    true
-                )
-            end
-        else
-            if transformator.alert_tick ~= 0 then
-                transformator.alert_tick = 0
-                for _, player in pairs(game.players) do
-                    player.remove_alert({ entity = transformator.unit })
-                end
+    -- Iterate over all prototypes producing power in the network
+    for prototype_name, count in pairs(stats.output_counts) do
+        if count > 0 then
+            local prototype = game.entity_prototypes[prototype_name]
+            if prototype and prototype.get_max_energy_production then
+                -- Get max energy production per entity in Joules per tick
+                local max_production_per_entity = prototype.get_max_energy_production()
+                -- Convert to Watts (Joules per second) and multiply by the count
+                total_max_production = total_max_production + (max_production_per_entity * count * 60)
             end
         end
     end
+
+    return total_max_production -- Return the maximum power production in Watts
 end
+]]
 
 --- Checks if the pump in the transformator is disabled, and if so, clears its fluid and triggers a replacement of boiler/steam engine.
 -- @param transformator table The transformator entity containing the pump reference.
@@ -157,28 +150,6 @@ local function nth_tick_checks()
     end
 end
 
---- Find all electric poles within a radius around a mined entity's position.
--- @param entity LuaEntity The mined electric pole entity.
--- @param radius number The radius to search (default: 64).
--- @return table A list of electric poles within the radius.
-local function get_nearby_poles(entity)
-    if not (entity and entity.valid and entity.type == "electric-pole") then return end
-
-    local position = entity.position
-    local surface = entity.surface
-    local distance = prototypes.entity[entity.name].get_max_wire_distance(entity.quality)
-
-    local area = {
-        { position.x - distance, position.y - distance },
-        { position.x + distance, position.y + distance }
-    }
-
-    return surface.find_entities_filtered {
-        area = area,
-        type = "electric-pole",
-    }
-end
-
 -- Places transformator or ugp_substation entities
 -- or enforces wiring rules if it's an electric-pole.
 -- @param entity LuaEntity The entity that was added.
@@ -192,28 +163,10 @@ local function on_entity_built(event)
         local unit_number = entity.unit_number
 
         job_queue.schedule(
-            game.tick + 180,                                        -- Run 3 seconds in the future
+            game.tick + 180,
             "replace_displayer_with_ugp_substation",
-            { surface = entity.surface, unit_number = unit_number } -- Pass the unit number as an argument
+            { unit_number = unit_number }
         )
-
-        --[[
-        local new_entity = replace_displayer_with_ugp_substation(entity)
-        if not storage.eg_transformators_only then
-            enforce_pole_connections(new_entity)
-
-            local poles = get_nearby_poles(new_entity)
-            if poles then
-                for _, pole in pairs(poles) do
-                    if pole.valid then
-                        enforce_pole_connections(pole)
-                    end
-                end
-            end
-        end
-
-        short_circuit_check()
-]]
     elseif entity.type == "electric-pole" then
         if not storage.eg_transformators_only then
             enforce_pole_connections(entity)
