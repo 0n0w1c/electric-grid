@@ -60,15 +60,20 @@ ugp_substation.connection_points              = {
 
 data:extend({ ugp_substation })
 
-local ugp_substation_displayer                   = table.deepcopy(ugp_substation)
-local name                                       = "eg-ugp-substation-displayer"
+local ugp_substation_displayer                        = table.deepcopy(ugp_substation)
+local name                                            = "eg-ugp-substation-displayer"
 
-ugp_substation_displayer.name                    = name
-ugp_substation_displayer.hidden                  = false
-ugp_substation_displayer.hidden_in_factoriopedia = false
-ugp_substation_displayer.draw_copper_wires       = true
-ugp_substation_displayer.collision_mask          = data.raw["electric-pole"]["substation"].collision_mask
-
+ugp_substation_displayer.name                         = name
+ugp_substation_displayer.hidden                       = false
+ugp_substation_displayer.hidden_in_factoriopedia      = false
+ugp_substation_displayer.draw_copper_wires            = true
+ugp_substation_displayer.collision_mask               = data.raw["electric-pole"]["substation"].collision_mask
+ugp_substation_displayer.flags                        = {
+    "placeable-player",
+    "player-creation",
+    "not-rotatable",
+    "get-by-unit-number"
+}
 
 local ugp_substation_displayer_item                   = table.deepcopy(data.raw["item"]["substation"])
 
@@ -82,16 +87,13 @@ ugp_substation_displayer_item.hidden                  = false
 ugp_substation_displayer_item.hidden_in_factoriopedia = false
 ugp_substation_displayer_item.place_result            = name
 
-
-local category = data.raw["recipe"]["substation"].category
-
-local ugp_substation_displayer_recipe =
+local ugp_substation_displayer_recipe                 =
 {
     type                  = "recipe",
     name                  = name,
     localised_name        = "Underground substation",
     localised_description = "Underground power distribution",
-    category              = category,
+    category              = data.raw["recipe"]["substation"].category,
     enabled               = false,
     ingredients           = { { type = "item", name = "substation", amount = 1 } },
     results               = { { type = "item", name = name, amount = 1 } }

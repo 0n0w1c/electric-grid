@@ -391,6 +391,40 @@ end
 
 --- Replace the ugp-substation-displayer entity with ugp-substation.
 -- Simply destroys the displayer and creates a ugp-substation in the same position.
+-- @param args table A table containing the unit_number.
+function replace_displayer_with_ugp_substation(args)
+    if not args or not args.unit_number then return end
+
+    local surface = args.surface
+    local unit_number = args.unit_number
+
+    local displayer = game.get_entity_by_unit_number(unit_number)
+
+    if not (displayer and displayer.valid) then return end
+
+    local position = displayer.position
+    local direction = displayer.direction
+    local force = displayer.force
+    local surface = displayer.surface
+    local quality = displayer.quality
+
+    displayer.destroy({ raise_destroy = true })
+
+    local new_ugp_substation = surface.create_entity {
+        name = "eg-ugp-substation",
+        position = position,
+        direction = direction,
+        force = force,
+        raise_built = true,
+        quality = quality
+    }
+
+    enforce_pole_connections(new_ugp_substation)
+end
+
+--[[
+--- Replace the ugp-substation-displayer entity with ugp-substation.
+-- Simply destroys the displayer and creates a ugp-substation in the same position.
 -- @param displayer LuaEntity The ugp-substation-displayer to replace.
 function replace_displayer_with_ugp_substation(displayer)
     if not displayer or not displayer.valid then return end
@@ -415,6 +449,32 @@ function replace_displayer_with_ugp_substation(displayer)
 
     return new_entity
 end
+]]
+
+local function get_maximum_production(pole)
+    if not (pole and pole.valid and pole.type == "electric-pole" and pole.electric_network_statistics) then
+        return 0
+    end
+
+    local stats = pole.electric_network_statistics
+    local total_max_production = 0
+
+    -- Iterate over all prototypes producing power in the network
+    for prototype_name, count in pairs(stats.output_counts) do
+        if count > 0 then
+            local prototype = game.entity_prototypes[prototype_name]
+            if prototype and prototype.get_max_energy_production then
+                -- Get max energy production per entity in Joules per tick
+                local max_production_per_entity = prototype.get_max_energy_production()
+                -- Convert to Watts (Joules per second) and multiply by the count
+                total_max_production = total_max_production + (max_production_per_entity * count * 60)
+            end
+        end
+    end
+
+    return total_max_production -- Return the maximum power production in Watts
+end
+
 
 --- Check if a copper cable connection is allowed between two poles.
 -- @param pole_a LuaEntity The first electric pole.
@@ -426,6 +486,14 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     end
 
     local name_a, name_b = pole_a.name, pole_b.name
+
+    -- Check if one of the poles is a high_voltage pole and execute get_maximum_production
+    --    for _, name in ipairs({ name_a, name_b }) do
+    --        if name:match("^eg%-high%-voltage%-pole%-") then
+    --            local max_power = get_maximum_production(name)
+    --            game.print("Max = " .. max_power)
+    --        end
+    --    end
 
     if constants.EG_WIRE_CONNECTIONS[name_a] and constants.EG_WIRE_CONNECTIONS[name_a][name_b] then
         return true

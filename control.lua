@@ -1,6 +1,8 @@
 constants = require("constants")
 
-require("control-helpers")
+local job_queue = require("job_queue")
+
+require("control_helpers")
 
 --- Initializes global storage variables for managing transformators and related state.
 -- Ensures all required global variables are initialized with default values if not already set.
@@ -187,6 +189,15 @@ local function on_entity_built(event)
     if is_transformator(entity.name) then
         eg_transformator_built(entity)
     elseif entity.name == "eg-ugp-substation-displayer" then
+        local unit_number = entity.unit_number
+
+        job_queue.schedule(
+            game.tick + 180,                                        -- Run 3 seconds in the future
+            "replace_displayer_with_ugp_substation",
+            { surface = entity.surface, unit_number = unit_number } -- Pass the unit number as an argument
+        )
+
+        --[[
         local new_entity = replace_displayer_with_ugp_substation(entity)
         if not storage.eg_transformators_only then
             enforce_pole_connections(new_entity)
@@ -194,12 +205,15 @@ local function on_entity_built(event)
             local poles = get_nearby_poles(new_entity)
             if poles then
                 for _, pole in pairs(poles) do
-                    enforce_pole_connections(pole)
+                    if pole.valid then
+                        enforce_pole_connections(pole)
+                    end
                 end
             end
         end
 
         short_circuit_check()
+]]
     elseif entity.type == "electric-pole" then
         if not storage.eg_transformators_only then
             enforce_pole_connections(entity)
@@ -420,14 +434,24 @@ end
 script.on_init(function()
     initialize_globals()
     register_event_handlers()
+    job_queue.init()
+    job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.update_registration()
 end)
 
 script.on_load(function()
     register_event_handlers()
+    if storage.jobs then
+        job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+        job_queue.update_registration()
+    end
 end)
 
 script.on_configuration_changed(function()
     initialize_globals()
     remove_invalid_transformators()
     register_event_handlers()
+    job_queue.init()
+    job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.update_registration()
 end)

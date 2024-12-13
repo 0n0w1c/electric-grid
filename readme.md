@@ -51,7 +51,6 @@ Very similair to [Electric Transformators](https://mods.factorio.com/mod/Electri
 Do not place the transformator in the supply area of an electric pole.  
 
 *Limitations:*  
-Underground substations do not place properly while dragging, use substations and fast-replace or upgrade planner.  
 *Quality adds a supply area to poles intended to have zero supply area (medium, big and huge).*  
 Hopefully future API development and/or my knowledge will allow for a better solution.  
 

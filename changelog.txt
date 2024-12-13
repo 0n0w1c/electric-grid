@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.0
+Date: 10.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Underground substations now place properly while pole dragging
+      More tricks are played here to account for other tricks, but the results should work fine
+    - Added Factorio+ as incompatible
+---------------------------------------------------------------------------------------------------
 Version: 1.2.3
 Date: 10.12.2024
   Bugfixes:
