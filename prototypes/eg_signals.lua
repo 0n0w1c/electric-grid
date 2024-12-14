@@ -7,7 +7,7 @@ data:extend({
         localised_name        = { "virtual-signal.eg-alert" },
         localised_description = { "virtual-signal-description.eg-alert" },
         icons                 = { {
-            icon = constants.EG_GRAPHICS .. "/icons/flash.png",
+            icon = constants.EG_ICONS .. "flash.png",
             tint = { r = 1, g = 1, b = 0 },
             icon_size = 32,
         } }

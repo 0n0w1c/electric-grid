@@ -27,8 +27,10 @@ constants.EG_FIRST_TICK = 1
 constants.EG_DEBUG_TRANSFORMATOR = false
 
 constants.EG_MOD = "__electric-grid__"
-constants.EG_GRAPHICS = constants.EG_MOD .. "/graphics"
-constants.EG_SOUND = constants.EG_MOD .. "/sound"
+constants.EG_GRAPHICS = constants.EG_MOD .. "/graphics/"
+constants.EG_ENTITIES = constants.EG_GRAPHICS .. "entities/"
+constants.EG_ICONS = constants.EG_GRAPHICS .. "icons/"
+constants.EG_SOUND = constants.EG_MOD .. "/sound/"
 constants.EG_TIER_BLEND_MODE = "additive"
 
 constants.EG_MAX_HEALTH = 500
@@ -79,15 +81,15 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
 }
 
 constants.EG_TRANSFORMATORS = {
-    ["eg-unit-1"] = { rating = "1MW", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 } },   -- Tier 1: Pure Red
-    ["eg-unit-2"] = { rating = "5MW", tint = { r = 1.0, g = 0.0, b = 0.5, a = 1 } },   -- Tier 2: Magenta (Red + Blue)
-    ["eg-unit-3"] = { rating = "10MW", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } },  -- Tier 3: Pure Magenta
-    ["eg-unit-4"] = { rating = "50MW", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 } },  -- Tier 4: Purple (Blue + Magenta)
-    ["eg-unit-5"] = { rating = "100MW", tint = { r = 0.0, g = 0.0, b = 1.0, a = 1 } }, -- Tier 5: Pure Blue
-    ["eg-unit-6"] = { rating = "500MW", tint = { r = 0.0, g = 1.0, b = 1.0, a = 1 } }, -- Tier 6: Cyan (Green + Blue)
-    ["eg-unit-7"] = { rating = "1GW", tint = { r = 0.0, g = 1.0, b = 0.0, a = 1 } },   -- Tier 7: Pure Green
-    ["eg-unit-8"] = { rating = "5GW", tint = { r = 0.5, g = 1.0, b = 0.0, a = 1 } },   -- Tier 8: Yellow-Green (Green + Yellow)
-    ["eg-unit-9"] = { rating = "10GW", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } }   -- Tier 9: Yellow (Red + Green)
+    ["eg-unit-1"] = { rating = "1MW", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 }, icon = constants.EG_ICONS .. "eg-unit-1.png" },
+    ["eg-unit-2"] = { rating = "5MW", tint = { r = 1.0, g = 0.0, b = 0.5, a = 1 }, icon = constants.EG_ICONS .. "eg-unit-2.png" },
+    ["eg-unit-3"] = { rating = "10MW", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 }, icon = constants.EG_ICONS .. "eg-unit-3.png" },
+    ["eg-unit-4"] = { rating = "50MW", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 }, icon = constants.EG_ICONS .. "eg-unit-4.png" },
+    ["eg-unit-5"] = { rating = "100MW", tint = { r = 0.0, g = 0.0, b = 1.0, a = 1 }, icon = constants.EG_ICONS .. "eg-unit-5.png" },
+    ["eg-unit-6"] = { rating = "500MW", tint = { r = 0.0, g = 1.0, b = 1.0, a = 1 }, icon = constants.EG_ICONS .. "eg-unit-6.png" },
+    ["eg-unit-7"] = { rating = "1GW", tint = { r = 0.0, g = 1.0, b = 0.0, a = 1 }, icon = constants.EG_ICONS .. "eg-unit-7.png" },
+    ["eg-unit-8"] = { rating = "5GW", tint = { r = 0.5, g = 1.0, b = 0.0, a = 1 }, icon = constants.EG_ICONS .. "eg-unit-8.png" },
+    ["eg-unit-9"] = { rating = "10GW", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 }, icon = constants.EG_ICONS .. "eg-unit-9.png" }
 }
 
 for _, transformator in pairs(constants.EG_TRANSFORMATORS) do

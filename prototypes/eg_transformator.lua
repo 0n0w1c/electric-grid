@@ -1,7 +1,7 @@
 local function get_transformator_picture(tier)
     local altoverlay = {
         north = {
-            filename = constants.EG_GRAPHICS .. "/entities/trafo-altoverlay-hr.png",
+            filename = constants.EG_ENTITIES .. "eg-unit-altoverlay-hr.png",
             x = 466,
             width = 466,
             height = 310,
@@ -9,7 +9,7 @@ local function get_transformator_picture(tier)
             scale = 0.5,
         },
         east = {
-            filename = constants.EG_GRAPHICS .. "/entities/trafo-altoverlay-hr.png",
+            filename = constants.EG_ENTITIES .. "eg-unit-altoverlay-hr.png",
             x = 0,
             width = 466,
             height = 310,
@@ -17,7 +17,7 @@ local function get_transformator_picture(tier)
             scale = 0.5,
         },
         south = {
-            filename = constants.EG_GRAPHICS .. "/entities/trafo-altoverlay-hr.png",
+            filename = constants.EG_ENTITIES .. "eg-unit-altoverlay-hr.png",
             x = 1398,
             width = 466,
             height = 310,
@@ -25,7 +25,7 @@ local function get_transformator_picture(tier)
             scale = 0.5,
         },
         west = {
-            filename = constants.EG_GRAPHICS .. "/entities/trafo-altoverlay-hr.png",
+            filename = constants.EG_ENTITIES .. "eg-unit-altoverlay-hr.png",
             x = 932,
             width = 466,
             height = 310,
@@ -38,7 +38,7 @@ local function get_transformator_picture(tier)
         north = {
             layers = {
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
                     x = 466,
                     width = 466,
                     height = 310,
@@ -46,7 +46,7 @@ local function get_transformator_picture(tier)
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-shadows-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows-hr.png",
                     x = 466,
                     width = 466,
                     height = 310,
@@ -55,7 +55,7 @@ local function get_transformator_picture(tier)
                     draw_as_shadow = true,
                 },
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-mask-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
                     x = 466,
                     width = 466,
                     height = 310,
@@ -69,7 +69,7 @@ local function get_transformator_picture(tier)
         east = {
             layers = {
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
                     x = 0,
                     width = 466,
                     height = 310,
@@ -77,7 +77,7 @@ local function get_transformator_picture(tier)
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-shadows-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows-hr.png",
                     x = 0,
                     width = 466,
                     height = 310,
@@ -86,7 +86,7 @@ local function get_transformator_picture(tier)
                     draw_as_shadow = true,
                 },
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-mask-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
                     x = 0,
                     width = 466,
                     height = 310,
@@ -100,7 +100,7 @@ local function get_transformator_picture(tier)
         south = {
             layers = {
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
                     x = 1398,
                     width = 466,
                     height = 310,
@@ -108,7 +108,7 @@ local function get_transformator_picture(tier)
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-shadows-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows-hr.png",
                     x = 1398,
                     width = 466,
                     height = 310,
@@ -117,7 +117,7 @@ local function get_transformator_picture(tier)
                     draw_as_shadow = true,
                 },
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-mask-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
                     x = 1398,
                     width = 466,
                     height = 310,
@@ -131,7 +131,7 @@ local function get_transformator_picture(tier)
         west = {
             layers = {
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-sprites-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
                     x = 932,
                     width = 466,
                     height = 310,
@@ -139,7 +139,7 @@ local function get_transformator_picture(tier)
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-shadows-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows-hr.png",
                     x = 932,
                     width = 466,
                     height = 310,
@@ -148,7 +148,7 @@ local function get_transformator_picture(tier)
                     draw_as_shadow = true,
                 },
                 {
-                    filename = constants.EG_GRAPHICS .. "/entities/trafo-mask-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
                     x = 932,
                     width = 466,
                     height = 310,
@@ -177,7 +177,7 @@ local function create_transformator_unit(tier)
     return {
         type = "simple-entity-with-force",
         name = "eg-unit-" .. tier,
-        icon = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
+        icon = constants.EG_ICONS .. "eg-unit-" .. tier .. ".png",
         icon_size = 128,
         hidden_in_factoriopedia = true,
         flags = { "placeable-player", "player-creation", "not-rotatable" },
@@ -231,7 +231,7 @@ local eg_transformator_displayer = {
     name = "eg-transformator-displayer",
     localised_name = { "entity-name.eg-transformator-displayer" },
     localised_description = { "entity-description.eg-transformator-displayer" },
-    icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
+    icon = constants.EG_ICONS .. "eg-unit-1.png",
     icon_size = 128,
     flags = { "placeable-player", "player-creation" },
     max_health = constants.EG_MAX_HEALTH,
@@ -246,7 +246,7 @@ local eg_transformator_item = {
     name = "eg-transformator",
     localised_name = { "item-name.eg-transformator" },
     localised_description = { "item-description.eg-transformator" },
-    icon = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
+    icon = constants.EG_ICONS .. "eg-unit-1.png",
     icon_size = 128,
     subgroup = "energy-pipe-distribution",
     order = "b[pipe]-d[eg-transformator-item]",

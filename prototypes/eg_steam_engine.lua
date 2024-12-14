@@ -23,7 +23,7 @@ function create_transformator_steam_engine(variant, tier)
         maximum_temperature   = 165,
         fluid_usage_per_tick  = 1,
         scale_fluid_usage     = true,
-        icon                  = constants.EG_GRAPHICS .. "/technologies/tier-" .. tier .. ".png",
+        icon                  = constants.EG_ICONS .. "eg-unit-" .. tier .. ".png",
         icon_size             = 128,
         impact_category       = "metal-large",
         max_health            = constants.EG_MAX_HEALTH,
@@ -67,7 +67,7 @@ function create_transformator_steam_engine(variant, tier)
             match_volume_to_activity = true,
             use_doppler_shift = true,
             sound = {
-                filename = constants.EG_SOUND .. "/MainsBrum50Hz.ogg",
+                filename = constants.EG_SOUND .. "MainsBrum50Hz.ogg",
                 volume = constants.EG_TRANSFORMATOR_VOLUME
             },
         },

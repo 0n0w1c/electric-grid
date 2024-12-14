@@ -6,7 +6,7 @@ function create_transformator_pump()
     return {
         type                      = "pump",
         name                      = "eg-pump",
-        icon                      = constants.EG_GRAPHICS .. "/technologies/tier-1.png",
+        icon                      = constants.EG_ICONS .. "eg-unit-1.png",
         icon_size                 = 128,
         max_health                = constants.EG_MAX_HEALTH,
         hidden                    = false,
