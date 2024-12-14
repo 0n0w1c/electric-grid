@@ -55,7 +55,7 @@ Do not place the transformator in the supply area of an electric pole.
 Hopefully future API development and/or my knowledge will allow for a better solution.  
 
 *Recommended Mods:*  
-[No Quality](https://mods.factorio.com/mod/no-quality) - Removes Quality which resolves the issue with transmission only poles.  
+[No Quality](https://mods.factorio.com/mod/no-quality) - Removes the effects of Quality which resolves the issue with transmission only poles.  
 
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole.  
