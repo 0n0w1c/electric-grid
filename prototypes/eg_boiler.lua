@@ -19,7 +19,7 @@ function create_transformator_boiler(tier)
     return {
         type = "boiler",
         name = "eg-boiler-" .. tier,
-        icon = constants.EG_ICONS .. "eg-unit-" .. tier .. ".png",
+        icon = constants.EG_ICONS .. "eg-transformator.png",
         icon_size = 128,
         energy_consumption = rating,
         target_temperature = 165,

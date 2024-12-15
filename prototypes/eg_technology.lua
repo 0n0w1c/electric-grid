@@ -2,7 +2,7 @@ data:extend({
     {
         type = "technology",
         name = "eg-tech-1",
-        icon = constants.EG_ICONS .. "eg-unit-1.png",
+        icon = constants.EG_ICONS .. "eg-transformator.png",
         icon_size = 128,
         localised_name = { "technology-name.eg-tech-1" },
         localised_description = { "technology-description.eg-tech-1" },

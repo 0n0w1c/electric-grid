@@ -565,16 +565,57 @@ end
 -- @param player LuaPlayer The player interacting with the GUI.
 -- @return LuaGuiElement The created or found frame.
 function get_or_create_transformator_frame(player)
+    -- Destroy any existing GUI frame
     if player.gui.screen.transformator_rating_selection_frame then
         player.gui.screen.transformator_rating_selection_frame.destroy()
     end
+
+    -- Add the main frame
     local frame = player.gui.screen.add {
         type = "frame",
         name = "transformator_rating_selection_frame",
-        caption = "Rating",
         direction = "vertical"
     }
     frame.auto_center = true
+
+    -- Add a custom top bar for title and Close button
+    local top_bar = frame.add {
+        type = "flow",
+        name = "transformator_top_bar",
+        direction = "horizontal"
+    }
+    top_bar.style.horizontal_align = "right" -- Align content to the right
+    top_bar.drag_target = frame              -- Allow dragging the window
+
+    -- Add a title label
+    local title_label = top_bar.add {
+        type = "label",
+        caption = "Transformator",
+        style = "frame_title",
+    }
+    title_label.style.horizontally_stretchable = false
+    title_label.style.padding = { 0, 8 }      -- Add horizontal padding for spacing
+    title_label.ignored_by_interaction = true -- So dragging works
+
+    -- Add a spacer to push the Close button to the far right
+    local spacer = top_bar.add {
+        type = "empty-widget",
+        style = "draggable_space",
+    }
+    spacer.style.horizontally_stretchable = true
+    spacer.style.vertically_stretchable = true
+
+    -- Add the Close button
+    local close_button = top_bar.add {
+        type = "sprite-button",
+        name = "close_transformator_gui",
+        sprite = "utility/close",
+        hovered_sprite = "utility/close_black",
+        clicked_sprite = "utility/close_black",
+        style = "frame_action_button",
+        tooltip = "Close"
+    }
+
     return frame
 end
 
@@ -614,4 +655,69 @@ function close_transformator_gui(player)
     if player.gui.screen.transformator_rating_selection_frame then
         player.gui.screen.transformator_rating_selection_frame.destroy()
     end
+end
+
+function add_rating_dropdown(parent_frame, current_rating)
+    -- Add a frame to act as a border for the drop-down and Save button
+    local bordered_frame = parent_frame.add {
+        type = "frame",
+        name = "rating_selection_bordered_frame",
+        direction = "vertical"
+    }
+
+    bordered_frame.add {
+        type = "sprite",
+        name = "eg-transformator-icon",
+        sprite = "eg-transformator-icon"
+    }
+
+    bordered_frame.add {
+        type = "label",
+        caption = " ",
+    }
+
+    local dropdown_flow = bordered_frame.add {
+        type = "flow",
+        name = "dropdown_flow",
+        direction = "horizontal"
+    }
+    dropdown_flow.style.horizontally_stretchable = true
+    dropdown_flow.style.horizontal_align = "center"
+
+    local dropdown_items = {}
+    local selected_index = 1
+    local idx = 1
+    for _, specs in pairs(constants.EG_TRANSFORMATORS) do
+        if specs.rating then
+            table.insert(dropdown_items, specs.rating)
+
+            if specs.rating == current_rating then
+                selected_index = idx
+            end
+            idx = idx + 1
+        end
+    end
+
+    dropdown_flow.add {
+        type = "drop-down",
+        name = "rating_dropdown",
+        items = dropdown_items,
+        selected_index = selected_index
+    }
+
+    -- Add the Save button inside a horizontal flow with alignment
+    local save_button_flow = bordered_frame.add {
+        type = "flow",
+        name = "save_button_flow",
+        direction = "horizontal"
+    }
+    save_button_flow.style.horizontally_stretchable = true
+    save_button_flow.style.horizontal_align = "center"
+
+    -- Add the Save button
+    save_button_flow.add {
+        type = "button",
+        name = "confirm_transformator_rating",
+        caption = "Save"
+    }
 end

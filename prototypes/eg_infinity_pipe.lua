@@ -1,7 +1,8 @@
 local eg_infinity_pipe = {
     type                           = "infinity-pipe",
     name                           = "eg-infinity-pipe",
-    icon                           = "__base__/graphics/icons/pipe.png",
+    icon                           = constants.EG_ICONS .. "eg-transformator.png",
+    icon_size                      = 128,
     gui_mode                       = "all",
     max_health                     = constants.EG_MAX_HEALTH,
     corpse                         = "small-remnants",

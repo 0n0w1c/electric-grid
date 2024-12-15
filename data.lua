@@ -21,6 +21,22 @@ constants.EG_EVEN_ALIGN_RADAR = settings.startup["eg-even-align-radar"].value
 
 data:extend({
     {
+        type                  = "virtual-signal",
+        name                  = "eg-alert",
+        icon_size             = 32,
+        hidden                = true,
+        localised_name        = { "virtual-signal.eg-alert" },
+        localised_description = { "virtual-signal-description.eg-alert" },
+        icons                 = { {
+            icon = constants.EG_ICONS .. "eg-flash.png",
+            tint = { r = 1, g = 1, b = 0 },
+            icon_size = 32,
+        } }
+    }
+})
+
+data:extend({
+    {
         type = "custom-input",
         name = "transformator_rating_selection",
         key_sequence = "mouse-button-1",
@@ -28,7 +44,15 @@ data:extend({
     }
 })
 
-require("prototypes/eg_signals")
+data:extend({
+    {
+        type = "sprite",
+        name = "eg-transformator-icon",
+        filename = constants.EG_ICONS .. "eg-transformator.png",
+        size = 128,
+    }
+})
+
 require("prototypes/eg_fluids")
 require("prototypes/eg_infinity_pipe")
 require("prototypes/eg_pump")

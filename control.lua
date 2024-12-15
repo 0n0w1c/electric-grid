@@ -17,6 +17,7 @@ local function initialize_globals()
     storage.eg_last_selected_pole = storage.eg_last_selected_pole or {}
     storage.eg_check_interval = storage.eg_check_interval or 60
     storage.eg_transformators_only = storage.eg_transformators_only or false
+    storage.eg_selected_rating = storage.eg_selected_rating or {}
 
     if settings.startup["eg-on-tick-interval"] and settings.startup["eg-on-tick-interval"].value then
         storage.eg_check_interval = tonumber(settings.startup["eg-on-tick-interval"].value) * 60
@@ -248,10 +249,6 @@ local function on_selected_entity_changed(event)
     end
 end
 
---- Handle transformator rating selection event.
--- Toggles the rating selection GUI for the player when a transformator is selected.
--- Opens the GUI and initializes it with the current rating.
--- @param event EventData The event data containing the player index.
 local function on_transformator_rating_selection(event)
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
@@ -263,9 +260,9 @@ local function on_transformator_rating_selection(event)
         else
             local frame = get_or_create_transformator_frame(player)
             local current_rating = get_current_transformator_rating(selected_entity)
-            add_rating_checkboxes(frame, current_rating)
-            frame.add { type = "button", name = "confirm_transformator_rating", caption = "Save" }
+            add_rating_dropdown(frame, current_rating)
 
+            -- Store the selected transformator
             storage.eg_selected_transformator[player.index] = selected_entity
         end
     end
@@ -293,10 +290,6 @@ local function on_gui_checked_state_changed(event)
     end
 end
 
---- Handle GUI click event.
--- Processes the "Save" button click in the transformator rating selection GUI.
--- Updates the transformator's rating if a different rating is selected and closes the GUI.
--- @param event EventData The event data containing the GUI element information.
 local function on_gui_click(event)
     local element = event.element
     if not (element and element.valid) then return end
@@ -304,61 +297,126 @@ local function on_gui_click(event)
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
 
+    if element.name == "close_transformator_gui" then
+        close_transformator_gui(player)
+        return
+    end
+
+    -- Handle Save button
     if element.name == "confirm_transformator_rating" then
         local transformator = storage.eg_selected_transformator[player.index]
         if transformator and transformator.valid then
             local frame = player.gui.screen.transformator_rating_selection_frame
-            local current_rating = get_current_transformator_rating(transformator)
-            local selected_rating = nil
-            for _, child in pairs(frame.children[1].children) do
-                if child.type == "checkbox" and child.state then
-                    selected_rating = string.match(child.name, "rating_checkbox_(.+)")
-                    break
+            if not frame then return end -- Ensure the frame exists
+
+            -- Locate the bordered frame
+            local bordered_frame = frame.rating_selection_bordered_frame
+            if not bordered_frame then return end
+
+            -- Find the drop-down by iterating through the children of the bordered frame
+            local dropdown = nil
+            for _, child in pairs(bordered_frame.children) do
+                if child.name == "dropdown_flow" then
+                    for _, inner_child in pairs(child.children) do
+                        if inner_child.name == "rating_dropdown" then
+                            dropdown = inner_child
+                            break
+                        end
+                    end
                 end
             end
 
+            local selected_rating = dropdown.items[dropdown.selected_index]
+            local current_rating = get_current_transformator_rating(transformator)
+
+            -- Replace transformator if the rating has changed
             if selected_rating and selected_rating ~= current_rating then
                 replace_transformator(transformator, selected_rating)
                 storage.eg_selected_transformator[player.index] = nil
             end
         end
 
+        -- Close the GUI
         close_transformator_gui(player)
     end
 end
 
---- Handle GUI closed event.
--- Replace the copmponents with a buffer when disabled via the filter.
--- Appropriate fluid filter is set on the pump based on the current transformator tier.
--- @param event EventData The event data containing the player and entity information.
 local function on_gui_closed(event)
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
 
+    -- Case 1: Handle the transformator's custom GUI
+    if event.element and event.element.name == "transformator_rating_selection_frame" then
+        -- Close the transformator's custom GUI
+        storage.eg_selected_transformator[player.index] = nil
+        return
+    end
+
+    -- Case 2: Handle the pump's native GUI
     local entity = event.entity
-    if not entity or not entity.valid then return end
+    if entity and entity.valid and entity.type == "pump" then
+        local transformator = find_transformator_by_pump(entity)
+        if not transformator then return end
 
-    local transformator = find_transformator_by_pump(entity)
-    if not transformator then return end
+        local pump = transformator.pump
+        if pump and pump.valid then
+            local filter = pump.fluidbox.get_filter(1)
+            if filter and filter.name then
+                local unit_name = transformator.unit.name
+                local tier = string.sub(unit_name, -1)
 
-    local pump = transformator.pump
-    if not pump or not pump.valid then return end
-
-    local filter = pump.fluidbox.get_filter(1)
-    if filter and filter.name then
-        local unit_name = transformator.unit.name
-        local tier = string.sub(unit_name, -1)
-
-        if filter.name == "eg-fluid-disable" then
-            pump.clear_fluid_inside()
-            pump.fluidbox.set_filter(1, { name = "eg-fluid-disable" })
-            replace_boiler_steam_engine(transformator)
-        else
-            pump.clear_fluid_inside()
-            pump.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
+                if filter.name == "eg-fluid-disable" then
+                    pump.clear_fluid_inside()
+                    pump.fluidbox.set_filter(1, { name = "eg-fluid-disable" })
+                    replace_boiler_steam_engine(transformator)
+                else
+                    pump.clear_fluid_inside()
+                    pump.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
+                end
+            end
         end
     end
 end
+
+script.on_event(defines.events.on_gui_selection_state_changed, function(event)
+    local element = event.element
+    if not (element and element.valid) then return end
+
+    -- Check if the event is from our drop-down
+    if element.name == "rating_dropdown" then
+        local player = game.get_player(event.player_index)
+        if not player or not player.valid then return end
+
+        -- Locate the GUI frame
+        local frame = player.gui.screen.transformator_rating_selection_frame
+        if not frame then return end -- Ensure the frame exists
+
+        -- Find the bordered frame
+        local bordered_frame = frame.rating_selection_bordered_frame
+        if not bordered_frame then return end
+
+        -- Find the sprite element to update
+        local sprite_element = bordered_frame.current_rating_sprite
+        if not sprite_element then return end
+
+        -- Get the selected rating from the drop-down and normalize it
+        local selected_rating = element.items[element.selected_index]
+        --local normalized_rating = selected_rating:gsub(" ", "") -- Remove spaces
+
+        -- Look up the correct sprite
+        local new_sprite = nil
+        for _, data in pairs(constants.EG_TRANSFORMATORS) do
+            if data.rating == selected_rating then
+                new_sprite = data.rating -- Use the sprite name as the rating name
+                break
+            end
+        end
+
+        -- Update the sprite or fallback to unknown_icon
+        sprite_element.sprite = new_sprite or "utility/unknown_icon"
+        sprite_element.tooltip = "Current selection: " .. (new_sprite or "N/A")
+    end
+end)
 
 local function register_event_handlers()
     script.on_event(defines.events.on_built_entity, on_entity_built)
@@ -382,6 +440,8 @@ local function register_event_handlers()
     script.on_event(defines.events.on_gui_checked_state_changed, on_gui_checked_state_changed)
     script.on_event(defines.events.on_gui_click, on_gui_click)
     script.on_event(defines.events.on_gui_closed, on_gui_closed)
+
+    script.on_event(defines.events.on_gui_selection_state_changed, on_gui_selection_state_changed)
 end
 
 script.on_init(function()

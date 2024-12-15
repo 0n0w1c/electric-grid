@@ -7,7 +7,7 @@ local eg_circuit_pole        =
 {
     type                       = "electric-pole",
     name                       = "eg-circuit-pole",
-    icon                       = constants.EG_ICONS .. "hr-circuit-pole.png",
+    icon                       = constants.EG_ICONS .. "eg-circuit-pole.png",
     icon_size                  = 32,
     localised_name             = { "entity-name.eg-circuit-pole" },
     localised_description      = { "entity-description.eg-circuit-pole" },
@@ -30,7 +30,7 @@ local eg_circuit_pole        =
     light                      = constants.EG_CIRCUIT_POLE_LIGHTS and constants.EG_MINI_POLE_LIGHT or nil,
     pictures                   =
     {
-        filename = constants.EG_ENTITIES .. "hr-circuit-pole.png",
+        filename = constants.EG_ENTITIES .. "eg-circuit-pole.png",
         priority = "extra-high",
         width = 256,
         height = 256,
@@ -62,7 +62,7 @@ local eg_circuit_pole_item   =
     name                  = "eg-circuit-pole",
     localised_name        = { "item-name.eg-circuit-pole" },
     localised_description = { "item-description.eg-circuit-pole" },
-    icon                  = constants.EG_ICONS .. "hr-circuit-pole.png",
+    icon                  = constants.EG_ICONS .. "eg-circuit-pole.png",
     icon_size             = 256,
     subgroup              = "circuit-network",
     order                 = "b[wires]-c[circuit-pole]",
