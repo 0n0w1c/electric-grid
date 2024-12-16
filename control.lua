@@ -232,7 +232,6 @@ local function on_selected_entity_changed(event)
     local selected_entity = player.selected
     local player_index = event.player_index
 
-    -- Check if the player was holding copper wire and previously had an electric pole selected
     if storage.eg_last_selected_pole[player_index] and (not selected_entity or selected_entity.type ~= "electric-pole") then
         enforce_pole_connections(storage.eg_last_selected_pole[player_index])
         storage.eg_last_selected_pole[player_index] = nil
@@ -240,15 +239,18 @@ local function on_selected_entity_changed(event)
         short_circuit_check()
     end
 
-    -- Update storage.eg_last_selected_pole if the player selects a new electric pole while holding copper wire
     if storage.eg_copper_wire_on_cursor[player_index] and selected_entity and selected_entity.valid and selected_entity.type == "electric-pole" then
         storage.eg_last_selected_pole[player_index] = selected_entity
     else
-        -- Clear storage.eg_last_selected_pole if they are no longer holding copper wire
         storage.eg_last_selected_pole[player_index] = nil
     end
 end
 
+--- Handle the transformator rating selection event
+-- Toggles the GUI for selecting the transformator rating
+-- If the GUI is already open, it closes it; otherwise, it initializes and opens the GUI
+-- Stores the selected transformator for reference during the GUI interaction
+-- @param event EventData.on_selected_entity_changed The event data containing the player's index
 local function on_transformator_rating_selection(event)
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
@@ -262,34 +264,15 @@ local function on_transformator_rating_selection(event)
             local current_rating = get_current_transformator_rating(selected_entity)
             add_rating_dropdown(frame, current_rating)
 
-            -- Store the selected transformator
             storage.eg_selected_transformator[player.index] = selected_entity
         end
     end
 end
 
---- Handle GUI checkbox state change event.
--- Ensures that only one checkbox in the transformator rating selection GUI is active at a time.
--- When a checkbox is selected, all others in the same frame are deselected.
--- @param event EventData The event data containing the GUI element information.
-local function on_gui_checked_state_changed(event)
-    local element = event.element
-    if not (element and element.valid) then return end
-
-    if element.name:find("rating_checkbox_") then
-        local player = game.get_player(event.player_index)
-        if not player then return end
-        local frame = player.gui.screen.transformator_rating_selection_frame
-        if frame then
-            for _, child in pairs(frame.children[1].children) do
-                if child.type == "checkbox" and child.name ~= element.name then
-                    child.state = false
-                end
-            end
-        end
-    end
-end
-
+--- Handle GUI click events
+-- Processes button clicks in the transformator rating selection GUI
+-- Handles "Save" and "Close" button clicks, updating the transformator rating or closing the GUI
+-- @param event EventData.on_gui_click The event data containing the GUI element and player index
 local function on_gui_click(event)
     local element = event.element
     if not (element and element.valid) then return end
@@ -302,18 +285,15 @@ local function on_gui_click(event)
         return
     end
 
-    -- Handle Save button
     if element.name == "confirm_transformator_rating" then
         local transformator = storage.eg_selected_transformator[player.index]
         if transformator and transformator.valid then
             local frame = player.gui.screen.transformator_rating_selection_frame
-            if not frame then return end -- Ensure the frame exists
+            if not frame then return end
 
-            -- Locate the bordered frame
             local bordered_frame = frame.rating_selection_bordered_frame
             if not bordered_frame then return end
 
-            -- Find the drop-down by iterating through the children of the bordered frame
             local dropdown = nil
             for _, child in pairs(bordered_frame.children) do
                 if child.name == "dropdown_flow" then
@@ -329,30 +309,29 @@ local function on_gui_click(event)
             local selected_rating = dropdown.items[dropdown.selected_index]
             local current_rating = get_current_transformator_rating(transformator)
 
-            -- Replace transformator if the rating has changed
             if selected_rating and selected_rating ~= current_rating then
                 replace_transformator(transformator, selected_rating)
                 storage.eg_selected_transformator[player.index] = nil
             end
         end
 
-        -- Close the GUI
         close_transformator_gui(player)
     end
 end
 
+--- Handle GUI or entity closed events
+-- Processes when a player closes the transformator rating selection GUI or an entity is closed
+-- Handles cleaning up the selected transformator state and updates the transformator's pump fluid filters
+-- @param event EventData.on_gui_closed The event data containing the player index and closed GUI element or entity
 local function on_gui_closed(event)
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
 
-    -- Case 1: Handle the transformator's custom GUI
     if event.element and event.element.name == "transformator_rating_selection_frame" then
-        -- Close the transformator's custom GUI
         storage.eg_selected_transformator[player.index] = nil
         return
     end
 
-    -- Case 2: Handle the pump's native GUI
     local entity = event.entity
     if entity and entity.valid and entity.type == "pump" then
         local transformator = find_transformator_by_pump(entity)
@@ -378,45 +357,44 @@ local function on_gui_closed(event)
     end
 end
 
-script.on_event(defines.events.on_gui_selection_state_changed, function(event)
+--- Update the sprite based on the selected dropdown rating.
+-- This function is called when the dropdown selection changes.
+-- @param player LuaPlayer The player interacting with the GUI.
+-- @param selected_rating string The selected rating from the dropdown.
+local function update_sprite(player, selected_rating)
+    if not player or not player.valid then return end
+
+    local frame = player.gui.screen.transformator_rating_selection_frame
+    if not frame then return end
+
+    local bordered_frame = frame.rating_selection_bordered_frame
+    if not bordered_frame then return end
+
+    local sprite_background_frame = bordered_frame["sprite_background_frame"]
+    if not sprite_background_frame then return end
+
+    local sprite_element = sprite_background_frame["current_rating_sprite"]
+    if not sprite_element then return end
+
+    sprite_element.sprite = selected_rating
+    sprite_element.tooltip = "Rating: " .. selected_rating
+end
+
+--- Handle dropdown selection state change event.
+-- Updates the sprite when the dropdown selection changes.
+-- @param event EventData The event data for the selection state change.
+local function on_dropdown_selection_changed(event)
     local element = event.element
     if not (element and element.valid) then return end
 
-    -- Check if the event is from our drop-down
     if element.name == "rating_dropdown" then
         local player = game.get_player(event.player_index)
         if not player or not player.valid then return end
 
-        -- Locate the GUI frame
-        local frame = player.gui.screen.transformator_rating_selection_frame
-        if not frame then return end -- Ensure the frame exists
-
-        -- Find the bordered frame
-        local bordered_frame = frame.rating_selection_bordered_frame
-        if not bordered_frame then return end
-
-        -- Find the sprite element to update
-        local sprite_element = bordered_frame.current_rating_sprite
-        if not sprite_element then return end
-
-        -- Get the selected rating from the drop-down and normalize it
         local selected_rating = element.items[element.selected_index]
-        --local normalized_rating = selected_rating:gsub(" ", "") -- Remove spaces
-
-        -- Look up the correct sprite
-        local new_sprite = nil
-        for _, data in pairs(constants.EG_TRANSFORMATORS) do
-            if data.rating == selected_rating then
-                new_sprite = data.rating -- Use the sprite name as the rating name
-                break
-            end
-        end
-
-        -- Update the sprite or fallback to unknown_icon
-        sprite_element.sprite = new_sprite or "utility/unknown_icon"
-        sprite_element.tooltip = "Current selection: " .. (new_sprite or "N/A")
+        update_sprite(player, selected_rating)
     end
-end)
+end
 
 local function register_event_handlers()
     script.on_event(defines.events.on_built_entity, on_entity_built)
@@ -437,11 +415,9 @@ local function register_event_handlers()
     end
 
     script.on_event("transformator_rating_selection", on_transformator_rating_selection)
-    script.on_event(defines.events.on_gui_checked_state_changed, on_gui_checked_state_changed)
+    script.on_event(defines.events.on_gui_selection_state_changed, on_dropdown_selection_changed)
     script.on_event(defines.events.on_gui_click, on_gui_click)
     script.on_event(defines.events.on_gui_closed, on_gui_closed)
-
-    script.on_event(defines.events.on_gui_selection_state_changed, on_gui_selection_state_changed)
 end
 
 script.on_init(function()

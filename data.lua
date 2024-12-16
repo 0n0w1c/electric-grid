@@ -53,6 +53,33 @@ data:extend({
     }
 })
 
+for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
+    data:extend({ {
+        type = "sprite",
+        name = transformator.rating,
+        layers = {
+            {
+                filename = constants.EG_ICONS .. "eg-unit-sprite-icon.png",
+                x = 0,
+                flags = { "no-crop" },
+                width = 270,
+                height = 230,
+                scale = 0.5,
+            },
+            {
+                filename = constants.EG_ICONS .. "eg-unit-mask-icon.png",
+                x = 0,
+                flags = { "no-crop" },
+                width = 270,
+                height = 230,
+                scale = 0.5,
+                blend_mode = constants.EG_TIER_BLEND_MODE,
+                tint = transformator.tint,
+            }
+        }
+    } })
+end
+
 require("prototypes/eg_fluids")
 require("prototypes/eg_infinity_pipe")
 require("prototypes/eg_pump")

@@ -565,12 +565,10 @@ end
 -- @param player LuaPlayer The player interacting with the GUI.
 -- @return LuaGuiElement The created or found frame.
 function get_or_create_transformator_frame(player)
-    -- Destroy any existing GUI frame
     if player.gui.screen.transformator_rating_selection_frame then
         player.gui.screen.transformator_rating_selection_frame.destroy()
     end
 
-    -- Add the main frame
     local frame = player.gui.screen.add {
         type = "frame",
         name = "transformator_rating_selection_frame",
@@ -578,26 +576,23 @@ function get_or_create_transformator_frame(player)
     }
     frame.auto_center = true
 
-    -- Add a custom top bar for title and Close button
     local top_bar = frame.add {
         type = "flow",
         name = "transformator_top_bar",
         direction = "horizontal"
     }
-    top_bar.style.horizontal_align = "right" -- Align content to the right
-    top_bar.drag_target = frame              -- Allow dragging the window
+    top_bar.style.horizontal_align = "right"
+    top_bar.drag_target = frame
 
-    -- Add a title label
     local title_label = top_bar.add {
         type = "label",
         caption = "Transformator",
         style = "frame_title",
     }
     title_label.style.horizontally_stretchable = false
-    title_label.style.padding = { 0, 8 }      -- Add horizontal padding for spacing
-    title_label.ignored_by_interaction = true -- So dragging works
+    title_label.style.padding = { 0, 8 }
+    title_label.ignored_by_interaction = true
 
-    -- Add a spacer to push the Close button to the far right
     local spacer = top_bar.add {
         type = "empty-widget",
         style = "draggable_space",
@@ -605,7 +600,6 @@ function get_or_create_transformator_frame(player)
     spacer.style.horizontally_stretchable = true
     spacer.style.vertically_stretchable = true
 
-    -- Add the Close button
     local close_button = top_bar.add {
         type = "sprite-button",
         name = "close_transformator_gui",
@@ -632,23 +626,6 @@ function get_current_transformator_rating(transformator)
     return nil
 end
 
---- Add rating checkboxes to a transformator frame.
--- @param frame LuaGuiElement The frame to add the checkboxes to.
--- @param current_rating string|nil The current rating of the transformator.
-function add_rating_checkboxes(frame, current_rating)
-    local table = frame.add { type = "table", column_count = 1 }
-    for name, specs in pairs(constants.EG_TRANSFORMATORS) do
-        if specs.rating then
-            table.add {
-                type = "checkbox",
-                name = "rating_checkbox_" .. specs.rating,
-                caption = specs.rating,
-                state = (specs.rating == current_rating)
-            }
-        end
-    end
-end
-
 --- Close the transformator GUI for the player.
 -- @param player LuaPlayer The player for whom the GUI is closed.
 function close_transformator_gui(player)
@@ -657,18 +634,34 @@ function close_transformator_gui(player)
     end
 end
 
+--- Add a dropdown menu with a sprite and a save button to a GUI frame
+-- This function creates a bordered frame containing a sprite, a dropdown menu for selecting ratings
+-- and a save button. The sprite reflects the currently selected rating
+-- @param parent_frame LuaGuiElement The parent frame to which the dropdown and other elements are added
+-- @param current_rating string The current rating to display in the dropdown and as the sprite
 function add_rating_dropdown(parent_frame, current_rating)
-    -- Add a frame to act as a border for the drop-down and Save button
     local bordered_frame = parent_frame.add {
         type = "frame",
         name = "rating_selection_bordered_frame",
         direction = "vertical"
     }
 
-    bordered_frame.add {
+    local sprite_frame = bordered_frame.add {
+        type = "frame",
+        name = "sprite_background_frame",
+        style = "deep_frame_in_shallow_frame",
+        direction = "vertical"
+    }
+    sprite_frame.style.minimal_width = 233
+    sprite_frame.style.minimal_height = 155
+    sprite_frame.style.horizontal_align = "center"
+    sprite_frame.style.vertical_align = "center"
+
+
+    sprite_frame.add {
         type = "sprite",
-        name = "eg-transformator-icon",
-        sprite = "eg-transformator-icon"
+        name = "current_rating_sprite",
+        sprite = current_rating
     }
 
     bordered_frame.add {
@@ -705,7 +698,6 @@ function add_rating_dropdown(parent_frame, current_rating)
         selected_index = selected_index
     }
 
-    -- Add the Save button inside a horizontal flow with alignment
     local save_button_flow = bordered_frame.add {
         type = "flow",
         name = "save_button_flow",
@@ -714,7 +706,6 @@ function add_rating_dropdown(parent_frame, current_rating)
     save_button_flow.style.horizontally_stretchable = true
     save_button_flow.style.horizontal_align = "center"
 
-    -- Add the Save button
     save_button_flow.add {
         type = "button",
         name = "confirm_transformator_rating",
