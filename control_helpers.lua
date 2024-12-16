@@ -590,24 +590,22 @@ function get_or_create_transformator_frame(player)
         style = "frame_title",
     }
     title_label.style.horizontally_stretchable = false
-    title_label.style.padding = { 0, 8 }
     title_label.ignored_by_interaction = true
 
     local spacer = top_bar.add {
-        type = "empty-widget",
-        style = "draggable_space",
+        type = "label",
+        caption = "                          ",
+        style = "frame_title",
     }
-    spacer.style.horizontally_stretchable = true
-    spacer.style.vertically_stretchable = true
+    spacer.style.horizontally_stretchable = false
+    spacer.ignored_by_interaction = true
 
     local close_button = top_bar.add {
         type = "sprite-button",
         name = "close_transformator_gui",
         sprite = "utility/close",
-        hovered_sprite = "utility/close_black",
-        clicked_sprite = "utility/close_black",
-        style = "frame_action_button",
-        tooltip = "Close"
+        style = "close_button",
+        mouse_button_filter = { "left" },
     }
 
     return frame
@@ -657,16 +655,24 @@ function add_rating_dropdown(parent_frame, current_rating)
     sprite_frame.style.horizontal_align = "center"
     sprite_frame.style.vertical_align = "center"
 
-
     sprite_frame.add {
         type = "sprite",
         name = "current_rating_sprite",
         sprite = current_rating
     }
 
-    bordered_frame.add {
+    local label_flow = bordered_frame.add {
+        type = "flow",
+        name = "label_flow",
+        direction = "horizontal"
+    }
+    label_flow.style.horizontally_stretchable = true
+    label_flow.style.horizontal_align = "center"
+
+    label_flow.add {
         type = "label",
-        caption = " ",
+        caption = { "gui.eg-select-rating" },
+        style = "heading_2_label"
     }
 
     local dropdown_flow = bordered_frame.add {

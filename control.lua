@@ -414,7 +414,7 @@ local function register_event_handlers()
         script.on_nth_tick(storage.eg_check_interval, nth_tick_checks)
     end
 
-    script.on_event("transformator_rating_selection", on_transformator_rating_selection)
+    script.on_event("transformator-rating-selection", on_transformator_rating_selection)
     script.on_event(defines.events.on_gui_selection_state_changed, on_dropdown_selection_changed)
     script.on_event(defines.events.on_gui_click, on_gui_click)
     script.on_event(defines.events.on_gui_closed, on_gui_closed)
@@ -443,4 +443,13 @@ script.on_configuration_changed(function()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.update_registration()
+end)
+
+script.on_event({ "close-transformator-rating-selection-e", "close-transformator-rating-selection-esc" }, function(event)
+    local player = game.get_player(event.player_index)
+    if not player or not player.valid then return end
+
+    if player.gui.screen.transformator_rating_selection_frame then
+        close_transformator_gui(player)
+    end
 end)

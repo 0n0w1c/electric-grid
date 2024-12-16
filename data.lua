@@ -38,8 +38,20 @@ data:extend({
 data:extend({
     {
         type = "custom-input",
-        name = "transformator_rating_selection",
+        name = "transformator-rating-selection",
         key_sequence = "mouse-button-1",
+        consuming = "none"
+    },
+    {
+        type = "custom-input",
+        name = "close-transformator-rating-selection-e",
+        key_sequence = "E",
+        consuming = "none"
+    },
+    {
+        type = "custom-input",
+        name = "close-transformator-rating-selection-esc",
+        key_sequence = "ESCAPE",
         consuming = "none"
     }
 })
@@ -60,7 +72,6 @@ for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
         layers = {
             {
                 filename = constants.EG_ICONS .. "eg-unit-sprite-icon.png",
-                x = 0,
                 flags = { "no-crop" },
                 width = 270,
                 height = 230,
@@ -68,8 +79,7 @@ for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
             },
             {
                 filename = constants.EG_ICONS .. "eg-unit-mask-icon.png",
-                x = 0,
-                flags = { "no-crop" },
+                flags = { "no-crop", "mask" },
                 width = 270,
                 height = 230,
                 scale = 0.5,
