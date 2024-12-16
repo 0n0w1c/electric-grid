@@ -569,6 +569,9 @@ function get_or_create_transformator_frame(player)
         player.gui.screen.transformator_rating_selection_frame.destroy()
     end
 
+    --player.play_sound { path = "custom-gui-open", volume_modifier = 0.6 }
+    player.play_sound { path = "eg-transformator-gui-open" }
+
     local frame = player.gui.screen.add {
         type = "frame",
         name = "transformator_rating_selection_frame",
@@ -593,11 +596,11 @@ function get_or_create_transformator_frame(player)
     title_label.ignored_by_interaction = true
 
     local spacer = top_bar.add {
-        type = "label",
-        caption = "                          ",
-        style = "frame_title",
+        type = "empty-widget",
+        style = "flib_titlebar_drag_handle",
+        --style = "draggable_space_header",
     }
-    spacer.style.horizontally_stretchable = false
+    spacer.style.horizontally_stretchable = true
     spacer.ignored_by_interaction = true
 
     local close_button = top_bar.add {
@@ -607,6 +610,8 @@ function get_or_create_transformator_frame(player)
         style = "close_button",
         mouse_button_filter = { "left" },
     }
+
+    player.opened = frame
 
     return frame
 end
@@ -629,6 +634,8 @@ end
 function close_transformator_gui(player)
     if player.gui.screen.transformator_rating_selection_frame then
         player.gui.screen.transformator_rating_selection_frame.destroy()
+        player.opened = nil
+        player.play_sound { path = "eg-transformator-gui-close" }
     end
 end
 
@@ -648,7 +655,7 @@ function add_rating_dropdown(parent_frame, current_rating)
         type = "frame",
         name = "sprite_background_frame",
         style = "deep_frame_in_shallow_frame",
-        direction = "vertical"
+        direction = "vertical",
     }
     sprite_frame.style.minimal_width = 233
     sprite_frame.style.minimal_height = 155

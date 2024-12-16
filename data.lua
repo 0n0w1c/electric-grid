@@ -21,6 +21,21 @@ constants.EG_EVEN_ALIGN_RADAR = settings.startup["eg-even-align-radar"].value
 
 data:extend({
     {
+        type = "sound",
+        name = "eg-transformator-gui-open",
+        filename = "__base__/sound/electric-network-open.ogg",
+        volume = 0.6
+    },
+    {
+        type = "sound",
+        name = "eg-transformator-gui-close",
+        filename = "__base__/sound/electric-network-close.ogg",
+        volume = 0.6
+    }
+})
+
+data:extend({
+    {
         type                  = "virtual-signal",
         name                  = "eg-alert",
         icon_size             = 32,
@@ -39,20 +54,17 @@ data:extend({
     {
         type = "custom-input",
         name = "transformator-rating-selection",
-        key_sequence = "mouse-button-1",
-        consuming = "none"
+        key_sequence = "mouse-button-1"
     },
     {
         type = "custom-input",
         name = "close-transformator-rating-selection-e",
-        key_sequence = "E",
-        consuming = "none"
+        key_sequence = "E"
     },
     {
         type = "custom-input",
         name = "close-transformator-rating-selection-esc",
-        key_sequence = "ESCAPE",
-        consuming = "none"
+        key_sequence = "ESCAPE"
     }
 })
 
@@ -61,7 +73,7 @@ data:extend({
         type = "sprite",
         name = "eg-transformator-icon",
         filename = constants.EG_ICONS .. "eg-transformator.png",
-        size = 128,
+        size = 128
     }
 })
 
@@ -75,7 +87,7 @@ for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
                 flags = { "no-crop" },
                 width = 270,
                 height = 230,
-                scale = 0.5,
+                scale = 0.5
             },
             {
                 filename = constants.EG_ICONS .. "eg-unit-mask-icon.png",
@@ -84,7 +96,7 @@ for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
                 height = 230,
                 scale = 0.5,
                 blend_mode = constants.EG_TIER_BLEND_MODE,
-                tint = transformator.tint,
+                tint = transformator.tint
             }
         }
     } })

@@ -265,6 +265,7 @@ local function on_transformator_rating_selection(event)
             add_rating_dropdown(frame, current_rating)
 
             storage.eg_selected_transformator[player.index] = selected_entity
+            player.opened = frame
         end
     end
 end
@@ -329,6 +330,7 @@ local function on_gui_closed(event)
 
     if event.element and event.element.name == "transformator_rating_selection_frame" then
         storage.eg_selected_transformator[player.index] = nil
+        player.opened = nil
         return
     end
 

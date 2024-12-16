@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.3
+Date: 16.12.2024
+  Bugfixes:
+    - Properly handle the [E] and [Esc] key presses to close the transformator gui
+  Changes:
+    - Added sound to the opening and closing of the transformator gui
+---------------------------------------------------------------------------------------------------
 Version: 1.4.2
 Date: 16.12.2024
   Bugfixes:
