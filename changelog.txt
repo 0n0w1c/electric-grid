@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.5.0
+Date: 17.12.2024
+  Bugfixes:
+    - Quality electric poles now display the supply area visualization
+  Changes:
+    - The electric network overhaul requires either the No More Quality or No Quality mod
+    - Decreased the intensity of the pole lights
+---------------------------------------------------------------------------------------------------
 Version: 1.4.4
 Date: 16.12.2024
   Bugfixes:

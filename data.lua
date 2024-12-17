@@ -13,6 +13,7 @@ else
 end
 
 constants.EG_TRANSFORMATORS_ONLY = settings.startup["eg-transformators-only"].value
+    or not (mods["no-quality"] or mods["no-more-quality"])
 constants.EG_MEDIUM_POLE_LIGHTS = settings.startup["eg-medium-pole-lights"].value
 constants.EG_BIG_POLE_LIGHTS = settings.startup["eg-big-pole-lights"].value
 constants.EG_HUGE_POLE_LIGHTS = settings.startup["eg-huge-pole-lights"].value

@@ -39,7 +39,8 @@ Medium, big and huge poles are for power transmission only
 Substations and underground substations are fast-replaceable  
 Circuit poles create copper wire connections for performance considerations, but are hidden
 
-*Startup setting to disable the electric network overhaul.*
+*If the No More Quality or No Quality mods are inactive, the electric network overhaul will be disabled.*
+*Startup setting to disable the electric network overhaul, effectively transformator only.*
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
 
@@ -51,12 +52,13 @@ Very similair to [Electric Transformators](https://mods.factorio.com/mod/Electri
 Do not place the transformator in the supply area of an electric pole.  
 
 *Limitations:*  
-*Quality adds a supply area to poles intended to have zero supply area (medium, big and huge).*  
+*Quality adds a supply area to the transmission only poles*  
 Hopefully future API development and/or my knowledge will allow for a better solution.  
 
-*Recommended Mods:*  
-[No Quality](https://mods.factorio.com/mod/no-quality) - Removes the effects of Quality which resolves the issue with transmission only poles.  
+*Recommended Mod:*  
+[No More Quality](https://mods.factorio.com/mod/no-more-quality) - Removes the Quality mechanic, resolves the issue with transmission only poles.  
 
 *Supported Mods:*  
-[AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole.  
-[Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the floating electric pole.  
+[AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole  
+[Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the floating electric pole  
+[No Quality](https://mods.factorio.com/mod/no-quality) - Can be used to enable the use of the electric network overhaul  

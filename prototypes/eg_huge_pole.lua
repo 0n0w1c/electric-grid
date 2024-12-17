@@ -25,7 +25,8 @@ local huge_pole                      =
     selection_box                  = big_pole.selection_box,
     damaged_trigger_effect         = big_pole.damaged_trigger_effect,
     maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value),
-    supply_area_distance           = 0,
+    radius_visualisation_picture   = big_pole.radius_visualisation_picture,
+    supply_area_distance           = 0.01,
     open_sound                     = big_pole.open_sound,
     close_sound                    = big_pole.close_sound,
     pictures                       =
@@ -137,7 +138,6 @@ local huge_pole_recipe               =
         { type = "item", name = "steel-plate",  amount = 8 },
         { type = "item", name = "copper-cable", amount = 8 }
     }
-
 }
 
 data:extend { huge_pole, huge_pole_item, huge_pole_recipe }

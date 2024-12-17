@@ -23,7 +23,6 @@ end
 
 local constants = {}
 
-constants.EG_FIRST_TICK = 1
 constants.EG_DEBUG_TRANSFORMATOR = false
 
 constants.EG_MOD = "__electric-grid__"
@@ -104,7 +103,7 @@ for _ in pairs(constants.EG_TRANSFORMATORS) do
 end
 
 constants.EG_LIGHT_COLOR            = { r = 1.0, g = 1.0, b = 0.7 }
-constants.EG_LIGHT_INTENSITY        = 0.8
+constants.EG_LIGHT_INTENSITY        = 0.7
 constants.EG_LIGHT_SIZE             = 12
 
 constants.EG_HUGE_POLE_LIGHT        =
