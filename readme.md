@@ -5,7 +5,7 @@ See license.txt for credits to the developers and their work that came before.
 A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.  
 
 *Important notes:*
-This mod should only be added to a new or early game, it significantly modifies the electric poles.  
+The electric network overhaul should only be added to a new or early game, it significantly modifies the electric poles.  
 If quick on/off via the circuit or logistic networks is not a priority, set "On tick interval" setting to 0 for near zero UPS impact.  
 Comments and suggestions are welcome.  
 
@@ -39,7 +39,7 @@ Medium, big and huge poles are for power transmission only
 Substations and underground substations are fast-replaceable  
 Circuit poles create copper wire connections for performance considerations, but are hidden
 
-*If the No More Quality or No Quality mods are inactive, the electric network overhaul will be disabled.*
+*If Space Age is active, the electric network overhaul requires either the No More Quality or No Quality mods.*
 *Startup setting to disable the electric network overhaul, effectively transformator only.*
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
@@ -61,4 +61,4 @@ Hopefully future API development and/or my knowledge will allow for a better sol
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole  
 [Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the floating electric pole  
-[No Quality](https://mods.factorio.com/mod/no-quality) - Can be used to enable the use of the electric network overhaul  
+[No Quality](https://mods.factorio.com/mod/no-quality) - Support for enabling the electric network overhaul  
