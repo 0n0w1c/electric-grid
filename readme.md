@@ -48,7 +48,7 @@ Set the Fluid filter to special fluids to manually enable and disable.
 Selectable power rating (1MW to 10GW) 
 
 Transformators do function as expected if connected in parallel.  
-Very similair to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
+Very similar to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
 Do not place the transformator in the supply area of an electric pole.  
 
 *Limitations:*  
