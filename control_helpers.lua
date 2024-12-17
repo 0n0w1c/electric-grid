@@ -569,7 +569,6 @@ function get_or_create_transformator_frame(player)
         player.gui.screen.transformator_rating_selection_frame.destroy()
     end
 
-    --player.play_sound { path = "custom-gui-open", volume_modifier = 0.6 }
     player.play_sound { path = "eg-transformator-gui-open" }
 
     local frame = player.gui.screen.add {
@@ -590,15 +589,14 @@ function get_or_create_transformator_frame(player)
     local title_label = top_bar.add {
         type = "label",
         caption = "Transformator",
-        style = "frame_title",
+        style = "frame_title"
     }
     title_label.style.horizontally_stretchable = false
     title_label.ignored_by_interaction = true
 
     local spacer = top_bar.add {
         type = "empty-widget",
-        style = "flib_titlebar_drag_handle",
-        --style = "draggable_space_header",
+        style = "flib_titlebar_drag_handle"
     }
     spacer.style.horizontally_stretchable = true
     spacer.ignored_by_interaction = true
@@ -608,7 +606,7 @@ function get_or_create_transformator_frame(player)
         name = "close_transformator_gui",
         sprite = "utility/close",
         style = "close_button",
-        mouse_button_filter = { "left" },
+        mouse_button_filter = { "left" }
     }
 
     player.opened = frame
