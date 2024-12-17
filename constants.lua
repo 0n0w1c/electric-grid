@@ -82,14 +82,14 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
 
 constants.EG_TRANSFORMATORS = {
     ["eg-unit-1"] = { rating = "1MW", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 } },
-    ["eg-unit-2"] = { rating = "5MW", tint = { r = 1.0, g = 0.0, b = 0.5, a = 1 } },
-    ["eg-unit-3"] = { rating = "10MW", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } },
-    ["eg-unit-4"] = { rating = "50MW", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 } },
-    ["eg-unit-5"] = { rating = "100MW", tint = { r = 0.0, g = 0.0, b = 1.0, a = 1 } },
+    ["eg-unit-2"] = { rating = "5MW", tint = { r = 1.0, g = 0.6, b = 0.0, a = 1 } },
+    ["eg-unit-3"] = { rating = "10MW", tint = { r = 1.0, g = 1.0, b = 1.0, a = 1 } },
+    ["eg-unit-4"] = { rating = "50MW", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } },
+    ["eg-unit-5"] = { rating = "100MW", tint = { r = 0.0, g = 1.0, b = 0.0, a = 1 } },
     ["eg-unit-6"] = { rating = "500MW", tint = { r = 0.0, g = 1.0, b = 1.0, a = 1 } },
-    ["eg-unit-7"] = { rating = "1GW", tint = { r = 0.0, g = 1.0, b = 0.0, a = 1 } },
-    ["eg-unit-8"] = { rating = "5GW", tint = { r = 0.5, g = 1.0, b = 0.0, a = 1 } },
-    ["eg-unit-9"] = { rating = "10GW", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } }
+    ["eg-unit-7"] = { rating = "1GW", tint = { r = 0.0, g = 0.5, b = 1.0, a = 1 } },
+    ["eg-unit-8"] = { rating = "5GW", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 } },
+    ["eg-unit-9"] = { rating = "10GW", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } }
 }
 
 for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
