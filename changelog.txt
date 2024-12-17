@@ -5,7 +5,7 @@ Date: 17.12.2024
     - None
   Changes:
     - Added No More Quality mod as an optional dependency
-    - Changed No Quality to be a hidden depencency
+    - Changed No Quality to be a hidden optional depencency
 ---------------------------------------------------------------------------------------------------
 Version: 1.5.0
 Date: 17.12.2024
