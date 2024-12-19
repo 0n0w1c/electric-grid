@@ -241,6 +241,13 @@ local eg_transformator_displayer = {
     picture = get_transformator_picture(1)
 }
 
+local subgroup
+if constants.EG_TRANSFORMATORS_ONLY then
+    subgroup = "energy-pipe-distribution"
+else
+    subgroup = "eg-electric-distribution"
+end
+
 local eg_transformator_item = {
     type = "item",
     name = "eg-transformator",
@@ -248,8 +255,8 @@ local eg_transformator_item = {
     localised_description = { "item-description.eg-transformator" },
     icon = constants.EG_ICONS .. "eg-transformator.png",
     icon_size = 128,
-    subgroup = "energy-pipe-distribution",
-    order = "b[pipe]-d[eg-transformator-item]",
+    subgroup = subgroup,
+    order = data.raw["item"]["substation"].order .. "zz",
     place_result = "eg-transformator-displayer",
     stack_size = 50,
     weight = 20000

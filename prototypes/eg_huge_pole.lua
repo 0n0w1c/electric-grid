@@ -119,6 +119,7 @@ local huge_pole_item                 = table.deepcopy(data.raw["item"]["big-elec
 huge_pole_item.name                  = "eg-huge-electric-pole"
 huge_pole_item.localised_name        = { "item-name.eg-huge-electric-pole" }
 huge_pole_item.localised_description = { "item-description.eg-huge-electric-pole" }
+huge_pole_item.subgroup              = "eg-electric-distribution"
 huge_pole_item.order                 = huge_pole_item.order .. "z"
 huge_pole_item.icon                  = constants.EG_ICONS .. "eg-huge-electric-pole.png"
 huge_pole_item.icon_size             = 32

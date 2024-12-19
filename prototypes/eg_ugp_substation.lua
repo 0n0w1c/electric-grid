@@ -80,6 +80,7 @@ local ugp_substation_displayer_item                   = table.deepcopy(data.raw[
 ugp_substation_displayer_item.name                    = name
 ugp_substation_displayer_item.localised_name          = { "item-name.eg-ugp-substation" }
 ugp_substation_displayer_item.localised_description   = { "item-description.eg-ugp-substation" }
+ugp_substation_displayer_item.subgroup                = "eg-electric-distribution"
 ugp_substation_displayer_item.order                   = ugp_substation_displayer_item.order .. "z"
 ugp_substation_displayer_item.icon                    = constants.EG_ICONS .. "eg-ugp-substation.png"
 ugp_substation_displayer_item.icon_size               = 64

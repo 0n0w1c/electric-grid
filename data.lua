@@ -22,6 +22,15 @@ constants.EG_EVEN_ALIGN_RADAR = settings.startup["eg-even-align-radar"].value
 
 data:extend({
     {
+        type = "item-subgroup",
+        name = "eg-electric-distribution",
+        group = "logistics",
+        order = "da"
+    }
+})
+
+data:extend({
+    {
         type = "sound",
         name = "eg-transformator-gui-open",
         filename = "__base__/sound/electric-network-open.ogg",

@@ -134,7 +134,7 @@ constants.EG_MINI_POLE_LIGHT        =
     size = constants.EG_LIGHT_SIZE / 3
 }
 
-constants.EG_MAXIMUM_WIRE_DISTANCE  = 6
+constants.EG_MAXIMUM_WIRE_DISTANCE  = 16
 constants.EG_SUPPLY_AREA_DISTANCE   = 0.8
 constants.EG_WIRE_CONNECTION_OFFSET = 0.1
 constants.EG_WIRE_CONNECTION_POINTS = {
