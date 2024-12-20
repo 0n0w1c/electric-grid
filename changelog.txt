@@ -4,7 +4,7 @@ Date: 19.12.2024
   Bugfixes:
     - None
   Changes:
-    - Transformator maxiumum wire distance increased from 6 to 16 to accommodate quality poles
+    - Transformator maximum wire distance increased from 6 to 16 to accommodate quality poles
       Do not place a transformator in the supply area of an electric pole
     - Transformators now sort after substations in player inventory and recipes
     - Overhaul - Moved the electric poles into their own subgroup
