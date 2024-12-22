@@ -69,6 +69,8 @@ if mods["aai-industry"] then
         { type = "item", name = "copper-cable", amount = 20 },
         { type = "item", name = "concrete",     amount = 2 }
     }
+
+    if mods["quality"] then require("__quality__.data-updates") end
 end
 
 if mods["cargo-ships"] and data.raw["item"]["floating-electric-pole"] then

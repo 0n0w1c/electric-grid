@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.5.3
+Date: 22.12.2024
+  Bugfixes:
+    - AAI Industry plus Quality only - Use Quality to regenerate the huge pole recycling recipe
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.5.2
 Date: 19.12.2024
   Bugfixes:
