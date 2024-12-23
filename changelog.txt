@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.1
+Date: 23.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Blueprinting of transformator circuit conditions and wiring is supported
+      Unfortunately, transformators require multiple robots and multiple trips to construct
+    - When viewing the transformator pump, the 10MW transformator image will be displayed
+---------------------------------------------------------------------------------------------------
 Version: 1.6.0
 Date: 23.12.2024
   Bugfixes:

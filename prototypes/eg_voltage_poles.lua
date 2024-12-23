@@ -75,7 +75,8 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.auto_connect_up_to_n_wires     = 0
         pole.minable                        = nil
         pole.selectable_in_game             = true
-        pole.flags                          = constants.EG_INTERNAL_ENTITY_FLAGS
+        pole.flags                          = { "placeable-player", "player-creation", "get-by-unit-number" }
+        pole.placeable_by                   = { item = "eg-transformator", count = 0 }
         pole.max_health                     = constants.EG_MAX_HEALTH
         pole.connection_points              = eg_wireconnections(connection_name, direction)
         pole.collision_box                  = { { -0.9, -0.9 }, { 0.9, 0.9 } }

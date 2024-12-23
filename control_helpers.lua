@@ -185,12 +185,23 @@ function eg_transformator_built(entity)
         y = eg_unit_position.y + rotated_offset.y
     }
 
-    local eg_pump = surface.create_entity {
-        name = "eg-pump",
-        position = eg_pump_position,
-        force = force,
-        direction = direction
-    }
+    local eg_pump = nil
+    local eg_pumps = surface.find_entities_filtered { position = eg_pump_position }
+    for _, pump in pairs(eg_pumps) do
+        if string.sub(pump.name, 1, 7) == "eg-pump" then
+            eg_pump = pump
+            break
+        end
+    end
+
+    if not eg_pump then
+        eg_pump = surface.create_entity {
+            name = "eg-pump",
+            position = eg_pump_position,
+            force = force,
+            direction = direction
+        }
+    end
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.infinity_pipe, direction)
     local eg_infinity_pipe_position = {
@@ -231,12 +242,23 @@ function eg_transformator_built(entity)
         y = eg_unit_position.y + rotated_offset.y
     }
 
-    local eg_high_voltage_pole = surface.create_entity {
-        name = "eg-high-voltage-pole-" .. direction,
-        position = eg_high_voltage_pole_position,
-        force = force,
-        direction = direction
-    }
+    local eg_high_voltage_pole = nil
+    local eg_high_poles = surface.find_entities_filtered { position = eg_high_voltage_pole_position }
+    for _, pole in pairs(eg_high_poles) do
+        if string.sub(pole.name, 1, 7) == "eg-high" then
+            eg_high_voltage_pole = pole
+            break
+        end
+    end
+
+    if not eg_high_voltage_pole then
+        eg_high_voltage_pole = surface.create_entity {
+            name = "eg-high-voltage-pole-" .. direction,
+            position = eg_high_voltage_pole_position,
+            force = force,
+            direction = direction
+        }
+    end
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.low_voltage_pole, direction)
     local eg_low_voltage_pole_position = {
@@ -244,12 +266,23 @@ function eg_transformator_built(entity)
         y = eg_unit_position.y + rotated_offset.y
     }
 
-    local eg_low_voltage_pole = surface.create_entity {
-        name = "eg-low-voltage-pole-" .. direction,
-        position = eg_low_voltage_pole_position,
-        force = force,
-        direction = direction
-    }
+    local eg_low_voltage_pole = nil
+    local eg_low_poles = surface.find_entities_filtered { position = eg_low_voltage_pole_position }
+    for _, pole in pairs(eg_low_poles) do
+        if string.sub(pole.name, 1, 6) == "eg-low" then
+            eg_low_voltage_pole = pole
+            break
+        end
+    end
+
+    if not eg_low_voltage_pole then
+        eg_low_voltage_pole = surface.create_entity {
+            name = "eg-low-voltage-pole-" .. direction,
+            position = eg_low_voltage_pole_position,
+            force = force,
+            direction = direction
+        }
+    end
 
     eg_infinity_pipe.set_infinity_pipe_filter({
         name = "eg-water-" .. tier,
