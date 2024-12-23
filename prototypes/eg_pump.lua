@@ -48,7 +48,7 @@ function create_transformator_pump()
             circuit_enable_disable = true,
             connect_to_logistic_network = true,
         },
-        circuit_wire_max_distance = 9,
+        circuit_wire_max_distance = constants.EG_MAXIMUM_WIRE_DISTANCE,
         close_sound               = {
             filename = "__base__/sound/machine-close.ogg",
             volume = 0.5

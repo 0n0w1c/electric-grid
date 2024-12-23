@@ -149,11 +149,17 @@ function eg_transformator_built(entity)
     local rotated_offset = { x = 0, y = 0 }
 
     local eg_unit_position = { x = position.x, y = position.y }
+    local tier
+    if entity.name == "eg-transformator-displayer" then
+        tier = "1"
+    else
+        tier = string.sub(entity.name, -1)
+    end
 
     entity.destroy({ raise_destroy = true })
 
     local eg_unit = surface.create_entity {
-        name = "eg-unit-1",
+        name = "eg-unit-" .. tier,
         position = eg_unit_position,
         force = force,
         direction = direction,
@@ -167,7 +173,7 @@ function eg_transformator_built(entity)
     }
 
     local eg_boiler = surface.create_entity {
-        name = "eg-boiler-1",
+        name = "eg-boiler-" .. tier,
         position = eg_boiler_position,
         force = force,
         direction = direction
@@ -213,7 +219,7 @@ function eg_transformator_built(entity)
     end
 
     local eg_steam_engine = surface.create_entity {
-        name = "eg-steam-engine-" .. eg_steam_engine_variant .. "-1",
+        name = "eg-steam-engine-" .. eg_steam_engine_variant .. "-" .. tier,
         position = eg_steam_engine_position,
         force = force,
         direction = direction
@@ -246,7 +252,7 @@ function eg_transformator_built(entity)
     }
 
     eg_infinity_pipe.set_infinity_pipe_filter({
-        name = "eg-water-1",
+        name = "eg-water-" .. tier,
         percentage = 1,
         temperature = 15,
         mode = "at-least"

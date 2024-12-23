@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.0
+Date: 23.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Copy & Paste and blueprints place the same rated transformator
+    - Circuit wire maximum distance increased from 6 to 16 to accommodate quality poles
+---------------------------------------------------------------------------------------------------
 Version: 1.5.3
 Date: 22.12.2024
   Bugfixes:
