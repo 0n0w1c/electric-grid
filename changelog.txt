@@ -3,9 +3,8 @@ Version: 1.6.2
 Date: 23.12.2024
   Bugfixes:
     - HOT FIX! Do not use Version 1.6.1 blueprints, delete any that you may have created
-      This is a roll-back to version 1.6.0
   Changes:
-    - Blueprinting of transformator circuit conditions and wiring is supported
+    - Rolling-back to version 1.6.0 code
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.1
 Date: 23.12.2024
