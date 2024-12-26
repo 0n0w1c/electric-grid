@@ -1,3 +1,99 @@
+local function get_transformator_picture(tier)
+    local template = {
+        north = {
+            layers = {
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
+                    x = 466,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.1, -0.95 },
+                    scale = 0.5,
+                },
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
+                    x = 466,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.1, -0.95 },
+                    blend_mode = constants.EG_TIER_BLEND_MODE,
+                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    scale = 0.5,
+                },
+            },
+        },
+        east = {
+            layers = {
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
+                    x = 0,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.0, -1.65 },
+                    scale = 0.5,
+                },
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
+                    x = 0,
+                    width = 466,
+                    height = 310,
+                    --                    shift = { 1.5, -1.15 },
+                    shift = { 2.0, -1.65 },
+                    scale = 0.5,
+                    blend_mode = constants.EG_TIER_BLEND_MODE,
+                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                },
+            },
+        },
+        south = {
+            layers = {
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
+                    x = 1398,
+                    width = 466,
+                    height = 310,
+                    shift = { 3.1, 0.05 },
+                    scale = 0.5,
+                },
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
+                    x = 1398,
+                    width = 466,
+                    height = 310,
+                    shift = { 3.1, 0.05 },
+                    scale = 0.5,
+                    blend_mode = constants.EG_TIER_BLEND_MODE,
+                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                },
+            },
+        },
+        west = {
+            layers = {
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
+                    x = 932,
+                    width = 466,
+                    height = 310,
+                    shift = { 1.0, -0.65 },
+                    scale = 0.5,
+                },
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
+                    x = 932,
+                    width = 466,
+                    height = 310,
+                    shift = { 1.0, -0.65 },
+                    scale = 0.5,
+                    blend_mode = constants.EG_TIER_BLEND_MODE,
+                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                },
+            },
+        },
+    }
+
+    return template
+end
+
 function create_transformator_pump()
     local collision_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
     local selection_box = { { -1.49, -0.49 }, { 0.49, 0.49 } }
@@ -12,7 +108,7 @@ function create_transformator_pump()
         hidden                    = false,
         hidden_in_factoriopedia   = true,
         selectable_in_game        = true,
-        flags                     = constants.EG_INTERNAL_ENTITY_FLAGS,
+        flags                     = constants.EG_PUMP_FLAGS,
         alert_icon_scale          = 0,
         minable                   = nil,
         collision_mask            = { layers = {} },
@@ -20,6 +116,7 @@ function create_transformator_pump()
         collision_box             = collision_box,
         localised_name            = { "entity-name.eg-pump" },
         localised_description     = { "entity-description.eg-pump" },
+        integration_patch         = get_transformator_picture(3),
         pumping_speed             = 1,
         energy_usage              = "0.001W",
         energy_source             = {

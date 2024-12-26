@@ -180,7 +180,6 @@ local function create_transformator_unit(tier)
         icon = constants.EG_ICONS .. "eg-transformator.png",
         icon_size = 128,
         hidden_in_factoriopedia = true,
-        --flags = { "placeable-player", "player-creation", "not-rotatable", "get-by-unit-number" },
         flags = { "placeable-player", "player-creation", "get-by-unit-number" },
         minable = { mining_time = 0.5, result = "eg-transformator" },
         selectable_in_game = true,

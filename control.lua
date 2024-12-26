@@ -29,26 +29,6 @@ local function initialize_globals()
     end
 end
 
---- Removes invalid transformators from the global storage.
--- Checks each transformator in the `storage.eg_transformators` table, determines its validity,
--- and removes those deemed invalid. Invalid transformators are logged to the game console.
--- @return nil
-local function remove_invalid_transformators()
-    local transformators = storage.eg_transformators
-    local invalid_transformators = {}
-
-    for unit_number, _ in pairs(transformators) do
-        if not is_transformator_valid(unit_number) then
-            table.insert(invalid_transformators, unit_number)
-        end
-    end
-
-    for _, unit_number in pairs(invalid_transformators) do
-        game.print("Invalid transformator detected: " .. unit_number)
-        remove_transformator(unit_number)
-    end
-end
-
 --[[
 local function get_usage(pole)
     if not (pole and pole.valid and pole.type == "electric-pole" and pole.electric_network_statistics) then
@@ -284,6 +264,7 @@ local function on_gui_click(event)
 
     if element.name == "close_transformator_gui" then
         close_transformator_gui(player)
+        remove_invalid_transformators()
         return
     end
 
@@ -318,6 +299,7 @@ local function on_gui_click(event)
         end
 
         close_transformator_gui(player)
+        remove_invalid_transformators()
     end
 end
 
@@ -360,10 +342,10 @@ local function on_gui_closed(event)
     end
 end
 
---- Update the sprite based on the selected dropdown rating.
--- This function is called when the dropdown selection changes.
--- @param player LuaPlayer The player interacting with the GUI.
--- @param selected_rating string The selected rating from the dropdown.
+--- Update the sprite based on the selected dropdown rating
+-- This function is called when the dropdown selection changes
+-- @param player LuaPlayer The player interacting with the GUI
+-- @param selected_rating string The selected rating from the dropdown
 local function update_sprite(player, selected_rating)
     if not player or not player.valid then return end
 
@@ -383,9 +365,9 @@ local function update_sprite(player, selected_rating)
     sprite_element.tooltip = "Rating: " .. selected_rating
 end
 
---- Handle dropdown selection state change event.
--- Updates the sprite when the dropdown selection changes.
--- @param event EventData The event data for the selection state change.
+--- Handle dropdown selection state change event
+-- Updates the sprite when the dropdown selection changes
+-- @param event EventData The event data for the selection state change
 local function on_dropdown_selection_changed(event)
     local element = event.element
     if not (element and element.valid) then return end
@@ -399,7 +381,22 @@ local function on_dropdown_selection_changed(event)
     end
 end
 
+--- Handle transformator rotation event
+-- Replaces a transformator upon rotation by removing and re-adding it, preserving its new orientation
+-- @param event EventData The event data containing the rotated entity
+local function on_entity_rotated(event)
+    local entity = event.entity
+    if not entity or not entity.valid then return end
+
+    if is_transformator(entity.name) and entity.unit_number then
+        remove_transformator(entity.unit_number)
+        eg_transformator_built(entity)
+    end
+end
+
 local function register_event_handlers()
+    script.on_event(defines.events.on_player_rotated_entity, on_entity_rotated)
+
     script.on_event(defines.events.on_built_entity, on_entity_built)
     script.on_event(defines.events.on_robot_built_entity, on_entity_built)
     script.on_event(defines.events.on_space_platform_built_entity, on_entity_built)

@@ -79,6 +79,20 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
     "not-in-made-in"
 }
 
+constants.EG_PUMP_FLAGS = {
+    "not-rotatable",
+    "hide-alt-info",
+    "placeable-neutral",
+    "not-repairable",
+    "not-on-map",
+    "not-blueprintable",
+    "not-deconstructable",
+    "not-flammable",
+    "not-upgradable",
+    "not-in-kill-statistics",
+    "not-in-made-in"
+}
+
 constants.EG_TRANSFORMATORS = {
     ["eg-unit-1"] = { rating = "1MW", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 } },
     ["eg-unit-2"] = { rating = "5MW", tint = { r = 1.0, g = 0.6, b = 0.0, a = 1 } },

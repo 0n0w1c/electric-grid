@@ -417,6 +417,26 @@ function get_nearby_poles(entity)
     }
 end
 
+--- Removes invalid transformators from the global storage.
+-- Checks each transformator in the `storage.eg_transformators` table, determines its validity,
+-- and removes those deemed invalid. Invalid transformators are logged to the game console.
+-- @return nil
+function remove_invalid_transformators()
+    local transformators = storage.eg_transformators
+    local invalid_transformators = {}
+
+    for unit_number, _ in pairs(transformators) do
+        if not is_transformator_valid(unit_number) then
+            table.insert(invalid_transformators, unit_number)
+        end
+    end
+
+    for _, unit_number in pairs(invalid_transformators) do
+        game.print("Invalid transformator detected: " .. unit_number)
+        remove_transformator(unit_number)
+    end
+end
+
 --- Checks for short circuits and issues alerts to players if detected
 -- Clears the alert if the short circuit condition resolves
 -- @return nil
@@ -424,6 +444,8 @@ function short_circuit_check()
     local transformators = storage.eg_transformators
 
     for _, transformator in pairs(transformators) do
+        if not transformator.valid then break end
+
         local high_network_id = transformator.high_voltage.electric_network_id
         local low_network_id = transformator.low_voltage.electric_network_id
 
