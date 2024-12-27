@@ -68,9 +68,9 @@ function is_transformator(name)
     return false
 end
 
---- Find the transformator associated with a given pump.
--- @param pump LuaEntity The pump entity to check.
--- @return table|nil The transformator object if found, nil otherwise.
+--- Find the transformator associated with a given pump
+-- @param pump LuaEntity The pump entity to check
+-- @return table|nil The transformator object if found, nil otherwise
 function find_transformator_by_pump(pump)
     if not (pump and pump.valid) then return nil end
     for _, transformator in pairs(storage.eg_transformators) do
@@ -81,9 +81,9 @@ function find_transformator_by_pump(pump)
     return nil
 end
 
---- Replace the boiler and steam engine for the given transformator.
--- @param transformator table The transformator to replace components for.
-function replace_boiler_steam_engine(transformator)
+--- Replace the boiler, pump and steam engine for the given transformator
+-- @param transformator table The transformator to replace components for
+function replace_tiered_components(transformator)
     if not transformator then return end
 
     local unit_name = transformator.unit.name
@@ -112,6 +112,21 @@ function replace_boiler_steam_engine(transformator)
             direction = direction
         }
 
+        name = eg_transformator.pump.name
+        direction = eg_transformator.pump.direction
+        position = eg_transformator.pump.position
+
+        if eg_transformator.pump and eg_transformator.pump.valid then
+            eg_transformator.pump.destroy()
+        end
+
+        local eg_pump = surface.create_entity {
+            name = name,
+            position = position,
+            force = force,
+            direction = direction
+        }
+
         name = eg_transformator.steam_engine.name
         direction = eg_transformator.steam_engine.direction
         position = eg_transformator.steam_engine.position
@@ -128,15 +143,16 @@ function replace_boiler_steam_engine(transformator)
         }
 
         storage.eg_transformators[unit_number].boiler = eg_boiler
+        storage.eg_transformators[unit_number].pump = eg_pump
         storage.eg_transformators[unit_number].steam_engine = eg_steam_engine
     else
         --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
     end
 end
 
---- Handle the building of a transformator.
--- Replaces the transformator displayer entity with the full transformator setup.
--- @param entity LuaEntity The entity being built.
+--- Handle the building of a transformator
+-- Replaces the transformator displayer entity with the full transformator setup
+-- @param entity LuaEntity The entity being built
 function eg_transformator_built(entity)
     if not entity or not entity.name then return end
 

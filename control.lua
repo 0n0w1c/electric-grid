@@ -119,7 +119,7 @@ local function check_pump_disabled(transformator)
 
     if control_behavior and control_behavior.disabled and pump.fluidbox[1] ~= nil then
         pump.clear_fluid_inside()
-        replace_boiler_steam_engine(transformator)
+        replace_tiered_components(transformator)
     end
 end
 
@@ -332,7 +332,7 @@ local function on_gui_closed(event)
                 if filter.name == "eg-fluid-disable" then
                     pump.clear_fluid_inside()
                     pump.fluidbox.set_filter(1, { name = "eg-fluid-disable" })
-                    replace_boiler_steam_engine(transformator)
+                    replace_tiered_components(transformator)
                 else
                     pump.clear_fluid_inside()
                     pump.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
