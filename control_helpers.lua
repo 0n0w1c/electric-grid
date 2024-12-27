@@ -186,7 +186,7 @@ function eg_transformator_built(entity)
     }
 
     local eg_pump = surface.create_entity {
-        name = "eg-pump",
+        name = "eg-pump-" .. tier,
         position = eg_pump_position,
         force = force,
         direction = direction
@@ -308,7 +308,9 @@ function replace_transformator(old_transformator, new_rating)
     local eg_low_voltage_pole = eg_transformator.low_voltage
 
     if not (eg_transformator.pump and eg_transformator.pump.valid) then return end
-    local eg_pump = eg_transformator.pump
+    local eg_pump_position = eg_transformator.pump.position
+    local eg_pump_direction = eg_transformator.pump.direction
+    eg_transformator.pump.destroy()
 
     if not (eg_transformator.unit and eg_transformator.unit.valid) then return end
     local eg_unit_position = eg_transformator.unit.position
@@ -335,23 +337,30 @@ function replace_transformator(old_transformator, new_rating)
     local eg_unit = surface.create_entity {
         name = "eg-unit-" .. tier,
         position = eg_unit_position,
-        force = force,
         direction = eg_unit_direction,
+        force = force,
         raise_built = true
     }
 
     local eg_boiler = surface.create_entity {
         name = "eg-boiler-" .. tier,
         position = eg_boiler_position,
-        force = force,
-        direction = eg_boiler_direction
+        direction = eg_boiler_direction,
+        force = force
+    }
+
+    local eg_pump = surface.create_entity {
+        name = "eg-pump-" .. tier,
+        position = eg_pump_position,
+        direction = eg_pump_direction,
+        force = force
     }
 
     local eg_infinity_pipe = surface.create_entity {
         name = "eg-infinity-pipe",
         position = eg_infinity_pipe_position,
-        force = force,
         direction = eg_infinity_pipe_direction,
+        force = force,
     }
 
     local eg_steam_engine_variant
@@ -364,8 +373,8 @@ function replace_transformator(old_transformator, new_rating)
     local eg_steam_engine = surface.create_entity {
         name = "eg-steam-engine-" .. eg_steam_engine_variant .. "-" .. tier,
         position = eg_steam_engine_position,
-        force = force,
-        direction = eg_steam_engine_direction
+        direction = eg_steam_engine_direction,
+        force = force
     }
 
     eg_pump.clear_fluid_inside()
@@ -444,7 +453,8 @@ function short_circuit_check()
     local transformators = storage.eg_transformators
 
     for _, transformator in pairs(transformators) do
-        if not transformator.valid then break end
+        if not (transformator.high_voltage and transformator.high_voltage.valid) then break end
+        if not (transformator.low_voltage and transformator.low_voltage.valid) then break end
 
         local high_network_id = transformator.high_voltage.electric_network_id
         local low_network_id = transformator.low_voltage.electric_network_id

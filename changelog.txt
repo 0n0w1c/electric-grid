@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.4
+Date: 26.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Migration of all placed transformator entities, replacing the pumps with tiered pumps
+      When viewing the transformator pump, the correct rated transformator image will be displayed
+---------------------------------------------------------------------------------------------------
 Version: 1.6.3
 Date: 26.12.2024
   Bugfixes:
