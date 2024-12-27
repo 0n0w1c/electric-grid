@@ -52,8 +52,11 @@ Very similar to [Electric Transformators](https://mods.factorio.com/mod/Electric
 Do not place the transformator in the supply area of an electric pole.  
 
 *Limitations:*  
-*Quality adds a supply area to the transmission only poles*  
-Hopefully future API development and/or my knowledge will allow for a better solution.  
+Transformator circuit conditions and copper wiring are not included in blueprints.  
+
+*Known Issues:*  
+Using the pipette [Q] always places a 1MW transformator.  
+Quality adds a supply area to poles intended to have zero supply area (medium, big and huge).
 
 *Recommended Mod:*  
 [No More Quality](https://mods.factorio.com/mod/no-more-quality) - Removes the Quality mechanic, resolves the issue with transmission only poles.  
