@@ -31,6 +31,7 @@ constants.EG_ENTITIES = constants.EG_GRAPHICS .. "entities/"
 constants.EG_ICONS = constants.EG_GRAPHICS .. "icons/"
 constants.EG_SOUND = constants.EG_MOD .. "/sound/"
 constants.EG_TIER_BLEND_MODE = "additive"
+constants.EG_OVERLAY_TINT = { r = 0.6, g = 0.6, b = 0.6, a = 1 }
 
 constants.EG_MAX_HEALTH = 500
 constants.EG_FLUID_VOLUME = 100

@@ -1,13 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.6
+Date: 28.12.2024
+  Bugfixes:
+    - Refactored and removed unused graphics files
+  Changes:
+    - Modified the color and contrast of the transformator connection icons
+---------------------------------------------------------------------------------------------------
 Version: 1.6.5
-Date: 26.12.2024
+Date: 27.12.2024
   Bugfixes:
     - Replace pump with tiered pump when changing transformator rating
   Changes:
     - None
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.4
-Date: 26.12.2024
+Date: 27.12.2024
   Bugfixes:
     - None
   Changes:

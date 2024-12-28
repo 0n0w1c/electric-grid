@@ -3,7 +3,7 @@ local function get_transformator_picture(tier)
         north = {
             layers = {
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites.png",
                     x = 466,
                     width = 466,
                     height = 310,
@@ -11,7 +11,7 @@ local function get_transformator_picture(tier)
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
                     x = 466,
                     width = 466,
                     height = 310,
@@ -25,7 +25,7 @@ local function get_transformator_picture(tier)
         east = {
             layers = {
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites.png",
                     x = 0,
                     width = 466,
                     height = 310,
@@ -33,11 +33,10 @@ local function get_transformator_picture(tier)
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
                     x = 0,
                     width = 466,
                     height = 310,
-                    --                    shift = { 1.5, -1.15 },
                     shift = { 2.0, -1.65 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
@@ -48,7 +47,7 @@ local function get_transformator_picture(tier)
         south = {
             layers = {
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites.png",
                     x = 1398,
                     width = 466,
                     height = 310,
@@ -56,7 +55,7 @@ local function get_transformator_picture(tier)
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
                     x = 1398,
                     width = 466,
                     height = 310,
@@ -70,7 +69,7 @@ local function get_transformator_picture(tier)
         west = {
             layers = {
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-sprites-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-sprites.png",
                     x = 932,
                     width = 466,
                     height = 310,
@@ -78,7 +77,7 @@ local function get_transformator_picture(tier)
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-mask-hr.png",
+                    filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
                     x = 932,
                     width = 466,
                     height = 310,
@@ -700,7 +699,6 @@ function create_transformator_pump(tier)
         },
     }
 end
-
 
 function create_old_transformator_pump()
     local collision_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
