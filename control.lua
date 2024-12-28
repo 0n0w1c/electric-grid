@@ -289,12 +289,14 @@ local function on_gui_click(event)
                 end
             end
 
-            local selected_rating = dropdown.items[dropdown.selected_index]
-            local current_rating = get_current_transformator_rating(transformator)
+            if dropdown and dropdown.items then
+                local selected_rating = dropdown.items[dropdown.selected_index]
+                local current_rating = get_current_transformator_rating(transformator)
 
-            if selected_rating and selected_rating ~= current_rating then
-                replace_transformator(transformator, selected_rating)
-                storage.eg_selected_transformator[player.index] = nil
+                if selected_rating and selected_rating ~= current_rating then
+                    replace_transformator(transformator, selected_rating)
+                    storage.eg_selected_transformator[player.index] = nil
+                end
             end
         end
 
@@ -330,9 +332,10 @@ local function on_gui_closed(event)
                 local tier = string.sub(unit_name, -1)
 
                 if filter.name == "eg-fluid-disable" then
+                    replace_tiered_components(transformator)
+                    pump = transformator.pump
                     pump.clear_fluid_inside()
                     pump.fluidbox.set_filter(1, { name = "eg-fluid-disable" })
-                    replace_tiered_components(transformator)
                 else
                     pump.clear_fluid_inside()
                     pump.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
@@ -394,6 +397,15 @@ local function on_entity_rotated(event)
     end
 end
 
+local function handle_close_transformator_gui(event)
+    local player = game.get_player(event.player_index)
+    if not player or not player.valid then return end
+
+    if player.gui.screen.transformator_rating_selection_frame then
+        close_transformator_gui(player)
+    end
+end
+
 local function register_event_handlers()
     script.on_event(defines.events.on_player_rotated_entity, on_entity_rotated)
 
@@ -418,6 +430,8 @@ local function register_event_handlers()
     script.on_event(defines.events.on_gui_selection_state_changed, on_dropdown_selection_changed)
     script.on_event(defines.events.on_gui_click, on_gui_click)
     script.on_event(defines.events.on_gui_closed, on_gui_closed)
+    script.on_event({ "close-transformator-rating-selection-e", "close-transformator-rating-selection-esc" },
+        handle_close_transformator_gui)
 end
 
 script.on_init(function()
@@ -443,13 +457,4 @@ script.on_configuration_changed(function()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.update_registration()
-end)
-
-script.on_event({ "close-transformator-rating-selection-e", "close-transformator-rating-selection-esc" }, function(event)
-    local player = game.get_player(event.player_index)
-    if not player or not player.valid then return end
-
-    if player.gui.screen.transformator_rating_selection_frame then
-        close_transformator_gui(player)
-    end
 end)

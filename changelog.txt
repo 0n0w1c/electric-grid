@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.7
+Date: 28.12.2024
+  Bugfixes:
+    - Transformators can again be disabled via fluid selection
+    - Fixed check of nearby poles when placing underground substations
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.6.6
 Date: 28.12.2024
   Bugfixes:

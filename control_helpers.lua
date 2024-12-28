@@ -528,7 +528,7 @@ function replace_displayer_with_ugp_substation(args)
 
     enforce_pole_connections(eg_ugp_substation)
 
-    local poles = get_nearby_poles(new_entity)
+    local poles = get_nearby_poles(eg_ugp_substation)
     if poles then
         for _, pole in pairs(poles) do
             if pole.valid then
