@@ -5,7 +5,7 @@ local function get_next_order()
     return string.format("a-%03d", order)
 end
 
-data:extend({
+data.extend({
     {
         type = "bool-setting",
         name = "eg-transformators-only",

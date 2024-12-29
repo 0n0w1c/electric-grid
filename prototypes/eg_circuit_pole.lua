@@ -86,4 +86,4 @@ local eg_circuit_pole_recipe =
     },
 }
 
-data:extend({ eg_circuit_pole, eg_circuit_pole_item, eg_circuit_pole_recipe })
+data.extend({ eg_circuit_pole, eg_circuit_pole_item, eg_circuit_pole_recipe })

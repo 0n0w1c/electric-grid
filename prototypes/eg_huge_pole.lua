@@ -141,4 +141,4 @@ local huge_pole_recipe               =
     }
 }
 
-data:extend { huge_pole, huge_pole_item, huge_pole_recipe }
+data.extend { huge_pole, huge_pole_item, huge_pole_recipe }

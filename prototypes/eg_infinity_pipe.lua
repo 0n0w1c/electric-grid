@@ -46,4 +46,4 @@ local eg_infinity_pipe = {
     }
 }
 
-data:extend({ eg_infinity_pipe })
+data.extend({ eg_infinity_pipe })

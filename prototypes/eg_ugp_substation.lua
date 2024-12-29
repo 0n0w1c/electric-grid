@@ -58,7 +58,7 @@ ugp_substation.connection_points              = {
     }
 }
 
-data:extend({ ugp_substation })
+data.extend({ ugp_substation })
 
 local ugp_substation_displayer                        = table.deepcopy(ugp_substation)
 local name                                            = "eg-ugp-substation-displayer"
@@ -100,4 +100,4 @@ local ugp_substation_displayer_recipe                 =
     results               = { { type = "item", name = name, amount = 1 } }
 }
 
-data:extend({ ugp_substation_displayer, ugp_substation_displayer_item, ugp_substation_displayer_recipe })
+data.extend({ ugp_substation_displayer, ugp_substation_displayer_item, ugp_substation_displayer_recipe })

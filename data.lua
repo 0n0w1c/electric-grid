@@ -15,7 +15,7 @@ constants.EG_HUGE_POLE_LIGHTS = settings.startup["eg-huge-pole-lights"].value
 constants.EG_CIRCUIT_POLE_LIGHTS = settings.startup["eg-circuit-pole-lights"].value
 constants.EG_EVEN_ALIGN_RADAR = settings.startup["eg-even-align-radar"].value
 
-data:extend({
+data.extend({
     {
         type = "item-subgroup",
         name = "eg-electric-distribution",
@@ -24,7 +24,7 @@ data:extend({
     }
 })
 
-data:extend({
+data.extend({
     {
         type = "sound",
         name = "eg-transformator-gui-open",
@@ -39,7 +39,7 @@ data:extend({
     }
 })
 
-data:extend({
+data.extend({
     {
         type                  = "virtual-signal",
         name                  = "eg-alert",
@@ -55,7 +55,7 @@ data:extend({
     }
 })
 
-data:extend({
+data.extend({
     {
         type = "custom-input",
         name = "transformator-rating-selection",
@@ -73,7 +73,7 @@ data:extend({
     }
 })
 
-data:extend({
+data.extend({
     {
         type = "sprite",
         name = "eg-transformator-icon",
@@ -83,7 +83,7 @@ data:extend({
 })
 
 for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
-    data:extend({ {
+    data.extend({ {
         type = "sprite",
         name = transformator.rating,
         layers = {

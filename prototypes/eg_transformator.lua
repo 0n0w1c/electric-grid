@@ -209,7 +209,7 @@ end
 
 -- Loop to extend data with entities and fluids for each tier
 for tier = 1, constants.EG_NUM_TIERS do
-    data:extend({
+    data.extend({
         create_transformator_unit(tier),
         create_transformator_water(tier),
         create_transformator_steam(tier),
@@ -220,7 +220,7 @@ for tier = 1, constants.EG_NUM_TIERS do
     })
 end
 
-data:extend({
+data.extend({
     create_transformator_fluid_disable(),
     create_transformator_fluid_enable(),
     create_old_transformator_pump(),
@@ -280,4 +280,4 @@ local eg_transformator_recipe = {
     allow_quality = false
 }
 
-data:extend({ eg_transformator_displayer, eg_transformator_item, eg_transformator_recipe })
+data.extend({ eg_transformator_displayer, eg_transformator_item, eg_transformator_recipe })
