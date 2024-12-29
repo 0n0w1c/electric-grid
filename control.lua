@@ -25,7 +25,7 @@ local function initialize_globals()
 
     if settings.startup["eg-transformators-only"] then
         storage.eg_transformators_only = settings.startup["eg-transformators-only"].value
-            or not (script.active_mods["no-quality"] or script.active_mods["no-more-quality"])
+            or not (script.active_mods["no-quality"] or script.active_mods["unquality"] or script.active_mods["no-more-quality"])
     end
 end
 

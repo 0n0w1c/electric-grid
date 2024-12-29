@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.8
+Date: 29.12.2024
+  Bugfixes:
+    - None
+  Changes:
+    - Transformator connection icons are now enabled by default, configurable via startup setting
+    - Added support for Unquality, added as hidden optional dependency
+    - Added MinimalWire as incompatible
+---------------------------------------------------------------------------------------------------
 Version: 1.6.7
 Date: 28.12.2024
   Bugfixes:

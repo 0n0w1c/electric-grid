@@ -1,19 +1,14 @@
 constants = require("constants")
 
-if settings.startup["eg-hide-alt-overlay"].value then
-    constants.EG_ALTOVERLAY = "hide-alt-info"
-else
-    constants.EG_ALTOVERLAY = nil
-end
-
 if settings.startup["eg-transformator-sound"].value then
     constants.EG_TRANSFORMATOR_VOLUME = 0.175
 else
     constants.EG_TRANSFORMATOR_VOLUME = 0
 end
 
+constants.EG_OVERLAY = settings.startup["eg-overlay"].value
 constants.EG_TRANSFORMATORS_ONLY = settings.startup["eg-transformators-only"].value
-    or not (mods["no-quality"] or mods["no-more-quality"])
+    or not (mods["no-quality"] or mods["unquality"] or mods["no-more-quality"])
 constants.EG_MEDIUM_POLE_LIGHTS = settings.startup["eg-medium-pole-lights"].value
 constants.EG_BIG_POLE_LIGHTS = settings.startup["eg-big-pole-lights"].value
 constants.EG_HUGE_POLE_LIGHTS = settings.startup["eg-huge-pole-lights"].value

@@ -1,7 +1,7 @@
 local function get_transformator_picture(tier)
-    local altoverlay = {
+    local overlay = {
         north = {
-            filename = constants.EG_ENTITIES .. "eg-unit-altoverlay.png",
+            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
             x = 466,
             width = 466,
             height = 310,
@@ -11,7 +11,7 @@ local function get_transformator_picture(tier)
             tint = constants.EG_OVERLAY_TINT
         },
         east = {
-            filename = constants.EG_ENTITIES .. "eg-unit-altoverlay.png",
+            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
             x = 0,
             width = 466,
             height = 310,
@@ -21,7 +21,7 @@ local function get_transformator_picture(tier)
             tint = constants.EG_OVERLAY_TINT
         },
         south = {
-            filename = constants.EG_ENTITIES .. "eg-unit-altoverlay.png",
+            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
             x = 1398,
             width = 466,
             height = 310,
@@ -31,7 +31,7 @@ local function get_transformator_picture(tier)
             tint = constants.EG_OVERLAY_TINT
         },
         west = {
-            filename = constants.EG_ENTITIES .. "eg-unit-altoverlay.png",
+            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
             x = 932,
             width = 466,
             height = 310,
@@ -169,11 +169,11 @@ local function get_transformator_picture(tier)
         },
     }
 
-    if constants.EG_ALTOVERLAY then
-        table.insert(template.north.layers, altoverlay.north)
-        table.insert(template.east.layers, altoverlay.east)
-        table.insert(template.south.layers, altoverlay.south)
-        table.insert(template.west.layers, altoverlay.west)
+    if constants.EG_OVERLAY then
+        table.insert(template.north.layers, overlay.north)
+        table.insert(template.east.layers, overlay.east)
+        table.insert(template.south.layers, overlay.south)
+        table.insert(template.west.layers, overlay.west)
     end
 
     return template
@@ -206,15 +206,6 @@ local function create_transformator_unit(tier)
     }
 end
 
-local flags = {}
-
-if constants.EG_ALTOVERLAY then
-    table.insert(flags, constants.EG_ALTOVERLAY)
-end
-
-for _, flag in ipairs(constants.EG_INTERNAL_ENTITY_FLAGS) do
-    table.insert(flags, flag)
-end
 
 -- Loop to extend data with entities and fluids for each tier
 for tier = 1, constants.EG_NUM_TIERS do

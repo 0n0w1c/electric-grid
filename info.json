@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "1.6.7",
+    "version": "1.6.8",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid!",
@@ -12,6 +12,8 @@
         "? aai-industry",
         "? cargo-ships",
         "(?) no-quality >= 0.1.3",
-        "! factorioplus"
+        "(?) unquality",
+        "! factorioplus",
+        "! minimalwire"
     ]
 }

@@ -62,12 +62,12 @@ data:extend({
     },
     {
         type = "bool-setting",
-        name = "eg-hide-alt-overlay",
+        name = "eg-overlay",
         setting_type = "startup",
-        default_value = false,
+        default_value = true,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-hide-alt-overlay" },
-        localised_description = { "setting-description.eg-hide-alt-overlay" }
+        localised_name = { "setting-name.eg-overlay" },
+        localised_description = { "setting-description.eg-overlay" }
     },
     {
         type = "int-setting",
