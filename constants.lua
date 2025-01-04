@@ -186,7 +186,8 @@ constants.EG_WIRE_CONNECTIONS       = {
     ["medium-electric-pole"] = {
         ["small-electric-pole"] = true,
         ["medium-electric-pole"] = true,
-        ["small-iron-electric-pole"] = true
+        ["small-iron-electric-pole"] = true,
+        ["james-rail-pole"] = true
     },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
@@ -217,6 +218,15 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["floating-electric-pole"] = true,
         ["eg-huge-electric-pole"] = true
     },
+    ["james-rail-pole"] = {
+        ["james-rail-pole"] = true,
+        ["james-track-pole"] = true,
+        ["medium-electric-pole"] = true
+    },
+    ["james-track-pole"] = {
+        ["james-rail-pole"] = true,
+        ["james-track-pole"] = true
+    }
 }
 
 return constants

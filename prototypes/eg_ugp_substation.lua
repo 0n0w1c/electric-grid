@@ -90,14 +90,12 @@ ugp_substation_displayer_item.place_result            = name
 
 local ugp_substation_displayer_recipe                 =
 {
-    type                  = "recipe",
-    name                  = name,
-    localised_name        = "Underground substation",
-    localised_description = "Underground power distribution",
-    category              = data.raw["recipe"]["substation"].category,
-    enabled               = false,
-    ingredients           = { { type = "item", name = "substation", amount = 1 } },
-    results               = { { type = "item", name = name, amount = 1 } }
+    type        = "recipe",
+    name        = name,
+    category    = data.raw["recipe"]["substation"].category,
+    enabled     = false,
+    ingredients = { { type = "item", name = "substation", amount = 1 } },
+    results     = { { type = "item", name = name, amount = 1 } }
 }
 
 data.extend({ ugp_substation_displayer, ugp_substation_displayer_item, ugp_substation_displayer_recipe })

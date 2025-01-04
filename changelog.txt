@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.7.2
+Date: 04.01.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Added support for James' Electric Trains Plus
+    - Modified the underground substation's recycling recipe to be the same as the substation
+---------------------------------------------------------------------------------------------------
 Version: 1.7.1
 Date: 04.01.2025
   Bugfixes:
