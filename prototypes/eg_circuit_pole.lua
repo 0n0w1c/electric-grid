@@ -11,7 +11,7 @@ local eg_circuit_pole        =
     icon_size                  = 32,
     localised_name             = { "entity-name.eg-circuit-pole" },
     localised_description      = { "entity-description.eg-circuit-pole" },
-    flags                      = { "placeable-neutral", "player-creation" },
+    flags                      = { "placeable-neutral", "placeable-player", "player-creation" },
     minable                    = { mining_time = big_pole.minable.mining_time, result = "eg-circuit-pole" },
     max_health                 = big_pole.max_health + 100,
     corpse                     = big_pole.corpse,

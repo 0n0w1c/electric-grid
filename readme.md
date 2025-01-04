@@ -9,9 +9,6 @@ The electric network overhaul should only be added to a new or early game, it si
 If quick on/off via the circuit or logistic networks is not a priority, set "On tick interval" setting to 0 for near zero UPS impact.  
 Comments and suggestions are welcome.  
 
-May not be useful or functional on Fulgora (to be determined, possible future development).  
-The wiring rules should still be valid. However, the use of transformators, maybe not so much.  
-
 *Adds:*  
 Transformator  
 Huge electric pole  
@@ -39,8 +36,7 @@ Medium, big and huge poles are for power transmission only
 Substations and underground substations are fast-replaceable  
 Circuit poles create copper wire connections for performance considerations, but are hidden
 
-*If Space Age is active, the electric network overhaul requires either the No More Quality, Unquality or No Quality mods.*
-*Startup setting to disable the electric network overhaul, effectively transformator only.*
+Startup setting to disable the electric network overhaul, effectively transformator only.  
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
 
@@ -51,12 +47,16 @@ Transformators do function as expected if connected in parallel.
 Very similar to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
 Do not place the transformator in the supply area of an electric pole.  
 
+*Fulgora and Aquillo*
+Transformators can not be placed on these surfaces (This could change in the future).  
+Wiring rules are relaxed, permitting copper wire connections between any of the transmission only poles.  
+
 *Limitations:*  
 Transformator circuit conditions and copper wiring are not included in blueprints.  
 
 *Known Issues:*  
 Using the pipette [Q] always places a 1MW transformator.  
-Quality adds a supply area to poles intended to have zero supply area (medium, big and huge).
+Quality prior to Factorio 2.0.29 adds a supply area to poles intended to have zero supply area (medium, big and huge).
 
 *Recommended Mod:*  
 [No More Quality](https://mods.factorio.com/mod/no-more-quality) - Hides the Quality mechanic, resolves the issue with transmission only poles.  

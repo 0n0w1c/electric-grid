@@ -58,9 +58,21 @@ function rotate_position(position, direction)
     return { x = x, y = y }
 end
 
---- Check if the given name corresponds to a transformator.
--- @param name string The name of the entity to check.
--- @return boolean True if the entity is a transformator, false otherwise.
+--- Check if the surface is supported
+-- @param surface LuaSurface
+-- @return boolean #True if the surface is supported, otherwise false.
+function surface_supported(surface)
+    if not (surface and surface.valid) then return false end
+
+    local name = surface.name
+    if name == "nauvis" or name == "vulcanus" or name == "gleba" then return true end
+
+    return false
+end
+
+--- Check if the given name corresponds to a transformator
+-- @param name string The name of the entity to check
+-- @return boolean True if the entity is a transformator, false otherwise
 function is_transformator(name)
     if name == "eg-transformator-displayer" or constants.EG_TRANSFORMATORS[name] then
         return true
@@ -549,7 +561,14 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         return false
     end
 
-    local name_a, name_b = pole_a.name, pole_b.name
+    local name_a = pole_a.name
+    local name_b = pole_b.name
+
+    if not surface_supported(pole_a.surface) then
+        if constants.EG_TRANSMISSION_POLES[name_a] and constants.EG_TRANSMISSION_POLES[name_b] then
+            return true
+        end
+    end
 
     -- Check if one of the poles is a high_voltage pole and execute get_maximum_production
     --    for _, name in ipairs({ name_a, name_b }) do

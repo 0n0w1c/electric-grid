@@ -188,7 +188,7 @@ local function create_transformator_unit(tier)
         icon = constants.EG_ICONS .. "eg-transformator.png",
         icon_size = 128,
         hidden_in_factoriopedia = true,
-        flags = { "placeable-player", "player-creation", "get-by-unit-number" },
+        flags = { "placeable-neutral", "placeable-player", "player-creation", "get-by-unit-number" },
         minable = { mining_time = 0.5, result = "eg-transformator" },
         selectable_in_game = true,
         corpse = "big-remnants",
@@ -202,12 +202,17 @@ local function create_transformator_unit(tier)
         collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
         picture = get_transformator_picture(tier),
         localised_name = { "entity-name.eg-unit" },
-        localised_description = { "", { "entity-description.eg-unit" }, " ", rating }
+        localised_description = { "", { "entity-description.eg-unit" }, " ", rating },
+        surface_conditions = {
+            {
+                max = 4000,
+                min = 1000,
+                property = "pressure"
+            }
+        }
     }
 end
 
-
--- Loop to extend data with entities and fluids for each tier
 for tier = 1, constants.EG_NUM_TIERS do
     data.extend({
         create_transformator_unit(tier),
@@ -233,12 +238,19 @@ local eg_transformator_displayer = {
     localised_description = { "entity-description.eg-transformator-displayer" },
     icon = constants.EG_ICONS .. "eg-transformator.png",
     icon_size = 128,
-    flags = { "placeable-player", "player-creation" },
+    flags = { "placeable-neutral", "placeable-player", "player-creation" },
     max_health = constants.EG_MAX_HEALTH,
     collision_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
     collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
     hidden_in_factoriopedia = true,
-    picture = get_transformator_picture(1)
+    picture = get_transformator_picture(1),
+    surface_conditions = {
+        {
+            max = 4000,
+            min = 1000,
+            property = "pressure"
+        }
+    }
 }
 
 local subgroup
@@ -256,6 +268,7 @@ local eg_transformator_item = {
     icon = constants.EG_ICONS .. "eg-transformator.png",
     icon_size = 128,
     subgroup = subgroup,
+    flags = { "hide-from-bonus-gui" },
     order = data.raw["item"]["substation"].order .. "zz",
     place_result = "eg-transformator-displayer",
     stack_size = 50,
@@ -263,21 +276,21 @@ local eg_transformator_item = {
 }
 
 local eg_transformator_recipe = {
-    type          = "recipe",
-    name          = "eg-transformator",
-    category      = data.raw["recipe"]["substation"].category,
-
-    ingredients   = {
+    type               = "recipe",
+    name               = "eg-transformator",
+    category           = data.raw["recipe"]["substation"].category,
+    ingredients        = {
         { type = "item", name = "copper-plate", amount = 2 },
         { type = "item", name = "steel-plate",  amount = 4 },
         { type = "item", name = "iron-plate",   amount = 10 },
         { type = "item", name = "copper-cable", amount = 200 }
     },
-    results       = {
+    results            = {
         { type = "item", name = "eg-transformator", amount = 1 }
     },
-    enabled       = false,
-    allow_quality = false
+    allow_quality      = false,
+    allow_productivity = false,
+    enabled            = false
 }
 
 data.extend({ eg_transformator_displayer, eg_transformator_item, eg_transformator_recipe })

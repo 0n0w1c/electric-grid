@@ -88,6 +88,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.hidden_in_factoriopedia        = true
         pole.light                          = constants.EG_MINI_POLE_LIGHT
         pole.collision_mask                 = { layers = {} }
+        pole.factoriopedia_alternative      = "eg-transformator-displayer"
 
         data.extend({ pole })
     end

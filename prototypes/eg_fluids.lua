@@ -15,8 +15,6 @@ function create_transformator_fluid_disable()
         subgroup = "fluid",
         localised_name = { "entity-name.eg-fluid-disable" },
         localised_description = { "entity-description.eg-fluid-disable" },
-        --localised_name = { "", "Disable" },
-        --localised_description = { "", "Select to disable a Transformator" }
     }
 end
 
@@ -37,8 +35,6 @@ function create_transformator_fluid_enable()
         subgroup = "fluid",
         localised_name = { "entity-name.eg-fluid-enable" },
         localised_description = { "entity-description.eg-fluid-enable" },
-        --localised_name = { "", "Enable" },
-        --localised_description = { "", "Select to enable a Transformator" }
     }
 end
 

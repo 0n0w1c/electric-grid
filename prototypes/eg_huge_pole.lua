@@ -1,11 +1,11 @@
 if constants.EG_TRANSFORMATORS_ONLY then return end
 
-local big_pole                       = data.raw["electric-pole"]["big-electric-pole"]
+local big_pole  = data.raw["electric-pole"]["big-electric-pole"]
 
-local scale                          = 1.2
-local translate                      = -0.4
+local scale     = 1.2
+local translate = -0.4
 
-local huge_pole                      =
+local huge_pole =
 {
     type                           = "electric-pole",
     name                           = "eg-huge-electric-pole",
@@ -115,6 +115,7 @@ local huge_pole                      =
     }
 }
 
+
 local huge_pole_item                 = table.deepcopy(data.raw["item"]["big-electric-pole"])
 huge_pole_item.name                  = "eg-huge-electric-pole"
 huge_pole_item.localised_name        = { "item-name.eg-huge-electric-pole" }
@@ -126,7 +127,8 @@ huge_pole_item.icon_size             = 32
 huge_pole_item.place_result          = "eg-huge-electric-pole"
 huge_pole_item.weight                = 20000
 
-local huge_pole_recipe               =
+
+local huge_pole_recipe =
 {
     type        = "recipe",
     name        = "eg-huge-electric-pole",

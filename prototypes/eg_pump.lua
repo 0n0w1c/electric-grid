@@ -1,4 +1,47 @@
 local function get_transformator_picture(tier)
+    local overlay = {
+        north = {
+            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+            x = 466,
+            width = 466,
+            height = 310,
+            shift = { 2.1, -0.95 },
+            scale = 0.5,
+            blend_mode = constants.EG_TIER_BLEND_MODE,
+            tint = constants.EG_OVERLAY_TINT
+        },
+        east = {
+            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+            x = 0,
+            width = 466,
+            height = 310,
+            shift = { 2.0, -1.65 },
+            scale = 0.5,
+            blend_mode = constants.EG_TIER_BLEND_MODE,
+            tint = constants.EG_OVERLAY_TINT
+        },
+        south = {
+            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+            x = 1398,
+            width = 466,
+            height = 310,
+            shift = { 3.1, 0.05 },
+            scale = 0.5,
+            blend_mode = constants.EG_TIER_BLEND_MODE,
+            tint = constants.EG_OVERLAY_TINT
+        },
+        west = {
+            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+            x = 932,
+            width = 466,
+            height = 310,
+            shift = { 1.0, -0.65 },
+            scale = 0.5,
+            blend_mode = constants.EG_TIER_BLEND_MODE,
+            tint = constants.EG_OVERLAY_TINT
+        },
+    }
+
     local template = {
         north = {
             layers = {
@@ -89,6 +132,13 @@ local function get_transformator_picture(tier)
             },
         },
     }
+
+    if constants.EG_OVERLAY then
+        table.insert(template.north.layers, overlay.north)
+        table.insert(template.east.layers, overlay.east)
+        table.insert(template.south.layers, overlay.south)
+        table.insert(template.west.layers, overlay.west)
+    end
 
     return template
 end

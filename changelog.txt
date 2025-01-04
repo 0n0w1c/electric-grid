@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.7.0
+Date: 03.01.2025
+  Bugfixes:
+    - Refactored the regeneration of the huge pole's recycling recipe when AAI Industry is active
+  Changes:
+    - The electric network overhaul is compatible with Quality when using Factorio 2.0.29 or later
+    - Transformators can not be placed on Fulgora or Aquillo (could change in the future)
+      Transformators act as over-powered accumulators on Fulgora due to the internal components
+      Transformators lack frozen support for Aquillo
+    - Copper wire connections between transmission only poles are permitted on Fulgora and Aquillo
+---------------------------------------------------------------------------------------------------
 Version: 1.6.8
 Date: 29.12.2024
   Bugfixes:

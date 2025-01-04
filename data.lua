@@ -6,13 +6,14 @@ else
     constants.EG_TRANSFORMATOR_VOLUME = 0
 end
 
-constants.EG_OVERLAY = settings.startup["eg-overlay"].value
 constants.EG_TRANSFORMATORS_ONLY = settings.startup["eg-transformators-only"].value
-    or not (mods["no-quality"] or mods["unquality"] or mods["no-more-quality"])
+    or (mods["base"] < "2.0.29" and not (mods["no-quality"] or mods["unquality"] or mods["no-more-quality"]))
+
 constants.EG_MEDIUM_POLE_LIGHTS = settings.startup["eg-medium-pole-lights"].value
 constants.EG_BIG_POLE_LIGHTS = settings.startup["eg-big-pole-lights"].value
 constants.EG_HUGE_POLE_LIGHTS = settings.startup["eg-huge-pole-lights"].value
 constants.EG_CIRCUIT_POLE_LIGHTS = settings.startup["eg-circuit-pole-lights"].value
+constants.EG_OVERLAY = settings.startup["eg-overlay"].value
 constants.EG_EVEN_ALIGN_RADAR = settings.startup["eg-even-align-radar"].value
 
 data.extend({

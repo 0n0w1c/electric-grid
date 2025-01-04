@@ -8,7 +8,7 @@ ugp_substation.icon                           = constants.EG_ICONS .. "eg-ugp-su
 ugp_substation.icon_size                      = 64
 ugp_substation.hidden                         = false
 ugp_substation.hidden_in_factoriopedia        = true
-ugp_substation.flags                          = { "placeable-player", "player-creation", "not-rotatable" }
+ugp_substation.flags                          = { "placeable-neutral", "placeable-player", "player-creation", "not-rotatable" }
 ugp_substation.placeable_by                   = { item = "eg-ugp-substation-displayer", count = 1 }
 ugp_substation.draw_copper_wires              = false
 ugp_substation.draw_circuit_wires             = false
