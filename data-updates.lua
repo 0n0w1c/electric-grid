@@ -74,7 +74,6 @@ if mods["aai-industry"] then
             local recycling = require("__quality__/prototypes/recycling")
 
             recycling.generate_recycling_recipe(huge_pole_recipe)
-            huge_pole_recipe.auto_recycle = nil
         end
     end
 end
