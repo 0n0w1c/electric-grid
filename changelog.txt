@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.7.0
-Date: 03.01.2025
+Date: 04.01.2025
   Bugfixes:
     - Refactored the regeneration of the huge pole's recycling recipe when AAI Industry is active
   Changes:
