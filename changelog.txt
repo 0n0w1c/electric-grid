@@ -6,6 +6,7 @@ Date: 04.01.2025
   Changes:
     - Modified some locale strings for consistency
     - Removed an internal component from the electric network
+      Both changes help specifically when viewing the electric network statistics gui
 ---------------------------------------------------------------------------------------------------
 Version: 1.7.2
 Date: 04.01.2025
