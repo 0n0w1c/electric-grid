@@ -168,10 +168,7 @@ function create_transformator_pump(tier)
         integration_patch         = get_transformator_picture(tier),
         pumping_speed             = 1,
         energy_usage              = "0.001W",
-        energy_source             = {
-            type = "electric",
-            usage_priority = "secondary-input"
-        },
+        energy_source             = { type = "void" },
         fluid_box                 = {
             volume = constants.EG_FLUID_VOLUME,
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,

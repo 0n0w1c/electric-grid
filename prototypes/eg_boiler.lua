@@ -30,7 +30,7 @@ function create_transformator_boiler(tier)
         selectable_in_game = false,
         flags = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name = { "entity-name.eg-boiler" },
-        localised_description = { "", { "entity-description.eg-boiler" }, " ", rating },
+        localised_description = { "entity-description.eg-boiler" },
         energy_source = {
             type = "electric",
             effectivity = constants.EG_EFFICIENCY,

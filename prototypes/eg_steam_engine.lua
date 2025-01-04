@@ -33,7 +33,7 @@ function create_transformator_steam_engine(variant, tier)
         alert_icon_scale      = 0,
         flags                 = constants.EG_INTERNAL_ENTITY_FLAGS,
         localised_name        = { "entity-name.eg-steam-engine" },
-        localised_description = { "", { "entity-description.eg-steam-engine" }, " ", rating },
+        localised_description = { "entity-description.eg-steam-engine" },
         collision_mask        = { layers = {} },
         collision_box         = collision_box,
         selection_box         = selection_box,

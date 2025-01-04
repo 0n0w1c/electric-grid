@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.7.3
+Date: 04.01.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Modified some locale strings for consistency
+    - Removed an internal component from the electric network
+---------------------------------------------------------------------------------------------------
 Version: 1.7.2
 Date: 04.01.2025
   Bugfixes:
