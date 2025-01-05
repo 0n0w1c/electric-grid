@@ -216,7 +216,12 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["floating-electric-pole"] = {
         ["floating-electric-pole"] = true,
+        ["or_pole"] = true,
         ["eg-huge-electric-pole"] = true
+    },
+    ["or_pole"] = {
+        ["or_pole"] = true,
+        ["floating-electric-pole"] = true
     },
     ["james-rail-pole"] = {
         ["james-rail-pole"] = true,

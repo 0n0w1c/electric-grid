@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.7.4
+Date: 04.01.2025
+  Bugfixes:
+    - Cargo Ships: Added wiring rules, permit oil-rig poles to connect to floating electric poles
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.7.3
 Date: 04.01.2025
   Bugfixes:
