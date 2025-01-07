@@ -1,17 +1,17 @@
 data.extend({
     {
-        type = "technology",
-        name = "eg-tech-1",
-        icon = constants.EG_ICONS .. "eg-transformator.png",
-        icon_size = 128,
-        localised_name = { "technology-name.eg-tech-1" },
+        type                  = "technology",
+        name                  = "eg-tech-1",
+        icon                  = constants.EG_ICONS .. "eg-transformator.png",
+        icon_size             = 128,
+        localised_name        = { "technology-name.eg-tech-1" },
         localised_description = { "technology-description.eg-tech-1" },
-        order = "c-e-c",
-        prerequisites = { "electric-energy-distribution-1" },
-        effects = {
+        order                 = "c-e-c",
+        prerequisites         = { "electric-energy-distribution-1" },
+        effects               = {
             { type = "unlock-recipe", recipe = "eg-transformator" }
         },
-        unit = {
+        unit                  = {
             count = 200,
             time = 60,
             ingredients = {
