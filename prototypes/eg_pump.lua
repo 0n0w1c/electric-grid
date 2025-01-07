@@ -165,6 +165,7 @@ function create_transformator_pump(tier)
         collision_box             = collision_box,
         localised_name            = { "entity-name.eg-pump" },
         localised_description     = { "entity-description.eg-pump" },
+        quality_indicator_scale   = 0,
         integration_patch         = get_transformator_picture(tier),
         pumping_speed             = 1,
         energy_usage              = "0.001W",

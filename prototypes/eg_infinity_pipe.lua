@@ -12,6 +12,7 @@ local eg_infinity_pipe = {
     flags                          = constants.EG_INTERNAL_ENTITY_FLAGS,
     localised_name                 = { "entity-name.eg-infinity-pipe" },
     localised_description          = { "entity-description.eg-infinity-pipe" },
+    quality_indicator_scale        = 0,
     collision_mask                 = { layers = {} },
     collision_box                  = { { -0.49, -0.49 }, { 0.49, 0.49 } },
     --selection_box = { { -0.49, -0.49 }, { 0.49,  0.49 } },

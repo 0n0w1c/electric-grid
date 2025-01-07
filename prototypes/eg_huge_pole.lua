@@ -1,118 +1,107 @@
 if constants.EG_TRANSFORMATORS_ONLY then return end
 
-local big_pole  = data.raw["electric-pole"]["big-electric-pole"]
+local scale                              = 1.2
+local translate                          = -0.4
 
-local scale     = 1.2
-local translate = -0.4
+local huge_pole                          = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
 
-local huge_pole =
+huge_pole.type                           = "electric-pole"
+huge_pole.name                           = "eg-huge-electric-pole"
+huge_pole.localised_name                 = { "entity-name.eg-huge-electric-pole" }
+huge_pole.localised_description          = { "entity-description.eg-huge-electric-pole" }
+huge_pole.icon                           = constants.EG_ICONS .. "eg-huge-electric-pole.png"
+huge_pole.icon_size                      = 32
+huge_pole.drawing_box_vertical_extension = 3
+huge_pole.minable                        = { mining_time = huge_pole.minable.mining_time, result = "eg-huge-electric-pole" }
+huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil
+huge_pole.max_health                     = huge_pole.max_health + 100
+huge_pole.maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value)
+huge_pole.supply_area_distance           = 0
+huge_pole.pictures                       =
 {
-    type                           = "electric-pole",
-    name                           = "eg-huge-electric-pole",
-    localised_name                 = { "entity-name.eg-huge-electric-pole" },
-    localised_description          = { "entity-description.eg-huge-electric-pole" },
-    icon                           = constants.EG_ICONS .. "eg-huge-electric-pole.png",
-    icon_size                      = 32,
-    drawing_box_vertical_extension = 3,
-    flags                          = big_pole.flags,
-    minable                        = { mining_time = big_pole.minable.mining_time, result = "eg-huge-electric-pole" },
-    light                          = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil,
-    max_health                     = big_pole.max_health + 100,
-    corpse                         = big_pole.corpse,
-    dying_explosion                = big_pole.dying_explosion,
-    resistances                    = big_pole.resistances,
-    collision_box                  = big_pole.collision_box,
-    selection_box                  = big_pole.selection_box,
-    damaged_trigger_effect         = big_pole.damaged_trigger_effect,
-    maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value),
-    radius_visualisation_picture   = big_pole.radius_visualisation_picture,
-    supply_area_distance           = 0,
-    open_sound                     = big_pole.open_sound,
-    close_sound                    = big_pole.close_sound,
-    pictures                       =
+    filename = constants.EG_ENTITIES .. "eg-huge-electric-pole.png",
+    priority = "extra-high",
+    width = 168,
+    height = 165,
+    direction_count = 4,
+    shift = { 1.6 * scale, (-1.1 + translate) * scale },
+    scale = scale,
+}
+
+huge_pole.connection_points              =
+{
     {
-        filename = constants.EG_ENTITIES .. "eg-huge-electric-pole.png",
-        priority = "extra-high",
-        width = 168,
-        height = 165,
-        direction_count = 4,
-        shift = { 1.6 * scale, (-1.1 + translate) * scale }, -- {1.6, -1.1},
-        scale = scale,
-    },
-    connection_points              =
-    {
+        shadow =
         {
-            shadow =
-            {
-                copper = { 2.7 * scale, translate },
-                green = { 1.8 * scale, translate },
-                red = { 3.6 * scale, translate }
-            },
-            wire =
-            {
-                copper = { 0, (-3.125 + translate) * scale },
-                green = { -0.59375 * scale, (-3.125 + translate) * scale },
-                red = { 0.625 * scale, (-3.125 + translate) * scale }
-            }
+            copper = { 2.7 * scale, translate },
+            green = { 1.8 * scale, translate },
+            red = { 3.6 * scale, translate }
         },
+        wire =
         {
-            shadow =
-            {
-                copper = { 3.1 * scale, (0.2 + translate) * scale },
-                green = { 2.3 * scale, (-0.3 + translate) * scale },
-                red = { 3.8 * scale, (0.6 + translate) * scale }
-            },
-            wire =
-            {
-                copper = { -0.0625 * scale, (-3.125 + translate) * scale },
-                green = { -0.5 * scale, (-3.4375 + translate) * scale },
-                red = { 0.34375 * scale, (-2.8125 + translate) * scale }
-            }
-        },
-        {
-            shadow =
-            {
-                copper = { 2.9 * scale, (0.06 + translate) * scale },
-                green = { 3.0 * scale, (-0.6 + translate) * scale },
-                red = { 3.0 * scale, (0.8 + translate) * scale }
-            },
-            wire =
-            {
-                copper = { -0.09375 * scale, (-3.09375 + translate) * scale },
-                green = { -0.09375 * scale, (-3.53125 + translate) * scale },
-                red = { -0.09375 * scale, (-2.65625 + translate) * scale }
-            }
-        },
-        {
-            shadow =
-            {
-                copper = { 3.1 * scale, (0.2 + translate) * scale },
-                green = { 3.8 * scale, (-0.3 + translate) * scale },
-                red = { 2.35 * scale, (0.6 + translate) * scale }
-            },
-            wire =
-            {
-                copper = { -0.0625 * scale, (-3.1875 + translate) * scale },
-                green = { 0.375 * scale, (-3.5 + translate) * scale },
-                red = { -0.46875 * scale, (-2.90625 + translate) * scale }
-            }
+            copper = { 0, (-3.125 + translate) * scale },
+            green = { -0.59375 * scale, (-3.125 + translate) * scale },
+            red = { 0.625 * scale, (-3.125 + translate) * scale }
         }
     },
-    water_reflection               =
     {
-        pictures =
+        shadow =
         {
-            filename = "__base__/graphics/entity/big-electric-pole/big-electric-pole-reflection.png",
-            priority = "extra-high",
-            width = 16,
-            height = 32,
-            shift = { util.by_pixel(0, 60)[1] * scale, (util.by_pixel(0, 60)[2] + translate) * scale },
-            variation_count = 1,
-            scale = 5 * scale
+            copper = { 3.1 * scale, (0.2 + translate) * scale },
+            green = { 2.3 * scale, (-0.3 + translate) * scale },
+            red = { 3.8 * scale, (0.6 + translate) * scale }
         },
-        rotate = false,
-        orientation_to_variation = false
+        wire =
+        {
+            copper = { -0.0625 * scale, (-3.125 + translate) * scale },
+            green = { -0.5 * scale, (-3.4375 + translate) * scale },
+            red = { 0.34375 * scale, (-2.8125 + translate) * scale }
+        }
+    },
+    {
+        shadow =
+        {
+            copper = { 2.9 * scale, (0.06 + translate) * scale },
+            green = { 3.0 * scale, (-0.6 + translate) * scale },
+            red = { 3.0 * scale, (0.8 + translate) * scale }
+        },
+        wire =
+        {
+            copper = { -0.09375 * scale, (-3.09375 + translate) * scale },
+            green = { -0.09375 * scale, (-3.53125 + translate) * scale },
+            red = { -0.09375 * scale, (-2.65625 + translate) * scale }
+        }
+    },
+    {
+        shadow =
+        {
+            copper = { 3.1 * scale, (0.2 + translate) * scale },
+            green = { 3.8 * scale, (-0.3 + translate) * scale },
+            red = { 2.35 * scale, (0.6 + translate) * scale }
+        },
+        wire =
+        {
+            copper = { -0.0625 * scale, (-3.1875 + translate) * scale },
+            green = { 0.375 * scale, (-3.5 + translate) * scale },
+            red = { -0.46875 * scale, (-2.90625 + translate) * scale }
+        }
     }
+}
+
+huge_pole.water_reflection               =
+{
+    pictures =
+    {
+        filename = "__base__/graphics/entity/big-electric-pole/big-electric-pole-reflection.png",
+        priority = "extra-high",
+        width = 16,
+        height = 32,
+        shift = { util.by_pixel(0, 60)[1] * scale, (util.by_pixel(0, 60)[2] + translate) * scale },
+        variation_count = 1,
+        scale = 5 * scale
+    },
+    rotate = false,
+    orientation_to_variation = false
 }
 
 

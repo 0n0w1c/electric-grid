@@ -17,32 +17,33 @@ function create_transformator_steam_engine(variant, tier)
     local collision_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
 
     return {
-        type                  = "generator",
-        name                  = name,
-        max_power_output      = rating,
-        maximum_temperature   = 165,
-        fluid_usage_per_tick  = 1,
-        scale_fluid_usage     = true,
-        icon                  = constants.EG_ICONS .. "eg-transformator.png",
-        icon_size             = 128,
-        impact_category       = "metal-large",
-        max_health            = constants.EG_MAX_HEALTH,
-        hidden                = true,
-        minable               = nil,
-        selectable_in_game    = false,
-        alert_icon_scale      = 0,
-        flags                 = constants.EG_INTERNAL_ENTITY_FLAGS,
-        localised_name        = { "entity-name.eg-steam-engine" },
-        localised_description = { "entity-description.eg-steam-engine" },
-        collision_mask        = { layers = {} },
-        collision_box         = collision_box,
-        selection_box         = selection_box,
-        effectivity           = 1,
-        energy_source         = {
+        type                    = "generator",
+        name                    = name,
+        max_power_output        = rating,
+        maximum_temperature     = 165,
+        fluid_usage_per_tick    = 1,
+        scale_fluid_usage       = true,
+        icon                    = constants.EG_ICONS .. "eg-transformator.png",
+        icon_size               = 128,
+        impact_category         = "metal-large",
+        max_health              = constants.EG_MAX_HEALTH,
+        hidden                  = true,
+        minable                 = nil,
+        selectable_in_game      = false,
+        alert_icon_scale        = 0,
+        flags                   = constants.EG_INTERNAL_ENTITY_FLAGS,
+        localised_name          = { "entity-name.eg-steam-engine" },
+        localised_description   = { "entity-description.eg-steam-engine" },
+        quality_indicator_scale = 0,
+        collision_mask          = { layers = {} },
+        collision_box           = collision_box,
+        selection_box           = selection_box,
+        effectivity             = 1,
+        energy_source           = {
             type = "electric",
             usage_priority = "secondary-output"
         },
-        fluid_box             = {
+        fluid_box               = {
             filter = "eg-steam-" .. tier,
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             minimum_temperature = 100,
@@ -63,7 +64,7 @@ function create_transformator_steam_engine(variant, tier)
                 }
             }
         },
-        working_sound         = {
+        working_sound           = {
             match_volume_to_activity = true,
             use_doppler_shift = true,
             sound = {

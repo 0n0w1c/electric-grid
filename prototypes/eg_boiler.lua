@@ -17,34 +17,35 @@ function create_transformator_boiler(tier)
     }
 
     return {
-        type = "boiler",
-        name = "eg-boiler-" .. tier,
-        icon = constants.EG_ICONS .. "eg-transformator.png",
-        icon_size = 128,
-        energy_consumption = rating,
-        target_temperature = 165,
-        max_health = constants.EG_MAX_HEALTH,
-        alert_icon_scale = 0,
-        hidden = true,
-        minable = nil,
-        selectable_in_game = false,
-        flags = constants.EG_INTERNAL_ENTITY_FLAGS,
-        localised_name = { "entity-name.eg-boiler" },
-        localised_description = { "entity-description.eg-boiler" },
-        energy_source = {
+        type                    = "boiler",
+        name                    = "eg-boiler-" .. tier,
+        icon                    = constants.EG_ICONS .. "eg-transformator.png",
+        icon_size               = 128,
+        energy_consumption      = rating,
+        target_temperature      = 165,
+        max_health              = constants.EG_MAX_HEALTH,
+        alert_icon_scale        = 0,
+        hidden                  = true,
+        minable                 = nil,
+        selectable_in_game      = false,
+        flags                   = constants.EG_INTERNAL_ENTITY_FLAGS,
+        localised_name          = { "entity-name.eg-boiler" },
+        localised_description   = { "entity-description.eg-boiler" },
+        quality_indicator_scale = 0,
+        energy_source           = {
             type = "electric",
             effectivity = constants.EG_EFFICIENCY,
             input_flow_limit = rating,
             usage_priority = "secondary-input",
             emissions = 0
         },
-        mode = "output-to-separate-pipe",
-        burning_cooldown = 0,
-        collision_mask = { layers = {} },
-        selection_box = selection_box,
-        collision_box = collision_box,
+        mode                    = "output-to-separate-pipe",
+        burning_cooldown        = 0,
+        collision_mask          = { layers = {} },
+        selection_box           = selection_box,
+        collision_box           = collision_box,
 
-        fluid_box = {
+        fluid_box               = {
             filter = "eg-water-" .. tier,
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             pipe_connections = {
@@ -64,7 +65,7 @@ function create_transformator_boiler(tier)
             production_type = "input",
             volume = constants.EG_FLUID_VOLUME,
         },
-        output_fluid_box = {
+        output_fluid_box        = {
             filter = "eg-steam-" .. tier,
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             pipe_connections = {

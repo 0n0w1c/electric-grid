@@ -179,37 +179,45 @@ local function get_transformator_picture(tier)
     return template
 end
 
+
+local surface_conditions = nil
+if mods["space-age"] then
+    surface_conditions = {
+        {
+            max = 4000,
+            min = 1000,
+            property = "pressure"
+        }
+    }
+end
+
+
 local function create_transformator_unit(tier)
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
     return {
-        type = "simple-entity-with-force",
-        name = "eg-unit-" .. tier,
-        icon = constants.EG_ICONS .. "eg-transformator.png",
-        icon_size = 128,
-        hidden_in_factoriopedia = true,
-        flags = { "placeable-neutral", "placeable-player", "player-creation", "get-by-unit-number" },
-        minable = { mining_time = 0.5, result = "eg-transformator" },
-        selectable_in_game = true,
-        corpse = "big-remnants",
-        dying_explosion = "medium-explosion",
-        placeable_by = { item = "eg-transformator", count = 1 },
-        max_health = constants.EG_MAX_HEALTH,
-        resistances = data.raw["electric-pole"]["substation"].resistances,
+        type                       = "simple-entity-with-force",
+        name                       = "eg-unit-" .. tier,
+        icon                       = constants.EG_ICONS .. "eg-transformator.png",
+        icon_size                  = 128,
+        hidden_in_factoriopedia    = true,
+        flags                      = { "placeable-neutral", "placeable-player", "player-creation", "get-by-unit-number" },
+        minable                    = { mining_time = 0.5, result = "eg-transformator" },
+        selectable_in_game         = true,
+        corpse                     = "big-remnants",
+        dying_explosion            = "medium-explosion",
+        placeable_by               = { item = "eg-transformator", count = 1 },
+        max_health                 = constants.EG_MAX_HEALTH,
+        resistances                = data.raw["electric-pole"]["substation"].resistances,
         random_variation_on_create = false,
-        collision_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
-        selection_box = { { -1.0, -1.0 }, { 1.0, 0.0 } },
-        collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
-        picture = get_transformator_picture(tier),
-        localised_name = { "entity-name.eg-unit" },
-        localised_description = { "entity-description.eg-unit" },
-        surface_conditions = {
-            {
-                max = 4000,
-                min = 1000,
-                property = "pressure"
-            }
-        }
+        collision_box              = { { -0.9, -1.9 }, { 0.9, 1.9 } },
+        selection_box              = { { -1.0, -1.0 }, { 1.0, 0.0 } },
+        collision_mask             = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
+        picture                    = get_transformator_picture(tier),
+        localised_name             = { "entity-name.eg-unit" },
+        localised_description      = { "entity-description.eg-unit" },
+        quality_indicator_scale    = 0,
+        surface_conditions         = surface_conditions
     }
 end
 
@@ -232,25 +240,20 @@ data.extend({
 })
 
 local eg_transformator_displayer = {
-    type = "simple-entity-with-force",
-    name = "eg-transformator-displayer",
-    localised_name = { "entity-name.eg-transformator-displayer" },
-    localised_description = { "entity-description.eg-transformator-displayer" },
-    icon = constants.EG_ICONS .. "eg-transformator.png",
-    icon_size = 128,
-    flags = { "placeable-neutral", "placeable-player", "player-creation" },
-    max_health = constants.EG_MAX_HEALTH,
-    collision_box = { { -0.9, -1.9 }, { 0.9, 1.9 } },
-    collision_mask = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
+    type                    = "simple-entity-with-force",
+    name                    = "eg-transformator-displayer",
+    localised_name          = { "entity-name.eg-transformator-displayer" },
+    localised_description   = { "entity-description.eg-transformator-displayer" },
+    quality_indicator_scale = 0,
+    icon                    = constants.EG_ICONS .. "eg-transformator.png",
+    icon_size               = 128,
+    flags                   = { "placeable-neutral", "placeable-player", "player-creation" },
+    max_health              = constants.EG_MAX_HEALTH,
+    collision_box           = { { -0.9, -1.9 }, { 0.9, 1.9 } },
+    collision_mask          = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
     hidden_in_factoriopedia = true,
-    picture = get_transformator_picture(1),
-    surface_conditions = {
-        {
-            max = 4000,
-            min = 1000,
-            property = "pressure"
-        }
-    }
+    picture                 = get_transformator_picture(1),
+    surface_conditions      = surface_conditions
 }
 
 local subgroup
@@ -261,18 +264,18 @@ else
 end
 
 local eg_transformator_item = {
-    type = "item",
-    name = "eg-transformator",
-    localised_name = { "item-name.eg-transformator" },
+    type                  = "item",
+    name                  = "eg-transformator",
+    localised_name        = { "item-name.eg-transformator" },
     localised_description = { "item-description.eg-transformator" },
-    icon = constants.EG_ICONS .. "eg-transformator.png",
-    icon_size = 128,
-    subgroup = subgroup,
-    flags = { "hide-from-bonus-gui" },
-    order = data.raw["item"]["substation"].order .. "zz",
-    place_result = "eg-transformator-displayer",
-    stack_size = 50,
-    weight = 20000
+    icon                  = constants.EG_ICONS .. "eg-transformator.png",
+    icon_size             = 128,
+    subgroup              = subgroup,
+    flags                 = { "hide-from-bonus-gui" },
+    order                 = data.raw["item"]["substation"].order .. "zz",
+    place_result          = "eg-transformator-displayer",
+    stack_size            = 50,
+    weight                = 20000
 }
 
 local eg_transformator_recipe = {

@@ -57,8 +57,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
     for _, pole_type in ipairs({ "high", "low" }) do
         local pole_name                     = "eg-" .. pole_type .. "-voltage-pole-" .. direction
         local connection_name               = "eg_" .. pole_type .. "_voltage_pole"
-        local selection_box                 =
-            pole_type == "high" and hv_selection_box(direction) or lv_selection_box(direction)
+        local selection_box                 = pole_type == "high" and hv_selection_box(direction) or lv_selection_box(direction)
         local localised_name                = { "entity-name.eg-" .. pole_type .. "-voltage-pole" }
         local localised_description         = { "entity-description.eg-" .. pole_type .. "-voltage-pole" }
         local pole                          = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
@@ -84,6 +83,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.selection_box                  = selection_box
         pole.localised_name                 = { "", localised_name }
         pole.localised_description          = { "", localised_description }
+        pole.quality_indicator_scale        = 0
         pole.hidden                         = true
         pole.hidden_in_factoriopedia        = true
         pole.light                          = constants.EG_MINI_POLE_LIGHT
