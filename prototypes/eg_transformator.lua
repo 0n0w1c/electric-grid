@@ -179,7 +179,6 @@ local function get_transformator_picture(tier)
     return template
 end
 
-
 local surface_conditions = nil
 if mods["space-age"] then
     surface_conditions = {
@@ -190,7 +189,6 @@ if mods["space-age"] then
         }
     }
 end
-
 
 local function create_transformator_unit(tier)
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
