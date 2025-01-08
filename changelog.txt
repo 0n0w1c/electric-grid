@@ -2,7 +2,7 @@
 Version: 1.7.7
 Date: 07.01.2025
   Bugfixes:
-    - Crash: Do not apply surface_conditions to the tranformator unless Space Age is active
+    - Crash: Do not apply surface_conditions to the transformator unless Space Age is active
   Changes:
     - Refactored the definition of the huge electric pole to use deepcopy
     - Scaled quality pip icons to zero for transformator components
