@@ -1,4 +1,5 @@
 if constants.EG_TRANSFORMATORS_ONLY then return end
+if mods["factorioplus"] then return end
 
 local scale                              = 1.2
 local translate                          = -0.4

@@ -26,11 +26,10 @@ data.raw["item"]["medium-electric-pole"].subgroup = "eg-electric-distribution"
 data.raw["item"]["big-electric-pole"].subgroup    = "eg-electric-distribution"
 data.raw["item"]["substation"].subgroup           = "eg-electric-distribution"
 
-
 -- Hide switch
-data.raw["power-switch"]["power-switch"].hidden = true
-data.raw["item"]["power-switch"].hidden         = true
-data.raw["recipe"]["power-switch"].hidden       = true
+data.raw["power-switch"]["power-switch"].hidden   = true
+data.raw["item"]["power-switch"].hidden           = true
+data.raw["recipe"]["power-switch"].hidden         = true
 
 -- Conditionally adjust the radar placement alignment
 if constants.EG_EVEN_ALIGN_RADAR then
@@ -38,8 +37,21 @@ if constants.EG_EVEN_ALIGN_RADAR then
 end
 
 -- Technologies
-table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
-    { type = "unlock-recipe", recipe = "eg-huge-electric-pole" })
+if mods["factorioplus"] then
+    table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
+        { type = "unlock-recipe", recipe = "huge-electric-pole" })
+
+    local effects = data.raw["technology"]["electric-energy-distribution-3"].effects
+    for i, effect in ipairs(effects) do
+        if effect.type == "unlock-recipe" and effect.recipe == "huge-electric-pole" then
+            table.remove(effects, i)
+            break
+        end
+    end
+else
+    table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
+        { type = "unlock-recipe", recipe = "eg-huge-electric-pole" })
+end
 
 table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
     { type = "unlock-recipe", recipe = "eg-ugp-substation-displayer" })
@@ -85,4 +97,15 @@ end
 
 if mods["cargo-ships"] and data.raw["item"]["floating-electric-pole"] then
     data.raw["item"]["floating-electric-pole"].subgroup = "eg-electric-distribution"
+end
+
+if mods["factorioplus"] then
+    local huge_pole = data.raw["electric-pole"]["huge-electric-pole"]
+
+    huge_pole.supply_area_distance = 0
+    huge_pole.maximum_wire_distance = tonumber(settings.startup["eg-max-wire-huge"].value)
+
+    data.raw["item"]["medium-wooden-electric-pole"].subgroup = "eg-electric-distribution"
+    data.raw["item"]["huge-electric-pole"].subgroup = "eg-electric-distribution"
+    data.raw["item"]["electrical-distributor"].subgroup = "eg-electric-distribution"
 end

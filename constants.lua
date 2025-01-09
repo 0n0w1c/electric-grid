@@ -173,26 +173,30 @@ constants.EG_TRANSMISSION_POLES     =
 {
     ["big-electric-pole"] = true,
     ["medium-electric-pole"] = true,
-    ["eg-huge-electric-pole"] = true
+    ["eg-huge-electric-pole"] = true,
+    ["huge-electric-pole"] = true
 }
 
 constants.EG_WIRE_CONNECTIONS       = {
     ["small-electric-pole"] = {
         ["small-electric-pole"] = true,
         ["medium-electric-pole"] = true,
-        ["small-iron-electric-pole"] = true
+        ["small-iron-electric-pole"] = true,
+        ["medium-wooden-electric-pole"] = true
     },
     ["medium-electric-pole"] = {
         ["small-electric-pole"] = true,
         ["medium-electric-pole"] = true,
         ["small-iron-electric-pole"] = true,
-        ["james-rail-pole"] = true
+        ["james-rail-pole"] = true,
+        ["medium-wooden-electric-pole"] = true
     },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
         ["substation"] = true,
         ["eg-ugp-substation"] = true,
-        ["eg-circuit-pole"] = true
+        ["eg-circuit-pole"] = true,
+        ["electrical-distributor"] = true
     },
     ["eg-huge-electric-pole"] = {
         ["eg-huge-electric-pole"] = true,
@@ -211,7 +215,8 @@ constants.EG_WIRE_CONNECTIONS       = {
     ["small-iron-electric-pole"] = {
         ["small-electric-pole"] = true,
         ["medium-electric-pole"] = true,
-        ["small-iron-electric-pole"] = true
+        ["small-iron-electric-pole"] = true,
+        ["medium-wooden-electric-pole"] = true
     },
     ["floating-electric-pole"] = {
         ["floating-electric-pole"] = true,
@@ -230,6 +235,19 @@ constants.EG_WIRE_CONNECTIONS       = {
     ["james-track-pole"] = {
         ["james-rail-pole"] = true,
         ["james-track-pole"] = true
+    },
+    ["huge-electric-pole"] = {
+        ["huge-electric-pole"] = true,
+        ["floating-electric-pole"] = true
+    },
+    ["medium-wooden-electric-pole"] = {
+        ["medium-wooden-electric-pole"] = true,
+        ["small-electric-pole"] = true,
+        ["medium-electric-pole"] = true,
+        ["small-iron-electric-pole"] = true
+    },
+    ["electrical-distributor"] = {
+        ["big-electric-pole"] = true
     }
 }
 
