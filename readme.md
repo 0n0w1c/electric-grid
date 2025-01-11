@@ -4,7 +4,9 @@ An overhaul of the electric network, engineer an Electric Grid.
 See license.txt for credits to the developers and their work that came before.  
 A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.  
 
-*Important notes:*
+*The [FAQ](https://mods.factorio.com/mod/electric-grid/faq) contains helpful tips and "too much information".*  
+
+*Important notes:*  
 The electric network overhaul should only be added to a new or early game, it significantly modifies the electric poles.  
 If quick on/off via the circuit or logistic networks is not a priority, set "On tick interval" setting to 0 for near zero UPS impact.  
 Comments and suggestions are welcome.  
@@ -36,6 +38,7 @@ Medium, big and huge poles are for power transmission only
 Substations and underground substations are fast-replaceable  
 Circuit poles create copper wire connections for performance considerations, but are hidden
 
+Startup setting to set the huge electric pole's maximum wire distance.
 Startup setting to disable the electric network overhaul, effectively transformator only.  
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
