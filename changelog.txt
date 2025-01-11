@@ -1,18 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.8.1
+Date: 11.01.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Reduced the transformator technology research time from 60 to 30 seconds
+    - Refactored underground substation placement, removed event triggers and build effect
+    - Refactored transformator placement, removed event triggers and redundant build effects
+---------------------------------------------------------------------------------------------------
 Version: 1.8.0
-Date: 08.01.2025
+Date: 09.01.2025
   Bugfixes:
     - None
   Changes:
     - Added support for Factorio+ (factorioplus)
-      electrical-distributor can connect to big electric poles
+      electrical distributor can connect to big electric poles
       wooden medium electric pole can connect to small and medium electric poles
       factorio+ huge pole replaces the electric grid huge pole (unlocked by energy distribution 1)
 ---------------------------------------------------------------------------------------------------
 Version: 1.7.7
 Date: 07.01.2025
   Bugfixes:
-    - Crash: Do not apply surface_conditions to the transformator unless Space Age is active
+    - Crash: Check if Space Age is active before applying transformator surface_conditions
   Changes:
     - Refactored the definition of the huge electric pole to use deepcopy
     - Scaled quality pip icons to zero for transformator components

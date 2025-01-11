@@ -8,7 +8,13 @@ ugp_substation.icon                           = constants.EG_ICONS .. "eg-ugp-su
 ugp_substation.icon_size                      = 64
 ugp_substation.hidden                         = false
 ugp_substation.hidden_in_factoriopedia        = true
-ugp_substation.flags                          = { "placeable-neutral", "placeable-player", "player-creation", "not-rotatable" }
+ugp_substation.flags                          =
+{
+    "placeable-neutral",
+    "placeable-player",
+    "player-creation",
+    "not-rotatable"
+}
 ugp_substation.placeable_by                   = { item = "eg-ugp-substation-displayer", count = 1 }
 ugp_substation.draw_copper_wires              = false
 ugp_substation.draw_circuit_wires             = false
@@ -60,20 +66,23 @@ ugp_substation.connection_points              = {
 
 data.extend({ ugp_substation })
 
-local ugp_substation_displayer                        = table.deepcopy(ugp_substation)
-local name                                            = "eg-ugp-substation-displayer"
 
-ugp_substation_displayer.name                         = name
-ugp_substation_displayer.hidden                       = false
-ugp_substation_displayer.hidden_in_factoriopedia      = false
-ugp_substation_displayer.draw_copper_wires            = true
-ugp_substation_displayer.collision_mask               = data.raw["electric-pole"]["substation"].collision_mask
-ugp_substation_displayer.flags                        = {
+local ugp_substation_displayer                   = table.deepcopy(ugp_substation)
+local name                                       = "eg-ugp-substation-displayer"
+
+ugp_substation_displayer.name                    = name
+ugp_substation_displayer.hidden                  = false
+ugp_substation_displayer.hidden_in_factoriopedia = false
+ugp_substation_displayer.draw_copper_wires       = true
+ugp_substation_displayer.collision_mask          = data.raw["electric-pole"]["substation"].collision_mask
+ugp_substation_displayer.flags                   =
+{
     "placeable-player",
     "player-creation",
     "not-rotatable",
     "get-by-unit-number"
 }
+
 
 local ugp_substation_displayer_item                   = table.deepcopy(data.raw["item"]["substation"])
 

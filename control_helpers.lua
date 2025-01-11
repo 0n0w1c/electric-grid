@@ -121,7 +121,8 @@ function replace_tiered_components(transformator)
             name = name,
             position = position,
             force = force,
-            direction = direction
+            direction = direction,
+            create_build_effect_smoke = false
         }
 
         name = eg_transformator.pump.name
@@ -136,7 +137,8 @@ function replace_tiered_components(transformator)
             name = name,
             position = position,
             force = force,
-            direction = direction
+            direction = direction,
+            create_build_effect_smoke = false
         }
 
         name = eg_transformator.steam_engine.name
@@ -151,7 +153,8 @@ function replace_tiered_components(transformator)
             name = name,
             position = position,
             force = force,
-            direction = direction
+            direction = direction,
+            create_build_effect_smoke = false
         }
 
         storage.eg_transformators[unit_number].boiler = eg_boiler
@@ -184,14 +187,14 @@ function eg_transformator_built(entity)
         tier = string.sub(entity.name, -1)
     end
 
-    entity.destroy({ raise_destroy = true })
+    entity.destroy()
 
     local eg_unit = surface.create_entity {
         name = "eg-unit-" .. tier,
         position = eg_unit_position,
         force = force,
         direction = direction,
-        raise_built = true
+        create_build_effect_smoke = false
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.boiler, direction)
@@ -204,7 +207,8 @@ function eg_transformator_built(entity)
         name = "eg-boiler-" .. tier,
         position = eg_boiler_position,
         force = force,
-        direction = direction
+        direction = direction,
+        create_build_effect_smoke = false
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.pump, direction)
@@ -217,7 +221,8 @@ function eg_transformator_built(entity)
         name = "eg-pump-" .. tier,
         position = eg_pump_position,
         force = force,
-        direction = direction
+        direction = direction,
+        create_build_effect_smoke = false
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.infinity_pipe, direction)
@@ -230,7 +235,8 @@ function eg_transformator_built(entity)
         name = "eg-infinity-pipe",
         position = eg_infinity_pipe_position,
         force = force,
-        direction = direction
+        direction = direction,
+        create_build_effect_smoke = false
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.steam_engine, direction)
@@ -250,7 +256,8 @@ function eg_transformator_built(entity)
         name = "eg-steam-engine-" .. eg_steam_engine_variant .. "-" .. tier,
         position = eg_steam_engine_position,
         force = force,
-        direction = direction
+        direction = direction,
+        create_build_effect_smoke = false
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.high_voltage_pole, direction)
@@ -263,7 +270,8 @@ function eg_transformator_built(entity)
         name = "eg-high-voltage-pole-" .. direction,
         position = eg_high_voltage_pole_position,
         force = force,
-        direction = direction
+        direction = direction,
+        create_build_effect_smoke = false
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.low_voltage_pole, direction)
@@ -276,7 +284,8 @@ function eg_transformator_built(entity)
         name = "eg-low-voltage-pole-" .. direction,
         position = eg_low_voltage_pole_position,
         force = force,
-        direction = direction
+        direction = direction,
+        create_build_effect_smoke = false
     }
 
     eg_infinity_pipe.set_infinity_pipe_filter({
@@ -304,9 +313,9 @@ function eg_transformator_built(entity)
     --eg_low_voltage_pole.destroy()
 end
 
---- Replace the old_transformator components with a new ones based on the selected rating.
--- @param old_transformator LuaEntity The transformator to replace.
--- @param new_rating string The selected new rating for the transformator.
+--- Replace the old_transformator components with new ones based on the selected rating
+-- @param old_transformator LuaEntity The transformator to replace
+-- @param new_rating string The selected new rating for the transformator
 function replace_transformator(old_transformator, new_rating)
     if not old_transformator then return end
     if not new_rating then return end
@@ -343,7 +352,7 @@ function replace_transformator(old_transformator, new_rating)
     if not (eg_transformator.unit and eg_transformator.unit.valid) then return end
     local eg_unit_position = eg_transformator.unit.position
     local eg_unit_direction = eg_transformator.unit.direction
-    eg_transformator.unit.destroy({ raise_destroy = true })
+    eg_transformator.unit.destroy()
 
     if not (eg_transformator.boiler and eg_transformator.boiler.valid) then return end
     local eg_boiler_position = eg_transformator.boiler.position
@@ -367,21 +376,23 @@ function replace_transformator(old_transformator, new_rating)
         position = eg_unit_position,
         direction = eg_unit_direction,
         force = force,
-        raise_built = true
+        create_build_effect_smoke = true
     }
 
     local eg_boiler = surface.create_entity {
         name = "eg-boiler-" .. tier,
         position = eg_boiler_position,
         direction = eg_boiler_direction,
-        force = force
+        force = force,
+        create_build_effect_smoke = false
     }
 
     local eg_pump = surface.create_entity {
         name = "eg-pump-" .. tier,
         position = eg_pump_position,
         direction = eg_pump_direction,
-        force = force
+        force = force,
+        create_build_effect_smoke = false
     }
 
     local eg_infinity_pipe = surface.create_entity {
@@ -389,6 +400,7 @@ function replace_transformator(old_transformator, new_rating)
         position = eg_infinity_pipe_position,
         direction = eg_infinity_pipe_direction,
         force = force,
+        create_build_effect_smoke = false
     }
 
     local eg_steam_engine_variant
@@ -402,7 +414,8 @@ function replace_transformator(old_transformator, new_rating)
         name = "eg-steam-engine-" .. eg_steam_engine_variant .. "-" .. tier,
         position = eg_steam_engine_position,
         direction = eg_steam_engine_direction,
-        force = force
+        force = force,
+        create_build_effect_smoke = false
     }
 
     eg_pump.clear_fluid_inside()
@@ -527,15 +540,15 @@ function replace_displayer_with_ugp_substation(args)
     local surface = displayer.surface
     local quality = displayer.quality
 
-    displayer.destroy({ raise_destroy = true })
+    displayer.destroy()
 
     local eg_ugp_substation = surface.create_entity {
         name = "eg-ugp-substation",
         position = position,
         direction = direction,
         force = force,
-        raise_built = true,
-        quality = quality
+        quality = quality,
+        create_build_effect_smoke = false
     }
 
     enforce_pole_connections(eg_ugp_substation)
