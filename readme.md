@@ -59,7 +59,6 @@ Wiring rules are relaxed, permitting copper wire connections between any of the 
 Transformator circuit conditions and copper wiring are not included in blueprints.  
 
 *Known Issues:*  
-Using the pipette [Q] always places a 1MW transformator.  
 Quality prior to Factorio 2.0.29 adds a supply area to poles intended to have zero supply area (medium, big and huge).
 
 *Recommended Mod:*  
