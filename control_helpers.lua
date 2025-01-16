@@ -187,6 +187,10 @@ function eg_transformator_built(entity)
         tier = string.sub(entity.name, -1)
     end
 
+    if storage.eg_transformator_to_build and string.sub(storage.eg_transformator_to_build, 1, 8) == "eg-unit-" then
+        tier = string.sub(storage.eg_transformator_to_build, -1)
+    end
+
     entity.destroy()
 
     local eg_unit = surface.create_entity {
@@ -194,7 +198,8 @@ function eg_transformator_built(entity)
         position = eg_unit_position,
         force = force,
         direction = direction,
-        create_build_effect_smoke = false
+        create_build_effect_smoke = false,
+        raise_built = true
     }
 
     rotated_offset = rotate_position(constants.EG_ENTITY_OFFSETS.boiler, direction)
@@ -482,7 +487,7 @@ function remove_invalid_transformators()
     end
 
     for _, unit_number in pairs(invalid_transformators) do
-        game.print("Invalid transformator detected: " .. unit_number)
+        --game.print("Invalid transformator detected: " .. unit_number)
         remove_transformator(unit_number)
     end
 end

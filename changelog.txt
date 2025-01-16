@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.8.2
+Date: 15.01.2025
+  Bugfixes:
+    - Reverted the change to remove one of the event triggers for on_built
+  Changes:
+    - Using the pipette [Q] now places the correct rated transformator (ghost image is 1 MW rating)
+---------------------------------------------------------------------------------------------------
 Version: 1.8.1
 Date: 11.01.2025
   Bugfixes:

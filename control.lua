@@ -18,6 +18,7 @@ local function initialize_globals()
     storage.eg_check_interval = storage.eg_check_interval or 60
     storage.eg_transformators_only = storage.eg_transformators_only or false
     storage.eg_selected_rating = storage.eg_selected_rating or {}
+    storage.eg_transformator_to_build = storage.eg_transformator_to_build or nil
 
     if settings.startup["eg-on-tick-interval"] and settings.startup["eg-on-tick-interval"].value then
         storage.eg_check_interval = tonumber(settings.startup["eg-on-tick-interval"].value) * 60
@@ -203,6 +204,10 @@ local function on_cursor_stack_changed(event)
     else
         storage.eg_copper_wire_on_cursor[player.index] = nil
     end
+
+    if cursor_stack and not cursor_stack.valid_for_read then
+        storage.eg_transformator_to_build = nil
+    end
 end
 
 --- Handle selection change events to track electric poles and enforce wiring rules.
@@ -225,6 +230,14 @@ local function on_selected_entity_changed(event)
         storage.eg_last_selected_pole[player_index] = selected_entity
     else
         storage.eg_last_selected_pole[player_index] = nil
+    end
+
+    if selected_entity and selected_entity.valid and is_transformator(selected_entity.name) and not storage.eg_transformator_to_build then
+        storage.eg_transformator_to_build = selected_entity.name
+    end
+
+    if player.cursor_stack and not player.cursor_stack.valid_for_read then
+        storage.eg_transformator_to_build = nil
     end
 end
 
@@ -400,14 +413,24 @@ end
 
 local function handle_close_transformator_gui(event)
     local player = game.get_player(event.player_index)
-    if not player or not player.valid then return end
+    if not player then return end
 
     if player.gui.screen.transformator_rating_selection_frame then
         close_transformator_gui(player)
     end
 end
 
+local function on_entity_pipetted(event)
+    local player = game.get_player(event.player_index)
+    if not player then return end
+
+    if player.selected and player.selected.valid then
+        storage.eg_transformator_to_build = player.selected.name
+    end
+end
+
 local function register_event_handlers()
+    script.on_event(defines.events.on_player_pipette, on_entity_pipetted)
     script.on_event(defines.events.on_player_rotated_entity, on_entity_rotated)
 
     script.on_event(defines.events.on_built_entity, on_entity_built)
