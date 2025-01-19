@@ -684,7 +684,7 @@ function get_or_create_transformator_frame(player)
 
     local title_label = top_bar.add {
         type = "label",
-        caption = "Transformator",
+        caption = { "entity-name.eg-unit" },
         style = "frame_title"
     }
     title_label.style.horizontally_stretchable = false
@@ -692,8 +692,11 @@ function get_or_create_transformator_frame(player)
 
     local spacer = top_bar.add {
         type = "empty-widget",
-        style = "flib_titlebar_drag_handle"
+        style = "draggable_space_header",
+        ignored_by_interaction = false,
     }
+    spacer.drag_target = frame
+    spacer.style.height = 24
     spacer.style.horizontally_stretchable = true
     spacer.ignored_by_interaction = true
 
