@@ -13,6 +13,7 @@
         "? cargo-ships",
         "? James-Train-Mod",
         "? factorioplus",
+        "? PowerOverload",
         "(?) no-quality >= 0.1.3",
         "(?) unquality",
         "! minimalwire"

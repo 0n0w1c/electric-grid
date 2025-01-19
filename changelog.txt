@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.8.3
+Date: 19.01.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Overhaul: Added support for Power Overload
+      Power Overload's huge pole, transformer, fuses and technology are hidden
+      The underground substation and circuit pole are hidden
+      The High energy interface can connect to transformators only
+---------------------------------------------------------------------------------------------------
 Version: 1.8.2
 Date: 15.01.2025
   Bugfixes:

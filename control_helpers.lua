@@ -609,6 +609,11 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         return true
     end
 
+    if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_b, 1, 12) == "po-interface") or
+        (name_b:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_a, 1, 12) == "po-interface") then
+        return true
+    end
+
     return false
 end
 

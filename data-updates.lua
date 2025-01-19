@@ -16,8 +16,10 @@ big_pole.maximum_wire_distance   = substation.maximum_wire_distance
 big_pole.light                   = constants.EG_BIG_POLE_LIGHTS and constants.EG_BIG_POLE_LIGHT or nil
 big_pole.subgroup                = "eg-electric-distribution"
 
-substation.next_upgrade          = "eg-ugp-substation-displayer"
 substation.subgroup              = "eg-electric-distribution"
+if not mods["PowerOverload"] then
+    substation.next_upgrade = "eg-ugp-substation-displayer"
+end
 
 
 -- Move electric poles in their own subgroup
@@ -30,6 +32,30 @@ data.raw["item"]["substation"].subgroup           = "eg-electric-distribution"
 data.raw["power-switch"]["power-switch"].hidden   = true
 data.raw["item"]["power-switch"].hidden           = true
 data.raw["recipe"]["power-switch"].hidden         = true
+
+if mods["PowerOverload"] then
+    data.raw["item"]["po-interface"].subgroup                    = "eg-electric-distribution"
+
+    data.raw["power-switch"]["po-transformer"].hidden            = true
+    data.raw["item"]["po-transformer"].hidden                    = true
+    data.raw["recipe"]["po-transformer"].hidden                  = true
+    data.raw["recipe"]["po-transformer-recycling"].hidden        = true
+
+    data.raw["electric-pole"]["po-huge-electric-pole"].hidden    = true
+    data.raw["item"]["po-huge-electric-pole"].hidden             = true
+    data.raw["recipe"]["po-huge-electric-pole"].hidden           = true
+    data.raw["recipe"]["po-huge-electric-pole-recycling"].hidden = true
+
+
+    local poles = data.raw["electric-pole"]
+    for _, pole in pairs(poles) do
+        if string.sub(pole.name, 1, 3) == "po-" and string.find(pole.name, "-fuse") then
+            data.raw["electric-pole"][pole.name].hidden = true
+            data.raw["item"][pole.name].hidden          = true
+            data.raw["recipe"][pole.name].hidden        = true
+        end
+    end
+end
 
 -- Conditionally adjust the radar placement alignment
 if constants.EG_EVEN_ALIGN_RADAR then
@@ -53,11 +79,15 @@ else
         { type = "unlock-recipe", recipe = "eg-huge-electric-pole" })
 end
 
-table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
-    { type = "unlock-recipe", recipe = "eg-ugp-substation-displayer" })
+if mods["PowerOverload"] then
+    data.raw["technology"]["po-electric-energy-distribution-3"].hidden = true
+else
+    table.insert(data.raw["technology"]["circuit-network"].effects,
+        { type = "unlock-recipe", recipe = "eg-circuit-pole" })
 
-table.insert(data.raw["technology"]["circuit-network"].effects,
-    { type = "unlock-recipe", recipe = "eg-circuit-pole" })
+    table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
+        { type = "unlock-recipe", recipe = "eg-ugp-substation-displayer" })
+end
 
 -- Mod support
 if mods["quality"] and data.raw["recipe"]["eg-ugp-substation-displayer-recycling"] then

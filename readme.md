@@ -67,5 +67,6 @@ Quality prior to Factorio 2.0.29 adds a supply area to poles intended to have ze
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole  
 [Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the floating electric pole  
-[James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod) - Support for electric rails
-[Factorio+](https://mods.factorio.com/mod/factorioplus) - Support for electric poles and substation
+[James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod) - Support for electric rails  
+[Factorio+](https://mods.factorio.com/mod/factorioplus) - Support for electric poles and substation  
+[Power Overload](https://mods.factorio.com/mod/PowerOverload) - Support for the mechanics and poles  
