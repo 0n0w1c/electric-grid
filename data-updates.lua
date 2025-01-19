@@ -81,6 +81,9 @@ end
 
 if mods["PowerOverload"] then
     data.raw["technology"]["po-electric-energy-distribution-3"].hidden = true
+
+    table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
+        { type = "unlock-recipe", recipe = "po-interface" })
 else
     table.insert(data.raw["technology"]["circuit-network"].effects,
         { type = "unlock-recipe", recipe = "eg-circuit-pole" })

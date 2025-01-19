@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.8.4
+Date: 19.01.2025
+  Bugfixes:
+    - Unlock Power Overhaul's high energy interface with electric-energy-distribution-2
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.8.3
 Date: 19.01.2025
   Bugfixes:
