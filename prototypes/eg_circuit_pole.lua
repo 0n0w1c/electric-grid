@@ -88,3 +88,6 @@ local eg_circuit_pole_recipe =
 }
 
 data.extend({ eg_circuit_pole, eg_circuit_pole_item, eg_circuit_pole_recipe })
+
+table.insert(data.raw["technology"]["circuit-network"].effects,
+    { type = "unlock-recipe", recipe = "eg-circuit-pole" })

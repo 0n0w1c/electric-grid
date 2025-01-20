@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.8.6
+Date: 19.01.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Power Overload: Uses the Power Overload huge electric pole
+      Light and maximum wire distance startup options will apply
+---------------------------------------------------------------------------------------------------
 Version: 1.8.5
 Date: 19.01.2025
   Bugfixes:

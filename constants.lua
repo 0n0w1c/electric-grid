@@ -174,7 +174,9 @@ constants.EG_TRANSMISSION_POLES     =
     ["big-electric-pole"] = true,
     ["medium-electric-pole"] = true,
     ["eg-huge-electric-pole"] = true,
-    ["huge-electric-pole"] = true
+    ["floating-electric-pole"] = true,
+    ["huge-electric-pole"] = true,
+    ["po-huge-electric-pole"] = true
 }
 
 constants.EG_WIRE_CONNECTIONS       = {
@@ -212,13 +214,13 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["eg-circuit-pole"] = true,
         ["big-electric-pole"] = true
     },
-    ["small-iron-electric-pole"] = {
+    ["small-iron-electric-pole"] = { -- aai industry
         ["small-electric-pole"] = true,
         ["medium-electric-pole"] = true,
         ["small-iron-electric-pole"] = true,
         ["medium-wooden-electric-pole"] = true
     },
-    ["floating-electric-pole"] = {
+    ["floating-electric-pole"] = { -- cargo ships
         ["floating-electric-pole"] = true,
         ["or_pole"] = true,
         ["eg-huge-electric-pole"] = true
@@ -227,7 +229,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["or_pole"] = true,
         ["floating-electric-pole"] = true
     },
-    ["james-rail-pole"] = {
+    ["james-rail-pole"] = { -- james' trains
         ["james-rail-pole"] = true,
         ["james-track-pole"] = true,
         ["medium-electric-pole"] = true
@@ -236,7 +238,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["james-rail-pole"] = true,
         ["james-track-pole"] = true
     },
-    ["huge-electric-pole"] = {
+    ["huge-electric-pole"] = { -- factorioplus
         ["huge-electric-pole"] = true,
         ["floating-electric-pole"] = true
     },
@@ -248,7 +250,11 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["electrical-distributor"] = {
         ["big-electric-pole"] = true
-    }
+    },
+    ["po-huge-electric-pole"] = { -- Power Overload
+        ["po-huge-electric-pole"] = true,
+        ["floating-electric-pole"] = true
+    },
 }
 
 return constants

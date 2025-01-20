@@ -109,3 +109,6 @@ local ugp_substation_displayer_recipe                 =
 }
 
 data.extend({ ugp_substation_displayer, ugp_substation_displayer_item, ugp_substation_displayer_recipe })
+
+table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
+    { type = "unlock-recipe", recipe = "eg-ugp-substation-displayer" })

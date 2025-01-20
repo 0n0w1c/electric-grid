@@ -1,5 +1,5 @@
 if constants.EG_TRANSFORMATORS_ONLY then return end
-if mods["factorioplus"] then return end
+if mods["factorioplus"] or mods["PowerOverload"] then return end
 
 local scale                              = 1.2
 local translate                          = -0.4
@@ -13,7 +13,8 @@ huge_pole.localised_description          = { "entity-description.eg-huge-electri
 huge_pole.icon                           = constants.EG_ICONS .. "eg-huge-electric-pole.png"
 huge_pole.icon_size                      = 32
 huge_pole.drawing_box_vertical_extension = 3
-huge_pole.minable                        = { mining_time = huge_pole.minable.mining_time, result = "eg-huge-electric-pole" }
+huge_pole.minable                        =
+    { mining_time = huge_pole.minable.mining_time, result = "eg-huge-electric-pole" }
 huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil
 huge_pole.max_health                     = huge_pole.max_health + 100
 huge_pole.maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value)
@@ -134,3 +135,6 @@ local huge_pole_recipe =
 }
 
 data.extend { huge_pole, huge_pole_item, huge_pole_recipe }
+
+table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
+    { type = "unlock-recipe", recipe = "eg-huge-electric-pole" })

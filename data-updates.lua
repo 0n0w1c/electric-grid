@@ -21,30 +21,31 @@ if not mods["PowerOverload"] then
     substation.next_upgrade = "eg-ugp-substation-displayer"
 end
 
-
--- Move electric poles in their own subgroup
 data.raw["item"]["small-electric-pole"].subgroup  = "eg-electric-distribution"
 data.raw["item"]["medium-electric-pole"].subgroup = "eg-electric-distribution"
 data.raw["item"]["big-electric-pole"].subgroup    = "eg-electric-distribution"
 data.raw["item"]["substation"].subgroup           = "eg-electric-distribution"
 
--- Hide switch
 data.raw["power-switch"]["power-switch"].hidden   = true
 data.raw["item"]["power-switch"].hidden           = true
 data.raw["recipe"]["power-switch"].hidden         = true
 
 if mods["PowerOverload"] then
-    data.raw["item"]["po-interface"].subgroup                    = "eg-electric-distribution"
+    local po_huge_pole = data.raw["electric-pole"]["po-huge-electric-pole"]
 
-    data.raw["power-switch"]["po-transformer"].hidden            = true
-    data.raw["item"]["po-transformer"].hidden                    = true
-    data.raw["recipe"]["po-transformer"].hidden                  = true
-    data.raw["recipe"]["po-transformer-recycling"].hidden        = true
+    po_huge_pole.light = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil
 
-    data.raw["electric-pole"]["po-huge-electric-pole"].hidden    = true
-    data.raw["item"]["po-huge-electric-pole"].hidden             = true
-    data.raw["recipe"]["po-huge-electric-pole"].hidden           = true
-    data.raw["recipe"]["po-huge-electric-pole-recycling"].hidden = true
+
+    po_huge_pole.maximum_wire_distance                    = tonumber(settings.startup["eg-max-wire-huge"].value)
+    po_huge_pole.drawing_box_vertical_extension           = 3
+
+    data.raw["item"]["po-huge-electric-pole"].subgroup    = "eg-electric-distribution"
+    data.raw["item"]["po-interface"].subgroup             = "eg-electric-distribution"
+
+    data.raw["power-switch"]["po-transformer"].hidden     = true
+    data.raw["item"]["po-transformer"].hidden             = true
+    data.raw["recipe"]["po-transformer"].hidden           = true
+    data.raw["recipe"]["po-transformer-recycling"].hidden = true
 
 
     local poles = data.raw["electric-pole"]
@@ -55,18 +56,17 @@ if mods["PowerOverload"] then
             data.raw["recipe"][pole.name].hidden        = true
         end
     end
-end
 
--- Conditionally adjust the radar placement alignment
-if constants.EG_EVEN_ALIGN_RADAR then
-    data.raw["radar"]["radar"].collision_box = { { -1.51, -1.51 }, { 1.51, 1.51 } }
-end
+    data.raw["technology"]["po-electric-energy-distribution-3"].hidden = true
 
--- Technologies
-if mods["factorioplus"] then
     table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
-        { type = "unlock-recipe", recipe = "huge-electric-pole" })
+        { type = "unlock-recipe", recipe = "po-huge-electric-pole" })
 
+    table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
+        { type = "unlock-recipe", recipe = "po-interface" })
+end
+
+if mods["factorioplus"] then
     local effects = data.raw["technology"]["electric-energy-distribution-3"].effects
     for i, effect in ipairs(effects) do
         if effect.type == "unlock-recipe" and effect.recipe == "huge-electric-pole" then
@@ -74,28 +74,18 @@ if mods["factorioplus"] then
             break
         end
     end
-else
+
+    local huge_pole = data.raw["electric-pole"]["huge-electric-pole"]
+
+    huge_pole.supply_area_distance = 0
+    huge_pole.maximum_wire_distance = tonumber(settings.startup["eg-max-wire-huge"].value)
+
+    data.raw["item"]["medium-wooden-electric-pole"].subgroup = "eg-electric-distribution"
+    data.raw["item"]["huge-electric-pole"].subgroup = "eg-electric-distribution"
+    data.raw["item"]["electrical-distributor"].subgroup = "eg-electric-distribution"
+
     table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
-        { type = "unlock-recipe", recipe = "eg-huge-electric-pole" })
-end
-
-if mods["PowerOverload"] then
-    data.raw["technology"]["po-electric-energy-distribution-3"].hidden = true
-
-    table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
-        { type = "unlock-recipe", recipe = "po-interface" })
-else
-    table.insert(data.raw["technology"]["circuit-network"].effects,
-        { type = "unlock-recipe", recipe = "eg-circuit-pole" })
-
-    table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
-        { type = "unlock-recipe", recipe = "eg-ugp-substation-displayer" })
-end
-
--- Mod support
-if mods["quality"] and data.raw["recipe"]["eg-ugp-substation-displayer-recycling"] then
-    data.raw["recipe"]["eg-ugp-substation-displayer-recycling"].results =
-        data.raw["recipe"]["substation-recycling"].results
+        { type = "unlock-recipe", recipe = "huge-electric-pole" })
 end
 
 if mods["aai-industry"] then
@@ -132,13 +122,12 @@ if mods["cargo-ships"] and data.raw["item"]["floating-electric-pole"] then
     data.raw["item"]["floating-electric-pole"].subgroup = "eg-electric-distribution"
 end
 
-if mods["factorioplus"] then
-    local huge_pole = data.raw["electric-pole"]["huge-electric-pole"]
+if mods["quality"] and data.raw["recipe"]["eg-ugp-substation-displayer-recycling"] then
+    data.raw["recipe"]["eg-ugp-substation-displayer-recycling"].results =
+        data.raw["recipe"]["substation-recycling"].results
+end
 
-    huge_pole.supply_area_distance = 0
-    huge_pole.maximum_wire_distance = tonumber(settings.startup["eg-max-wire-huge"].value)
-
-    data.raw["item"]["medium-wooden-electric-pole"].subgroup = "eg-electric-distribution"
-    data.raw["item"]["huge-electric-pole"].subgroup = "eg-electric-distribution"
-    data.raw["item"]["electrical-distributor"].subgroup = "eg-electric-distribution"
+-- Conditionally adjust the radar placement alignment
+if constants.EG_EVEN_ALIGN_RADAR then
+    data.raw["radar"]["radar"].collision_box = { { -1.51, -1.51 }, { 1.51, 1.51 } }
 end
