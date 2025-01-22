@@ -44,6 +44,13 @@ constants.EG_QUALITIES = {
     "legendary"
 }
 
+constants.EG_SUPPORTED_SURFACES = {
+    ["aquilo"] = true,
+    ["gleba"] = true,
+    ["nauvis"] = true,
+    ["vulcanus"] = true
+}
+
 constants.EG_EFFICIENCY = 1
 constants.HEAT_CAPACITY_PER_MW = 0.2565
 

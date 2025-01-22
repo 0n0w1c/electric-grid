@@ -51,8 +51,8 @@ Transformators do function as expected if connected in parallel.
 Very similar to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
 Do not place the transformator in the supply area of an electric pole.  
 
-*Fulgora and Aquillo*
-Transformators can not be placed on these surfaces (This could change in the future).  
+*Fulgora*
+Disrupted by the heavy planetary magnetic field and extreme electrical storms, transformators can not be placed.  
 Wiring rules are relaxed, permitting copper wire connections between any of the transmission only poles.  
 
 *Limitations:*  

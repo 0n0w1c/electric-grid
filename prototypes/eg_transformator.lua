@@ -183,9 +183,9 @@ local surface_conditions = nil
 if mods["space-age"] then
     surface_conditions = {
         {
-            max = 4000,
-            min = 1000,
-            property = "pressure"
+            max = 90,
+            min = 10,
+            property = "magnetic-field"
         }
     }
 end

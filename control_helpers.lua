@@ -65,7 +65,8 @@ function surface_supported(surface)
     if not (surface and surface.valid) then return false end
 
     local name = surface.name
-    if name == "nauvis" or name == "vulcanus" or name == "gleba" then return true end
+
+    if constants.EG_SUPPORTED_SURFACES[name] then return true end
 
     return false
 end

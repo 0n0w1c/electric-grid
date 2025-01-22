@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.0
+Date: 21.01.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Transformators can be placed on Aquilo
+      Like electric poles and substations, they do not freeze
+---------------------------------------------------------------------------------------------------
 Version: 1.8.6
 Date: 19.01.2025
   Bugfixes:
