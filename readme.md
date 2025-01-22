@@ -7,7 +7,6 @@ A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.
 *The [FAQ](https://mods.factorio.com/mod/electric-grid/faq) contains helpful tips and "too much information".*  
 
 *Important notes:*  
-*Factorio 2.0.29 or newer is required for compatibility with Quality.*  
 The electric network overhaul should only be added to a new or early game, it significantly modifies the electric poles.  
 If quick on/off via the circuit or logistic networks is not a priority, set "On tick interval" setting to 0 for near zero UPS impact.  
 Comments and suggestions are welcome.  
@@ -57,9 +56,6 @@ Wiring rules are relaxed, permitting copper wire connections between any of the 
 
 *Limitations:*  
 Transformator circuit conditions and copper wiring are not included in blueprints.  
-
-*Known Issues:*  
-Quality prior to Factorio 2.0.29 adds a supply area to poles intended to have zero supply area (medium, big and huge).
 
 *Recommended Mod:*  
 [No More Quality](https://mods.factorio.com/mod/no-more-quality) - Hides the Quality mechanic, resolves the issue with transmission only poles.  
