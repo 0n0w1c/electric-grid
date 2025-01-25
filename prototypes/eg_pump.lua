@@ -143,7 +143,7 @@ local function get_transformator_picture(tier)
     return template
 end
 
-function create_transformator_pump(tier)
+function create_tiered_transformator_pump(tier)
     local collision_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
     local selection_box = { { -1.49, -0.49 }, { 0.49, 0.49 } }
     --local selection_box = { { -0.49, -0.49 }, { 0.49,  0.49 } }
@@ -748,7 +748,7 @@ function create_transformator_pump(tier)
     }
 end
 
-function create_old_transformator_pump()
+function create_transformator_pump()
     local collision_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
     local selection_box = { { -1.49, -0.49 }, { 0.49, 0.49 } }
     --local selection_box = { { -0.49, -0.49 }, { 0.49,  0.49 } }
@@ -770,8 +770,8 @@ function create_old_transformator_pump()
         collision_box             = collision_box,
         localised_name            = { "entity-name.eg-pump" },
         localised_description     = { "entity-description.eg-pump" },
-        integration_patch         = get_transformator_picture(3),
-        pumping_speed             = 1,
+        integration_patch         = get_transformator_picture(1),
+        pumping_speed             = 100,
         energy_usage              = "0.001W",
         energy_source             = {
             type = "electric",

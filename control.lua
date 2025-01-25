@@ -118,7 +118,6 @@ local function check_pump_disabled(transformator)
     if not (pump and pump.valid) then return end
 
     local control_behavior = pump.get_control_behavior()
-
     if control_behavior and control_behavior.disabled and pump.fluidbox[1] ~= nil then
         pump.clear_fluid_inside()
         replace_tiered_components(transformator)
@@ -346,9 +345,8 @@ local function on_gui_closed(event)
                 local tier = string.sub(unit_name, -1)
 
                 if filter.name == "eg-fluid-disable" then
-                    replace_tiered_components(transformator)
-                    pump = transformator.pump
                     pump.clear_fluid_inside()
+                    replace_tiered_components(transformator)
                     pump.fluidbox.set_filter(1, { name = "eg-fluid-disable" })
                 else
                     pump.clear_fluid_inside()
@@ -446,16 +444,16 @@ local function register_event_handlers()
     script.on_event(defines.events.on_player_cursor_stack_changed, on_cursor_stack_changed)
     script.on_event(defines.events.on_selected_entity_changed, on_selected_entity_changed)
 
-    if storage.eg_check_interval and storage.eg_check_interval > 0 then
-        script.on_nth_tick(storage.eg_check_interval, nth_tick_checks)
-    end
-
     script.on_event("transformator-rating-selection", on_transformator_rating_selection)
     script.on_event(defines.events.on_gui_selection_state_changed, on_dropdown_selection_changed)
     script.on_event(defines.events.on_gui_click, on_gui_click)
     script.on_event(defines.events.on_gui_closed, on_gui_closed)
     script.on_event({ "close-transformator-rating-selection-e", "close-transformator-rating-selection-esc" },
         handle_close_transformator_gui)
+
+    if game and storage.eg_check_interval and storage.eg_check_interval > 0 then
+        job_queue.schedule(game.tick + storage.eg_check_interval, "nth_tick_checks", {}, storage.eg_check_interval)
+    end
 end
 
 script.on_init(function()
@@ -463,6 +461,7 @@ script.on_init(function()
     register_event_handlers()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("nth_tick_checks", nth_tick_checks)
     job_queue.update_registration()
 end)
 
@@ -470,6 +469,7 @@ script.on_load(function()
     register_event_handlers()
     if storage.jobs then
         job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+        job_queue.register_function("nth_tick_checks", nth_tick_checks)
         job_queue.update_registration()
     end
 end)
@@ -480,5 +480,6 @@ script.on_configuration_changed(function()
     register_event_handlers()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("nth_tick_checks", nth_tick_checks)
     job_queue.update_registration()
 end)

@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.1
+Date: 25.01.2025
+  Bugfixes:
+    - IMPORTANT: Reverting the change to tiered pumps, introduced with 1.6.5
+    - Quick on/off via circuit conditions was not functioning properly
+  Changes:
+    - IMPORTANT: Tiered pumps are being migrated back to a single pump
+      Transformators may need to be reset, either set the transformator pump's filter to be 
+      disabled, then enabled, or change the transformator rating, and then back
+      Transformators which had a circuit network connection, will need to be reconnected
+    - Transformator pumps will display as a 1MW Transformator in Factoriopedia and the filter gui
+---------------------------------------------------------------------------------------------------
 Version: 1.9.0
 Date: 21.01.2025
   Bugfixes:

@@ -125,23 +125,6 @@ function replace_tiered_components(transformator)
             direction = direction,
             create_build_effect_smoke = false
         }
-
-        name = eg_transformator.pump.name
-        direction = eg_transformator.pump.direction
-        position = eg_transformator.pump.position
-
-        if eg_transformator.pump and eg_transformator.pump.valid then
-            eg_transformator.pump.destroy()
-        end
-
-        local eg_pump = surface.create_entity {
-            name = name,
-            position = position,
-            force = force,
-            direction = direction,
-            create_build_effect_smoke = false
-        }
-
         name = eg_transformator.steam_engine.name
         direction = eg_transformator.steam_engine.direction
         position = eg_transformator.steam_engine.position
@@ -159,7 +142,6 @@ function replace_tiered_components(transformator)
         }
 
         storage.eg_transformators[unit_number].boiler = eg_boiler
-        storage.eg_transformators[unit_number].pump = eg_pump
         storage.eg_transformators[unit_number].steam_engine = eg_steam_engine
     else
         --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
@@ -224,7 +206,7 @@ function eg_transformator_built(entity)
     }
 
     local eg_pump = surface.create_entity {
-        name = "eg-pump-" .. tier,
+        name = "eg-pump",
         position = eg_pump_position,
         force = force,
         direction = direction,
@@ -311,12 +293,6 @@ function eg_transformator_built(entity)
         low_voltage = eg_low_voltage_pole,
         alert_tick = 0
     }
-
-    --eg_unit.destroy()
-    --eg_boiler.destroy()
-    --eg_steam_engine.destroy()
-    --eg_high_voltage_pole.destroy()
-    --eg_low_voltage_pole.destroy()
 end
 
 --- Replace the old_transformator components with new ones based on the selected rating
@@ -351,9 +327,7 @@ function replace_transformator(old_transformator, new_rating)
     local eg_low_voltage_pole = eg_transformator.low_voltage
 
     if not (eg_transformator.pump and eg_transformator.pump.valid) then return end
-    local eg_pump_position = eg_transformator.pump.position
-    local eg_pump_direction = eg_transformator.pump.direction
-    eg_transformator.pump.destroy()
+    local eg_pump = eg_transformator.pump
 
     if not (eg_transformator.unit and eg_transformator.unit.valid) then return end
     local eg_unit_position = eg_transformator.unit.position
@@ -392,15 +366,6 @@ function replace_transformator(old_transformator, new_rating)
         force = force,
         create_build_effect_smoke = false
     }
-
-    local eg_pump = surface.create_entity {
-        name = "eg-pump-" .. tier,
-        position = eg_pump_position,
-        direction = eg_pump_direction,
-        force = force,
-        create_build_effect_smoke = false
-    }
-
     local eg_infinity_pipe = surface.create_entity {
         name = "eg-infinity-pipe",
         position = eg_infinity_pipe_position,

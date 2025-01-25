@@ -227,14 +227,14 @@ for tier = 1, constants.EG_NUM_TIERS do
         create_transformator_boiler(tier),
         create_transformator_steam_engine("ne", tier),
         create_transformator_steam_engine("sw", tier),
-        create_transformator_pump(tier),
+        create_tiered_transformator_pump(tier),
     })
 end
 
 data.extend({
     create_transformator_fluid_disable(),
     create_transformator_fluid_enable(),
-    create_old_transformator_pump(),
+    create_transformator_pump(),
 })
 
 local eg_transformator_displayer = {

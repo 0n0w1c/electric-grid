@@ -22,14 +22,19 @@ end
 -- @param tick number The tick when the job should run
 -- @param function_name string The name of the registered function to call
 -- @param arguments table Arguments to pass to the function, including the entity
-function job_queue.schedule(tick, function_name, arguments)
+-- @param repeat_interval number|nil Optional interval in ticks for the job to repeat
+function job_queue.schedule(tick, function_name, arguments, repeat_interval)
     assert(type(tick) == "number", "Tick must be a number")
     assert(function_registry[function_name], "Function name must reference a registered function")
     -- Validation of arguments should be handled by the registered function
 
     storage.jobs = storage.jobs or {}
     storage.jobs[tick] = storage.jobs[tick] or {}
-    table.insert(storage.jobs[tick], { function_name = function_name, arguments = arguments })
+    table.insert(storage.jobs[tick], {
+        function_name = function_name,
+        arguments = arguments,
+        repeat_interval = repeat_interval
+    })
 
     job_queue.update_registration()
 end
@@ -50,18 +55,29 @@ function job_queue.process(tick)
         else
             log("Function not found for name: " .. job.function_name)
         end
+
+        -- Re-schedule repeating jobs
+        if job.repeat_interval and storage.eg_check_interval and storage.eg_check_interval > 0 then
+            local next_tick = tick + job.repeat_interval
+            job_queue.schedule(next_tick, job.function_name, job.arguments, job.repeat_interval)
+        end
     end
 
     storage.jobs[tick] = nil
 end
 
---- Finds the next tick with jobs and registers on_nth_tick.
+--- Updates the registration for the next job tick
 function job_queue.update_registration()
+    if not game then return end
+
     storage.jobs = storage.jobs or {}
     local next_tick = next(storage.jobs)
 
     if next_tick then
         local nth_tick = next_tick - game.tick
+
+        if nth_tick <= 0 then nth_tick = 1 end
+
         script.on_nth_tick(nth_tick, function(event)
             job_queue.process(event.tick)
             job_queue.update_registration()
