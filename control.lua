@@ -458,28 +458,28 @@ end
 
 script.on_init(function()
     initialize_globals()
-    register_event_handlers()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("nth_tick_checks", nth_tick_checks)
     job_queue.update_registration()
+    register_event_handlers()
 end)
 
 script.on_load(function()
-    register_event_handlers()
     if storage.jobs then
         job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
         job_queue.register_function("nth_tick_checks", nth_tick_checks)
         job_queue.update_registration()
     end
+    register_event_handlers()
 end)
 
 script.on_configuration_changed(function()
     initialize_globals()
     remove_invalid_transformators()
-    register_event_handlers()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("nth_tick_checks", nth_tick_checks)
     job_queue.update_registration()
+    register_event_handlers()
 end)
