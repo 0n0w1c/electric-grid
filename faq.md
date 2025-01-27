@@ -21,20 +21,19 @@ A transformator is a composite entity, comprised of the following seven base ent
 A tough question, but let me try.  
 This mod will add some load... it must, it adds both code and entities.  
 
-
-There are two primary areas... the code that runs when events occur (ex. you place an entity) and the code that runs on ticks.  
-As much code as possible is assigned to events, minimizing the on tick code.  
+There are two primary areas... the code that runs when events occur (ex. you place an entity) and the code that runs on-tick.  
+As much code as possible is assigned to events, minimizing the on-tick code.  
 The code that runs when events take place should have little impact, I doubt it can be noticed in normal game play.  
-Usually the greater concern is the code that runs on tick, this code runs at quick intervals throughout the game session.  
-This mod uses the on tick to watch for when the transformators are enabled/disabled via the circuit and logistics networks.  
-If the startup setting for the on tick interval is set to 0, there will be no on tick code executed.  
+Usually the greater concern is the code that runs on-tick, this code runs at quick intervals throughout the game session.  
+This mod uses the on-tick to watch for when the transformators are enabled/disabled via the circuit and logistics networks.  
+If the startup setting for the on-tick interval is set to 0, there will be no continuous on-tick code executed.  
 
 So adding a transformator is the same as adding the seven entities. Quick enable/disable adds more.  
 I have tested 100 transformators in operation with the on tick interval set to 1, it was not too much on my computer (M2 Mac Mini) and the performance profile was pretty good. Could you build with over 500 transformators? Uh, maybe, maybe not.  I could probably make code adjustments to split the workload. Please contact me if you do run into performance issues. I would want a save to test with, if possible, I am not a megabase engineer.  
 
 
-#### Why is there on tick code?  
-The transformator's boiler and steam engine have an energy buffer and this buffer scales with the rating. When a transformator is disabled, this buffer will continue to supply power until it is depleted. This can take some time depending on the rating chosen and power consumption. A fully buffered 10 GW transformator with nothing more than an inserter as the consumer, will take a very long time. The on tick code flushes the buffers, so the power-off takes effect quickly.  
+#### Why is there on-tick code?  
+The transformator's boiler and steam engine have an energy buffer and this buffer scales with the rating. When a transformator is disabled, this buffer will continue to supply power until it is depleted. This can take some time depending on the rating chosen and power consumption. A fully buffered 10 GW transformator with nothing more than an inserter as the consumer, will take a very long time. The on-tick code flushes the buffers, so the power-off takes effect quickly.  
 
 
 #### Why can't transformators be placed on Fulgora?  

@@ -144,7 +144,7 @@ function replace_tiered_components(transformator)
         storage.eg_transformators[unit_number].boiler = eg_boiler
         storage.eg_transformators[unit_number].steam_engine = eg_steam_engine
     else
-        --game.print("Error: Transformator with unit_number " .. unit_number .. " not found.")
+        log("Error: Transformator with unit_number " .. unit_number .. " not found.")
     end
 end
 
@@ -453,7 +453,7 @@ function remove_invalid_transformators()
     end
 
     for _, unit_number in pairs(invalid_transformators) do
-        --game.print("Invalid transformator detected: " .. unit_number)
+        log("Invalid transformator detected: " .. unit_number)
         remove_transformator(unit_number)
     end
 end

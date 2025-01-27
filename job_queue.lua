@@ -12,8 +12,15 @@ end
 -- @param name string The unique name of the function
 -- @param function_pointer function The function to register
 function job_queue.register_function(name, function_pointer)
-    assert(type(name) == "string", "Function name must be a string")
-    assert(type(function_pointer) == "function", "Only functions can be registered")
+    if type(name) ~= "string" then
+        log("Error: Function name must be a string. Received: " .. tostring(name))
+        return
+    end
+
+    if type(function_pointer) ~= "function" then
+        log("Error: Only functions can be registered. Received: " .. tostring(function_pointer))
+        return
+    end
 
     function_registry[name] = function_pointer
 end
@@ -24,8 +31,16 @@ end
 -- @param arguments table Arguments to pass to the function, including the entity
 -- @param repeat_interval number|nil Optional interval in ticks for the job to repeat
 function job_queue.schedule(tick, function_name, arguments, repeat_interval)
-    assert(type(tick) == "number", "Tick must be a number")
-    assert(function_registry[function_name], "Function name must reference a registered function")
+    if type(tick) ~= "number" then
+        log("Error: Tick must be a number. Received: " .. tostring(tick))
+        return
+    end
+
+    if not function_registry[function_name] then
+        log("Error: Function name must reference a registered function. Received: " .. tostring(function_name))
+        return
+    end
+
     -- Validation of arguments should be handled by the registered function
 
     storage.jobs = storage.jobs or {}

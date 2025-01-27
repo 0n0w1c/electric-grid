@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.3
+Date: 26.01.2025
+  Bugfixes:
+    - Added handler for script raised destroy events
+  Changes:
+    - Refactored asserts, errors will be logged to factorio-current.log
+---------------------------------------------------------------------------------------------------
 Version: 1.9.2
 Date: 25.01.2025
   Bugfixes:
