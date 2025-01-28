@@ -15,7 +15,7 @@ Comments and suggestions are welcome.
 Transformator  
 Huge electric pole  
 Underground substation  
-Circuit pole
+Circuit pole  
 
 *Removes:*  
 Power switch  
@@ -36,7 +36,7 @@ Transformators can only connect to medium, big and huge poles
 Small poles and substations are for power distribution and collection  
 Medium, big and huge poles are for power transmission only  
 Substations and underground substations are fast-replaceable  
-Circuit poles create copper wire connections for performance considerations, but are hidden
+Circuit poles create copper wire connections for performance considerations, but are hidden  
 
 Startup setting to set the huge electric pole's maximum wire distance.  
 Startup setting to disable the electric network overhaul, effectively transformator only.  
@@ -44,7 +44,9 @@ Startup setting to disable the electric network overhaul, effectively transforma
 *Transformators can be controlled via the circuit and/or logistic networks.*  
 
 Set the Fluid filter to special fluids to manually enable and disable.  
-Selectable power rating (1MW to 10GW) 
+Selectable power rating (1MW to 10GW)  
+
+No quality bonus is applied to transformators, placing a higher quality will result in normal quality.  
 
 Transformators do function as expected if connected in parallel.  
 Very similar to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
@@ -57,12 +59,14 @@ Wiring rules are relaxed, permitting copper wire connections between any of the 
 *Limitations:*  
 Transformator circuit conditions and copper wiring are not included in blueprints.  
 
-*Recommended Mod:*  
-[No More Quality](https://mods.factorio.com/mod/no-more-quality) - Hides the Quality mechanic, resolves the issue with transmission only poles.  
+*Helpful Mods:* 
+[Wire Tools](https://mods.factorio.com/mod/WireTools)  - Isolates selected poles into a separate electric network  
+[Electric Grid Enforcer](https://mods.factorio.com/mod/noangledcables) - Enforce 90 degree wire angles, as poles are placed  
+[Rewire Tool v2](https://mods.factorio.com/mod/rewire-tool-v2) - Enforce 90 degree wire angles, after placement  
 
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole  
-[Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the floating electric pole  
-[James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod) - Support for electric rails  
-[Factorio+](https://mods.factorio.com/mod/factorioplus) - Support for electric poles and substation  
+[Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the oil-rig pole and floating electric pole  
+[James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod) - Support for electric rails (connect to medium poles)  
+[Factorio+](https://mods.factorio.com/mod/factorioplus) - Support for electric poles and electrical distributor  
 [Power Overload](https://mods.factorio.com/mod/PowerOverload) - Support for the mechanics and poles  
