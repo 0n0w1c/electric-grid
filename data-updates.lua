@@ -1,3 +1,39 @@
+if mods["PowerOverload"] then
+    local po_huge_pole                          = data.raw["electric-pole"]["po-huge-electric-pole"]
+
+    po_huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil
+    po_huge_pole.maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value)
+    po_huge_pole.drawing_box_vertical_extension = 3
+
+    if not constants.EG_TRANSFORMATORS_ONLY then
+        data.raw["item"]["po-huge-electric-pole"].subgroup = "eg-electric-distribution"
+        data.raw["item"]["po-interface"].subgroup          = "eg-electric-distribution"
+    end
+
+    data.raw["power-switch"]["po-transformer"].hidden     = true
+    data.raw["item"]["po-transformer"].hidden             = true
+    data.raw["recipe"]["po-transformer"].hidden           = true
+    data.raw["recipe"]["po-transformer-recycling"].hidden = true
+
+
+    local poles = data.raw["electric-pole"]
+    for _, pole in pairs(poles) do
+        if string.sub(pole.name, 1, 3) == "po-" and string.find(pole.name, "-fuse") then
+            data.raw["electric-pole"][pole.name].hidden = true
+            data.raw["item"][pole.name].hidden          = true
+            data.raw["recipe"][pole.name].hidden        = true
+        end
+    end
+
+    data.raw["technology"]["po-electric-energy-distribution-3"].hidden = true
+
+    table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
+        { type = "unlock-recipe", recipe = "po-huge-electric-pole" })
+
+    table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
+        { type = "unlock-recipe", recipe = "po-interface" })
+end
+
 if constants.EG_TRANSFORMATORS_ONLY then return end
 
 local small_pole                 = data.raw["electric-pole"]["small-electric-pole"]
@@ -29,42 +65,6 @@ data.raw["item"]["substation"].subgroup           = "eg-electric-distribution"
 data.raw["power-switch"]["power-switch"].hidden   = true
 data.raw["item"]["power-switch"].hidden           = true
 data.raw["recipe"]["power-switch"].hidden         = true
-
-if mods["PowerOverload"] then
-    local po_huge_pole = data.raw["electric-pole"]["po-huge-electric-pole"]
-
-    po_huge_pole.light = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil
-
-
-    po_huge_pole.maximum_wire_distance                    = tonumber(settings.startup["eg-max-wire-huge"].value)
-    po_huge_pole.drawing_box_vertical_extension           = 3
-
-    data.raw["item"]["po-huge-electric-pole"].subgroup    = "eg-electric-distribution"
-    data.raw["item"]["po-interface"].subgroup             = "eg-electric-distribution"
-
-    data.raw["power-switch"]["po-transformer"].hidden     = true
-    data.raw["item"]["po-transformer"].hidden             = true
-    data.raw["recipe"]["po-transformer"].hidden           = true
-    data.raw["recipe"]["po-transformer-recycling"].hidden = true
-
-
-    local poles = data.raw["electric-pole"]
-    for _, pole in pairs(poles) do
-        if string.sub(pole.name, 1, 3) == "po-" and string.find(pole.name, "-fuse") then
-            data.raw["electric-pole"][pole.name].hidden = true
-            data.raw["item"][pole.name].hidden          = true
-            data.raw["recipe"][pole.name].hidden        = true
-        end
-    end
-
-    data.raw["technology"]["po-electric-energy-distribution-3"].hidden = true
-
-    table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
-        { type = "unlock-recipe", recipe = "po-huge-electric-pole" })
-
-    table.insert(data.raw["technology"]["electric-energy-distribution-2"].effects,
-        { type = "unlock-recipe", recipe = "po-interface" })
-end
 
 if mods["factorioplus"] then
     local effects = data.raw["technology"]["electric-energy-distribution-3"].effects

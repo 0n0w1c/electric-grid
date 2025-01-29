@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.5
+Date: 28.01.2025
+  Bugfixes:
+    - Power Overload: Hide fuses and transformer when transformator only is selected
+  Changes:
+    - Power Overload: Hide startup settings for fuses and transformer efficiency
+---------------------------------------------------------------------------------------------------
 Version: 1.9.4
 Date: 27.01.2025
   Bugfixes:
