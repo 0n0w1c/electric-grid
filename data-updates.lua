@@ -10,11 +10,13 @@ if mods["PowerOverload"] then
         data.raw["item"]["po-interface"].subgroup          = "eg-electric-distribution"
     end
 
-    data.raw["power-switch"]["po-transformer"].hidden     = true
-    data.raw["item"]["po-transformer"].hidden             = true
-    data.raw["recipe"]["po-transformer"].hidden           = true
-    data.raw["recipe"]["po-transformer-recycling"].hidden = true
+    data.raw["power-switch"]["po-transformer"].hidden = true
+    data.raw["item"]["po-transformer"].hidden         = true
+    data.raw["recipe"]["po-transformer"].hidden       = true
 
+    if mods["quality"] then
+        data.raw["recipe"]["po-transformer-recycling"].hidden = true
+    end
 
     local poles = data.raw["electric-pole"]
     for _, pole in pairs(poles) do
