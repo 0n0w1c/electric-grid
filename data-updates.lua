@@ -131,5 +131,9 @@ end
 
 -- Conditionally adjust the radar placement alignment
 if constants.EG_EVEN_ALIGN_RADAR then
-    data.raw["radar"]["radar"].collision_box = { { -1.51, -1.51 }, { 1.51, 1.51 } }
+    local radars = data.raw["radar"]
+
+    for _, radar in pairs(radars) do
+        radar.collision_box = { { -1.51, -1.51 }, { 1.51, 1.51 } }
+    end
 end

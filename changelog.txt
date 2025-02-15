@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.8
+Date: 15.02.2025
+  Bugfixes:
+    - None
+  Changes:
+    - When the even align radar startup option is selected, even align modded radars
+---------------------------------------------------------------------------------------------------
 Version: 1.9.7
 Date: 07.02.2025
   Bugfixes:
