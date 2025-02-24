@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.9
+Date: 24.02.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Overhaul: Added a small iron electric pole
+      Similar to the small electric pole but without the surface restriction
+---------------------------------------------------------------------------------------------------
 Version: 1.9.8
 Date: 15.02.2025
   Bugfixes:

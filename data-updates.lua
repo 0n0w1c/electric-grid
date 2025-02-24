@@ -68,6 +68,11 @@ data.raw["power-switch"]["power-switch"].hidden   = true
 data.raw["item"]["power-switch"].hidden           = true
 data.raw["recipe"]["power-switch"].hidden         = true
 
+if not mods["aai-industry"] and data.raw["recipe"]["small-iron-electric-pole"] then
+    table.insert(data.raw["technology"]["electronics"].effects,
+        { type = "unlock-recipe", recipe = "small-iron-electric-pole" })
+end
+
 if mods["factorioplus"] then
     local effects = data.raw["technology"]["electric-energy-distribution-3"].effects
     for i, effect in ipairs(effects) do
@@ -129,7 +134,6 @@ if mods["quality"] and data.raw["recipe"]["eg-ugp-substation-displayer-recycling
         data.raw["recipe"]["substation-recycling"].results
 end
 
--- Conditionally adjust the radar placement alignment
 if constants.EG_EVEN_ALIGN_RADAR then
     local radars = data.raw["radar"]
 

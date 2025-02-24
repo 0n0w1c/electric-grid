@@ -13,6 +13,7 @@ Comments and suggestions are welcome.
 
 *Adds:*  
 Transformator  
+Small iron electric pole  
 Huge electric pole  
 Underground substation  
 Circuit pole  
