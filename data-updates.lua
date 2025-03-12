@@ -141,3 +141,18 @@ if constants.EG_EVEN_ALIGN_RADAR then
         radar.collision_box = { { -1.51, -1.51 }, { 1.51, 1.51 } }
     end
 end
+
+local function version_gte(version, target)
+    local v_major, v_minor, v_patch = version:match("^(%d+)%.(%d+)%.(%d+)$")
+    local t_major, t_minor, t_patch = target:match("^(%d+)%.(%d+)%.(%d+)$")
+
+    return { v_major, v_minor, v_patch } >= { t_major, t_minor, t_patch }
+end
+
+if version_gte(mods["base"], "2.0.40") then
+    local poles = data.raw["electric-pole"]
+
+    for _, pole in pairs(poles) do
+        pole.rewire_neighbours_when_destroying = false
+    end
+end

@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.10
+Date: 12.03.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Overhaul: version >= 2.0.40 rewire_neighbours_when_destroying = false for all electric poles
+      When removing electric poles, new copper wire connections will not be created
+---------------------------------------------------------------------------------------------------
 Version: 1.9.9
 Date: 24.02.2025
   Bugfixes:
