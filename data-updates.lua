@@ -146,7 +146,16 @@ local function version_gte(version, target)
     local v_major, v_minor, v_patch = version:match("^(%d+)%.(%d+)%.(%d+)$")
     local t_major, t_minor, t_patch = target:match("^(%d+)%.(%d+)%.(%d+)$")
 
-    return { v_major, v_minor, v_patch } >= { t_major, t_minor, t_patch }
+    v_major, v_minor, v_patch = tonumber(v_major), tonumber(v_minor), tonumber(v_patch)
+    t_major, t_minor, t_patch = tonumber(t_major), tonumber(t_minor), tonumber(t_patch)
+
+    if v_major > t_major then return true end
+    if v_major < t_major then return false end
+
+    if v_minor > t_minor then return true end
+    if v_minor < t_minor then return false end
+
+    return v_patch >= t_patch
 end
 
 if version_gte(mods["base"], "2.0.40") then
