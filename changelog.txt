@@ -2,7 +2,7 @@
 Version: 1.9.11
 Date: 15.03.2025
   Bugfixes:
-    - Refactored: on_gui_closed
+    - Refactored: on_gui_closed and removed custom-inputs
   Changes:
     - None
 ---------------------------------------------------------------------------------------------------
