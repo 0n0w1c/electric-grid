@@ -60,17 +60,8 @@ data.extend({
     {
         type = "custom-input",
         name = "transformator-rating-selection",
-        key_sequence = "mouse-button-1"
-    },
-    {
-        type = "custom-input",
-        name = "close-transformator-rating-selection-e",
-        key_sequence = "E"
-    },
-    {
-        type = "custom-input",
-        name = "close-transformator-rating-selection-esc",
-        key_sequence = "ESCAPE"
+        key_sequence = "mouse-button-1",
+        linked_game_control = "open-gui"
     }
 })
 

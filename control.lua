@@ -329,6 +329,7 @@ local function on_gui_closed(event)
     if event.element and event.element.name == "transformator_rating_selection_frame" then
         storage.eg_selected_transformator[player.index] = nil
         player.opened = nil
+        close_transformator_gui(player)
         return
     end
 
@@ -355,6 +356,7 @@ local function on_gui_closed(event)
             end
         end
     end
+    close_transformator_gui(player)
 end
 
 --- Update the sprite based on the selected dropdown rating
@@ -409,15 +411,6 @@ local function on_entity_rotated(event)
     end
 end
 
-local function handle_close_transformator_gui(event)
-    local player = game.get_player(event.player_index)
-    if not player then return end
-
-    if player.gui.screen.transformator_rating_selection_frame then
-        close_transformator_gui(player)
-    end
-end
-
 local function on_entity_pipetted(event)
     local player = game.get_player(event.player_index)
     if not player then return end
@@ -450,8 +443,6 @@ local function register_event_handlers()
     script.on_event(defines.events.on_gui_selection_state_changed, on_dropdown_selection_changed)
     script.on_event(defines.events.on_gui_click, on_gui_click)
     script.on_event(defines.events.on_gui_closed, on_gui_closed)
-    script.on_event({ "close-transformator-rating-selection-e", "close-transformator-rating-selection-esc" },
-        handle_close_transformator_gui)
 
     if game and storage.eg_check_interval and storage.eg_check_interval > 0 then
         job_queue.schedule(game.tick + storage.eg_check_interval, "nth_tick_checks", {}, storage.eg_check_interval)
