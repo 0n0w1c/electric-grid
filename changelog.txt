@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.10.0
+Date: 16.03.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Expanded support for James' Electric Trains Plus
+      Rails are upgradable to electric rails (move trains before attempting to upgrade)
+      Elevated rails are not upgradable (ramp and first rail do not upgrade)
+      Rail interconnect appears as a medium electric pole
+      Prerequisite for Electrified Rails technology modified to be the Electric Trains technology
+      Various icon adjustments
+---------------------------------------------------------------------------------------------------
 Version: 1.9.11
 Date: 15.03.2025
   Bugfixes:
