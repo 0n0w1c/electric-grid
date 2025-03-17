@@ -2,7 +2,6 @@ if constants.EG_TRANSFORMATORS_ONLY then return end
 if mods["aai-industry"] or mods["PowerOverload"] then return end
 
 local small_iron_pole                      = table.deepcopy(data.raw["electric-pole"]["small-electric-pole"])
-local medium_pole                          = data.raw["electric-pole"]["medium-electric-pole"]
 
 small_iron_pole.type                       = "electric-pole"
 small_iron_pole.name                       = "small-iron-electric-pole"
@@ -10,10 +9,13 @@ small_iron_pole.localised_name             = { "entity-name.eg-small-iron-electr
 small_iron_pole.localised_description      = { "entity-description.eg-small-iron-electric-pole" }
 small_iron_pole.icon                       = constants.EG_ICONS .. "eg-small-iron-electric-pole.png"
 small_iron_pole.icon_size                  = 64
-small_iron_pole.maximum_wire_distance      = medium_pole.maximum_wire_distance
-small_iron_pole.supply_area_distance       = medium_pole.supply_area_distance
+small_iron_pole.maximum_wire_distance      = constants.EG_MAX_WIRE_SMALL_IRON
+small_iron_pole.supply_area_distance       = constants.EG_MAX_SUPPLY_SMALL_IRON
 small_iron_pole.minable                    =
-{ mining_time = small_iron_pole.minable.mining_time, result = "small-iron-electric-pole" }
+{
+    mining_time = small_iron_pole.minable.mining_time,
+    result = "small-iron-electric-pole"
+}
 small_iron_pole.surface_conditions         = nil
 small_iron_pole.pictures                   = {
     layers = {

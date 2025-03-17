@@ -27,7 +27,7 @@ local eg_circuit_pole        =
     draw_copper_wires          = false,
     draw_circuit_wires         = true,
     supply_area_distance       = 0,
-    maximum_wire_distance      = substation.maximum_wire_distance / 2,
+    maximum_wire_distance      = constants.EG_MAX_WIRE_SUBSTATION / 2,
     light                      = constants.EG_CIRCUIT_POLE_LIGHTS and constants.EG_MINI_POLE_LIGHT or nil,
     pictures                   =
     {

@@ -64,7 +64,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
 
         pole.name                           = pole_name
         pole.supply_area_distance           = constants.EG_SUPPLY_AREA_DISTANCE
-        pole.maximum_wire_distance          = constants.EG_MAXIMUM_WIRE_DISTANCE
+        pole.maximum_wire_distance          = constants.EG_MAX_WIRE_TRANSFORMATOR
         pole.icon                           = constants.EG_ICONS .. "eg-transformator.png"
         pole.icon_size                      = 128
         pole.pictures                       = nil

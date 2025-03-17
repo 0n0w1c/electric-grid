@@ -7,6 +7,45 @@ end
 
 data.extend({
     {
+        type = "int-setting",
+        name = "eg-on-tick-interval",
+        setting_type = "startup",
+        default_value = 1,
+        allowed_values = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+        order = get_next_order(),
+        localised_name = { "setting-name.eg-on-tick-interval" },
+        localised_description = { "setting-description.eg-on-tick-interval" }
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-wire-transformator",
+        setting_type = "startup",
+        default_value = 16.0,
+        minimum_value = 4.0,
+        maximum_value = 24.0,
+        order = get_next_order(),
+        localised_name = { "setting-name.eg-max-wire-transformator" },
+        localised_description = { "setting-description.eg-max-wire-transformator" }
+    },
+    {
+        type = "bool-setting",
+        name = "eg-transformator-sound",
+        setting_type = "startup",
+        default_value = true,
+        order = get_next_order(),
+        localised_name = { "setting-name.eg-transformator-sound" },
+        localised_description = { "setting-description.eg-transformator-sound" }
+    },
+    {
+        type = "bool-setting",
+        name = "eg-overlay",
+        setting_type = "startup",
+        default_value = true,
+        order = get_next_order(),
+        localised_name = { "setting-name.eg-overlay" },
+        localised_description = { "setting-description.eg-overlay" }
+    },
+    {
         type = "bool-setting",
         name = "eg-transformators-only",
         setting_type = "startup",
@@ -52,51 +91,102 @@ data.extend({
         localised_description = { "setting-description.eg-circuit-pole-lights" }
     },
     {
-        type = "bool-setting",
-        name = "eg-transformator-sound",
+        type = "double-setting",
+        name = "eg-max-wire-small",
         setting_type = "startup",
-        default_value = true,
+        default_value = 9.0,
+        minimum_value = 4.0,
+        maximum_value = 12.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-transformator-sound" },
-        localised_description = { "setting-description.eg-transformator-sound" }
+        localised_name = { "setting-name.eg-max-wire-small" },
+        localised_description = { "setting-description.eg-max-wire-small" }
     },
     {
-        type = "bool-setting",
-        name = "eg-overlay",
+        type = "double-setting",
+        name = "eg-max-wire-small-iron",
         setting_type = "startup",
-        default_value = true,
+        default_value = 9.0,
+        minimum_value = 4.0,
+        maximum_value = 12.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-overlay" },
-        localised_description = { "setting-description.eg-overlay" }
+        localised_name = { "setting-name.eg-max-wire-small-iron" },
+        localised_description = { "setting-description.eg-max-wire-small-iron" }
     },
     {
-        type = "int-setting",
-        name = "eg-on-tick-interval",
+        type = "double-setting",
+        name = "eg-max-wire-medium",
         setting_type = "startup",
-        default_value = 1,
-        allowed_values = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+        default_value = 9.0,
+        minimum_value = 4.0,
+        maximum_value = 12.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-on-tick-interval" },
-        localised_description = { "setting-description.eg-on-tick-interval" }
+        localised_name = { "setting-name.eg-max-wire-medium" },
+        localised_description = { "setting-description.eg-max-wire-medium" }
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-wire-big",
+        setting_type = "startup",
+        default_value = 18.0,
+        minimum_value = 16.0,
+        maximum_value = 24.0,
+        order = get_next_order(),
+        localised_name = { "setting-name.eg-max-wire-big" },
+        localised_description = { "setting-description.eg-max-wire-big" }
     },
     {
         type = "double-setting",
         name = "eg-max-wire-huge",
         setting_type = "startup",
         default_value = 36.0,
-        minimum_value = 30.0,
-        maximum_value = 64.0,
+        minimum_value = 24.0,
+        maximum_value = 50.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-wire-huge" },
         localised_description = { "setting-description.eg-max-wire-huge" }
     },
     {
-        type = "bool-setting",
-        name = "eg-even-align-radar",
+        type = "double-setting",
+        name = "eg-max-wire-substation",
         setting_type = "startup",
-        default_value = false,
+        default_value = 18.0,
+        minimum_value = 16.0,
+        maximum_value = 24.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-even-align-radar" },
-        localised_description = { "setting-description.eg-even-align-radar" }
+        localised_name = { "setting-name.eg-max-wire-substation" },
+        localised_description = { "setting-description.eg-max-wire-substation" }
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-supply-small",
+        setting_type = "startup",
+        default_value = 7.0,
+        minimum_value = 4.0,
+        maximum_value = 10.0,
+        order = get_next_order(),
+        localised_name = { "setting-name.eg-max-supply-small" },
+        localised_description = { "setting-description.eg-max-supply-small" }
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-supply-small-iron",
+        setting_type = "startup",
+        default_value = 7.0,
+        minimum_value = 4.0,
+        maximum_value = 10.0,
+        order = get_next_order(),
+        localised_name = { "setting-name.eg-max-supply-small-iron" },
+        localised_description = { "setting-description.eg-max-supply-small-iron" }
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-supply-substation",
+        setting_type = "startup",
+        default_value = 18.0,
+        minimum_value = 16.0,
+        maximum_value = 24.0,
+        order = get_next_order(),
+        localised_name = { "setting-name.eg-max-supply-substation" },
+        localised_description = { "setting-description.eg-max-supply-substation" }
     }
 })

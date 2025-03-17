@@ -14,10 +14,13 @@ huge_pole.icon                           = constants.EG_ICONS .. "eg-huge-electr
 huge_pole.icon_size                      = 32
 huge_pole.drawing_box_vertical_extension = 3
 huge_pole.minable                        =
-    { mining_time = huge_pole.minable.mining_time, result = "eg-huge-electric-pole" }
+{
+    mining_time = huge_pole.minable.mining_time,
+    result = "eg-huge-electric-pole"
+}
 huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil
 huge_pole.max_health                     = huge_pole.max_health + 100
-huge_pole.maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value)
+huge_pole.maximum_wire_distance          = constants.EG_MAX_WIRE_HUGE
 huge_pole.supply_area_distance           = 0
 huge_pole.pictures                       =
 {
@@ -29,7 +32,6 @@ huge_pole.pictures                       =
     shift = { 1.6 * scale, (-1.1 + translate) * scale },
     scale = scale,
 }
-
 huge_pole.connection_points              =
 {
     {
@@ -89,7 +91,6 @@ huge_pole.connection_points              =
         }
     }
 }
-
 huge_pole.water_reflection               =
 {
     pictures =

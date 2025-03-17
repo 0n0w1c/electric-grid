@@ -39,8 +39,8 @@ Medium, big and huge poles are for power transmission only
 Substations and underground substations are fast-replaceable  
 Circuit poles create copper wire connections for performance considerations, but are hidden  
 
-Startup setting to set the huge electric pole's maximum wire distance.  
 Startup setting to disable the electric network overhaul, effectively transformator only.  
+Startup settings to modify electric poles, they only take effect if the overhaul is active.  
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
 
@@ -51,7 +51,7 @@ No quality bonus is applied to transformators, placing a higher quality will res
 
 Transformators do function as expected if connected in parallel.  
 Very similar to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
-Do not place the transformator in the supply area of an electric pole.  
+*Do not place the transformator in the supply area of an electric pole.*  
 
 *Fulgora*
 Disrupted by the heavy planetary magnetic field and extreme electrical storms, transformators can not be placed.  

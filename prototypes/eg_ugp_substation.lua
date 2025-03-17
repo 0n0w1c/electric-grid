@@ -9,6 +9,8 @@ ugp_substation.icon                           = constants.EG_ICONS .. "eg-ugp-su
 ugp_substation.icon_size                      = 64
 ugp_substation.hidden                         = false
 ugp_substation.hidden_in_factoriopedia        = true
+ugp_substation.maximum_wire_distance          = constants.EG_MAX_WIRE_SUBSTATION
+ugp_substation.supply_area_distance           = constants.EG_MAX_SUPPLY_SUBSTATION
 ugp_substation.flags                          =
 {
     "placeable-neutral",
@@ -24,7 +26,6 @@ ugp_substation.minable                        = { mining_time = 0.5, result = "s
 ugp_substation.selection_priority             = 1
 ugp_substation.collision_mask                 = { colliding_with_tiles_only = true, layers = {} }
 ugp_substation.integration_patch_render_layer = "ground-patch"
-
 ugp_substation.integration_patch              = {
     layers = {
         {
@@ -36,7 +37,6 @@ ugp_substation.integration_patch              = {
         }
     }
 }
-
 ugp_substation.pictures                       = {
     layers = {
         {
@@ -49,7 +49,6 @@ ugp_substation.pictures                       = {
         }
     }
 }
-
 ugp_substation.connection_points              = {
     {
         shadow = {

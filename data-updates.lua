@@ -2,7 +2,7 @@ if mods["PowerOverload"] then
     local po_huge_pole                          = data.raw["electric-pole"]["po-huge-electric-pole"]
 
     po_huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil
-    po_huge_pole.maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value)
+    po_huge_pole.maximum_wire_distance          = settings.startup["eg-max-wire-huge"].value
     po_huge_pole.drawing_box_vertical_extension = 3
 
     if not constants.EG_TRANSFORMATORS_ONLY then
@@ -38,23 +38,26 @@ end
 
 if constants.EG_TRANSFORMATORS_ONLY then return end
 
-local small_pole                 = data.raw["electric-pole"]["small-electric-pole"]
-local medium_pole                = data.raw["electric-pole"]["medium-electric-pole"]
-local big_pole                   = data.raw["electric-pole"]["big-electric-pole"]
-local substation                 = data.raw["electric-pole"]["substation"]
+local small_pole                  = data.raw["electric-pole"]["small-electric-pole"]
+local medium_pole                 = data.raw["electric-pole"]["medium-electric-pole"]
+local big_pole                    = data.raw["electric-pole"]["big-electric-pole"]
+local substation                  = data.raw["electric-pole"]["substation"]
 
-small_pole.maximum_wire_distance = medium_pole.maximum_wire_distance
-small_pole.supply_area_distance  = medium_pole.supply_area_distance
+small_pole.maximum_wire_distance  = constants.EG_MAX_WIRE_SMALL
+small_pole.supply_area_distance   = constants.EG_MAX_SUPPLY_SMALL
 
-medium_pole.supply_area_distance = 0
-medium_pole.light                = constants.EG_MEDIUM_POLE_LIGHTS and constants.EG_MEDIUM_POLE_LIGHT or nil
+medium_pole.supply_area_distance  = 0
+medium_pole.maximum_wire_distance = constants.EG_MAX_WIRE_MEDIUM
+medium_pole.light                 = constants.EG_MEDIUM_POLE_LIGHTS and constants.EG_MEDIUM_POLE_LIGHT or nil
 
-big_pole.supply_area_distance    = 0
-big_pole.maximum_wire_distance   = substation.maximum_wire_distance
-big_pole.light                   = constants.EG_BIG_POLE_LIGHTS and constants.EG_BIG_POLE_LIGHT or nil
-big_pole.subgroup                = "eg-electric-distribution"
+big_pole.supply_area_distance     = 0
+big_pole.maximum_wire_distance    = constants.EG_MAX_WIRE_BIG
+big_pole.light                    = constants.EG_BIG_POLE_LIGHTS and constants.EG_BIG_POLE_LIGHT or nil
+big_pole.subgroup                 = "eg-electric-distribution"
 
-substation.subgroup              = "eg-electric-distribution"
+substation.subgroup               = "eg-electric-distribution"
+substation.maximum_wire_distance  = constants.EG_MAX_WIRE_SUBSTATION
+substation.supply_area_distance   = constants.EG_MAX_SUPPLY_SUBSTATION
 if not mods["PowerOverload"] then
     substation.next_upgrade = "eg-ugp-substation-displayer"
 end
@@ -96,59 +99,6 @@ if mods["factorioplus"] then
 end
 
 if mods["James-Train-Mod"] then
-    data.raw["technology"]["electric-trains"].icons =
-    {
-        {
-            icon = "__James-Train-Mod__/graphics/Technology-Backing.png",
-            icon_size = 128
-        },
-        {
-            icon = "__base__/graphics/icons/locomotive.png",
-            icon_size = 64,
-            shift = { 0, 0 }
-        },
-        {
-            icon = "__core__/graphics/icons/tooltips/tooltip-category-electricity.png",
-            icon_size = 32,
-            scale = 1,
-            shift = { 0, 0 }
-        },
-        {
-            icon = "__James-Train-Mod__/graphics/speed.png",
-            icon_size = 64,
-            scale = 0.5,
-            shift = { 48, 48 }
-        }
-    }
-
-    data.raw["technology"]["electrified-tracks"].icons =
-    {
-        {
-            icon = "__base__/graphics/icons/rail.png",
-            icon_size = 64
-        },
-        {
-            icon = "__core__/graphics/icons/tooltips/tooltip-category-electricity.png",
-            icon_size = 32,
-            scale = 1,
-            shift = { 0, 0 }
-        }
-    }
-
-    data.raw["technology"]["electrified-elevated-tracks"].icons =
-    {
-        {
-            icon = "__elevated-rails__/graphics/technology/elevated-rail.png",
-            icon_size = 256
-        },
-        {
-            icon = "__core__/graphics/icons/tooltips/tooltip-category-electricity.png",
-            icon_size = 32,
-            scale = 1,
-            shift = { 0, 0 }
-        }
-    }
-
     local rail_pole = data.raw["electric-pole"]["james-rail-pole"]
 
     rail_pole.drawing_box_vertical_extension = medium_pole.drawing_box_vertical_extension
@@ -157,8 +107,6 @@ if mods["James-Train-Mod"] then
     rail_pole.pictures = medium_pole.pictures
     rail_pole.connection_points = medium_pole.connection_points
     rail_pole.supply_area_distance = 0
-
-    data.raw["technology"]["electrified-tracks"].prerequisites = { "electric-trains" }
 
     -- note: rails under trains do not upgrade, gotta move'em
     data.raw["straight-rail"]["straight-rail"].next_upgrade = "james-powered-rail-straight-rail"
@@ -169,37 +117,6 @@ if mods["James-Train-Mod"] then
     data.raw["accumulator"]["james-rail-accumulator"].icon = nil
     data.raw["accumulator"]["james-rail-accumulator"].icons =
         data.raw["straight-rail"]["james-powered-rail-straight-rail"].icons
-
-    if mods["elevated-rails"] then
-        -- elevated ramp and first attached elevated rail do not upgrade via the planner
-        -- maybe this gets fixed?
-        --[[
-        data.raw["elevated-straight-rail"]["elevated-straight-rail"].next_upgrade =
-        "james-powered-rail-elevated-straight-rail"
-        data.raw["elevated-curved-rail-a"]["elevated-curved-rail-a"].next_upgrade =
-        "james-powered-rail-elevated-curved-rail-a"
-        data.raw["elevated-curved-rail-b"]["elevated-curved-rail-b"].next_upgrade =
-        "james-powered-rail-elevated-curved-rail-b"
-        data.raw["elevated-half-diagonal-rail"]["elevated-half-diagonal-rail"].next_upgrade =
-        "james-powered-rail-elevated-half-diagonal-rail"
-
-        data.raw["rail-ramp"]["rail-ramp"].next_upgrade = "james-powered-rail-ramp"
-        ]]
-
-        data.raw["elevated-straight-rail"]["james-powered-rail-elevated-straight-rail"].icons =
-        {
-            {
-                icon = "__elevated-rails__/graphics/icons/elevated-rail.png",
-                icon_size = 64
-            },
-            {
-                icon = "__core__/graphics/icons/tooltips/tooltip-category-electricity.png",
-                icon_size = 32,
-                scale = 0.5,
-                shift = { 0, 0 }
-            }
-        }
-    end
 end
 
 if mods["aai-industry"] then
@@ -239,14 +156,6 @@ end
 if mods["quality"] and data.raw["recipe"]["eg-ugp-substation-displayer-recycling"] then
     data.raw["recipe"]["eg-ugp-substation-displayer-recycling"].results =
         data.raw["recipe"]["substation-recycling"].results
-end
-
-if constants.EG_EVEN_ALIGN_RADAR then
-    local radars = data.raw["radar"]
-
-    for _, radar in pairs(radars) do
-        radar.collision_box = { { -1.51, -1.51 }, { 1.51, 1.51 } }
-    end
 end
 
 local function version_gte(version, target)

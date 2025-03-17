@@ -9,12 +9,24 @@ end
 constants.EG_TRANSFORMATORS_ONLY = settings.startup["eg-transformators-only"].value
     or (mods["base"] < "2.0.29" and not (mods["no-quality"] or mods["unquality"] or mods["no-more-quality"]))
 
+constants.EG_MAX_WIRE_TRANSFORMATOR = settings.startup["eg-max-wire-transformator"].value
+constants.EG_OVERLAY = settings.startup["eg-overlay"].value
+
 constants.EG_MEDIUM_POLE_LIGHTS = settings.startup["eg-medium-pole-lights"].value
 constants.EG_BIG_POLE_LIGHTS = settings.startup["eg-big-pole-lights"].value
 constants.EG_HUGE_POLE_LIGHTS = settings.startup["eg-huge-pole-lights"].value
 constants.EG_CIRCUIT_POLE_LIGHTS = settings.startup["eg-circuit-pole-lights"].value
-constants.EG_OVERLAY = settings.startup["eg-overlay"].value
-constants.EG_EVEN_ALIGN_RADAR = settings.startup["eg-even-align-radar"].value
+
+constants.EG_MAX_WIRE_SMALL = settings.startup["eg-max-wire-small"].value
+constants.EG_MAX_WIRE_SMALL_IRON = settings.startup["eg-max-wire-small-iron"].value
+constants.EG_MAX_WIRE_MEDIUM = settings.startup["eg-max-wire-medium"].value
+constants.EG_MAX_WIRE_BIG = settings.startup["eg-max-wire-big"].value
+constants.EG_MAX_WIRE_HUGE = settings.startup["eg-max-wire-huge"].value
+constants.EG_MAX_WIRE_SUBSTATION = settings.startup["eg-max-wire-substation"].value
+
+constants.EG_MAX_SUPPLY_SMALL = settings.startup["eg-max-supply-small"].value / 2
+constants.EG_MAX_SUPPLY_SMALL_IRON = settings.startup["eg-max-supply-small-iron"].value / 2
+constants.EG_MAX_SUPPLY_SUBSTATION = settings.startup["eg-max-supply-substation"].value / 2
 
 data.extend({
     {

@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.11.0
+Date: 17.03.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Startup setting to modify the transformator maximum wire distance
+    - Overhaul: Electric poles can be modified via startup settings
+      If the Overhaul is disabled, the electric pole settings will have no effect
+    - Removed the cosmetic only icon adjustments for James' Electric Trains Plus (out of scope)
+    - Removed the startup setting to even-align radars (out of scope)
+---------------------------------------------------------------------------------------------------
 Version: 1.10.0
 Date: 16.03.2025
   Bugfixes:
