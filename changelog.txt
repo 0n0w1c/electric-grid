@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.11.1
+Date: 18.03.2025
+  Bugfixes:
+    - Cargo Ships: Floating electric poles connect to big electric poles, not huge electric poles
+  Changes:
+    - Medium electric poles can connect to big electric poles
+    - Removed all modifications made to James' Electric Trains Plus
+      The electric rail interconnect now connects to small and medium electric poles
+---------------------------------------------------------------------------------------------------
 Version: 1.11.0
 Date: 17.03.2025
   Bugfixes:

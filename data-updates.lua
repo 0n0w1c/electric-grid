@@ -98,27 +98,6 @@ if mods["factorioplus"] then
         { type = "unlock-recipe", recipe = "huge-electric-pole" })
 end
 
-if mods["James-Train-Mod"] then
-    local rail_pole = data.raw["electric-pole"]["james-rail-pole"]
-
-    rail_pole.drawing_box_vertical_extension = medium_pole.drawing_box_vertical_extension
-    rail_pole.selection_box = medium_pole.selection_box
-    rail_pole.corpse = medium_pole.corpse
-    rail_pole.pictures = medium_pole.pictures
-    rail_pole.connection_points = medium_pole.connection_points
-    rail_pole.supply_area_distance = 0
-
-    -- note: rails under trains do not upgrade, gotta move'em
-    data.raw["straight-rail"]["straight-rail"].next_upgrade = "james-powered-rail-straight-rail"
-    data.raw["curved-rail-a"]["curved-rail-a"].next_upgrade = "james-powered-rail-curved-rail-a"
-    data.raw["curved-rail-b"]["curved-rail-b"].next_upgrade = "james-powered-rail-curved-rail-b"
-    data.raw["half-diagonal-rail"]["half-diagonal-rail"].next_upgrade = "james-powered-rail-half-diagonal-rail"
-
-    data.raw["accumulator"]["james-rail-accumulator"].icon = nil
-    data.raw["accumulator"]["james-rail-accumulator"].icons =
-        data.raw["straight-rail"]["james-powered-rail-straight-rail"].icons
-end
-
 if mods["aai-industry"] then
     local iron_pole = data.raw["electric-pole"]["small-iron-electric-pole"]
 
