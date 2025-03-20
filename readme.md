@@ -27,8 +27,8 @@ Medium, big, huge and circuit poles have no supply area and optional lights
 
 *Wiring rules:*  
 Small poles can connect to small and medium poles  
-Medium poles can connect to small, medium poles and big poles  
-Big poles can connect to medium poles, big poles, substations, underground substations, and circuit poles  
+Medium poles can connect to small, medium and big poles  
+Big poles can connect to medium and big poles, substations, underground substations and circuit poles  
 Huge poles can only connect to huge poles  
 Substations and underground substations can only connect to big poles  
 Circuit poles can connect to circuit poles and big electric poles  
@@ -37,7 +37,7 @@ Transformators can only connect to medium, big and huge poles
 Small poles and substations are for power distribution and collection  
 Medium, big and huge poles are for power transmission only  
 Substations and underground substations are fast-replaceable  
-Circuit poles create copper wire connections for performance considerations, but are hidden  
+Circuit poles create copper wire connections for performance considerations, but they are hidden  
 
 Startup setting to disable the electric network overhaul, effectively transformator only.  
 Startup settings to modify electric poles, they only take effect if the overhaul is active.  
