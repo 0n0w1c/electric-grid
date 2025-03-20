@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.11.2
+Date: 20.03.2025
+  Bugfixes:
+    - Even Pickier Dollies: Blacklist the selectable transformator components
+  Changes:
+    - Added support for Even Pickier Dollies
+      Transformator components are now prevented from being moved
+---------------------------------------------------------------------------------------------------
 Version: 1.11.1
 Date: 18.03.2025
   Bugfixes:

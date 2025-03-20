@@ -4,6 +4,28 @@ local job_queue = require("job_queue")
 
 require("control_helpers")
 
+local function edp_blacklist()
+    if not remote.interfaces["PickerDollies"] then return end
+
+    local blacklist_names =
+    {
+        "eg-unit-1", "eg-unit-2", "eg-unit-3", "eg-unit-4", "eg-unit-5",
+        "eg-unit-6", "eg-unit-7", "eg-unit-8", "eg-unit-9", "eg-pump",
+        "eg-low-voltage-pole-" .. defines.direction.north,
+        "eg-low-voltage-pole-" .. defines.direction.east,
+        "eg-low-voltage-pole-" .. defines.direction.south,
+        "eg-low-voltage-pole-" .. defines.direction.west,
+        "eg-high-voltage-pole-" .. defines.direction.north,
+        "eg-high-voltage-pole-" .. defines.direction.east,
+        "eg-high-voltage-pole-" .. defines.direction.south,
+        "eg-high-voltage-pole-" .. defines.direction.west
+    }
+
+    for _, name in pairs(blacklist_names) do
+        remote.call("PickerDollies", "add_blacklist_name", name)
+    end
+end
+
 --- Initializes global storage variables for managing transformators and related state.
 -- Ensures all required global variables are initialized with default values if not already set.
 -- Configures `storage` based on startup settings.
@@ -455,6 +477,7 @@ script.on_init(function()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("nth_tick_checks", nth_tick_checks)
     job_queue.update_registration()
+    edp_blacklist()
     register_event_handlers()
 end)
 
@@ -464,6 +487,7 @@ script.on_load(function()
         job_queue.register_function("nth_tick_checks", nth_tick_checks)
         job_queue.update_registration()
     end
+    edp_blacklist()
     register_event_handlers()
 end)
 
