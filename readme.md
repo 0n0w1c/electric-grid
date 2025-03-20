@@ -27,8 +27,8 @@ Medium, big, huge and circuit poles have no supply area and optional lights
 
 *Wiring rules:*  
 Small poles can connect to small and medium poles  
-Medium poles can connect to small and medium poles  
-Big poles can connect to big poles, substations, underground substations, and circuit poles  
+Medium poles can connect to small, medium poles and big poles  
+Big poles can connect to medium poles, big poles, substations, underground substations, and circuit poles  
 Huge poles can only connect to huge poles  
 Substations and underground substations can only connect to big poles  
 Circuit poles can connect to circuit poles and big electric poles  
