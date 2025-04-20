@@ -1,5 +1,9 @@
-local order = 0
+local function is_hidden()
+    if mods["bobpower"] then return true end
+    return false
+end
 
+local order = 0
 local function get_next_order()
     order = order + 1
     return string.format("a-%03d", order)
@@ -52,7 +56,8 @@ data.extend({
         default_value = false,
         order = get_next_order(),
         localised_name = { "setting-name.eg-transformators-only" },
-        localised_description = { "setting-description.eg-transformators-only" }
+        localised_description = { "setting-description.eg-transformators-only" },
+        hidden = is_hidden()
     },
     {
         type = "bool-setting",
@@ -61,7 +66,8 @@ data.extend({
         default_value = true,
         order = get_next_order(),
         localised_name = { "setting-name.eg-medium-pole-lights" },
-        localised_description = { "setting-description.eg-medium-pole-lights" }
+        localised_description = { "setting-description.eg-medium-pole-lights" },
+        hidden = is_hidden()
     },
     {
         type = "bool-setting",
@@ -70,7 +76,8 @@ data.extend({
         default_value = true,
         order = get_next_order(),
         localised_name = { "setting-name.eg-big-pole-lights" },
-        localised_description = { "setting-description.eg-big-pole-lights" }
+        localised_description = { "setting-description.eg-big-pole-lights" },
+        hidden = is_hidden()
     },
     {
         type = "bool-setting",
@@ -79,7 +86,8 @@ data.extend({
         default_value = true,
         order = get_next_order(),
         localised_name = { "setting-name.eg-huge-pole-lights" },
-        localised_description = { "setting-description.eg-huge-pole-lights" }
+        localised_description = { "setting-description.eg-huge-pole-lights" },
+        hidden = is_hidden()
     },
     {
         type = "bool-setting",
@@ -88,7 +96,8 @@ data.extend({
         default_value = true,
         order = get_next_order(),
         localised_name = { "setting-name.eg-circuit-pole-lights" },
-        localised_description = { "setting-description.eg-circuit-pole-lights" }
+        localised_description = { "setting-description.eg-circuit-pole-lights" },
+        hidden = is_hidden()
     },
     {
         type = "double-setting",
@@ -99,7 +108,8 @@ data.extend({
         maximum_value = 12.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-wire-small" },
-        localised_description = { "setting-description.eg-max-wire-small" }
+        localised_description = { "setting-description.eg-max-wire-small" },
+        hidden = is_hidden()
     },
     {
         type = "double-setting",
@@ -110,7 +120,8 @@ data.extend({
         maximum_value = 12.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-wire-small-iron" },
-        localised_description = { "setting-description.eg-max-wire-small-iron" }
+        localised_description = { "setting-description.eg-max-wire-small-iron" },
+        hidden = is_hidden()
     },
     {
         type = "double-setting",
@@ -121,7 +132,8 @@ data.extend({
         maximum_value = 12.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-wire-medium" },
-        localised_description = { "setting-description.eg-max-wire-medium" }
+        localised_description = { "setting-description.eg-max-wire-medium" },
+        hidden = is_hidden()
     },
     {
         type = "double-setting",
@@ -132,7 +144,8 @@ data.extend({
         maximum_value = 24.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-wire-big" },
-        localised_description = { "setting-description.eg-max-wire-big" }
+        localised_description = { "setting-description.eg-max-wire-big" },
+        hidden = is_hidden()
     },
     {
         type = "double-setting",
@@ -143,7 +156,8 @@ data.extend({
         maximum_value = 50.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-wire-huge" },
-        localised_description = { "setting-description.eg-max-wire-huge" }
+        localised_description = { "setting-description.eg-max-wire-huge" },
+        hidden = is_hidden()
     },
     {
         type = "double-setting",
@@ -154,7 +168,8 @@ data.extend({
         maximum_value = 24.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-wire-substation" },
-        localised_description = { "setting-description.eg-max-wire-substation" }
+        localised_description = { "setting-description.eg-max-wire-substation" },
+        hidden = is_hidden()
     },
     {
         type = "double-setting",
@@ -165,7 +180,8 @@ data.extend({
         maximum_value = 10.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-supply-small" },
-        localised_description = { "setting-description.eg-max-supply-small" }
+        localised_description = { "setting-description.eg-max-supply-small" },
+        hidden = is_hidden()
     },
     {
         type = "double-setting",
@@ -176,7 +192,8 @@ data.extend({
         maximum_value = 10.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-supply-small-iron" },
-        localised_description = { "setting-description.eg-max-supply-small-iron" }
+        localised_description = { "setting-description.eg-max-supply-small-iron" },
+        hidden = is_hidden()
     },
     {
         type = "double-setting",
@@ -187,6 +204,7 @@ data.extend({
         maximum_value = 24.0,
         order = get_next_order(),
         localised_name = { "setting-name.eg-max-supply-substation" },
-        localised_description = { "setting-description.eg-max-supply-substation" }
+        localised_description = { "setting-description.eg-max-supply-substation" },
+        hidden = is_hidden()
     }
 })

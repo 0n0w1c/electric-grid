@@ -7,7 +7,7 @@ else
 end
 
 constants.EG_TRANSFORMATORS_ONLY = settings.startup["eg-transformators-only"].value
-    or (mods["base"] < "2.0.29" and not (mods["no-quality"] or mods["unquality"] or mods["no-more-quality"]))
+if mods["bobpower"] then constants.EG_TRANSFORMATORS_ONLY = true end
 
 constants.EG_MAX_WIRE_TRANSFORMATOR = settings.startup["eg-max-wire-transformator"].value
 constants.EG_OVERLAY = settings.startup["eg-overlay"].value

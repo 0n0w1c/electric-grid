@@ -261,6 +261,13 @@ else
     subgroup = "eg-electric-distribution"
 end
 
+local order
+if mods["bobpower"] then
+    order = "a[energy]-d[substation-4]" .. "zz"
+else
+    order = data.raw["item"]["substation"].order .. "zz"
+end
+
 local eg_transformator_item = {
     type                  = "item",
     name                  = "eg-transformator",
@@ -270,7 +277,7 @@ local eg_transformator_item = {
     icon_size             = 128,
     subgroup              = subgroup,
     flags                 = { "hide-from-bonus-gui" },
-    order                 = data.raw["item"]["substation"].order .. "zz",
+    order                 = order,
     place_result          = "eg-transformator-displayer",
     stack_size            = 50,
     weight                = 20000

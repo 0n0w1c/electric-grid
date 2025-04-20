@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.11.3
+Date: 20.04.2025
+  Bugfixes:
+    - Error loading when Bob's Power is active
+  Changes:
+    - Bob's Power is now supported as transformator only, overhaul startup options will be disabled
+---------------------------------------------------------------------------------------------------
 Version: 1.11.2
 Date: 20.03.2025
   Bugfixes:
