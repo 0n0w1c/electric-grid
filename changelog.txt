@@ -4,6 +4,7 @@ Date: 20.04.2025
   Bugfixes:
     - Error loading when Bob's Power is active
   Changes:
+    - Minimum Factorio version set to 2.0.40
     - Bob's Power is now supported as transformator only, overhaul startup options will be disabled
 ---------------------------------------------------------------------------------------------------
 Version: 1.11.2
