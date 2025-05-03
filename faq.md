@@ -1,8 +1,8 @@
 #### The Why, what does the overhaul of the electric network accomplish?  
-The wiring rules are not a challenge per se, but they intentionally modify how the electric poles connect.  
-And a significant reason is to limit the number of manual wire disconnections.  
-Attempting to build with isolated electric networks, using vanilla wiring, can be [insert word].  
-The wiring rules will not prevent electric network short-circuits, but they will help.  
+The wiring rules aren’t meant to be restrictive, but intentionally guide how electric poles connect.  
+A key goal is to reduce the need for manual wire disconnections.  
+Building isolated electric networks using vanilla wiring can be tedious and error-prone.  
+While these rules won't entirely prevent electric network short-circuits, they make them less likely.  
 
 
 #### About existing blueprints?  
