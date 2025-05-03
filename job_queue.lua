@@ -33,8 +33,8 @@ end
 --- @param queue string The queue in which to schedule the job.
 --- @param tick integer The game tick at which to execute the job.
 --- @param function_name string The name of the registered function to call.
---- @param repeat_interval integer|nil Optional interval (in ticks) for job repetition.
 --- @param args table The arguments passed to the function when executed.
+--- @param repeat_interval integer|nil Optional interval (in ticks) for job repetition.
 function job_queue.schedule(queue, tick, function_name, args, repeat_interval)
     assert(type(queue) == "string", "job_queue.schedule: queue name must be a string")
     assert(type(tick) == "number", "job_queue.schedule: tick must be a number")
