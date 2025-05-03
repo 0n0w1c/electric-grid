@@ -1,3 +1,14 @@
+#### The Why, what does the overhaul of the electric network accomplish?  
+The wiring rules are not a challenge per se, but they intentionally modify how the electric poles connect.  
+And a significant reason is to limit the number of manual wire disconnections.  
+Attempting to build with isolated electric networks, using vanilla wiring, can be [insert word].  
+The wiring rules will not prevent electric network short-circuits, but they will help.  
+
+
+#### About existing blueprints?  
+Why I tagged this mod as an Overhaul, the power distribution portion will likely need to be modified.  
+
+
 #### What is this high voltage and low voltage nonsense?  
 Just an attempt to be thematic, it is equally correct to refer to them as: input/output, source/target, production/consumption, etc.  
 
