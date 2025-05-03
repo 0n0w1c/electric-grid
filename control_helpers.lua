@@ -548,6 +548,14 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     local name_a = pole_a.name
     local name_b = pole_b.name
 
+    for _, transformator in pairs(storage.eg_transformators) do
+        local hv = transformator.high_voltage
+        local lv = transformator.low_voltage
+        if (hv == pole_a and lv == pole_b) or (hv == pole_b and lv == pole_a) then
+            return false
+        end
+    end
+
     if not surface_supported(pole_a.surface) then
         if constants.EG_TRANSMISSION_POLES[name_a] and constants.EG_TRANSMISSION_POLES[name_b] then
             return true

@@ -23,6 +23,9 @@ end
 
 local constants = {}
 
+constants.EG_QUEUE_ENTITY = "entity"
+constants.EG_QUEUE_NTH_TICK = "nth_tick"
+
 constants.EG_DEBUG_TRANSFORMATOR = false
 
 constants.EG_MOD = "__electric-grid__"
@@ -208,7 +211,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["eg-ugp-substation"] = true,
         ["eg-circuit-pole"] = true,
         ["floating-electric-pole"] = true,
-        ["electrical-distributor"] = true
+        ["electrical-distributor"] = true,
+        ["kr-superior-substation"] = true
     },
     ["eg-huge-electric-pole"] = {
         ["eg-huge-electric-pole"] = true
@@ -263,6 +267,9 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["po-huge-electric-pole"] = { -- Power Overload
         ["po-huge-electric-pole"] = true
+    },
+    ["kr-superior-substation"] = {
+        ["big-electric-pole"] = true
     },
 }
 

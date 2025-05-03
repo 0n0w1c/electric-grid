@@ -2,7 +2,7 @@ if mods["PowerOverload"] then
     local po_huge_pole                          = data.raw["electric-pole"]["po-huge-electric-pole"]
 
     po_huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or nil
-    po_huge_pole.maximum_wire_distance          = settings.startup["eg-max-wire-huge"].value
+    po_huge_pole.maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value)
     po_huge_pole.drawing_box_vertical_extension = 3
 
     if not constants.EG_TRANSFORMATORS_ONLY then
@@ -58,7 +58,8 @@ big_pole.subgroup                 = "eg-electric-distribution"
 substation.subgroup               = "eg-electric-distribution"
 substation.maximum_wire_distance  = constants.EG_MAX_WIRE_SUBSTATION
 substation.supply_area_distance   = constants.EG_MAX_SUPPLY_SUBSTATION
-if not mods["PowerOverload"] then
+
+if not mods["PowerOverload"] and not mods["Krastorio2"] then
     substation.next_upgrade = "eg-ugp-substation-displayer"
 end
 
@@ -78,10 +79,12 @@ end
 
 if mods["factorioplus"] then
     local effects = data.raw["technology"]["electric-energy-distribution-3"].effects
-    for i, effect in ipairs(effects) do
-        if effect.type == "unlock-recipe" and effect.recipe == "huge-electric-pole" then
-            table.remove(effects, i)
-            break
+    if effects then
+        for i, effect in ipairs(effects) do
+            if effect.type == "unlock-recipe" and effect.recipe == "huge-electric-pole" then
+                table.remove(effects, i)
+                break
+            end
         end
     end
 
@@ -130,6 +133,11 @@ end
 
 if mods["cargo-ships"] and data.raw["item"]["floating-electric-pole"] then
     data.raw["item"]["floating-electric-pole"].subgroup = "eg-electric-distribution"
+end
+
+if mods["Krastorio2"] and data.raw["item"]["kr-superior-substation"] then
+    data.raw["item"]["kr-superior-substation"].order = data.raw["item"]["substation"].order .. "y"
+    data.raw["item"]["kr-superior-substation"].subgroup = "eg-electric-distribution"
 end
 
 if mods["quality"] and data.raw["recipe"]["eg-ugp-substation-displayer-recycling"] then

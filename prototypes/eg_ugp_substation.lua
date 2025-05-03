@@ -24,6 +24,7 @@ ugp_substation.draw_circuit_wires             = false
 ugp_substation.drawing_box_vertical_extension = 0
 ugp_substation.minable                        = { mining_time = 0.5, result = "substation" }
 ugp_substation.selection_priority             = 1
+ugp_substation.next_upgrade                   = nil
 ugp_substation.collision_mask                 = { colliding_with_tiles_only = true, layers = {} }
 ugp_substation.integration_patch_render_layer = "ground-patch"
 ugp_substation.integration_patch              = {
@@ -66,7 +67,6 @@ ugp_substation.connection_points              = {
 
 data.extend({ ugp_substation })
 
-
 local ugp_substation_displayer                   = table.deepcopy(ugp_substation)
 local name                                       = "eg-ugp-substation-displayer"
 
@@ -83,21 +83,23 @@ ugp_substation_displayer.flags                   =
     "get-by-unit-number"
 }
 
+local ugp_substation_displayer_item              =
+{
+    type                    = "item",
+    name                    = name,
+    localised_name          = { "item-name.eg-ugp-substation" },
+    localised_description   = { "item-description.eg-ugp-substation" },
+    subgroup                = "eg-electric-distribution",
+    order                   = data.raw["item"]["substation"].order .. "z",
+    icon                    = constants.EG_ICONS .. "eg-ugp-substation.png",
+    icon_size               = 64,
+    stack_size              = data.raw["item"]["substation"].stack_size,
+    hidden                  = false,
+    hidden_in_factoriopedia = false,
+    place_result            = name
+}
 
-local ugp_substation_displayer_item                   = table.deepcopy(data.raw["item"]["substation"])
-
-ugp_substation_displayer_item.name                    = name
-ugp_substation_displayer_item.localised_name          = { "item-name.eg-ugp-substation" }
-ugp_substation_displayer_item.localised_description   = { "item-description.eg-ugp-substation" }
-ugp_substation_displayer_item.subgroup                = "eg-electric-distribution"
-ugp_substation_displayer_item.order                   = ugp_substation_displayer_item.order .. "z"
-ugp_substation_displayer_item.icon                    = constants.EG_ICONS .. "eg-ugp-substation.png"
-ugp_substation_displayer_item.icon_size               = 64
-ugp_substation_displayer_item.hidden                  = false
-ugp_substation_displayer_item.hidden_in_factoriopedia = false
-ugp_substation_displayer_item.place_result            = name
-
-local ugp_substation_displayer_recipe                 =
+local ugp_substation_displayer_recipe            =
 {
     type        = "recipe",
     name        = name,
