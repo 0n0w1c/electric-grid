@@ -59,7 +59,7 @@ substation.subgroup               = "eg-electric-distribution"
 substation.maximum_wire_distance  = constants.EG_MAX_WIRE_SUBSTATION
 substation.supply_area_distance   = constants.EG_MAX_SUPPLY_SUBSTATION
 
-if not mods["PowerOverload"] and not mods["Krastorio2"] then
+if not mods["PowerOverload"] and not mods["Krastorio2"] and not mods["Krastorio2-spaced-out"] then
     substation.next_upgrade = "eg-ugp-substation-displayer"
 end
 
@@ -135,7 +135,7 @@ if mods["cargo-ships"] and data.raw["item"]["floating-electric-pole"] then
     data.raw["item"]["floating-electric-pole"].subgroup = "eg-electric-distribution"
 end
 
-if mods["Krastorio2"] then
+if mods["Krastorio2"] or mods["Krastorio2-spaced-out"] then
     if data.raw["item"]["kr-superior-substation"] then
         data.raw["item"]["kr-superior-substation"].order = data.raw["item"]["substation"].order .. "y"
         data.raw["item"]["kr-superior-substation"].subgroup = "eg-electric-distribution"
