@@ -23,8 +23,8 @@ ugp_substation.draw_copper_wires              = false
 ugp_substation.draw_circuit_wires             = false
 ugp_substation.drawing_box_vertical_extension = 0
 ugp_substation.minable                        = { mining_time = 0.5, result = "substation" }
-ugp_substation.selection_priority             = 1
 ugp_substation.next_upgrade                   = nil
+ugp_substation.selection_priority             = 1
 ugp_substation.collision_mask                 = { colliding_with_tiles_only = true, layers = {} }
 ugp_substation.integration_patch_render_layer = "ground-patch"
 ugp_substation.integration_patch              = {
@@ -66,6 +66,7 @@ ugp_substation.connection_points              = {
 }
 
 data.extend({ ugp_substation })
+
 
 local ugp_substation_displayer                   = table.deepcopy(ugp_substation)
 local name                                       = "eg-ugp-substation-displayer"

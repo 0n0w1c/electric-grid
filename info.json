@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "1.11.5",
+    "version": "1.11.6",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid!",
@@ -12,8 +12,8 @@
         "? cargo-ships",
         "? James-Train-Mod",
         "? factorioplus",
-        "? PowerOverload",
         "? Krastorio2",
+        "? PowerOverload",
         "(?) bobpower",
         "(?) even-pickier-dollies",
         "! minimalwire"

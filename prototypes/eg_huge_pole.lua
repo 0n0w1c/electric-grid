@@ -107,20 +107,22 @@ huge_pole.water_reflection               =
     orientation_to_variation = false
 }
 
+local huge_pole_item                     =
+{
+    type                  = "item",
+    name                  = "eg-huge-electric-pole",
+    localised_name        = { "item-name.eg-huge-electric-pole" },
+    localised_description = { "item-description.eg-huge-electric-pole" },
+    subgroup              = "eg-electric-distribution",
+    order                 = data.raw["item"]["big-electric-pole"].order .. "z",
+    icon                  = constants.EG_ICONS .. "eg-huge-electric-pole.png",
+    icon_size             = 32,
+    stack_size            = data.raw["item"]["big-electric-pole"].stack_size,
+    place_result          = "eg-huge-electric-pole",
+    weight                = 20000
+}
 
-local huge_pole_item                 = table.deepcopy(data.raw["item"]["big-electric-pole"])
-huge_pole_item.name                  = "eg-huge-electric-pole"
-huge_pole_item.localised_name        = { "item-name.eg-huge-electric-pole" }
-huge_pole_item.localised_description = { "item-description.eg-huge-electric-pole" }
-huge_pole_item.subgroup              = "eg-electric-distribution"
-huge_pole_item.order                 = huge_pole_item.order .. "z"
-huge_pole_item.icon                  = constants.EG_ICONS .. "eg-huge-electric-pole.png"
-huge_pole_item.icon_size             = 32
-huge_pole_item.place_result          = "eg-huge-electric-pole"
-huge_pole_item.weight                = 20000
-
-
-local huge_pole_recipe =
+local huge_pole_recipe                   =
 {
     type        = "recipe",
     name        = "eg-huge-electric-pole",

@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.11.6
+Date: 04.05.2025
+  Bugfixes:
+    - Reverted job_queue refactor
+    - Fixed quick on/off not resumed when the game was restarted
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.11.5
 Date: 03.05.2025
   Bugfixes:
@@ -19,7 +27,7 @@ Date: 20.04.2025
     - Error loading when Bob's Power is active
   Changes:
     - Minimum Factorio version set to 2.0.40
-    - Bob's Power is now supported as transformator only, overhaul startup options will be disabled
+    - Bob's Power is now supported as transformator only, overhaul startup option will be ignored
 ---------------------------------------------------------------------------------------------------
 Version: 1.11.2
 Date: 20.03.2025

@@ -135,9 +135,11 @@ if mods["cargo-ships"] and data.raw["item"]["floating-electric-pole"] then
     data.raw["item"]["floating-electric-pole"].subgroup = "eg-electric-distribution"
 end
 
-if mods["Krastorio2"] and data.raw["item"]["kr-superior-substation"] then
-    data.raw["item"]["kr-superior-substation"].order = data.raw["item"]["substation"].order .. "y"
-    data.raw["item"]["kr-superior-substation"].subgroup = "eg-electric-distribution"
+if mods["Krastorio2"] then
+    if data.raw["item"]["kr-superior-substation"] then
+        data.raw["item"]["kr-superior-substation"].order = data.raw["item"]["substation"].order .. "y"
+        data.raw["item"]["kr-superior-substation"].subgroup = "eg-electric-distribution"
+    end
 end
 
 if mods["quality"] and data.raw["recipe"]["eg-ugp-substation-displayer-recycling"] then
@@ -145,10 +147,7 @@ if mods["quality"] and data.raw["recipe"]["eg-ugp-substation-displayer-recycling
         data.raw["recipe"]["substation-recycling"].results
 end
 
-if not constants.EG_TRANSFORMATORS_ONLY then
-    local poles = data.raw["electric-pole"]
-
-    for _, pole in pairs(poles) do
-        pole.rewire_neighbours_when_destroying = false
-    end
+local poles = data.raw["electric-pole"]
+for _, pole in pairs(poles) do
+    pole.rewire_neighbours_when_destroying = false
 end

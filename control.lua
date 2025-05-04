@@ -48,6 +48,8 @@ local function initialize_globals()
 
     if settings.startup["eg-transformators-only"] then
         storage.eg_transformators_only = settings.startup["eg-transformators-only"].value
+            or (script.active_mods["base"] < "2.0.29"
+                and not (script.active_mods["no-quality"] or script.active_mods["unquality"] or script.active_mods["no-more-quality"]))
     end
 end
 
@@ -166,7 +168,6 @@ local function on_entity_built(event)
         local unit_number = entity.unit_number
 
         job_queue.schedule(
-            constants.EG_QUEUE_ENTITY,
             game.tick + 180,
             "replace_displayer_with_ugp_substation",
             { unit_number = unit_number }
@@ -469,42 +470,41 @@ end
 script.on_init(function()
     initialize_globals()
     job_queue.init()
-
-    -- Register functions into their respective queues
-    job_queue.register_function(constants.EG_QUEUE_ENTITY, "replace_displayer_with_ugp_substation",
-        replace_displayer_with_ugp_substation)
-    job_queue.register_function(constants.EG_QUEUE_NTH_TICK, "nth_tick_checks", nth_tick_checks)
-
-    if storage.eg_check_interval and storage.eg_check_interval > 0 then
-        job_queue.ensure_scheduled(constants.EG_QUEUE_NTH_TICK, "nth_tick_checks", storage.eg_check_interval)
-    end
-
+    job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("nth_tick_checks", nth_tick_checks)
+    job_queue.update_registration()
     edp_blacklist()
     register_event_handlers()
+
+    if storage.eg_check_interval and storage.eg_check_interval > 0 then
+        job_queue.schedule(game.tick + storage.eg_check_interval, "nth_tick_checks", {}, storage.eg_check_interval)
+    end
 end)
 
 script.on_load(function()
-    job_queue.register_function(constants.EG_QUEUE_ENTITY, "replace_displayer_with_ugp_substation",
-        replace_displayer_with_ugp_substation)
-    job_queue.register_function(constants.EG_QUEUE_NTH_TICK, "nth_tick_checks", nth_tick_checks)
-
+    if storage.jobs then
+        job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+        job_queue.register_function("nth_tick_checks", nth_tick_checks)
+        job_queue.update_registration()
+    end
     edp_blacklist()
     register_event_handlers()
+
+    if storage.eg_check_interval and storage.eg_check_interval > 0 then
+        script.on_nth_tick(storage.eg_check_interval, nth_tick_checks)
+    end
 end)
 
 script.on_configuration_changed(function()
     initialize_globals()
     remove_invalid_transformators()
     job_queue.init()
-
-    -- Register functions into their respective queues
-    job_queue.register_function(constants.EG_QUEUE_ENTITY, "replace_displayer_with_ugp_substation",
-        replace_displayer_with_ugp_substation)
-    job_queue.register_function(constants.EG_QUEUE_NTH_TICK, "nth_tick_checks", nth_tick_checks)
-
-    if storage.eg_check_interval and storage.eg_check_interval > 0 then
-        job_queue.ensure_scheduled(constants.EG_QUEUE_NTH_TICK, "nth_tick_checks", storage.eg_check_interval)
-    end
-
+    job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("nth_tick_checks", nth_tick_checks)
+    job_queue.update_registration()
     register_event_handlers()
+
+    if game and storage.eg_check_interval and storage.eg_check_interval > 0 then
+        job_queue.schedule(game.tick + storage.eg_check_interval, "nth_tick_checks", {}, storage.eg_check_interval)
+    end
 end)

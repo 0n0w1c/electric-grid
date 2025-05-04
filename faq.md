@@ -1,14 +1,3 @@
-#### The Why, what does the overhaul of the electric network accomplish?  
-The wiring rules aren’t meant to be restrictive, but intentionally guide how electric poles connect.  
-A key goal is to reduce the need for manual wire disconnections.  
-Building isolated electric networks using vanilla wiring can be tedious and error-prone.  
-While these rules won't entirely prevent electric network short-circuits, they make them less likely.  
-
-
-#### About existing blueprints?  
-Why I tagged this mod as an Overhaul, the power distribution portion will likely need to be modified.  
-
-
 #### What is this high voltage and low voltage nonsense?  
 Just an attempt to be thematic, it is equally correct to refer to them as: input/output, source/target, production/consumption, etc.  
 
@@ -44,8 +33,8 @@ I have tested 100 transformators in operation with the on tick interval set to 1
 
 
 #### Why is there on-tick code?  
-The transformator's boiler and steam engine have an energy buffer and this buffer scales with the rating. When a transformator is disabled, this buffer will continue to supply power until it is depleted. This can take some time depending on the rating chosen and power consumption. A fully buffered 10 GW transformator with nothing more than an inserter as the consumer, will take a very long time to deplete the buffer. The on-tick code flushes the buffers, so the power-off takes effect quickly.  
-The on-tick code is optional, if you are not interested in quick power-off, it can be disabled in the startup settings. 
+The transformator's boiler and steam engine have an energy buffer and this buffer scales with the rating. When a transformator is disabled, this buffer will continue to supply power until it is depleted. This can take some time depending on the rating chosen and power consumption. A fully buffered 10 GW transformator with nothing more than an inserter as the consumer, will take a very long time. The on-tick code flushes the buffers, so the power-off takes effect quickly.  
+
 
 #### Why can't transformators be placed on Fulgora?  
 On Fulgora, the buffers of the internal components act as an over-powered accumulator. In the spirit of intended game-play, they do not belong there.  

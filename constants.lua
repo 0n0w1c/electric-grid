@@ -23,9 +23,6 @@ end
 
 local constants = {}
 
-constants.EG_QUEUE_ENTITY = "entity"
-constants.EG_QUEUE_NTH_TICK = "nth_tick"
-
 constants.EG_DEBUG_TRANSFORMATOR = false
 
 constants.EG_MOD = "__electric-grid__"
