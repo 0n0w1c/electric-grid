@@ -64,6 +64,7 @@ Transformator circuit conditions and copper wiring are not included in blueprint
 [Wire Tools](https://mods.factorio.com/mod/WireTools)  - Isolates selected poles into a separate electric network  
 [Electric Grid Enforcer](https://mods.factorio.com/mod/noangledcables) - Enforce 90 degree wire angles, as poles are placed  
 [Rewire Tool v2](https://mods.factorio.com/mod/rewire-tool-v2) - Enforce 90 degree wire angles, after placement  
+[Energy Combinator](https://mods.factorio.com/mod/energy-combinator) - Reads the electric network and produces circuit signals  
 
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole  
