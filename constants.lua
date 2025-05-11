@@ -267,7 +267,7 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["kr-superior-substation"] = {
         ["big-electric-pole"] = true
-    },
+    }
 }
 
 return constants

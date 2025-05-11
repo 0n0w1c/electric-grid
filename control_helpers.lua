@@ -548,6 +548,10 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     local name_a = pole_a.name
     local name_b = pole_b.name
 
+    if name_a == "power-combinator-meter-network" or name_b == "power-combinator-meter-network" then
+        return true
+    end
+
     for _, transformator in pairs(storage.eg_transformators) do
         local hv = transformator.high_voltage
         local lv = transformator.low_voltage
