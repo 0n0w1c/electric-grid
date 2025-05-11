@@ -7,10 +7,10 @@ Power always flows through a transformator from the high voltage pole to the low
 This is true, even if the power source you are connecting produces less power than what already exists on the high voltage electric network.  
 
 
-#### What are the four different selectable sections of the transformator?
-The two on the either end are electric poles, to which you connect copper wires, but not across them. Circuit wires can cross.
-The two middle sections, the pump, which connects the transformator to the circuit and/or logistics network, or can be disabled.
-The final section allows you change the electrical rating, how much electricity is allowed to pass through, from pole to pole.
+#### What are the four different selectable sections of the transformator?  
+The two on the either end are electric poles, to which you connect copper wires, but not across them. Circuit wires can cross.  
+The two middle sections, the pump, which connects the transformator to the circuit and/or logistics network, or can be disabled.  
+The final section allows you change the electrical rating, how much electricity is allowed to pass through, from pole to pole.  
 
 
 #### How to connect a power source to the high voltage network?  
@@ -18,9 +18,9 @@ Power always flows through a transformator from the high voltage pole to the low
 This is true, even if the power source you are connecting produces less power than what already exists on the high voltage electric network.  
 
 
-#### How to connect a transformator to a circuit network?
-While the electric poles of the transformator will carry circuit signals as any electric pole, they to *not* connect the transformator to the circuit network.
-To connect the transformator, a circuit wire must be connected the internal pump, which is located near the yellow plug.
+#### How to connect a transformator to a circuit network?  
+While the electric poles of the transformator will carry circuit signals as any electric pole, they to *not* connect the transformator to the circuit network.  
+To connect the transformator, a circuit wire must be connected the internal pump, which is located near the yellow plug.  
 
 
 #### In modding terms, what is a Transformator?  
