@@ -212,6 +212,7 @@ local function create_transformator_unit(tier)
         selection_box              = { { -1.0, -1.0 }, { 1.0, 0.0 } },
         collision_mask             = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
         picture                    = get_transformator_picture(tier),
+        render_layer               = "object-under",
         localised_name             = { "entity-name.eg-unit" },
         localised_description      = { "entity-description.eg-unit" },
         quality_indicator_scale    = 0,
