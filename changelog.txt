@@ -2,7 +2,7 @@
 Version: 1.11.9
 Date: 14.05.2025
   Bugfixes:
-    - Refactored the circuit connection defintions
+    - Refactored the circuit connection definitions
   Changes:
     - Circuit connector has been moved to a consistent position
 ---------------------------------------------------------------------------------------------------
