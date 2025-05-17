@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.12.0
+Date: 17.05.2025
+  Bugfixes:
+    - Refactored: removed migration support for versions prior to 1.9.1
+  Changes:
+    - Added sound when opening the transformator circuit and logistics gui
+    - Slightly lowered the volume when opening and closing a transformator gui
+---------------------------------------------------------------------------------------------------
 Version: 1.11.9
 Date: 14.05.2025
   Bugfixes:

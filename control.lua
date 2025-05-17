@@ -234,11 +234,12 @@ end
 --- Handle selection change events to track electric poles and enforce wiring rules.
 -- @param event EventData.on_selected_entity_changed The event data contains the player information.
 local function on_selected_entity_changed(event)
-    local player = game.get_player(event.player_index)
+    local player_index = event.player_index
+    local player = game.get_player(player_index)
     if not player then return end
 
     local selected_entity = player.selected
-    local player_index = event.player_index
+    if not selected_entity or not selected_entity.valid then return end
 
     if storage.eg_last_selected_pole[player_index] and (not selected_entity or selected_entity.type ~= "electric-pole") then
         enforce_pole_connections(storage.eg_last_selected_pole[player_index])
@@ -247,13 +248,13 @@ local function on_selected_entity_changed(event)
         short_circuit_check()
     end
 
-    if storage.eg_copper_wire_on_cursor[player_index] and selected_entity and selected_entity.valid and selected_entity.type == "electric-pole" then
+    if storage.eg_copper_wire_on_cursor[player_index] and selected_entity.type == "electric-pole" then
         storage.eg_last_selected_pole[player_index] = selected_entity
     else
         storage.eg_last_selected_pole[player_index] = nil
     end
 
-    if selected_entity and selected_entity.valid and is_transformator(selected_entity.name) and not storage.eg_transformator_to_build then
+    if is_transformator(selected_entity.name) and not storage.eg_transformator_to_build then
         storage.eg_transformator_to_build = selected_entity.name
     end
 

@@ -42,13 +42,13 @@ data.extend({
         type = "sound",
         name = "eg-transformator-gui-open",
         filename = "__base__/sound/electric-network-open.ogg",
-        volume = 0.6
+        volume = 0.5
     },
     {
         type = "sound",
         name = "eg-transformator-gui-close",
         filename = "__base__/sound/electric-network-close.ogg",
-        volume = 0.6
+        volume = 0.5
     }
 })
 

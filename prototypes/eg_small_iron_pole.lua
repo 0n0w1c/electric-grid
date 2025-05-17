@@ -1,23 +1,23 @@
 if constants.EG_TRANSFORMATORS_ONLY then return end
 if mods["aai-industry"] or mods["PowerOverload"] then return end
 
-local small_iron_pole                      = table.deepcopy(data.raw["electric-pole"]["small-electric-pole"])
+local small_iron_pole                 = table.deepcopy(data.raw["electric-pole"]["small-electric-pole"])
 
-small_iron_pole.type                       = "electric-pole"
-small_iron_pole.name                       = "small-iron-electric-pole"
-small_iron_pole.localised_name             = { "entity-name.eg-small-iron-electric-pole" }
-small_iron_pole.localised_description      = { "entity-description.eg-small-iron-electric-pole" }
-small_iron_pole.icon                       = constants.EG_ICONS .. "eg-small-iron-electric-pole.png"
-small_iron_pole.icon_size                  = 64
-small_iron_pole.maximum_wire_distance      = constants.EG_MAX_WIRE_SMALL_IRON
-small_iron_pole.supply_area_distance       = constants.EG_MAX_SUPPLY_SMALL_IRON
-small_iron_pole.minable                    =
+small_iron_pole.type                  = "electric-pole"
+small_iron_pole.name                  = "small-iron-electric-pole"
+small_iron_pole.localised_name        = { "entity-name.eg-small-iron-electric-pole" }
+small_iron_pole.localised_description = { "entity-description.eg-small-iron-electric-pole" }
+small_iron_pole.icon                  = constants.EG_ICONS .. "eg-small-iron-electric-pole.png"
+small_iron_pole.icon_size             = 64
+small_iron_pole.maximum_wire_distance = constants.EG_MAX_WIRE_SMALL_IRON
+small_iron_pole.supply_area_distance  = constants.EG_MAX_SUPPLY_SMALL_IRON
+small_iron_pole.minable               =
 {
     mining_time = small_iron_pole.minable.mining_time,
     result = "small-iron-electric-pole"
 }
-small_iron_pole.surface_conditions         = nil
-small_iron_pole.pictures                   = {
+small_iron_pole.surface_conditions    = nil
+small_iron_pole.pictures              = {
     layers = {
         {
             direction_count = 4,
@@ -47,17 +47,21 @@ small_iron_pole.pictures                   = {
     }
 }
 
-local small_iron_pole_item                 = table.deepcopy(data.raw["item"]["small-electric-pole"])
-small_iron_pole_item.name                  = "small-iron-electric-pole"
-small_iron_pole_item.localised_name        = { "item-name.eg-small-iron-electric-pole" }
-small_iron_pole_item.localised_description = { "item-description.eg-small-iron-electric-pole" }
-small_iron_pole_item.subgroup              = "eg-electric-distribution"
-small_iron_pole_item.order                 = small_iron_pole_item.order .. "z"
-small_iron_pole_item.icon                  = constants.EG_ICONS .. "eg-small-iron-electric-pole.png"
-small_iron_pole_item.icon_size             = 64
-small_iron_pole_item.place_result          = "small-iron-electric-pole"
+local small_iron_pole_item            =
+{
+    type                  = "item",
+    name                  = "small-iron-electric-pole",
+    localised_name        = { "item-name.eg-small-iron-electric-pole" },
+    localised_description = { "item-description.eg-small-iron-electric-pole" },
+    subgroup              = "eg-electric-distribution",
+    order                 = data.raw["item"]["small-electric-pole"].order .. "z",
+    icon                  = constants.EG_ICONS .. "eg-small-iron-electric-pole.png",
+    icon_size             = 64,
+    stack_size            = data.raw["item"]["small-electric-pole"].stack_size,
+    place_result          = "small-iron-electric-pole"
+}
 
-local small_iron_pole_recipe               =
+local small_iron_pole_recipe          =
 {
     type        = "recipe",
     name        = "small-iron-electric-pole",
