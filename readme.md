@@ -8,7 +8,6 @@ A special thanks to Stringweasel for his work on Fluidic Power, the inspiration.
 
 *Important notes:*  
 The electric network overhaul should only be added to a new or early game, it significantly modifies the electric poles.  
-If quick on/off via the circuit or logistic networks is not a priority, set "On tick interval" setting to 0 for near zero UPS impact.  
 Comments and suggestions are welcome.  
 
 *Adds:*  
@@ -47,7 +46,7 @@ Startup settings to modify electric poles, they only take effect if the overhaul
 Set the Fluid filter to special fluids to manually enable and disable.  
 Selectable power rating (1MW to 10GW)  
 
-No quality bonus is applied to transformators, placing a higher quality will result in normal quality.  
+No quality bonus is applied to transformators.
 
 Transformators do function as expected if connected in parallel.  
 Very similar to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  

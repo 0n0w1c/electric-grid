@@ -42,7 +42,6 @@ As much code as possible is assigned to events, minimizing the on_nth_tick code.
 The code that runs when events take place should have little impact, I doubt it can be noticed in normal game play.  
 Usually the greater concern is the code that runs on_nth_tick, this code runs at quick intervals throughout the game session.  
 This mod uses the on_nth_tick to watch for when the transformators are enabled/disabled via the circuit and logistics networks.  
-If the startup setting for the on_nth_tick interval is set to 0, there will be no repeating on_nth_tick code executed.  
 
 So adding a transformator is the same as adding the seven entities. Quick enable/disable adds more.  
 I have tested 100 transformators in operation with the on tick interval set to 1, it was not too much on my computer (M2 Mac Mini) and the performance profile was pretty good. Could you build with over 500 transformators? Uh, maybe, maybe not.  I could probably make code adjustments to split the workload. Please contact me if you do run into performance issues. I would want a save to test with, if possible, I am not a megabase engineer.  
