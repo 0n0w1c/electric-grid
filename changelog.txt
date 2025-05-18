@@ -3,9 +3,9 @@ Version: 1.13.0
 Date: 18.05.2025
   Bugfixes:
     - Resolved multiplayer desync when joining a game
-    - Refactored: job queue runs at a fixed interval of one second (60 ticks)
+    - Refactored: job queue runs at a fixed interval of once per second (60 ticks)
   Changes:
-    - Removed the On tick interval startup setting, now runs at once per second
+    - Removed the On tick interval startup setting
 ---------------------------------------------------------------------------------------------------
 Version: 1.12.0
 Date: 17.05.2025
