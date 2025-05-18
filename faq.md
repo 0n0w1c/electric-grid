@@ -49,6 +49,7 @@ I have tested 100 transformators in operation with the on tick interval set to 1
 
 #### Why is there on_nth_tick code?  
 The transformator's boiler and steam engine have an energy buffer and this buffer scales with the rating. When a transformator is disabled, this buffer will continue to supply power until it is depleted. This can take some time depending on the rating chosen and power consumption. A fully buffered 10 GW transformator with nothing more than an inserter as the consumer, will take a very long time. The repeating on_nth_tick code flushes the buffers, so the power-off takes effect quickly.  
+When the underground substations are placed, the on_nth_tick is used to replace the displayer entity with the actual underground substation. This allows the underground substation to the placed via pole dragging, like other electric poles.  
 
 
 #### Why can't transformators be placed on Fulgora?  
