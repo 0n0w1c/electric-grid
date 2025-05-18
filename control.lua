@@ -37,14 +37,9 @@ local function initialize_globals()
     storage.eg_selected_transformator = storage.eg_selected_transformator or {}
     storage.eg_copper_wire_on_cursor = storage.eg_copper_wire_on_cursor or {}
     storage.eg_last_selected_pole = storage.eg_last_selected_pole or {}
-    storage.eg_check_interval = storage.eg_check_interval or 60
     storage.eg_transformators_only = storage.eg_transformators_only or false
     storage.eg_selected_rating = storage.eg_selected_rating or {}
     storage.eg_transformator_to_build = storage.eg_transformator_to_build or nil
-
-    if settings.startup["eg-on-tick-interval"] and settings.startup["eg-on-tick-interval"].value then
-        storage.eg_check_interval = tonumber(settings.startup["eg-on-tick-interval"].value) * 60
-    end
 
     if settings.startup["eg-transformators-only"] then
         storage.eg_transformators_only = settings.startup["eg-transformators-only"].value
@@ -166,9 +161,11 @@ local function on_entity_built(event)
         eg_transformator_built(entity)
     elseif entity.name == "eg-ugp-substation-displayer" then
         local unit_number = entity.unit_number
+        local interval = constants.EG_TICK_INTERVAL
+        local aligned_tick = math.ceil((game.tick + 180) / interval) * interval
 
         job_queue.schedule(
-            game.tick + 180,
+            aligned_tick,
             "replace_displayer_with_ugp_substation",
             { unit_number = unit_number }
         )
@@ -477,23 +474,17 @@ script.on_init(function()
     edp_blacklist()
     register_event_handlers()
 
-    if storage.eg_check_interval and storage.eg_check_interval > 0 then
-        job_queue.schedule(game.tick + storage.eg_check_interval, "nth_tick_checks", {}, storage.eg_check_interval)
-    end
+    local interval = constants.EG_TICK_INTERVAL
+    local aligned_tick = math.ceil(game.tick / interval) * interval
+    job_queue.schedule(aligned_tick, "nth_tick_checks", {}, interval)
 end)
 
 script.on_load(function()
-    if storage.jobs then
-        job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
-        job_queue.register_function("nth_tick_checks", nth_tick_checks)
-        job_queue.update_registration()
-    end
+    job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("nth_tick_checks", nth_tick_checks)
+    job_queue.update_registration()
     edp_blacklist()
     register_event_handlers()
-
-    if storage.eg_check_interval and storage.eg_check_interval > 0 then
-        script.on_nth_tick(storage.eg_check_interval, nth_tick_checks)
-    end
 end)
 
 script.on_configuration_changed(function()
@@ -505,7 +496,7 @@ script.on_configuration_changed(function()
     job_queue.update_registration()
     register_event_handlers()
 
-    if game and storage.eg_check_interval and storage.eg_check_interval > 0 then
-        job_queue.schedule(game.tick + storage.eg_check_interval, "nth_tick_checks", {}, storage.eg_check_interval)
-    end
+    local interval = constants.EG_TICK_INTERVAL
+    local aligned_tick = math.ceil(game.tick / interval) * interval
+    job_queue.schedule(aligned_tick, "nth_tick_checks", {}, interval)
 end)

@@ -11,16 +11,6 @@ end
 
 data.extend({
     {
-        type = "int-setting",
-        name = "eg-on-tick-interval",
-        setting_type = "startup",
-        default_value = 1,
-        allowed_values = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
-        order = get_next_order(),
-        localised_name = { "setting-name.eg-on-tick-interval" },
-        localised_description = { "setting-description.eg-on-tick-interval" }
-    },
-    {
         type = "double-setting",
         name = "eg-max-wire-transformator",
         setting_type = "startup",
