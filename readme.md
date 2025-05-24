@@ -38,7 +38,7 @@ Medium, big and huge poles are for power transmission only
 Substations and underground substations are fast-replaceable  
 Circuit poles create copper wire connections for performance considerations, but they are hidden  
 
-Startup setting to disable the electric network overhaul, effectively transformator only.  
+Startup setting to disable the electric network overhaul, effectively Transformator only.  
 Startup settings to modify electric poles, they only take effect if the overhaul is active.  
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
@@ -46,14 +46,14 @@ Startup settings to modify electric poles, they only take effect if the overhaul
 Set the Fluid filter to special fluids to manually enable and disable.  
 Selectable power rating (1MW to 10GW)  
 
-No quality bonus is applied to transformators.
+No quality bonus is applied to Transformators.
 
 Transformators do function as expected if connected in parallel.  
 Very similar to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
-*Do not place the transformator in the supply area of an electric pole.*  
+*Do not place the Transformator in the supply area of an electric pole.*  
 
 *Fulgora*
-Disrupted by the heavy planetary magnetic field and extreme electrical storms, transformators can not be placed.  
+Disrupted by the heavy planetary magnetic field and extreme electrical storms, Transformators can not be placed.  
 Wiring rules are relaxed, permitting copper wire connections between any of the transmission only poles.  
 
 *Limitations:*  
