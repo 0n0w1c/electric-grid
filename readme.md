@@ -59,15 +59,18 @@ Wiring rules are relaxed, permitting copper wire connections between any of the 
 *Limitations:*  
 Transformator circuit conditions and copper wiring are not included in blueprints.  
 
+*Recommended Mods:*
+[Energy Combinator](https://mods.factorio.com/mod/energy-combinator) - Reads the electric network and produces circuit signals  
+(For use with Electric Grid, it is recommended to change the *Update rate* startup setting from 5 to 60.) 
+
 *Helpful Mods:*  
-[Wire Tools](https://mods.factorio.com/mod/WireTools)  - Isolates selected poles into a separate electric network  
+[Wire Tools](https://mods.factorio.com/mod/WireTools) - Isolates selected poles into a separate electric network  
 [Electric Grid Enforcer](https://mods.factorio.com/mod/noangledcables) - Enforce 90 degree wire angles, as poles are placed  
 [Rewire Tool v2](https://mods.factorio.com/mod/rewire-tool-v2) - Enforce 90 degree wire angles, after placement  
 
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole  
 [Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the oil-rig pole and floating electric pole  
-[Energy Combinator](https://mods.factorio.com/mod/energy-combinator) - Reads the electric network and produces circuit signals  
 [Factorio+](https://mods.factorio.com/mod/factorioplus) - Support for electric poles and electrical distributor  
 [James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod) - Support for electric rails (connect to medium poles)  
 [Krastorio2](https://mods.factorio.com/mod/Krastorio2) - Support for superior substation  
