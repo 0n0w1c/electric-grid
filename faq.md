@@ -15,8 +15,7 @@ Huge electric poles, in particular, form the backbone of a high-voltage network.
 They can only connect to other huge poles or to Transformators, which means that any electric networks on either side of a huge pole line are automatically isolated.  
 When arranged in a grid, huge poles naturally divide your factory into independent power blocks.  
 
-A typical layout might involve connecting a power generation facility — nuclear, solar, or 
-steam — to the high-voltage side of a Transformator.  
+A typical layout might involve connecting a power generation facility — nuclear, solar, or steam — to the high-voltage side of a Transformator.  
 The Transformator's low-voltage side then feeds into a backbone of huge poles, forming your high-voltage main bus.  
 This bus carries power across the factory without directly powering anything along the way.  
 
