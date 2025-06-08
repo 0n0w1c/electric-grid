@@ -548,8 +548,8 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     local name_a = pole_a.name
     local name_b = pole_b.name
 
-    if name_a == "power-combinator-meter-network" or name_b == "power-combinator-meter-network" then
-        return true
+    if name_a == "power-combinator-meter-network" and name_b == "power-combinator-meter-network" then
+        return false
     end
 
     for _, transformator in pairs(storage.eg_transformators) do
@@ -609,13 +609,12 @@ function enforce_pole_connections(pole)
         return true
     end
 
-    local allowed = true
-
     local connectors = pole.get_wire_connectors()
     if not connectors then
         return true
     end
 
+    local allowed = true
     for _, connector in pairs(connectors) do
         if connector.wire_type == defines.wire_type.copper then
             for _, connection in pairs(connector.connections) do

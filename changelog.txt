@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.13.2
+Date: 08.06.2025
+  Bugfixes:
+    - Pole connection rules not applied to manual copper wire connections
+  Changes:
+    - Add the energy combinator hidden pole to the electric pole connection rules
+    - Energy Combinator: Limit the copper wire auto-connect to a single electric pole
+    - Added preliminary support for Subsurface, wooden supports can connect to medium poles
+---------------------------------------------------------------------------------------------------
 Version: 1.13.1
 Date: 01.06.2025
   Bugfixes:

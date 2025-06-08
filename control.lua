@@ -169,6 +169,13 @@ local function on_entity_built(event)
             "replace_displayer_with_ugp_substation",
             { unit_number = unit_number }
         )
+    elseif entity.name == "power-combinator" or entity.name == "power-combinator-MK2" then
+        if not storage.eg_transformators_only then
+            local pole = entity.surface.find_entity("power-combinator-meter-network", entity.position)
+            if pole then
+                enforce_pole_connections(pole)
+            end
+        end
     elseif entity.type == "electric-pole" then
         if not storage.eg_transformators_only then
             enforce_pole_connections(entity)
@@ -236,26 +243,29 @@ local function on_selected_entity_changed(event)
     if not player then return end
 
     local selected_entity = player.selected
-    if not selected_entity or not selected_entity.valid then return end
 
-    if storage.eg_last_selected_pole[player_index] and (not selected_entity or selected_entity.type ~= "electric-pole") then
-        enforce_pole_connections(storage.eg_last_selected_pole[player_index])
+    if not selected_entity and storage.eg_last_selected_pole[player_index] then
+        --if not selected_entity and storage.eg_last_selected_pole[player_index] and storage.eg_copper_wire_on_cursor[player_index] then
+        local poles = get_nearby_poles(storage.eg_last_selected_pole[player_index])
+        if poles then
+            for _, pole in pairs(poles) do
+                enforce_pole_connections(pole)
+            end
+        end
+
         storage.eg_last_selected_pole[player_index] = nil
-
-        short_circuit_check()
+        return
     end
 
-    if storage.eg_copper_wire_on_cursor[player_index] and selected_entity.type == "electric-pole" then
+    if storage.eg_copper_wire_on_cursor[player_index] and selected_entity and selected_entity.type == "electric-pole" then
         storage.eg_last_selected_pole[player_index] = selected_entity
-    else
-        storage.eg_last_selected_pole[player_index] = nil
     end
 
-    if is_transformator(selected_entity.name) and not storage.eg_transformator_to_build then
+    if selected_entity and is_transformator(selected_entity.name) and not storage.eg_transformator_to_build then
         storage.eg_transformator_to_build = selected_entity.name
     end
 
-    if player.cursor_stack and not player.cursor_stack.valid_for_read then
+    if not (player.cursor_stack and player.cursor_stack.valid_for_read) then
         storage.eg_transformator_to_build = nil
     end
 end

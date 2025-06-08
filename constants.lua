@@ -183,7 +183,8 @@ constants.EG_TRANSMISSION_POLES     =
     ["eg-huge-electric-pole"] = true,
     ["floating-electric-pole"] = true,
     ["huge-electric-pole"] = true,
-    ["po-huge-electric-pole"] = true
+    ["po-huge-electric-pole"] = true,
+    ["power-combinator-meter-network"] = true
 }
 
 constants.EG_WIRE_CONNECTIONS       = {
@@ -192,6 +193,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["medium-electric-pole"] = true,
         ["small-iron-electric-pole"] = true,
         ["medium-wooden-electric-pole"] = true,
+        ["power-combinator-meter-network"] = true,
         ["james-rail-pole"] = true
     },
     ["medium-electric-pole"] = {
@@ -200,7 +202,9 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["small-electric-pole"] = true,
         ["small-iron-electric-pole"] = true,
         ["medium-wooden-electric-pole"] = true,
-        ["james-rail-pole"] = true
+        ["james-rail-pole"] = true,
+        ["wooden-support"] = true,
+        ["power-combinator-meter-network"] = true
     },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
@@ -210,12 +214,15 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["eg-circuit-pole"] = true,
         ["floating-electric-pole"] = true,
         ["electrical-distributor"] = true,
+        ["power-combinator-meter-network"] = true,
         ["kr-superior-substation"] = true
     },
     ["eg-huge-electric-pole"] = {
+        ["power-combinator-meter-network"] = true,
         ["eg-huge-electric-pole"] = true
     },
     ["substation"] = {
+        ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true
     },
     ["eg-ugp-substation"] = {
@@ -230,6 +237,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["medium-electric-pole"] = true,
         ["small-iron-electric-pole"] = true,
         ["medium-wooden-electric-pole"] = true,
+        ["power-combinator-meter-network"] = true,
         ["james-rail-pole"] = true
     },
     ["floating-electric-pole"] = { -- cargo ships
@@ -251,6 +259,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["james-track-pole"] = true
     },
     ["huge-electric-pole"] = { -- factorioplus
+        ["power-combinator-meter-network"] = true,
         ["huge-electric-pole"] = true
     },
     ["medium-wooden-electric-pole"] = { -- factorioplus
@@ -261,13 +270,32 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["james-rail-pole"] = true
     },
     ["electrical-distributor"] = { -- factorioplus
+        ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true
     },
-    ["po-huge-electric-pole"] = { -- Power Overload
+    ["po-huge-electric-pole"] = { -- power overload
+        ["power-combinator-meter-network"] = true,
         ["po-huge-electric-pole"] = true
     },
-    ["kr-superior-substation"] = {
+    ["kr-superior-substation"] = { -- krastorio 2
+        ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true
+    },
+    ["wooden-support"] = { -- subsurface
+        ["wooden-support"] = true,
+        ["medium-electric-pole"] = true
+    },
+    ["power-combinator-meter-network"] = { -- energy combinator
+        ["small-electric-pole"] = true,
+        ["small-iron-electric-pole"] = true,
+        ["medium-electric-pole"] = true,
+        ["big-electric-pole"] = true,
+        ["eg-huge-electric-pole"] = true,
+        ["substation"] = true,
+        ["huge-electric-pole"] = true,
+        ["po-huge-electric-pole"] = true,
+        ["electrical-distributor"] = true,
+        ["kr-superior-substation"] = true
     }
 }
 

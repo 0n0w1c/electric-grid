@@ -101,6 +101,13 @@ if mods["factorioplus"] then
         { type = "unlock-recipe", recipe = "huge-electric-pole" })
 end
 
+if mods["energy-combinator"] then
+    local pole = data.raw["electric-pole"]["power-combinator-meter-network"]
+    if pole then
+        pole.auto_connect_up_to_n_wires = 1
+    end
+end
+
 if mods["aai-industry"] then
     local iron_pole = data.raw["electric-pole"]["small-iron-electric-pole"]
 
