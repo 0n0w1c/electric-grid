@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "1.13.3",
+    "version": "1.13.4",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid!",
@@ -16,9 +16,9 @@
         "? Krastorio2",
         "? Krastorio2-spaced-out",
         "? PowerOverload",
+        "? Subsurface",
         "(?) bobpower",
         "(?) even-pickier-dollies",
-        "(?) Subsurface",
         "! minimalwire"
     ]
 }

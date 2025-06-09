@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.13.4
+Date: 09.06.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Added support for Subsurface, tunnel entrance can connect to medium and big poles
+---------------------------------------------------------------------------------------------------
 Version: 1.13.3
 Date: 08.06.2025
   Bugfixes:
@@ -13,7 +20,7 @@ Date: 08.06.2025
   Changes:
     - Overhaul: Add the energy combinator hidden pole to the wiring rules (connects to most poles)
     - Energy Combinator: Limit the copper wire auto-connect to a single electric pole
-    - Added preliminary support for Subsurface, wooden supports can connect to medium poles
+    - Added preliminary support for Subsurface
 ---------------------------------------------------------------------------------------------------
 Version: 1.13.1
 Date: 01.06.2025

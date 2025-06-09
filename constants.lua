@@ -204,6 +204,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["medium-wooden-electric-pole"] = true,
         ["james-rail-pole"] = true,
         ["wooden-support"] = true,
+        ["tunnel-entrance-cable"] = true,
         ["power-combinator-meter-network"] = true
     },
     ["big-electric-pole"] = {
@@ -215,6 +216,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["floating-electric-pole"] = true,
         ["electrical-distributor"] = true,
         ["power-combinator-meter-network"] = true,
+        ["tunnel-entrance-cable"] = true,
         ["kr-superior-substation"] = true
     },
     ["eg-huge-electric-pole"] = {
@@ -283,7 +285,14 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["wooden-support"] = { -- subsurface
         ["wooden-support"] = true,
-        ["medium-electric-pole"] = true
+        ["tunnel-exit-cable"] = true
+    },
+    ["tunnel-entrance-cable"] = { -- subsurface
+        ["medium-electric-pole"] = true,
+        ["big-electric-pole"] = true
+    },
+    ["tunnel-exit-cable"] = { -- subsurface
+        ["wooden-support"] = true
     },
     ["power-combinator-meter-network"] = { -- energy combinator
         ["small-electric-pole"] = true,
