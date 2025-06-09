@@ -1,20 +1,20 @@
 constants = require("constants")
 
-if settings.startup["eg-transformator-sound"].value then
+if settings.startup["eg-transformator-sound"].value == true then
     constants.EG_TRANSFORMATOR_VOLUME = 0.175
 else
     constants.EG_TRANSFORMATOR_VOLUME = 0
 end
 
-constants.EG_TRANSFORMATORS_ONLY = settings.startup["eg-transformators-only"].value
+constants.EG_OVERLAY = settings.startup["eg-overlay"].value == true
+
+constants.EG_TRANSFORMATORS_ONLY = settings.startup["eg-transformators-only"].value == true
 if mods["bobpower"] then constants.EG_TRANSFORMATORS_ONLY = true end
 
-constants.EG_OVERLAY = settings.startup["eg-overlay"].value
-
-constants.EG_MEDIUM_POLE_LIGHTS = settings.startup["eg-medium-pole-lights"].value
-constants.EG_BIG_POLE_LIGHTS = settings.startup["eg-big-pole-lights"].value
-constants.EG_HUGE_POLE_LIGHTS = settings.startup["eg-huge-pole-lights"].value
-constants.EG_CIRCUIT_POLE_LIGHTS = settings.startup["eg-circuit-pole-lights"].value
+constants.EG_MEDIUM_POLE_LIGHTS = settings.startup["eg-medium-pole-lights"].value == true
+constants.EG_BIG_POLE_LIGHTS = settings.startup["eg-big-pole-lights"].value == true
+constants.EG_HUGE_POLE_LIGHTS = settings.startup["eg-huge-pole-lights"].value == true
+constants.EG_CIRCUIT_POLE_LIGHTS = settings.startup["eg-circuit-pole-lights"].value == true
 
 constants.EG_MAX_WIRE_TRANSFORMATOR = tonumber(settings.startup["eg-max-wire-transformator"].value)
 constants.EG_MAX_WIRE_SMALL = tonumber(settings.startup["eg-max-wire-small"].value)

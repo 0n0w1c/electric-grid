@@ -1,8 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.13.3
+Date: 08.06.2025
+  Bugfixes:
+    - Refactored data-updates and support for Power Overload
+  Changes:
+    - Power Overload: No modifications unless the Overhaul is active
+---------------------------------------------------------------------------------------------------
 Version: 1.13.2
 Date: 08.06.2025
   Bugfixes:
-    - Overhaul: Wiring rules not applied to manual copper wire connections
+    - Overhaul: Wiring rules not properly applied to manual copper wire connections
   Changes:
     - Overhaul: Add the energy combinator hidden pole to the wiring rules (connects to most poles)
     - Energy Combinator: Limit the copper wire auto-connect to a single electric pole
