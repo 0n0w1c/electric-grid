@@ -71,6 +71,7 @@ Transformator circuit conditions and copper wiring are not included in blueprint
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole  
 [Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the oil-rig pole and floating electric pole  
+[Dredgeworks](https://mods.factorio.com/mod/dredgeworks) - Support for the wire buoys  
 [Factorio+](https://mods.factorio.com/mod/factorioplus) - Support for electric poles and electrical distributor  
 [James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod) - Support for electric rails (connect to medium poles)  
 [Krastorio2](https://mods.factorio.com/mod/Krastorio2) - Support for superior substation  
