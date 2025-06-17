@@ -205,7 +205,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["james-rail-pole"] = true,
         ["wooden-support"] = true,
         ["tunnel-entrance-cable"] = true,
-        ["power-combinator-meter-network"] = true
+        ["power-combinator-meter-network"] = true,
+        ["wire-buoy"] = true
     },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
@@ -293,6 +294,10 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["tunnel-exit-cable"] = { -- subsurface
         ["wooden-support"] = true
+    },
+    ["wire-buoy"] = { -- dredgeworks
+        ["wire-buoy"] = true,
+        ["medium-electric-pole"] = true
     },
     ["power-combinator-meter-network"] = { -- energy combinator
         ["small-electric-pole"] = true,

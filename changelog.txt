@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.14.1
+Date: 16.06.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Overhaul: Added support for Dredgeworks, wire buoy can connect to wire buoys and medium poles
+---------------------------------------------------------------------------------------------------
 Version: 1.14.0
 Date: 09.06.2025
   Bugfixes:
