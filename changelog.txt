@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.14.2
+Date: 22.06.2025
+  Bugfixes:
+    - Crash triggered when opening the rating gui while the transformator pump interface is active
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.14.1
 Date: 16.06.2025
   Bugfixes:

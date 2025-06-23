@@ -285,6 +285,8 @@ local function on_transformator_rating_selection(event)
             close_transformator_gui(player)
         else
             local frame = get_or_create_transformator_frame(player)
+            if not (frame and frame.valid) then return end
+
             local current_rating = get_current_transformator_rating(selected_entity)
             add_rating_dropdown(frame, current_rating)
 

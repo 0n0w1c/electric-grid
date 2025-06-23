@@ -709,6 +709,7 @@ function close_transformator_gui(player)
     if player.gui.screen.transformator_rating_selection_frame then
         player.gui.screen.transformator_rating_selection_frame.destroy()
         player.opened = nil
+        storage.eg_selected_transformator[player.index] = nil
         player.play_sound { path = "eg-transformator-gui-close" }
     end
 end
@@ -719,6 +720,8 @@ end
 -- @param parent_frame LuaGuiElement The parent frame to which the dropdown and other elements are added
 -- @param current_rating string The current rating to display in the dropdown and as the sprite
 function add_rating_dropdown(parent_frame, current_rating)
+    if not (parent_frame and parent_frame.valid) then return end
+
     local bordered_frame = parent_frame.add {
         type = "frame",
         name = "rating_selection_bordered_frame",
