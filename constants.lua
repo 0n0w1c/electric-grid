@@ -286,6 +286,12 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["wooden-support"] = { -- subsurface
         ["wooden-support"] = true,
+        ["steel-support"] = true,
+        ["tunnel-exit-cable"] = true
+    },
+    ["steel-support"] = { -- subsurface
+        ["wooden-support"] = true,
+        ["steel-support"] = true,
         ["tunnel-exit-cable"] = true
     },
     ["tunnel-entrance-cable"] = { -- subsurface
