@@ -299,7 +299,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["big-electric-pole"] = true
     },
     ["tunnel-exit-cable"] = { -- subsurface
-        ["wooden-support"] = true
+        ["wooden-support"] = true,
+        ["steel-support"] = true
     },
     ["wire-buoy"] = { -- dredgeworks
         ["wire-buoy"] = true,
