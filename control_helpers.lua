@@ -592,6 +592,21 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         return true
     end
 
+    -- electric tile to electric tile
+    if string.sub(name_a, 1, 15) == "electric-proxy-" and string.sub(name_b, 1, 15) == "electric-proxy-" then
+        return true
+    end
+
+    -- electric tiles can not connect to huge poles (power leaks)
+    if (constants.EG_HUGE_POLES[name_a] and string.sub(name_b, 1, 15) == "electric-proxy-") or
+        (constants.EG_HUGE_POLES[name_b] and string.sub(name_a, 1, 15) == "electric-proxy-") then
+        return false
+    end
+    if (constants.EG_TRANSMISSION_POLES[name_a] and string.sub(name_b, 1, 15) == "electric-proxy-") or
+        (constants.EG_TRANSMISSION_POLES[name_b] and string.sub(name_a, 1, 15) == "electric-proxy-") then
+        return true
+    end
+
     return false
 end
 

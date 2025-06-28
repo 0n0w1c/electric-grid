@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "1.14.4",
+    "version": "1.15.0",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid!",
@@ -11,6 +11,7 @@
         "? aai-industry",
         "? cargo-ships",
         "? dredgeworks",
+        "? electric-tiles",
         "? energy-combinator",
         "? James-Train-Mod",
         "? factorioplus",

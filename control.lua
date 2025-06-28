@@ -251,6 +251,7 @@ local function on_selected_entity_changed(event)
             for _, pole in pairs(poles) do
                 enforce_pole_connections(pole)
             end
+            short_circuit_check()
         end
 
         storage.eg_last_selected_pole[player_index] = nil

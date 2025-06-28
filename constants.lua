@@ -187,6 +187,25 @@ constants.EG_TRANSMISSION_POLES     =
     ["power-combinator-meter-network"] = true
 }
 
+constants.EG_SUPPLY_POLES     =
+{
+    ["small-electric-pole"] = true,
+    ["small-iron-electric-pole"] = true,
+    ["substation"] = true,
+    ["eg-ugp-substation"] = true,
+    ["wooden-support"] = true,
+    ["steel-support"] = true,
+    ["kr-superior-substation"] = true,
+    ["electrical-distributor"] = true
+}
+
+constants.EG_HUGE_POLES     =
+{
+    ["huge-electric-pole"] = true,
+    ["eg-huge-electric-pole"] = true,
+    ["po-huge-electric-pole"] = true
+}
+
 constants.EG_WIRE_CONNECTIONS       = {
     ["small-electric-pole"] = {
         ["small-electric-pole"] = true,
