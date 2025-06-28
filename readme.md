@@ -69,14 +69,15 @@ Transformator circuit conditions and copper wiring are not included in blueprint
 [Rewire Tool v2](https://mods.factorio.com/mod/rewire-tool-v2) - Enforce 90 degree wire angles, after placement  
 
 *Supported Mods:*  
-[AAI Industry](https://mods.factorio.com/mod/aai-industry) - Support for the small iron electric pole  
-[Cargo Ships](https://mods.factorio.com/mod/cargo-ships) - Support for the oil-rig pole and floating electric pole  
-[Dredgeworks](https://mods.factorio.com/mod/dredgeworks) - Support for the wire buoys  
-[Electric Tiles](https://mods.factorio.com/mod/electric-tiles) - Can connect to medium and big electric poles  
-[Factorio+](https://mods.factorio.com/mod/factorioplus) - Support for electric poles and electrical distributor  
-[James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod) - Support for electric rails (connect to medium poles)  
-[Krastorio2](https://mods.factorio.com/mod/Krastorio2) - Support for superior substation  
-[Krastorio2 Spaced Out](https://mods.factorio.com/mod/Krastorio2-spaced-out) - Support for superior substation  
+[AAI Industry](https://mods.factorio.com/mod/aai-industry)  
+[Cargo Ships](https://mods.factorio.com/mod/cargo-ships)  
+[Dredgeworks](https://mods.factorio.com/mod/dredgeworks)  
+[Electric Tiles](https://mods.factorio.com/mod/electric-tiles)  
+[Energy Combinator](https://mods.factorio.com/mod/energy-combinator)  
+[Factorio+](https://mods.factorio.com/mod/factorioplus)  
+[James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod)  
+[Krastorio2](https://mods.factorio.com/mod/Krastorio2)  
+[Krastorio2 Spaced Out](https://mods.factorio.com/mod/Krastorio2-spaced-out)  
 [Power Overload](https://mods.factorio.com/mod/PowerOverload) - Support for the mechanics and electric poles, fuses are removed  
 
 
