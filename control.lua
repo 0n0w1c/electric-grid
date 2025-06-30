@@ -188,7 +188,16 @@ local function on_entity_built(event)
             end
         end
 
-        short_circuit_check()
+        if string.sub(entity.name, 1, 7) == "F077ET-" then
+            local interval = constants.EG_TICK_INTERVAL
+            local aligned_tick = math.ceil((game.tick + 1) / interval) * interval
+            job_queue.schedule(
+                aligned_tick,
+                "short_circuit_check"
+            )
+        else
+            short_circuit_check()
+        end
     end
 end
 
@@ -204,8 +213,6 @@ local function on_entity_mined(event)
         local unit_number = entity.unit_number
         remove_transformator(unit_number)
     elseif entity.type == "electric-pole" then
-        short_circuit_check()
-
         if not storage.eg_transformators_only then
             -- Auto-reconnect seems to preserve the wiring rules, so this may not be necessary.
             local poles = get_nearby_poles(entity)
@@ -215,6 +222,8 @@ local function on_entity_mined(event)
                 end
             end
         end
+
+        short_circuit_check()
     end
 end
 
@@ -245,7 +254,6 @@ local function on_selected_entity_changed(event)
     local selected_entity = player.selected
 
     if not selected_entity and storage.eg_last_selected_pole[player_index] then
-        --if not selected_entity and storage.eg_last_selected_pole[player_index] and storage.eg_copper_wire_on_cursor[player_index] then
         local poles = get_nearby_poles(storage.eg_last_selected_pole[player_index])
         if poles then
             for _, pole in pairs(poles) do
@@ -461,6 +469,7 @@ local function register_event_handlers()
     script.on_event(defines.events.on_robot_built_entity, on_entity_built)
     script.on_event(defines.events.on_space_platform_built_entity, on_entity_built)
     script.on_event(defines.events.on_entity_cloned, on_entity_built)
+    script.on_event(defines.events.script_raised_built, on_entity_built)
     script.on_event(defines.events.script_raised_revive, on_entity_built)
 
     script.on_event(defines.events.on_player_mined_entity, on_entity_mined)
@@ -483,6 +492,7 @@ script.on_init(function()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("nth_tick_checks", nth_tick_checks)
+    job_queue.register_function("short_circuit_check", short_circuit_check)
     job_queue.update_registration()
     edp_blacklist()
     register_event_handlers()
@@ -495,6 +505,7 @@ end)
 script.on_load(function()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("nth_tick_checks", nth_tick_checks)
+    job_queue.register_function("short_circuit_check", short_circuit_check)
     job_queue.update_registration()
     edp_blacklist()
     register_event_handlers()
@@ -506,6 +517,7 @@ script.on_configuration_changed(function()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("nth_tick_checks", nth_tick_checks)
+    job_queue.register_function("short_circuit_check", short_circuit_check)
     job_queue.update_registration()
     register_event_handlers()
 

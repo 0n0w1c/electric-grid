@@ -1,8 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.15.1
+Date: 30.06.2025
+  Bugfixes:
+    - Overhaul: Refactored huge poles into a seperate table along with the related connection logic
+  Changes:
+    - Added a short circuit check when Electric Tiles are placed
+---------------------------------------------------------------------------------------------------
 Version: 1.15.0
 Date: 28.06.2025
   Bugfixes:
-    - Overhaul: Added a short circuit check when manually creating copper wire connections
+    - Added a short circuit check when manually creating copper wire connections
   Changes:
     - Overhaul: Added support for Electric Tiles, tiles can connect to medium or big electric poles
 ---------------------------------------------------------------------------------------------------

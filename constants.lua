@@ -180,14 +180,11 @@ constants.EG_TRANSMISSION_POLES     =
 {
     ["big-electric-pole"] = true,
     ["medium-electric-pole"] = true,
-    ["eg-huge-electric-pole"] = true,
     ["floating-electric-pole"] = true,
-    ["huge-electric-pole"] = true,
-    ["po-huge-electric-pole"] = true,
     ["power-combinator-meter-network"] = true
 }
 
-constants.EG_SUPPLY_POLES     =
+constants.EG_SUPPLY_POLES           =
 {
     ["small-electric-pole"] = true,
     ["small-iron-electric-pole"] = true,
@@ -199,7 +196,7 @@ constants.EG_SUPPLY_POLES     =
     ["electrical-distributor"] = true
 }
 
-constants.EG_HUGE_POLES     =
+constants.EG_HUGE_POLES             =
 {
     ["huge-electric-pole"] = true,
     ["eg-huge-electric-pole"] = true,

@@ -564,6 +564,13 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         if constants.EG_TRANSMISSION_POLES[name_a] and constants.EG_TRANSMISSION_POLES[name_b] then
             return true
         end
+        if (constants.EG_TRANSMISSION_POLES[name_a] and constants.EG_HUGE_POLES[name_b]) or
+            (constants.EG_TRANSMISSION_POLES[name_b] and constants.EG_HUGE_POLES[name_a]) then
+            return true
+        end
+        if constants.EG_HUGE_POLES[name_a] and constants.EG_HUGE_POLES[name_b] then
+            return true
+        end
     end
 
     -- Check if one of the poles is a high_voltage pole and execute get_maximum_production
@@ -587,6 +594,11 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         return true
     end
 
+    if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and constants.EG_HUGE_POLES[name_b]) or
+        (name_b:match(constants.EG_TRANSFORMATOR_POLES) and constants.EG_HUGE_POLES[name_a]) then
+        return true
+    end
+
     if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_b, 1, 12) == "po-interface") or
         (name_b:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_a, 1, 12) == "po-interface") then
         return true
@@ -598,10 +610,10 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     end
 
     -- electric tiles can not connect to huge poles (power leaks)
-    if (constants.EG_HUGE_POLES[name_a] and string.sub(name_b, 1, 15) == "electric-proxy-") or
-        (constants.EG_HUGE_POLES[name_b] and string.sub(name_a, 1, 15) == "electric-proxy-") then
-        return false
-    end
+    --if (constants.EG_HUGE_POLES[name_a] and string.sub(name_b, 1, 15) == "electric-proxy-") or
+    --    (constants.EG_HUGE_POLES[name_b] and string.sub(name_a, 1, 15) == "electric-proxy-") then
+    --    return false
+    --end
     if (constants.EG_TRANSMISSION_POLES[name_a] and string.sub(name_b, 1, 15) == "electric-proxy-") or
         (constants.EG_TRANSMISSION_POLES[name_b] and string.sub(name_a, 1, 15) == "electric-proxy-") then
         return true
