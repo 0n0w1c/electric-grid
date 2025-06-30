@@ -2,7 +2,7 @@
 Version: 1.15.4
 Date: 30.06.2025
   Bugfixes:
-    - Electric Tiles: Updated the connection allowed rules for version 1.2.4
+    - Overhaul: Updated the connection allowed rules for Electric Tiles 1.2.4
   Changes:
     - None
 ---------------------------------------------------------------------------------------------------
