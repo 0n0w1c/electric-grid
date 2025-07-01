@@ -60,7 +60,7 @@ Wiring rules are relaxed, permitting copper wire connections between any of the 
 Transformator circuit conditions and copper wiring are not included in blueprints.  
 
 *Notes*
-If Bob' Power is active, the Overhaul is not available, Transformator only
+If Bob's Power and its startup setting for new power poles and substations is enabled, the Overhaul will be deactivated.
 
 *Recommended Mods:*
 [Energy Combinator](https://mods.factorio.com/mod/energy-combinator) - Reads the electric network and produces circuit signals  

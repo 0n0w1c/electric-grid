@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.15.6
+Date: 01.07.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Bob's Power: Overhaul will be deactivated if startup setting for new power poles is enabled
+---------------------------------------------------------------------------------------------------
 Version: 1.15.5
 Date: 01.07.2025
   Bugfixes:

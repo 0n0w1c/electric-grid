@@ -41,12 +41,14 @@ local function initialize_globals()
     storage.eg_selected_rating = storage.eg_selected_rating or {}
     storage.eg_transformator_to_build = storage.eg_transformator_to_build or nil
 
-    if settings.startup["eg-transformators-only"] then
+    if settings.startup["eg-transformators-only"].value then
         storage.eg_transformators_only = settings.startup["eg-transformators-only"].value
             or (script.active_mods["base"] < "2.0.29"
                 and not (script.active_mods["no-quality"] or script.active_mods["unquality"] or script.active_mods["no-more-quality"]))
     end
-    if script.active_mods["bobpower"] then storage.eg_transformators_only = true end
+    if script.active_mods["bobpower"] and settings.startup["bobmods-power-poles"].value then
+        storage.eg_transformators_only = true
+    end
 end
 
 --[[

@@ -9,7 +9,9 @@ end
 constants.EG_OVERLAY = settings.startup["eg-overlay"].value == true
 
 constants.EG_TRANSFORMATORS_ONLY = settings.startup["eg-transformators-only"].value == true
-if mods["bobpower"] then constants.EG_TRANSFORMATORS_ONLY = true end
+if mods["bobpower"] and settings.startup["bobmods-power-poles"].value == true then
+    constants.EG_TRANSFORMATORS_ONLY = true
+end
 
 constants.EG_MEDIUM_POLE_LIGHTS = settings.startup["eg-medium-pole-lights"].value == true
 constants.EG_BIG_POLE_LIGHTS = settings.startup["eg-big-pole-lights"].value == true
