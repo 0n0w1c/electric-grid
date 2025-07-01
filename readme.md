@@ -59,6 +59,9 @@ Wiring rules are relaxed, permitting copper wire connections between any of the 
 *Limitations:*  
 Transformator circuit conditions and copper wiring are not included in blueprints.  
 
+*Notes*
+If Bob' Power is active, the Overhaul is not available, Transformator only
+
 *Recommended Mods:*
 [Energy Combinator](https://mods.factorio.com/mod/energy-combinator) - Reads the electric network and produces circuit signals  
 (For use with Electric Grid, it is recommended to change the *Update rate* startup setting from 5 to 60.) 
@@ -79,7 +82,6 @@ Transformator circuit conditions and copper wiring are not included in blueprint
 [Krastorio2](https://mods.factorio.com/mod/Krastorio2)  
 [Krastorio2 Spaced Out](https://mods.factorio.com/mod/Krastorio2-spaced-out)  
 [Power Overload](https://mods.factorio.com/mod/PowerOverload) - Support for the mechanics and electric poles, fuses are removed  
-
 
 *Alternate locales:*  
 `cs`, `de`, `es`, `fr`, `it`, `ja`, `pl`, `pt-BR`, `ru`, `tr`, `uk`, `zh-CN`, `zh-TW`

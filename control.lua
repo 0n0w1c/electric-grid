@@ -46,6 +46,7 @@ local function initialize_globals()
             or (script.active_mods["base"] < "2.0.29"
                 and not (script.active_mods["no-quality"] or script.active_mods["unquality"] or script.active_mods["no-more-quality"]))
     end
+    if script.active_mods["bobpower"] then storage.eg_transformators_only = true end
 end
 
 --[[
@@ -250,6 +251,8 @@ local function on_selected_entity_changed(event)
     local player_index = event.player_index
     local player = game.get_player(player_index)
     if not player then return end
+
+    if storage.eg_transformators_only then return true end
 
     local selected_entity = player.selected
 

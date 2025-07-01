@@ -541,6 +541,8 @@ end
 -- @param pole_b LuaEntity The second electric pole.
 -- @return boolean True if the connection is allowed, false otherwise.
 function is_copper_cable_connection_allowed(pole_a, pole_b)
+    if storage.eg_transformators_only then return true end
+
     if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
         return false
     end
@@ -639,13 +641,8 @@ end
 -- @param pole LuaEntity The electric pole to enforce connections for.
 -- @return boolean True if all connections are valid or no connections exist, false otherwise.
 function enforce_pole_connections(pole)
-    if not pole or not pole.valid or pole.type ~= "electric-pole" then
-        return true
-    end
-
-    if storage.eg_transformators_only then
-        return true
-    end
+    if not pole or not pole.valid or pole.type ~= "electric-pole" then return true end
+    if storage.eg_transformators_only then return true end
 
     local connectors = pole.get_wire_connectors()
     if not connectors then
