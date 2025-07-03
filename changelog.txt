@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.15.7
+Date: 03.07.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Cargo Ships: Oil rig pole can now connect more electric poles, same as the medium pole
+---------------------------------------------------------------------------------------------------
 Version: 1.15.6
 Date: 01.07.2025
   Bugfixes:

@@ -193,6 +193,7 @@ constants.EG_SUPPLY_POLES           =
     ["wooden-support"] = true,
     ["steel-support"] = true,
     ["kr-superior-substation"] = true,
+    ["or_pole"] = true,
     ["electrical-distributor"] = true
 }
 
@@ -210,6 +211,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["small-iron-electric-pole"] = true,
         ["medium-wooden-electric-pole"] = true,
         ["power-combinator-meter-network"] = true,
+        ["or_pole"] = true,
         ["james-rail-pole"] = true
     },
     ["medium-electric-pole"] = {
@@ -222,6 +224,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["wooden-support"] = true,
         ["tunnel-entrance-cable"] = true,
         ["power-combinator-meter-network"] = true,
+        ["or_pole"] = true,
         ["wire-buoy"] = true
     },
     ["big-electric-pole"] = {
@@ -234,7 +237,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["electrical-distributor"] = true,
         ["power-combinator-meter-network"] = true,
         ["tunnel-entrance-cable"] = true,
-        ["kr-superior-substation"] = true
+        ["kr-superior-substation"] = true,
+        ["or_pole"] = true
     },
     ["eg-huge-electric-pole"] = {
         ["power-combinator-meter-network"] = true,
@@ -257,6 +261,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["small-iron-electric-pole"] = true,
         ["medium-wooden-electric-pole"] = true,
         ["power-combinator-meter-network"] = true,
+        ["or_pole"] = true,
         ["james-rail-pole"] = true
     },
     ["floating-electric-pole"] = { -- cargo ships
@@ -265,6 +270,10 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["big-electric-pole"] = true
     },
     ["or_pole"] = { -- cargo ships
+        ["medium-wooden-electric-pole"] = true,
+        ["small-electric-pole"] = true,
+        ["medium-electric-pole"] = true,
+        ["small-iron-electric-pole"] = true,
         ["or_pole"] = true,
         ["floating-electric-pole"] = true
     },
@@ -286,6 +295,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["small-electric-pole"] = true,
         ["medium-electric-pole"] = true,
         ["small-iron-electric-pole"] = true,
+        ["or_pole"] = true,
         ["james-rail-pole"] = true
     },
     ["electrical-distributor"] = { -- factorioplus
