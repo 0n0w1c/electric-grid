@@ -76,9 +76,7 @@ if mods["PowerOverload"] then
 
     for _, pole in pairs(poles) do
         if string.sub(pole.name, 1, 3) == "po-" and string.find(pole.name, "-fuse") then
-            data.raw["electric-pole"][pole.name].hidden = true
-            items[pole.name].hidden                     = true
-            recipes[pole.name].hidden                   = true
+            items[pole.name].subgroup = "eg-electric-distribution"
         end
     end
 

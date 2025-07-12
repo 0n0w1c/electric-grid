@@ -212,7 +212,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["medium-wooden-electric-pole"] = true,
         ["power-combinator-meter-network"] = true,
         ["or_pole"] = true,
-        ["james-rail-pole"] = true
+        ["james-rail-pole"] = true,
+        ["po-small-electric-fuse"] = true,
     },
     ["medium-electric-pole"] = {
         ["medium-electric-pole"] = true,
@@ -225,7 +226,9 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["tunnel-entrance-cable"] = true,
         ["power-combinator-meter-network"] = true,
         ["or_pole"] = true,
-        ["wire-buoy"] = true
+        ["wire-buoy"] = true,
+        ["po-small-electric-fuse"] = true,
+        ["po-medium-electric-fuse"] = true,
     },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
@@ -238,7 +241,9 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["power-combinator-meter-network"] = true,
         ["tunnel-entrance-cable"] = true,
         ["kr-superior-substation"] = true,
-        ["or_pole"] = true
+        ["or_pole"] = true,
+        ["po-medium-electric-fuse"] = true,
+        ["po-big-electric-fuse"] = true,
     },
     ["eg-huge-electric-pole"] = {
         ["power-combinator-meter-network"] = true,
@@ -246,10 +251,13 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["substation"] = {
         ["power-combinator-meter-network"] = true,
-        ["big-electric-pole"] = true
+        ["big-electric-pole"] = true,
+        ["po-big-electric-fuse"] = true,
     },
     ["eg-ugp-substation"] = {
-        ["big-electric-pole"] = true
+        ["power-combinator-meter-network"] = true,
+        ["big-electric-pole"] = true,
+        ["po-big-electric-fuse"] = true,
     },
     ["eg-circuit-pole"] = {
         ["eg-circuit-pole"] = true,
@@ -262,7 +270,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["medium-wooden-electric-pole"] = true,
         ["power-combinator-meter-network"] = true,
         ["or_pole"] = true,
-        ["james-rail-pole"] = true
+        ["james-rail-pole"] = true,
+        ["po-small-electric-fuse"] = true,
     },
     ["floating-electric-pole"] = { -- cargo ships
         ["floating-electric-pole"] = true,
@@ -304,7 +313,8 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["po-huge-electric-pole"] = { -- power overload
         ["power-combinator-meter-network"] = true,
-        ["po-huge-electric-pole"] = true
+        ["po-huge-electric-pole"] = true,
+        ["po-huge-electric-fuse"] = true,
     },
     ["kr-superior-substation"] = { -- krastorio 2
         ["power-combinator-meter-network"] = true,
@@ -343,7 +353,27 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["po-huge-electric-pole"] = true,
         ["electrical-distributor"] = true,
         ["kr-superior-substation"] = true
-    }
+    },
+    ["po-interface"] = { -- power overload
+        ["po-huge-electric-fuse"] = true
+    },
+    ["po-small-electric-fuse"] = { -- power overload
+        ["small-electric-pole"] = true,
+        ["small-iron-electric-pole"] = true,
+        ["medium-electric-pole"] = true
+    },
+    ["po-medium-electric-fuse"] = { -- power overload
+        ["medium-electric-pole"] = true,
+        ["big-electric-pole"] = true
+    },
+    ["po-big-electric-fuse"] = { -- power overload
+        ["big-electric-pole"] = true,
+        ["substation"] = true
+    },
+    ["po-huge-electric-fuse"] = { -- power overload
+        ["po-huge-electric-pole"] = true,
+        ["po-interface"] = true
+    },
 }
 
 return constants

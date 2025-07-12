@@ -81,7 +81,7 @@ If Bob's Power and its startup setting for new power poles and substations is en
 [James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod)  
 [Krastorio2](https://mods.factorio.com/mod/Krastorio2)  
 [Krastorio2 Spaced Out](https://mods.factorio.com/mod/Krastorio2-spaced-out)  
-[Power Overload](https://mods.factorio.com/mod/PowerOverload) - Support for the mechanics and electric poles, fuses are removed  
+[Power Overload](https://mods.factorio.com/mod/PowerOverload)  
 
 *Alternate locales:*  
 `cs`, `de`, `es`, `fr`, `it`, `ja`, `pl`, `pt-BR`, `ru`, `tr`, `uk`, `zh-CN`, `zh-TW`

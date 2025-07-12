@@ -546,7 +546,6 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
         return false
     end
-
     local name_a = pole_a.name
     local name_b = pole_b.name
 
@@ -603,6 +602,11 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
 
     if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_b, 1, 12) == "po-interface") or
         (name_b:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_a, 1, 12) == "po-interface") then
+        return true
+    end
+
+    if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_b, 1, 3) == "po-" and string.find(name_b, "-fuse")) or
+        (name_b:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_a, 1, 3) == "po-" and string.find(name_a, "-fuse")) then
         return true
     end
 

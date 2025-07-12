@@ -181,8 +181,6 @@ local function on_entity_built(event)
         end
     elseif entity.type == "electric-pole" then
         if not storage.eg_transformators_only then
-            enforce_pole_connections(entity)
-
             local poles = get_nearby_poles(entity)
             if poles then
                 for _, pole in pairs(poles) do
