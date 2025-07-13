@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.0
+Date: 13.07.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Added support for Foundations: Space Platform Foundation can connect to medium and big poles
+---------------------------------------------------------------------------------------------------
 Version: 1.15.8
 Date: 12.07.2025
   Bugfixes:

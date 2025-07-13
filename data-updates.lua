@@ -155,3 +155,7 @@ if mods["energy-combinator"] then
     local pole = poles["power-combinator-meter-network"]
     if pole then pole.auto_connect_up_to_n_wires = 1 end
 end
+
+if mods["Foundations"] and items["F077ET-esp-foundation"] then
+    items["F077ET-esp-foundation"].subgroup = "eg-electric-distribution"
+end
