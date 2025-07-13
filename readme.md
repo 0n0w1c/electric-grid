@@ -78,6 +78,7 @@ If Bob's Power and its startup setting for new power poles and substations is en
 [Electric Tiles](https://mods.factorio.com/mod/electric-tiles)  
 [Energy Combinator](https://mods.factorio.com/mod/energy-combinator)  
 [Factorio+](https://mods.factorio.com/mod/factorioplus)  
+[Foundations](https://mods.factorio.com/mod/Foundations)  
 [James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod)  
 [Krastorio2](https://mods.factorio.com/mod/Krastorio2)  
 [Krastorio2 Spaced Out](https://mods.factorio.com/mod/Krastorio2-spaced-out)  
