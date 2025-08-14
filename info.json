@@ -1,12 +1,12 @@
 {
     "name": "electric-grid",
-    "version": "1.16.0",
+    "version": "1.16.1",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid!",
     "factorio_version": "2.0",
     "dependencies": [
-        "base >= 2.0.40",
+        "base >= 2.0.63",
         "? space-age",
         "? aai-industry",
         "? cargo-ships",

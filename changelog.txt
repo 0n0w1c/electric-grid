@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.1
+Date: 14.08.2025
+  Bugfixes:
+    - Quick and dirty fix for version 2.0.63 to address changes to in-game physics of boilers
+  Changes:
+    - Minimum version for base updated to 2.0.63 (Changes to game physics)
+---------------------------------------------------------------------------------------------------
 Version: 1.16.0
 Date: 13.07.2025
   Bugfixes:

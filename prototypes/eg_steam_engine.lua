@@ -38,7 +38,7 @@ function create_transformator_steam_engine(variant, tier)
         collision_mask          = { layers = {} },
         collision_box           = collision_box,
         selection_box           = selection_box,
-        effectivity             = 1,
+        effectivity             = 2.31,
         energy_source           = {
             type = "electric",
             usage_priority = "secondary-output"
