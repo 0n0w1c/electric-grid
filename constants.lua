@@ -245,6 +245,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["or_pole"] = true,
         ["po-medium-electric-fuse"] = true,
         ["po-big-electric-fuse"] = true,
+        ["po-substation-fuse"] = true
     },
     ["eg-huge-electric-pole"] = {
         ["power-combinator-meter-network"] = true,
@@ -253,12 +254,12 @@ constants.EG_WIRE_CONNECTIONS       = {
     ["substation"] = {
         ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true,
-        ["po-big-electric-fuse"] = true,
+        ["po-substation-fuse"] = true,
     },
     ["eg-ugp-substation"] = {
         ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true,
-        ["po-big-electric-fuse"] = true,
+        ["po-substation-fuse"] = true,
     },
     ["eg-circuit-pole"] = {
         ["eg-circuit-pole"] = true,
@@ -370,6 +371,11 @@ constants.EG_WIRE_CONNECTIONS       = {
     ["po-big-electric-fuse"] = { -- power overload
         ["big-electric-pole"] = true,
         ["substation"] = true
+    },
+    ["po-substation-fuse"] = { -- power overload
+        ["substation"] = true,
+        ["big-electric-pole"] = true,
+        ["eg-ugp-substation"] = true
     },
     ["po-huge-electric-fuse"] = { -- power overload
         ["po-huge-electric-pole"] = true,
