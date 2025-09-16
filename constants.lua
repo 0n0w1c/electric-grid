@@ -230,6 +230,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["wire-buoy"] = true,
         ["po-small-electric-fuse"] = true,
         ["po-medium-electric-fuse"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true
     },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
@@ -245,11 +247,15 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["or_pole"] = true,
         ["po-medium-electric-fuse"] = true,
         ["po-big-electric-fuse"] = true,
-        ["po-substation-fuse"] = true
+        ["po-substation-fuse"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true
     },
     ["eg-huge-electric-pole"] = {
         ["power-combinator-meter-network"] = true,
-        ["eg-huge-electric-pole"] = true
+        ["eg-huge-electric-pole"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true
     },
     ["substation"] = {
         ["power-combinator-meter-network"] = true,
@@ -299,7 +305,7 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["huge-electric-pole"] = { -- factorioplus
         ["power-combinator-meter-network"] = true,
-        ["huge-electric-pole"] = true
+        ["huge-electric-pole"] = true,
     },
     ["medium-wooden-electric-pole"] = { -- factorioplus
         ["medium-wooden-electric-pole"] = true,
@@ -317,6 +323,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["power-combinator-meter-network"] = true,
         ["po-huge-electric-pole"] = true,
         ["po-huge-electric-fuse"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true
     },
     ["kr-superior-substation"] = { -- krastorio 2
         ["power-combinator-meter-network"] = true,
@@ -362,24 +370,58 @@ constants.EG_WIRE_CONNECTIONS       = {
     ["po-small-electric-fuse"] = { -- power overload
         ["small-electric-pole"] = true,
         ["small-iron-electric-pole"] = true,
-        ["medium-electric-pole"] = true
+        ["medium-electric-pole"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true
     },
     ["po-medium-electric-fuse"] = { -- power overload
         ["medium-electric-pole"] = true,
-        ["big-electric-pole"] = true
+        ["big-electric-pole"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true
     },
     ["po-big-electric-fuse"] = { -- power overload
         ["big-electric-pole"] = true,
-        ["substation"] = true
+        ["substation"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true
     },
     ["po-substation-fuse"] = { -- power overload
         ["substation"] = true,
         ["big-electric-pole"] = true,
-        ["eg-ugp-substation"] = true
+        ["eg-ugp-substation"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true,
     },
     ["po-huge-electric-fuse"] = { -- power overload
         ["po-huge-electric-pole"] = true,
-        ["po-interface"] = true
+        ["po-interface"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true
+    },
+    ["po-hidden-electric-pole-in"] = { -- power overload
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true,
+        ["medium-electric-pole"] = true,
+        ["po-huge-electric-pole"] = true,
+        ["big-electric-pole"] = true,
+        ["po-small-electric-fuse"] = true,
+        ["po-medium-electric-fuse"] = true,
+        ["po-big-electric-fuse"] = true,
+        ["po-huge-electric-fuse"] = true,
+        ["po-substation-fuse"] = true,
+    },
+    ["po-hidden-electric-pole-out"] = { -- power overload
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true,
+        ["medium-electric-pole"] = true,
+        ["po-huge-electric-pole"] = true,
+        ["big-electric-pole"] = true,
+        ["po-small-electric-fuse"] = true,
+        ["po-medium-electric-fuse"] = true,
+        ["po-big-electric-fuse"] = true,
+        ["po-huge-electric-fuse"] = true,
+        ["po-substation-fuse"] = true,
     },
 }
 

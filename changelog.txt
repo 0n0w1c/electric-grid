@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.3
+Date: 15.09.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Power Overload: transformers can connect to medium, big, and huge poles and all fuses
+---------------------------------------------------------------------------------------------------
 Version: 1.16.2
 Date: 19.08.2025
   Bugfixes:
