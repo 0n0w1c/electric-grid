@@ -202,7 +202,8 @@ constants.EG_HUGE_POLES             =
 {
     ["huge-electric-pole"] = true,
     ["eg-huge-electric-pole"] = true,
-    ["po-huge-electric-pole"] = true
+    ["po-huge-electric-pole"] = true,
+    ["large-electric-pole"] = true,
 }
 
 constants.EG_WIRE_CONNECTIONS       = {
@@ -255,7 +256,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["power-combinator-meter-network"] = true,
         ["eg-huge-electric-pole"] = true,
         ["po-hidden-electric-pole-in"] = true,
-        ["po-hidden-electric-pole-out"] = true
+        ["po-hidden-electric-pole-out"] = true,
     },
     ["substation"] = {
         ["power-combinator-meter-network"] = true,
@@ -306,6 +307,8 @@ constants.EG_WIRE_CONNECTIONS       = {
     ["huge-electric-pole"] = { -- factorioplus
         ["power-combinator-meter-network"] = true,
         ["huge-electric-pole"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true,
     },
     ["medium-wooden-electric-pole"] = { -- factorioplus
         ["medium-wooden-electric-pole"] = true,
@@ -324,7 +327,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["po-huge-electric-pole"] = true,
         ["po-huge-electric-fuse"] = true,
         ["po-hidden-electric-pole-in"] = true,
-        ["po-hidden-electric-pole-out"] = true
+        ["po-hidden-electric-pole-out"] = true,
     },
     ["kr-superior-substation"] = { -- krastorio 2
         ["power-combinator-meter-network"] = true,
@@ -362,7 +365,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["huge-electric-pole"] = true,
         ["po-huge-electric-pole"] = true,
         ["electrical-distributor"] = true,
-        ["kr-superior-substation"] = true
+        ["kr-superior-substation"] = true,
+        ["large-electric-pole"] = true,
     },
     ["po-interface"] = { -- power overload
         ["po-huge-electric-fuse"] = true
@@ -410,6 +414,8 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["po-big-electric-fuse"] = true,
         ["po-huge-electric-fuse"] = true,
         ["po-substation-fuse"] = true,
+        ["huge-electric-pole"] = true,
+        ["large-electric-pole"] = true,
     },
     ["po-hidden-electric-pole-out"] = { -- power overload
         ["po-hidden-electric-pole-in"] = true,
@@ -422,6 +428,14 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["po-big-electric-fuse"] = true,
         ["po-huge-electric-fuse"] = true,
         ["po-substation-fuse"] = true,
+        ["huge-electric-pole"] = true,
+        ["large-electric-pole"] = true,
+    },
+    ["large-electric-pole"] = { -- fixLargeElectricPole
+        ["large-electric-pole"] = true,
+        ["power-combinator-meter-network"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true
     },
 }
 

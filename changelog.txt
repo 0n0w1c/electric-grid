@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.4
+Date: 19.09.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Added support for fixLargeElectricPole
+      Large electric poles can connect to large electric poles, Transformators, and PO transformers
+---------------------------------------------------------------------------------------------------
 Version: 1.16.3
 Date: 15.09.2025
   Bugfixes:

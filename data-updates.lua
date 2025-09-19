@@ -57,18 +57,22 @@ if not mods["aai-industry"] and recipes["small-iron-electric-pole"] then
 end
 
 if mods["PowerOverload"] then
-    local po_huge_pole                                = poles["po-huge-electric-pole"]
-    po_huge_pole.light                                = constants.EG_HUGE_POLE_LIGHTS and constants.EG_HUGE_POLE_LIGHT or
+    local po_huge_pole                          = poles["po-huge-electric-pole"]
+    po_huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and
+        constants.EG_HUGE_POLE_LIGHT or
         nil
-    po_huge_pole.maximum_wire_distance                = tonumber(settings.startup["eg-max-wire-huge"].value)
-    po_huge_pole.drawing_box_vertical_extension       = 3
+    po_huge_pole.maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value)
+    po_huge_pole.drawing_box_vertical_extension = 3
 
-    items["po-huge-electric-pole"].subgroup           = "eg-electric-distribution"
-    items["po-interface"].subgroup                    = "eg-electric-distribution"
+    items["po-huge-electric-pole"].subgroup     = "eg-electric-distribution"
+    items["po-interface"].subgroup              = "eg-electric-distribution"
 
-    data.raw["power-switch"]["po-transformer"].hidden = true
-    items["po-transformer"].hidden                    = true
-    recipes["po-transformer"].hidden                  = true
+    --data.raw["power-switch"]["po-transformer"].hidden = true
+    --items["po-transformer"].hidden                    = true
+    --recipes["po-transformer"].hidden                  = true
+    items["po-transformer"].subgroup            = "eg-electric-distribution"
+    items["po-transformer-high"].subgroup       = "eg-electric-distribution"
+    items["po-transformer-low"].subgroup        = "eg-electric-distribution"
 
     if mods["quality"] then
         recipes["po-transformer-recycling"].hidden = true
@@ -158,4 +162,16 @@ end
 
 if mods["Foundations"] and items["F077ET-esp-foundation"] then
     items["F077ET-esp-foundation"].subgroup = "eg-electric-distribution"
+end
+
+if mods["fixLargeElectricPole"] then
+    local item = data.raw["item-with-entity-data"]["large-electric-pole"]
+    if item then
+        item.subgroup = "eg-electric-distribution"
+    end
+
+    local recipe = recipes["large-electric-pole"]
+    if recipe then
+        recipe.subgroup = "eg-electric-distribution"
+    end
 end
