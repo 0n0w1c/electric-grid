@@ -73,6 +73,7 @@ If Bob's Power and its startup setting for new power poles and substations is en
 
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry)  
+[Bio Industries](https://mods.factorio.com/mod/Bio_Industries_2)  
 [Cargo Ships](https://mods.factorio.com/mod/cargo-ships)  
 [Dredgeworks](https://mods.factorio.com/mod/dredgeworks)  
 [Electric Tiles](https://mods.factorio.com/mod/electric-tiles)  
