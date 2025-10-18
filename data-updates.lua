@@ -117,6 +117,14 @@ if mods["factorioplus"] then
         { type = "unlock-recipe", recipe = "huge-electric-pole" })
 end
 
+if mods["Bio_Industries_2"] then
+    poles["bi-wooden-pole-big"].supply_area_distance = 0
+    items["bi-wooden-pole-big"].subgroup = "eg-electric-distribution"
+
+    poles["bi-wooden-pole-huge"].supply_area_distance = 0
+    items["bi-wooden-pole-huge"].subgroup = "eg-electric-distribution"
+end
+
 if mods["aai-industry"] then
     local iron_pole = poles["small-iron-electric-pole"]
     if iron_pole then

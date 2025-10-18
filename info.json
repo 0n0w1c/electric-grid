@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "1.16.5",
+    "version": "1.16.6",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid!",
@@ -9,6 +9,7 @@
         "base >= 2.0.63",
         "? space-age",
         "? aai-industry",
+        "? Bio_Industries_2",
         "? cargo-ships",
         "? dredgeworks",
         "? electric-tiles",

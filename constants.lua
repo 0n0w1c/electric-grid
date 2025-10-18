@@ -182,7 +182,8 @@ constants.EG_TRANSMISSION_POLES     =
     ["big-electric-pole"] = true,
     ["medium-electric-pole"] = true,
     ["floating-electric-pole"] = true,
-    ["power-combinator-meter-network"] = true
+    ["power-combinator-meter-network"] = true,
+    ["bi-wooden-pole-big"] = true,
 }
 
 constants.EG_SUPPLY_POLES           =
@@ -204,6 +205,7 @@ constants.EG_HUGE_POLES             =
     ["eg-huge-electric-pole"] = true,
     ["po-huge-electric-pole"] = true,
     ["large-electric-pole"] = true,
+    ["bi-wooden-pole-huge"] = true,
 }
 
 constants.EG_WIRE_CONNECTIONS       = {
@@ -250,27 +252,32 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["po-big-electric-fuse"] = true,
         ["po-substation-fuse"] = true,
         ["po-hidden-electric-pole-in"] = true,
-        ["po-hidden-electric-pole-out"] = true
+        ["po-hidden-electric-pole-out"] = true,
+        ["bi-wooden-pole-big"] = true,
     },
     ["eg-huge-electric-pole"] = {
         ["power-combinator-meter-network"] = true,
         ["eg-huge-electric-pole"] = true,
         ["po-hidden-electric-pole-in"] = true,
         ["po-hidden-electric-pole-out"] = true,
+        ["bi-wooden-pole-huge"] = true,
     },
     ["substation"] = {
         ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true,
         ["po-substation-fuse"] = true,
+        ["bi-wooden-pole-big"] = true,
     },
     ["eg-ugp-substation"] = {
         ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true,
         ["po-substation-fuse"] = true,
+        ["bi-wooden-pole-big"] = true,
     },
     ["eg-circuit-pole"] = {
         ["eg-circuit-pole"] = true,
-        ["big-electric-pole"] = true
+        ["big-electric-pole"] = true,
+        ["bi-wooden-pole-big"] = true,
     },
     ["small-iron-electric-pole"] = { -- aai industry and EG
         ["small-electric-pole"] = true,
@@ -285,7 +292,8 @@ constants.EG_WIRE_CONNECTIONS       = {
     ["floating-electric-pole"] = { -- cargo ships
         ["floating-electric-pole"] = true,
         ["or_pole"] = true,
-        ["big-electric-pole"] = true
+        ["big-electric-pole"] = true,
+        ["bi-wooden-pole-big"] = true,
     },
     ["or_pole"] = { -- cargo ships
         ["medium-wooden-electric-pole"] = true,
@@ -309,6 +317,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["huge-electric-pole"] = true,
         ["po-hidden-electric-pole-in"] = true,
         ["po-hidden-electric-pole-out"] = true,
+        ["bi-wooden-pole-huge"] = true,
     },
     ["medium-wooden-electric-pole"] = { -- factorioplus
         ["medium-wooden-electric-pole"] = true,
@@ -320,7 +329,8 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["electrical-distributor"] = { -- factorioplus
         ["power-combinator-meter-network"] = true,
-        ["big-electric-pole"] = true
+        ["big-electric-pole"] = true,
+        ["bi-wooden-pole-big"] = true,
     },
     ["po-huge-electric-pole"] = { -- power overload
         ["power-combinator-meter-network"] = true,
@@ -328,10 +338,12 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["po-huge-electric-fuse"] = true,
         ["po-hidden-electric-pole-in"] = true,
         ["po-hidden-electric-pole-out"] = true,
+        ["bi-wooden-pole-huge"] = true,
     },
     ["kr-superior-substation"] = { -- krastorio 2
         ["power-combinator-meter-network"] = true,
-        ["big-electric-pole"] = true
+        ["big-electric-pole"] = true,
+        ["bi-wooden-pole-big"] = true,
     },
     ["wooden-support"] = { -- subsurface
         ["wooden-support"] = true,
@@ -345,7 +357,8 @@ constants.EG_WIRE_CONNECTIONS       = {
     },
     ["tunnel-entrance-cable"] = { -- subsurface
         ["medium-electric-pole"] = true,
-        ["big-electric-pole"] = true
+        ["big-electric-pole"] = true,
+        ["bi-wooden-pole-big"] = true,
     },
     ["tunnel-exit-cable"] = { -- subsurface
         ["wooden-support"] = true,
@@ -436,6 +449,33 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["power-combinator-meter-network"] = true,
         ["po-hidden-electric-pole-in"] = true,
         ["po-hidden-electric-pole-out"] = true
+    },
+    ["bi-wooden-pole-big"] = {
+        ["bi-wooden-pole-big"] = true,
+        ["big-electric-pole"] = true,
+        ["medium-electric-pole"] = true,
+        ["substation"] = true,
+        ["eg-ugp-substation"] = true,
+        ["eg-circuit-pole"] = true,
+        ["floating-electric-pole"] = true,
+        ["electrical-distributor"] = true,
+        ["power-combinator-meter-network"] = true,
+        ["tunnel-entrance-cable"] = true,
+        ["kr-superior-substation"] = true,
+        ["or_pole"] = true,
+        ["po-medium-electric-fuse"] = true,
+        ["po-big-electric-fuse"] = true,
+        ["po-substation-fuse"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true,
+    },
+    ["bi-wooden-pole-huge"] = {
+        ["power-combinator-meter-network"] = true,
+        ["bi-wooden-pole-huge"] = true,
+        ["eg-huge-electric-pole"] = true,
+        ["huge-electric-pole"] = true,
+        ["po-hidden-electric-pole-in"] = true,
+        ["po-hidden-electric-pole-out"] = true,
     },
 }
 
