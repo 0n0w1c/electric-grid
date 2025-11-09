@@ -126,13 +126,13 @@ if mods["Bio_Industries_2"] then
 end
 
 if mods["aai-industry"] then
-    local iron_pole = poles["small-iron-electric-pole"]
-    if iron_pole then
-        iron_pole.maximum_wire_distance = small_pole.maximum_wire_distance
-        iron_pole.supply_area_distance  = small_pole.supply_area_distance
+    local small_iron_pole = poles["small-iron-electric-pole"]
+    if small_iron_pole then
+        local small_iron_pole_item            = items["small-iron-electric-pole"]
+        small_iron_pole_item.subgroup         = "eg-electric-distribution"
 
-        local iron_pole_item            = items["small-iron-electric-pole"]
-        iron_pole_item.subgroup         = "eg-electric-distribution"
+        small_iron_pole.maximum_wire_distance = constants.EG_MAX_WIRE_SMALL_IRON
+        small_iron_pole.supply_area_distance  = constants.EG_MAX_SUPPLY_SMALL_IRON
     end
 
     local huge_pole_recipe = recipes["eg-huge-electric-pole"]

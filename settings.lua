@@ -9,6 +9,11 @@ local function get_next_order()
     return string.format("a-%03d", order)
 end
 
+local huge_localised = { "", "[item=eg-huge-electric-pole] ", { "setting-name.eg-max-wire-huge" } }
+if mods["PowerOverload"] then
+    huge_localised = { "", "[item=po-huge-electric-pole] ", { "setting-name.eg-max-wire-huge" } }
+end
+
 data.extend({
     {
         type = "double-setting",
@@ -18,7 +23,7 @@ data.extend({
         minimum_value = 4.0,
         maximum_value = 24.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-max-wire-transformator" },
+        localised_name = { "", "[item=eg-transformator] ", { "setting-name.eg-max-wire-transformator" } },
         localised_description = { "setting-description.eg-max-wire-transformator" }
     },
     {
@@ -97,8 +102,20 @@ data.extend({
         minimum_value = 4.0,
         maximum_value = 12.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-max-wire-small" },
+        localised_name = { "", "[item=small-electric-pole] ", { "setting-name.eg-max-wire-small" } },
         localised_description = { "setting-description.eg-max-wire-small" },
+        hidden = is_hidden()
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-supply-small",
+        setting_type = "startup",
+        default_value = 7.0,
+        minimum_value = 4.0,
+        maximum_value = 10.0,
+        order = get_next_order(),
+        localised_name = { "", "[item=small-electric-pole] ", { "setting-name.eg-max-supply-small" } },
+        localised_description = { "setting-description.eg-max-supply-small" },
         hidden = is_hidden()
     },
     {
@@ -109,9 +126,21 @@ data.extend({
         minimum_value = 4.0,
         maximum_value = 12.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-max-wire-small-iron" },
+        localised_name = { "", "[item=small-iron-electric-pole] ", { "setting-name.eg-max-wire-small-iron" } },
         localised_description = { "setting-description.eg-max-wire-small-iron" },
-        hidden = is_hidden()
+        hidden = (is_hidden() or mods["PowerOverload"] ~= nil)
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-supply-small-iron",
+        setting_type = "startup",
+        default_value = 7.0,
+        minimum_value = 4.0,
+        maximum_value = 10.0,
+        order = get_next_order(),
+        localised_name = { "", "[item=small-iron-electric-pole] ", { "setting-name.eg-max-supply-small-iron" } },
+        localised_description = { "setting-description.eg-max-supply-small-iron" },
+        hidden = (is_hidden() or mods["PowerOverload"] ~= nil)
     },
     {
         type = "double-setting",
@@ -121,7 +150,7 @@ data.extend({
         minimum_value = 4.0,
         maximum_value = 12.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-max-wire-medium" },
+        localised_name = { "", "[item=medium-electric-pole] ", { "setting-name.eg-max-wire-medium" } },
         localised_description = { "setting-description.eg-max-wire-medium" },
         hidden = is_hidden()
     },
@@ -133,7 +162,7 @@ data.extend({
         minimum_value = 16.0,
         maximum_value = 24.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-max-wire-big" },
+        localised_name = { "", "[item=big-electric-pole] ", { "setting-name.eg-max-wire-big" } },
         localised_description = { "setting-description.eg-max-wire-big" },
         hidden = is_hidden()
     },
@@ -145,7 +174,7 @@ data.extend({
         minimum_value = 24.0,
         maximum_value = 50.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-max-wire-huge" },
+        localised_name = huge_localised,
         localised_description = { "setting-description.eg-max-wire-huge" },
         hidden = is_hidden()
     },
@@ -157,32 +186,8 @@ data.extend({
         minimum_value = 16.0,
         maximum_value = 24.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-max-wire-substation" },
+        localised_name = { "", "[item=substation] ", { "setting-name.eg-max-wire-substation" } },
         localised_description = { "setting-description.eg-max-wire-substation" },
-        hidden = is_hidden()
-    },
-    {
-        type = "double-setting",
-        name = "eg-max-supply-small",
-        setting_type = "startup",
-        default_value = 7.0,
-        minimum_value = 4.0,
-        maximum_value = 10.0,
-        order = get_next_order(),
-        localised_name = { "setting-name.eg-max-supply-small" },
-        localised_description = { "setting-description.eg-max-supply-small" },
-        hidden = is_hidden()
-    },
-    {
-        type = "double-setting",
-        name = "eg-max-supply-small-iron",
-        setting_type = "startup",
-        default_value = 7.0,
-        minimum_value = 4.0,
-        maximum_value = 10.0,
-        order = get_next_order(),
-        localised_name = { "setting-name.eg-max-supply-small-iron" },
-        localised_description = { "setting-description.eg-max-supply-small-iron" },
         hidden = is_hidden()
     },
     {
@@ -193,7 +198,7 @@ data.extend({
         minimum_value = 16.0,
         maximum_value = 24.0,
         order = get_next_order(),
-        localised_name = { "setting-name.eg-max-supply-substation" },
+        localised_name = { "", "[item=substation] ", { "setting-name.eg-max-supply-substation" } },
         localised_description = { "setting-description.eg-max-supply-substation" },
         hidden = is_hidden()
     }

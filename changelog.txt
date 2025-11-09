@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.17.0
+Date: 09.11.2025
+  Bugfixes:
+    - None
+  Changes:
+    - AAI Industry: small and small iron poles no longer made to be identical (contrib: iq2luc)
+    - Updated the startup settings
+---------------------------------------------------------------------------------------------------
 Version: 1.16.7
 Date: 08.11.2025
   Bugfixes:
