@@ -477,6 +477,7 @@ end
 local function register_event_handlers()
     script.on_event(defines.events.on_player_pipette, on_entity_pipetted)
     script.on_event(defines.events.on_player_rotated_entity, on_entity_rotated)
+    script.on_event(defines.events.on_player_flipped_entity, on_entity_rotated)
 
     script.on_event(defines.events.on_built_entity, on_entity_built)
     script.on_event(defines.events.on_robot_built_entity, on_entity_built)
