@@ -58,19 +58,6 @@ function rotate_position(position, direction)
     return { x = x, y = y }
 end
 
---- Check if the surface is supported
--- @param surface LuaSurface
--- @return boolean #True if the surface is supported, otherwise false.
-function surface_supported(surface)
-    if not (surface and surface.valid) then return false end
-
-    local name = surface.name
-
-    if constants.EG_SUPPORTED_SURFACES[name] then return true end
-
-    return false
-end
-
 --- Check if the given name corresponds to a transformator
 -- @param name string The name of the entity to check
 -- @return boolean True if the entity is a transformator, false otherwise
@@ -561,7 +548,7 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         end
     end
 
-    if not surface_supported(pole_a.surface) then
+    if pole_a.surface.name == "fulgora" then
         if constants.EG_TRANSMISSION_POLES[name_a] and constants.EG_TRANSMISSION_POLES[name_b] then
             return true
         end

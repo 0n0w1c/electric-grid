@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.0
+Date: 25.11.2025
+  Bugfixes:
+    - Subsurface: Support is better implemented
+  Changes:
+    - Transformators can be used on modded planets
+    - Subsurface: Added startup settings for wooden and steel supports 
+      (Steel supports are transmission only)
+    - Updated pl locale, provided by S3BA-pl (human)
+    - Added ko locale (ChatGPT)
+    - Updated all other alternate locale files (ChatGPT)
+---------------------------------------------------------------------------------------------------
 Version: 1.17.1
 Date: 09.11.2025
   Bugfixes:

@@ -4,15 +4,25 @@ if mods["quality"] then
     recycling = require("__quality__/prototypes/recycling")
 end
 
-local items                       = data.raw["item"]
-local recipes                     = data.raw["recipe"]
-local technologies                = data.raw["technology"]
-local poles                       = data.raw["electric-pole"]
+local items        = data.raw["item"]
+local recipes      = data.raw["recipe"]
+local technologies = data.raw["technology"]
+local poles        = data.raw["electric-pole"]
 
-local small_pole                  = poles["small-electric-pole"]
-local medium_pole                 = poles["medium-electric-pole"]
-local big_pole                    = poles["big-electric-pole"]
-local substation                  = poles["substation"]
+local small_pole   = poles["small-electric-pole"]
+local medium_pole  = poles["medium-electric-pole"]
+local big_pole     = poles["big-electric-pole"]
+local substation   = poles["substation"]
+
+if mods["Subsurface"] then
+    local wooden_support                 = poles["wooden-support"]
+    wooden_support.maximum_wire_distance = constants.EG_MAX_WIRE_WOODEN_SUPPORT
+    wooden_support.supply_area_distance  = constants.EG_MAX_SUPPLY_WOODEN_SUPPORT
+
+    local steel_support                  = poles["steel-support"]
+    steel_support.maximum_wire_distance  = constants.EG_MAX_WIRE_STEEL_SUPPORT
+    steel_support.supply_area_distance   = 0
+end
 
 small_pole.maximum_wire_distance  = constants.EG_MAX_WIRE_SMALL
 small_pole.supply_area_distance   = constants.EG_MAX_SUPPLY_SMALL

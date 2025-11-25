@@ -45,13 +45,6 @@ constants.EG_QUALITIES = {
     "legendary"
 }
 
-constants.EG_SUPPORTED_SURFACES = {
-    ["aquilo"] = true,
-    ["gleba"] = true,
-    ["nauvis"] = true,
-    ["vulcanus"] = true
-}
-
 constants.EG_EFFICIENCY = 1
 constants.HEAT_CAPACITY_PER_MW = 0.2565
 constants.STEAM_ENGINE_EFFECTIVITY = 2.31 -- adjusted from 1, Factorio 2.0.63 boiler changes
@@ -184,6 +177,7 @@ constants.EG_TRANSMISSION_POLES     =
     ["floating-electric-pole"] = true,
     ["power-combinator-meter-network"] = true,
     ["bi-wooden-pole-big"] = true,
+    ["steel-support"] = true,
 }
 
 constants.EG_SUPPLY_POLES           =
@@ -193,7 +187,6 @@ constants.EG_SUPPLY_POLES           =
     ["substation"] = true,
     ["eg-ugp-substation"] = true,
     ["wooden-support"] = true,
-    ["steel-support"] = true,
     ["kr-superior-substation"] = true,
     ["or_pole"] = true,
     ["electrical-distributor"] = true
@@ -348,7 +341,6 @@ constants.EG_WIRE_CONNECTIONS       = {
     ["wooden-support"] = { -- subsurface
         ["wooden-support"] = true,
         ["steel-support"] = true,
-        ["tunnel-exit-cable"] = true
     },
     ["steel-support"] = { -- subsurface
         ["wooden-support"] = true,
@@ -361,7 +353,6 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["bi-wooden-pole-big"] = true,
     },
     ["tunnel-exit-cable"] = { -- subsurface
-        ["wooden-support"] = true,
         ["steel-support"] = true
     },
     ["wire-buoy"] = { -- dredgeworks

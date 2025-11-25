@@ -201,5 +201,41 @@ data.extend({
         localised_name = { "", "[item=substation] ", { "setting-name.eg-max-supply-substation" } },
         localised_description = { "setting-description.eg-max-supply-substation" },
         hidden = is_hidden()
-    }
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-wire-wooden-support",
+        setting_type = "startup",
+        default_value = 9.5,
+        minimum_value = 4.0,
+        maximum_value = 12.0,
+        order = get_next_order(),
+        localised_name = { "", "[item=wooden-support] ", { "setting-name.eg-max-wire-wooden-support" } },
+        localised_description = { "setting-description.eg-max-wire-wooden-support" },
+        hidden = not mods["Subsurface"]
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-supply-wooden-support",
+        setting_type = "startup",
+        default_value = 9.0,
+        minimum_value = 4.0,
+        maximum_value = 10.0,
+        order = get_next_order(),
+        localised_name = { "", "[item=wooden-support] ", { "setting-name.eg-max-supply-wooden-support" } },
+        localised_description = { "setting-description.eg-max-supply-wooden-supoprt" },
+        hidden = not mods["Subsurface"]
+    },
+    {
+        type = "double-setting",
+        name = "eg-max-wire-steel-support",
+        setting_type = "startup",
+        default_value = 9.5,
+        minimum_value = 4.0,
+        maximum_value = 12.0,
+        order = get_next_order(),
+        localised_name = { "", "[item=steel-support] ", { "setting-name.eg-max-wire-steel-support" } },
+        localised_description = { "setting-description.eg-max-wire-steel-support" },
+        hidden = not mods["Subsurface"]
+    },
 })

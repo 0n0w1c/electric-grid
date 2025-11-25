@@ -30,6 +30,10 @@ constants.EG_MAX_SUPPLY_SMALL = settings.startup["eg-max-supply-small"].value / 
 constants.EG_MAX_SUPPLY_SMALL_IRON = settings.startup["eg-max-supply-small-iron"].value / 2
 constants.EG_MAX_SUPPLY_SUBSTATION = settings.startup["eg-max-supply-substation"].value / 2
 
+constants.EG_MAX_WIRE_WOODEN_SUPPORT = tonumber(settings.startup["eg-max-wire-wooden-support"].value)
+constants.EG_MAX_SUPPLY_WOODEN_SUPPORT = settings.startup["eg-max-supply-wooden-support"].value / 2
+constants.EG_MAX_WIRE_STEEL_SUPPORT = tonumber(settings.startup["eg-max-wire-steel-support"].value)
+
 data.extend({
     {
         type = "item-subgroup",

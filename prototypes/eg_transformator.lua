@@ -186,6 +186,10 @@ if mods["space-age"] then
             max = 90,
             min = 10,
             property = "magnetic-field"
+        },
+        {
+            min = 1,
+            property = "gravity"
         }
     }
 end

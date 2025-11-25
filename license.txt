@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright © 2024 0n0w1c
+Copyright © 2025 0n0w1c
 
 Code, audio, graphics and/or ideas provided by:
 (MIT) Copyright © 2021 max2344 [Transformators](https://mods.factorio.com/mod/Electric_Transformators)

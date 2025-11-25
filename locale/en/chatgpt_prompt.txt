@@ -1,0 +1,31 @@
+Translate the following Factorio mod locale file into the target language.
+
+Rules:
+
+Follow official Factorio localization for the target language.
+Before translating, infer the correct equivalents for all game concepts (e.g., mining drill, pumpjack, ore, tiles, recipes, blueprints, etc.) from the style used in the base game’s official localization.
+Do not create new terminology unless the game itself does.
+
+Interpret mod-specific prefixes by meaning, not literally.
+The word “Transformator” in names refers to a mod concept, not an English word that should appear in the translation.
+It is a transformer like in-game entity provided by this mod. Much of this is concerning electric poles and their properties.
+Translate such prefixes using a natural, internally consistent term that expresses the intended gameplay behavior (e.g., self-generating, auto-loading).
+Choose one term and apply it consistently across all items.
+
+Preserve the locale keys exactly.
+Only translate the text after each =.
+
+Maintain full consistency across all translated strings:
+
+consistent naming of machines and variants
+
+consistent capitalization
+
+consistent grammatical structure
+
+consistent terminology for descriptions, GUI labels, and messages
+
+Do not add or remove meaning.
+Translate precisely while adapting naturally to the target language’s grammar and style.
+
+Return the translated locale file only, with no commentary.
