@@ -86,5 +86,5 @@ If Bob's Power and its startup setting for new power poles and substations is en
 [Power Overload](https://mods.factorio.com/mod/PowerOverload)  
 
 *Alternate locales:*  
-`pl` provided by S3BA-pl (human)
+`pl` provided by S3BA-pl (human)  
 `cs`, `de`, `es`, `fr`, `it`, `ja`, `ko`, `pt-BR`, `ru`, `tr`, `uk`, `zh-CN`, `zh-TW` provided by ChatGPT
