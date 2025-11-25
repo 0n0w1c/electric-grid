@@ -223,7 +223,7 @@ data.extend({
         maximum_value = 10.0,
         order = get_next_order(),
         localised_name = { "", "[item=wooden-support] ", { "setting-name.eg-max-supply-wooden-support" } },
-        localised_description = { "setting-description.eg-max-supply-wooden-supoprt" },
+        localised_description = { "setting-description.eg-max-supply-wooden-support" },
         hidden = not mods["Subsurface"]
     },
     {
