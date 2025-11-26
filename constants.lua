@@ -158,13 +158,13 @@ constants.EG_WIRE_CONNECTION_POINTS = {
         north = { wire = { 0.0, -1.8 }, shadow = { 2.2, 0.7 } },
         east  = { wire = { -0.4, -1.6 }, shadow = { 1.5, -1.2 } },
         south = { wire = { 0.0, -1.2 }, shadow = { 2.5, 0.6 } },
-        west  = { wire = { 0.3, -1.6 }, shadow = { 2.0, 0.6 } },
+        west  = { wire = { 0.1, -1.6 }, shadow = { 1.9, 0.6 } },
     },
     eg_low_voltage_pole = {
         north = { wire = { 0.0, -1.6 }, shadow = { 3.0, 0.5 } },
         east  = { wire = { 0.3, -2.1 }, shadow = { 4.0, 0.5 } },
         south = { wire = { 0.0, -2.1 }, shadow = { 2.9, 0.7 } },
-        west  = { wire = { -0.4, -2.0 }, shadow = { 1.8, 0.2 } },
+        west  = { wire = { -0.5, -2.0 }, shadow = { 1.7, 0.2 } },
     },
 }
 

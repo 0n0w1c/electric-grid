@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.2
+Date: 26.11.2025
+  Bugfixes:
+    - Removed integration patch from the pump
+    - Adjusted the west direction sprite shifts
+  Changes:
+    - Updated the appearence of the transformator to be more consistent in all directions
+---------------------------------------------------------------------------------------------------
 Version: 1.18.1
 Date: 25.11.2025
   Bugfixes:
