@@ -35,7 +35,6 @@ local function get_transformator_picture(tier)
             x = 932,
             width = 466,
             height = 310,
-            --shift = { 1.5, -1.15 },
             shift = { 1.44, -1.2 },
             scale = 0.5,
             blend_mode = constants.EG_TIER_BLEND_MODE,
