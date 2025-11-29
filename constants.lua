@@ -46,8 +46,8 @@ constants.EG_QUALITIES = {
 }
 
 constants.EG_EFFICIENCY = 1
-constants.HEAT_CAPACITY_PER_MW = 0.2565
-constants.STEAM_ENGINE_EFFECTIVITY = 2.31 -- adjusted from 1, Factorio 2.0.63 boiler changes
+constants.HEAT_CAPACITY_PER_MW = 0.25655
+constants.STEAM_ENGINE_EFFECTIVITY = 2.3068 -- adjusted from 1, Factorio 2.0.63 boiler changes
 
 constants.EG_DIRECTION_TO_CARDINAL = {
     [defines.direction.north] = "north",

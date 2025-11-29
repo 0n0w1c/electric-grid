@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.19.0
+Date: 29.11.2025
+  Bugfixes:
+    - None
+  Changes:
+    - Adjustments to the magic numbers
+    - Internal pump now uses a void energy source
+---------------------------------------------------------------------------------------------------
 Version: 1.18.3
 Date: 26.11.2025
   Bugfixes:

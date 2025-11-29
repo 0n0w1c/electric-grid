@@ -168,11 +168,8 @@ function create_transformator_pump()
         localised_description     = { "entity-description.eg-pump" },
         integration_patch         = get_pump_picture(1),
         pumping_speed             = 100,
-        energy_usage              = "0.001W",
-        energy_source             = {
-            type = "electric",
-            usage_priority = "secondary-input"
-        },
+        energy_usage              = "1kW",
+        energy_source             = { type = "void" },
         fluid_box                 = {
             volume = constants.EG_FLUID_VOLUME,
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
