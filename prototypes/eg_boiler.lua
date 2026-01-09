@@ -34,7 +34,6 @@ function create_transformator_boiler(tier)
         quality_indicator_scale = 0,
         energy_source           = {
             type = "electric",
-            effectivity = constants.EG_EFFICIENCY,
             input_flow_limit = rating,
             usage_priority = "secondary-input",
             emissions = 0

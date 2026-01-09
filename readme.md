@@ -29,7 +29,7 @@ Small poles can connect to small and medium poles
 Medium poles can connect to small, medium and big poles  
 Big poles can connect to medium and big poles, substations, underground substations and circuit poles  
 Huge poles can only connect to huge poles  
-Substations and underground substations can only connect to big poles  
+Substations and underground substations can connect to other substations and big poles  
 Circuit poles can connect to circuit poles and big electric poles  
 Transformators can only connect to medium, big and huge poles  
 

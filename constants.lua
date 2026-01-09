@@ -45,7 +45,6 @@ constants.EG_QUALITIES = {
     "legendary"
 }
 
-constants.EG_EFFICIENCY = 1
 constants.HEAT_CAPACITY_PER_MW = 0.25655
 constants.STEAM_ENGINE_EFFECTIVITY = 2.3068 -- adjusted from 1, Factorio 2.0.63 boiler changes
 
@@ -256,12 +255,16 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["bi-wooden-pole-huge"] = true,
     },
     ["substation"] = {
+        ["substation"] = true,
+        ["eg-ugp-substation"] = true,
         ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true,
         ["po-substation-fuse"] = true,
         ["bi-wooden-pole-big"] = true,
     },
     ["eg-ugp-substation"] = {
+        ["eg-ugp-substation"] = true,
+        ["substation"] = true,
         ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true,
         ["po-substation-fuse"] = true,
@@ -334,6 +337,7 @@ constants.EG_WIRE_CONNECTIONS       = {
         ["bi-wooden-pole-huge"] = true,
     },
     ["kr-superior-substation"] = { -- krastorio 2
+        ["kr-superior-substation"] = true,
         ["power-combinator-meter-network"] = true,
         ["big-electric-pole"] = true,
         ["bi-wooden-pole-big"] = true,
