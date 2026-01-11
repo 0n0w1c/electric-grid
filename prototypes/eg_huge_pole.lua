@@ -20,6 +20,15 @@ huge_pole.max_health                     = huge_pole.max_health + 100
 huge_pole.maximum_wire_distance          = constants.EG_MAX_WIRE_HUGE
 huge_pole.supply_area_distance           = 0
 
+huge_pole.collision_box                  = {
+    { -1.4, -1.4 },
+    { 1.4,  1.4 }
+}
+huge_pole.selection_box                  = {
+    { -1.5, -1.5 },
+    { 1.5,  1.5 }
+}
+
 huge_pole.pictures                       =
 {
     layers =
