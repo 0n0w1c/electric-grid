@@ -1,9 +1,6 @@
 if constants.EG_TRANSFORMATORS_ONLY then return end
 if mods["factorioplus"] or mods["PowerOverload"] then return end
 
-local scale                              = 1.2
-local translate                          = -0.4
-
 local huge_pole                          = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
 
 huge_pole.type                           = "electric-pole"
@@ -12,7 +9,7 @@ huge_pole.localised_name                 = { "entity-name.eg-huge-electric-pole"
 huge_pole.localised_description          = { "entity-description.eg-huge-electric-pole" }
 huge_pole.icon                           = constants.EG_ICONS .. "eg-huge-electric-pole.png"
 huge_pole.icon_size                      = 32
-huge_pole.drawing_box_vertical_extension = 3
+huge_pole.drawing_box_vertical_extension = 5
 huge_pole.minable                        =
 {
     mining_time = huge_pole.minable.mining_time,
@@ -22,74 +19,90 @@ huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and con
 huge_pole.max_health                     = huge_pole.max_health + 100
 huge_pole.maximum_wire_distance          = constants.EG_MAX_WIRE_HUGE
 huge_pole.supply_area_distance           = 0
+
 huge_pole.pictures                       =
 {
-    filename = constants.EG_ENTITIES .. "eg-huge-electric-pole.png",
-    priority = "extra-high",
-    width = 168,
-    height = 165,
-    direction_count = 4,
-    shift = { 1.6 * scale, (-1.1 + translate) * scale },
-    scale = scale,
+    layers =
+    {
+        {
+            filename = constants.EG_ENTITIES .. "eg-huge-electric-pole.png",
+            priority = "extra-high",
+            width = 1216 / 4,
+            height = 512,
+            scale = 0.5,
+            direction_count = 4,
+            shift = util.by_pixel(0, -70),
+        },
+        {
+            filename = constants.EG_ENTITIES .. "eg-huge-electric-pole-shadow.png",
+            priority = "extra-high",
+            width = 2048 / 4,
+            height = 160,
+            scale = 0.5,
+            direction_count = 4,
+            shift = util.by_pixel(76, 3),
+            draw_as_shadow = true,
+        }
+    }
 }
 huge_pole.connection_points              =
 {
     {
         shadow =
         {
-            copper = { 2.7 * scale, translate },
-            green = { 1.8 * scale, translate },
-            red = { 3.6 * scale, translate }
+            copper = util.by_pixel_hr(330, 3),
+            red = util.by_pixel_hr(360, 3),
+            green = util.by_pixel_hr(280, 3)
         },
         wire =
         {
-            copper = { 0, (-3.125 + translate) * scale },
-            green = { -0.59375 * scale, (-3.125 + translate) * scale },
-            red = { 0.625 * scale, (-3.125 + translate) * scale }
+            copper = util.by_pixel_hr(0, -340),
+            red = util.by_pixel_hr(74, -304),
+            green = util.by_pixel_hr(-74, -304)
         }
     },
     {
         shadow =
         {
-            copper = { 3.1 * scale, (0.2 + translate) * scale },
-            green = { 2.3 * scale, (-0.3 + translate) * scale },
-            red = { 3.8 * scale, (0.6 + translate) * scale }
+            copper = util.by_pixel_hr(346, 4),
+            red = util.by_pixel_hr(346, 48),
+            green = util.by_pixel_hr(280, -28)
         },
         wire =
         {
-            copper = { -0.0625 * scale, (-3.125 + translate) * scale },
-            green = { -0.5 * scale, (-3.4375 + translate) * scale },
-            red = { 0.34375 * scale, (-2.8125 + translate) * scale }
+            copper = util.by_pixel_hr(-0, -340),
+            red = util.by_pixel_hr(52, -264),
+            green = util.by_pixel_hr(-52, -332)
         }
     },
     {
         shadow =
         {
-            copper = { 2.9 * scale, (0.06 + translate) * scale },
-            green = { 3.0 * scale, (-0.6 + translate) * scale },
-            red = { 3.0 * scale, (0.8 + translate) * scale }
+            copper = util.by_pixel_hr(340, 8),
+            red = util.by_pixel_hr(310, 62),
+            green = util.by_pixel_hr(310, -50)
         },
         wire =
         {
-            copper = { -0.09375 * scale, (-3.09375 + translate) * scale },
-            green = { -0.09375 * scale, (-3.53125 + translate) * scale },
-            red = { -0.09375 * scale, (-2.65625 + translate) * scale }
+            copper = util.by_pixel_hr(4, -340),
+            red = util.by_pixel_hr(4, -260),
+            green = util.by_pixel_hr(4, -354)
         }
     },
     {
         shadow =
         {
-            copper = { 3.1 * scale, (0.2 + translate) * scale },
-            green = { 3.8 * scale, (-0.3 + translate) * scale },
-            red = { 2.35 * scale, (0.6 + translate) * scale }
+            copper = util.by_pixel_hr(346, 8),
+            red = util.by_pixel_hr(270, 40),
+            green = util.by_pixel_hr(340, -30)
         },
         wire =
         {
-            copper = { -0.0625 * scale, (-3.1875 + translate) * scale },
-            green = { 0.375 * scale, (-3.5 + translate) * scale },
-            red = { -0.46875 * scale, (-2.90625 + translate) * scale }
+            copper = util.by_pixel_hr(0, -340),
+            red = util.by_pixel_hr(-52, -264),
+            green = util.by_pixel_hr(52, -332)
         }
-    }
+    },
 }
 huge_pole.water_reflection               =
 {
@@ -99,9 +112,9 @@ huge_pole.water_reflection               =
         priority = "extra-high",
         width = 16,
         height = 32,
-        shift = { util.by_pixel(0, 60)[1] * scale, (util.by_pixel(0, 60)[2] + translate) * scale },
+        shift = util.by_pixel(0, 70),
         variation_count = 1,
-        scale = 5 * scale
+        scale = 8
     },
     rotate = false,
     orientation_to_variation = false
@@ -116,7 +129,7 @@ local huge_pole_item                     =
     subgroup              = "eg-electric-distribution",
     order                 = data.raw["item"]["big-electric-pole"].order .. "z",
     icon                  = constants.EG_ICONS .. "eg-huge-electric-pole.png",
-    icon_size             = 32,
+    icon_size             = 64,
     stack_size            = data.raw["item"]["big-electric-pole"].stack_size,
     place_result          = "eg-huge-electric-pole",
     weight                = 20000

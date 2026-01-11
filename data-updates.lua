@@ -4,25 +4,15 @@ if mods["quality"] then
     recycling = require("__quality__/prototypes/recycling")
 end
 
-local items        = data.raw["item"]
-local recipes      = data.raw["recipe"]
-local technologies = data.raw["technology"]
-local poles        = data.raw["electric-pole"]
+local items                       = data.raw["item"]
+local recipes                     = data.raw["recipe"]
+local technologies                = data.raw["technology"]
+local poles                       = data.raw["electric-pole"]
 
-local small_pole   = poles["small-electric-pole"]
-local medium_pole  = poles["medium-electric-pole"]
-local big_pole     = poles["big-electric-pole"]
-local substation   = poles["substation"]
-
-if mods["Subsurface"] then
-    local wooden_support                 = poles["wooden-support"]
-    wooden_support.maximum_wire_distance = constants.EG_MAX_WIRE_WOODEN_SUPPORT
-    wooden_support.supply_area_distance  = constants.EG_MAX_SUPPLY_WOODEN_SUPPORT
-
-    local steel_support                  = poles["steel-support"]
-    steel_support.maximum_wire_distance  = constants.EG_MAX_WIRE_STEEL_SUPPORT
-    steel_support.supply_area_distance   = 0
-end
+local small_pole                  = poles["small-electric-pole"]
+local medium_pole                 = poles["medium-electric-pole"]
+local big_pole                    = poles["big-electric-pole"]
+local substation                  = poles["substation"]
 
 small_pole.maximum_wire_distance  = constants.EG_MAX_WIRE_SMALL
 small_pole.supply_area_distance   = constants.EG_MAX_SUPPLY_SMALL
@@ -40,16 +30,46 @@ substation.subgroup               = "eg-electric-distribution"
 substation.maximum_wire_distance  = constants.EG_MAX_WIRE_SUBSTATION
 substation.supply_area_distance   = constants.EG_MAX_SUPPLY_SUBSTATION
 
+for _, pole in pairs(poles) do
+    pole.rewire_neighbours_when_destroying = false
+end
+
+if big_pole then
+    for _, layer in pairs(big_pole.pictures.layers) do
+        layer.shift = layer.shift or { 0, 0 }
+        layer.shift[2] = layer.shift[2] + 0.5
+    end
+
+    for _, connection in pairs(big_pole.connection_points) do
+        local points = { "wire", "shadow" }
+        for _, point in ipairs(points) do
+            if connection[point] then
+                for _, color in pairs({ "red", "green", "copper" }) do
+                    if connection[point][color] then
+                        connection[point][color][2] = connection[point][color][2] + 0.5
+                    end
+                end
+            end
+        end
+    end
+end
+
+if mods["Subsurface"] then
+    local wooden_support                 = poles["wooden-support"]
+    wooden_support.maximum_wire_distance = constants.EG_MAX_WIRE_WOODEN_SUPPORT
+    wooden_support.supply_area_distance  = constants.EG_MAX_SUPPLY_WOODEN_SUPPORT
+
+    local steel_support                  = poles["steel-support"]
+    steel_support.maximum_wire_distance  = constants.EG_MAX_WIRE_STEEL_SUPPORT
+    steel_support.supply_area_distance   = 0
+end
+
 if not mods["PowerOverload"] and not mods["Krastorio2"] and not mods["Krastorio2-spaced-out"] then
     substation.next_upgrade = "eg-ugp-substation-displayer"
 end
 
 if mods["quality"] and recipes["eg-ugp-substation-displayer-recycling"] then
     recipes["eg-ugp-substation-displayer-recycling"].results = recipes["substation-recycling"].results
-end
-
-for _, pole in pairs(poles) do
-    pole.rewire_neighbours_when_destroying = false
 end
 
 items["small-electric-pole"].subgroup           = "eg-electric-distribution"
@@ -77,9 +97,6 @@ if mods["PowerOverload"] then
     items["po-huge-electric-pole"].subgroup     = "eg-electric-distribution"
     items["po-interface"].subgroup              = "eg-electric-distribution"
 
-    --data.raw["power-switch"]["po-transformer"].hidden = true
-    --items["po-transformer"].hidden                    = true
-    --recipes["po-transformer"].hidden                  = true
     items["po-transformer"].subgroup            = "eg-electric-distribution"
     items["po-transformer-high"].subgroup       = "eg-electric-distribution"
     items["po-transformer-low"].subgroup        = "eg-electric-distribution"
