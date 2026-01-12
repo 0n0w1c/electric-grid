@@ -7,6 +7,7 @@ else
 end
 
 constants.EG_OVERLAY = settings.startup["eg-overlay"].value == true
+constants.EG_OLD_HUGE_POLE = settings.startup["eg-old-huge-pole"].value == true
 
 constants.EG_TRANSFORMATORS_ONLY = settings.startup["eg-transformators-only"].value == true
 if mods["bobpower"] and settings.startup["bobmods-power-poles"].value == true then

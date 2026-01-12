@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.20.3
+Date: 12.01.2026
+  Bugfixes:
+    - None
+  Changes:
+    - Overhaul: Added a startup option to enable the old graphics and 2x2 size for the huge pole
+    - Overhaul: Changed the maximum from 50 to 64 for the huge electric pole's maximum wire length
+    - Overhaul: The huge electric pole recipe now unlocks with the Transformators technology
+---------------------------------------------------------------------------------------------------
 Version: 1.20.2
 Date: 11.01.2026
   Bugfixes:

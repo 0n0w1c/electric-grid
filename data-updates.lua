@@ -30,6 +30,11 @@ substation.subgroup               = "eg-electric-distribution"
 substation.maximum_wire_distance  = constants.EG_MAX_WIRE_SUBSTATION
 substation.supply_area_distance   = constants.EG_MAX_SUPPLY_SUBSTATION
 
+if recipes["eg-huge-electric-pole"] then
+    local technology = technologies["eg-tech-1"]
+    table.insert(technology.effects, { type = "unlock-recipe", recipe = "eg-huge-electric-pole" })
+end
+
 for _, pole in pairs(poles) do
     pole.rewire_neighbours_when_destroying = false
 end
@@ -113,8 +118,7 @@ if mods["PowerOverload"] then
 
     technologies["po-electric-energy-distribution-3"].hidden = true
 
-    table.insert(technologies["electric-energy-distribution-1"].effects,
-        { type = "unlock-recipe", recipe = "po-huge-electric-pole" })
+    table.insert(technologies["eg-tech-1"].effects, { type = "unlock-recipe", recipe = "po-huge-electric-pole" })
 
     table.insert(technologies["electric-energy-distribution-2"].effects,
         { type = "unlock-recipe", recipe = "po-interface" })
