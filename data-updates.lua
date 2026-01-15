@@ -42,7 +42,7 @@ end
 if big_pole then
     for _, layer in pairs(big_pole.pictures.layers) do
         layer.shift = layer.shift or { 0, 0 }
-        layer.shift[2] = layer.shift[2] + 0.5
+        layer.shift[2] = layer.shift[2] + 0.3
     end
 
     for _, connection in pairs(big_pole.connection_points) do
@@ -51,7 +51,7 @@ if big_pole then
             if connection[point] then
                 for _, color in pairs({ "red", "green", "copper" }) do
                     if connection[point][color] then
-                        connection[point][color][2] = connection[point][color][2] + 0.5
+                        connection[point][color][2] = connection[point][color][2] + 0.3
                     end
                 end
             end

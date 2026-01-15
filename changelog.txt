@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.20.4
+Date: 15.01.2026
+  Bugfixes:
+    - Overhaul: Reverted change to 3x3 huge electric pole
+  Changes:
+    - Overhaul: Updated the huge electric pole graphics
+---------------------------------------------------------------------------------------------------
 Version: 1.20.3
 Date: 12.01.2026
   Bugfixes:

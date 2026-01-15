@@ -97,10 +97,7 @@ if constants.EG_OLD_HUGE_POLE then
 else
     huge_pole.icon                           = constants.EG_ICONS .. "eg-huge-electric-pole.png"
     huge_pole.icon_size                      = 64
-    huge_pole.drawing_box_vertical_extension = 5
-
-    huge_pole.collision_box                  = { { -1.4, -1.4 }, { 1.4, 1.4 } }
-    huge_pole.selection_box                  = { { -1.5, -1.5 }, { 1.5, 1.5 } }
+    huge_pole.drawing_box_vertical_extension = 4
 
     huge_pole.pictures                       =
     {
@@ -109,8 +106,8 @@ else
             {
                 filename = constants.EG_ENTITIES .. "eg-huge-electric-pole.png",
                 priority = "extra-high",
-                width = 1216 / 4,
-                height = 512,
+                width = 592 / 4,
+                height = 420,
                 scale = 0.5,
                 direction_count = 4,
                 shift = util.by_pixel(0, -70),
@@ -118,11 +115,11 @@ else
             {
                 filename = constants.EG_ENTITIES .. "eg-huge-electric-pole-shadow.png",
                 priority = "extra-high",
-                width = 2048 / 4,
-                height = 160,
+                width = 1680 / 4,
+                height = 148,
                 scale = 0.5,
                 direction_count = 4,
-                shift = util.by_pixel(76, 3),
+                shift = util.by_pixel(74, 0),
                 draw_as_shadow = true,
             }
         }
@@ -132,57 +129,57 @@ else
         {
             shadow =
             {
-                copper = util.by_pixel_hr(330, 3),
-                red = util.by_pixel_hr(360, 3),
+                copper = util.by_pixel_hr(320, 0),
+                red = util.by_pixel_hr(350, 3),
                 green = util.by_pixel_hr(280, 3)
             },
             wire =
             {
-                copper = util.by_pixel_hr(0, -340),
-                red = util.by_pixel_hr(74, -304),
-                green = util.by_pixel_hr(-74, -304)
+                copper = util.by_pixel_hr(0, -300),
+                red = util.by_pixel_hr(54, -290),
+                green = util.by_pixel_hr(-56, -290)
             }
         },
         {
             shadow =
             {
-                copper = util.by_pixel_hr(346, 4),
-                red = util.by_pixel_hr(346, 48),
-                green = util.by_pixel_hr(280, -28)
+                copper = util.by_pixel_hr(300, 10),
+                red = util.by_pixel_hr(258, 46),
+                green = util.by_pixel_hr(340, -38)
             },
             wire =
             {
-                copper = util.by_pixel_hr(-0, -340),
-                red = util.by_pixel_hr(52, -264),
-                green = util.by_pixel_hr(-52, -332)
+                copper = util.by_pixel_hr(6, -286),
+                red = util.by_pixel_hr(42, -252),
+                green = util.by_pixel_hr(-40, -330)
             }
         },
         {
             shadow =
             {
-                copper = util.by_pixel_hr(340, 8),
-                red = util.by_pixel_hr(310, 62),
-                green = util.by_pixel_hr(310, -50)
+                copper = util.by_pixel_hr(306, 0),
+                red = util.by_pixel_hr(300, 58),
+                green = util.by_pixel_hr(300, -56)
             },
             wire =
             {
-                copper = util.by_pixel_hr(4, -340),
-                red = util.by_pixel_hr(4, -260),
-                green = util.by_pixel_hr(4, -354)
+                copper = util.by_pixel_hr(8, -290),
+                red = util.by_pixel_hr(0, -230),
+                green = util.by_pixel_hr(0, -344)
             }
         },
         {
             shadow =
             {
-                copper = util.by_pixel_hr(346, 8),
-                red = util.by_pixel_hr(270, 40),
-                green = util.by_pixel_hr(340, -30)
+                copper = util.by_pixel_hr(306, 0),
+                red = util.by_pixel_hr(330, 38),
+                green = util.by_pixel_hr(260, -40)
             },
             wire =
             {
-                copper = util.by_pixel_hr(0, -340),
-                red = util.by_pixel_hr(-52, -264),
-                green = util.by_pixel_hr(52, -332)
+                copper = util.by_pixel_hr(4, -290),
+                red = util.by_pixel_hr(-38, -256),
+                green = util.by_pixel_hr(42, -328)
             }
         },
     }
