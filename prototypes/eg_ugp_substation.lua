@@ -84,6 +84,8 @@ ugp_substation_displayer.flags                   =
     "get-by-unit-number"
 }
 
+local item_sounds                                = require("__base__/prototypes/item_sounds")
+
 local ugp_substation_displayer_item              =
 {
     type                    = "item",
@@ -97,7 +99,10 @@ local ugp_substation_displayer_item              =
     stack_size              = data.raw["item"]["substation"].stack_size,
     hidden                  = false,
     hidden_in_factoriopedia = false,
-    place_result            = name
+    place_result            = name,
+    inventory_move_sound    = item_sounds.electric_large_inventory_move,
+    pick_sound              = item_sounds.electric_large_inventory_pickup,
+    drop_sound              = item_sounds.electric_large_inventory_move
 }
 
 local ugp_substation_displayer_recipe            =

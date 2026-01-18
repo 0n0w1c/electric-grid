@@ -211,6 +211,8 @@ else
     icon_size = 64
 end
 
+local item_sounds      = require("__base__/prototypes/item_sounds")
+
 local huge_pole_item   =
 {
     type                  = "item",
@@ -223,7 +225,10 @@ local huge_pole_item   =
     icon_size             = icon_size,
     stack_size            = data.raw["item"]["big-electric-pole"].stack_size,
     place_result          = "eg-huge-electric-pole",
-    weight                = 20000
+    weight                = 20000,
+    inventory_move_sound  = item_sounds.electric_large_inventory_move,
+    pick_sound            = item_sounds.electric_large_inventory_pickup,
+    drop_sound            = item_sounds.electric_large_inventory_move
 }
 
 local huge_pole_recipe =

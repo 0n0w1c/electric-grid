@@ -272,6 +272,8 @@ else
     order = data.raw["item"]["substation"].order .. "zz"
 end
 
+local item_sounds = require("__base__/prototypes/item_sounds")
+
 local eg_transformator_item = {
     type                  = "item",
     name                  = "eg-transformator",
@@ -284,7 +286,10 @@ local eg_transformator_item = {
     order                 = order,
     place_result          = "eg-transformator-displayer",
     stack_size            = 50,
-    weight                = 20000
+    weight                = 20000,
+    inventory_move_sound = item_sounds.electric_large_inventory_move,
+    pick_sound = item_sounds.electric_large_inventory_pickup,
+    drop_sound = item_sounds.electric_large_inventory_move
 }
 
 local eg_transformator_recipe = {
