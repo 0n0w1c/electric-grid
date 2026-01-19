@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "1.20.6",
+    "version": "1.21.0",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid!",
@@ -22,6 +22,8 @@
         "? PowerOverload",
         "? Subsurface",
         "? fixLargeElectricPole",
+        "? IR3_Assets_bronze",
+        "? IR3_Assets_power",
         "(?) bobpower",
         "(?) even-pickier-dollies",
         "! minimalwire"

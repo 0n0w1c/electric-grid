@@ -214,3 +214,53 @@ if mods["fixLargeElectricPole"] then
         recipe.subgroup = "eg-electric-distribution"
     end
 end
+
+if mods["IR3_Assets_bronze"] then
+    local item = data.raw["item"]["small-bronze-pole"]
+    if item then
+        item.subgroup = "eg-electric-distribution"
+    end
+
+    local recipe = recipes["small-bronze-pole"]
+    if recipe then
+        recipe.subgroup = "eg-electric-distribution"
+    end
+end
+
+if mods["IR3_Assets_power"] and settings.startup["IR3-enable-electric-poles"].value then
+    local item = data.raw["item"]["small-iron-pole"]
+    if item then
+        item.subgroup = "eg-electric-distribution"
+    end
+
+    local recipe = recipes["small-iron-pole"]
+    if recipe then
+        recipe.subgroup = "eg-electric-distribution"
+    end
+
+    local medium_steel_pole                = poles["medium-steel-pole"]
+    medium_steel_pole.supply_area_distance = 0
+
+    item                                   = items["medium-steel-pole"]
+    if item then
+        item.subgroup = "eg-electric-distribution"
+    end
+
+    recipe = recipes["medium-steel-pole"]
+    if recipe then
+        recipe.subgroup = "eg-electric-distribution"
+    end
+
+    local big_wooden_pole                = poles["big-wooden-pole"]
+    big_wooden_pole.supply_area_distance = 0
+
+    item                                 = items["big-wooden-pole"]
+    if item then
+        item.subgroup = "eg-electric-distribution"
+    end
+
+    recipe = recipes["big-wooden-pole"]
+    if recipe then
+        recipe.subgroup = "eg-electric-distribution"
+    end
+end
