@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.21.2
+Date: 20.01.2026
+  Bugfixes:
+    - Resolved underground substation recipe exploit
+  Changes:
+    - Changed the recipe for the underground substation to be the same as the substation
+---------------------------------------------------------------------------------------------------
 Version: 1.21.1
 Date: 20.01.2026
   Bugfixes:

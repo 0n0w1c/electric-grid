@@ -111,7 +111,7 @@ local ugp_substation_displayer_recipe            =
     name        = name,
     category    = data.raw["recipe"]["substation"].category,
     enabled     = false,
-    ingredients = { { type = "item", name = "substation", amount = 1 } },
+    ingredients = data.raw["recipe"]["substation"].ingredients,
     results     = { { type = "item", name = name, amount = 1 } }
 }
 

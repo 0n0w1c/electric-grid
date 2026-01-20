@@ -73,10 +73,6 @@ if not mods["PowerOverload"] and not mods["Krastorio2"] and not mods["Krastorio2
     substation.next_upgrade = "eg-ugp-substation-displayer"
 end
 
-if mods["quality"] and recipes["eg-ugp-substation-displayer-recycling"] then
-    recipes["eg-ugp-substation-displayer-recycling"].results = recipes["substation-recycling"].results
-end
-
 items["small-electric-pole"].subgroup           = "eg-electric-distribution"
 items["medium-electric-pole"].subgroup          = "eg-electric-distribution"
 items["big-electric-pole"].subgroup             = "eg-electric-distribution"
