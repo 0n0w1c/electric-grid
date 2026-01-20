@@ -22,7 +22,7 @@ ugp_substation.placeable_by                   = { item = "eg-ugp-substation-disp
 ugp_substation.draw_copper_wires              = false
 ugp_substation.draw_circuit_wires             = false
 ugp_substation.drawing_box_vertical_extension = 0
-ugp_substation.minable                        = { mining_time = 0.5, result = "substation" }
+ugp_substation.minable                        = { mining_time = 0.5, result = "eg-ugp-substation-displayer" }
 ugp_substation.next_upgrade                   = nil
 ugp_substation.selection_priority             = 1
 ugp_substation.collision_mask                 = { colliding_with_tiles_only = true, layers = {} }
