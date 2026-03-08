@@ -25,6 +25,7 @@ local constants = {}
 
 constants.EG_DEBUG_TRANSFORMATOR = false
 constants.EG_TICK_INTERVAL = 60
+constants.EG_PROCESS_PER_TICK = 5
 
 constants.EG_MOD = "__electric-grid__"
 constants.EG_GRAPHICS = constants.EG_MOD .. "/graphics/"

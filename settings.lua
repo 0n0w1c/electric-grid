@@ -17,6 +17,16 @@ end
 data.extend({
     {
         type = "bool-setting",
+        name = "eg-transformators-only",
+        setting_type = "startup",
+        default_value = false,
+        order = get_next_order(),
+        localised_name = { "mod-setting-name.eg-transformators-only" },
+        localised_description = { "mod-setting-description.eg-transformators-only" },
+        hidden = is_hidden()
+    },
+    {
+        type = "bool-setting",
         name = "eg-old-huge-pole",
         setting_type = "startup",
         default_value = false,
@@ -41,16 +51,6 @@ data.extend({
         order = get_next_order(),
         localised_name = { "mod-setting-name.eg-overlay" },
         localised_description = { "mod-setting-description.eg-overlay" }
-    },
-    {
-        type = "bool-setting",
-        name = "eg-transformators-only",
-        setting_type = "startup",
-        default_value = false,
-        order = get_next_order(),
-        localised_name = { "mod-setting-name.eg-transformators-only" },
-        localised_description = { "mod-setting-description.eg-transformators-only" },
-        hidden = is_hidden()
     },
     {
         type = "bool-setting",

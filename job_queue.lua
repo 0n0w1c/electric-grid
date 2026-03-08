@@ -78,10 +78,4 @@ function job_queue.process(current_tick)
     end
 end
 
-function job_queue.update_registration()
-    script.on_nth_tick(constants.EG_TICK_INTERVAL, function(event)
-        job_queue.process(event.tick)
-    end)
-end
-
 return job_queue

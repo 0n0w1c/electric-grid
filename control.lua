@@ -26,6 +26,11 @@ local function edp_blacklist()
     end
 end
 
+local function align_to_scheduler_tick(tick)
+    local scheduler_interval = constants.EG_TICK_INTERVAL
+    return math.ceil(tick / scheduler_interval) * scheduler_interval
+end
+
 --- Initializes global storage variables for managing transformators and related state.
 -- Ensures all required global variables are initialized with default values if not already set.
 -- Configures `storage` based on startup settings.
@@ -40,6 +45,8 @@ local function initialize_globals()
     storage.eg_transformators_only = storage.eg_transformators_only or false
     storage.eg_selected_rating = storage.eg_selected_rating or {}
     storage.eg_transformator_to_build = storage.eg_transformator_to_build or nil
+    storage.eg_transformator_keys = storage.eg_transformator_keys or {}
+    storage.eg_transformator_scan_index = storage.eg_transformator_scan_index or 1
 
     if settings.startup["eg-transformators-only"].value then
         storage.eg_transformators_only = settings.startup["eg-transformators-only"].value
@@ -51,85 +58,8 @@ local function initialize_globals()
     end
 end
 
---[[
-local function get_usage(pole)
-    if not (pole and pole.valid and pole.type == "electric-pole" and pole.electric_network_statistics) then
-        return 0
-    end
-
-    local stats = pole.electric_network_statistics
-    local total_usage = 0
-
-    for prototype_name, count in pairs(stats.input_counts) do
-        if count > 0 and string.sub(prototype_name, 1, 3) ~= "eg-" then
-            for _, quality in ipairs(constants.EG_QUALITIES) do
-                local flow = stats.get_flow_count {
-                    name = { name = prototype_name, quality = quality },
-                    precision_index = defines.flow_precision_index.five_seconds,
-                    count = false,
-                    category = "input"
-                }
-
-                total_usage = total_usage + flow
-            end
-        end
-    end
-
-    return total_usage * 60 -- Convert from per tick to per second
-end
-
-local function get_production(pole)
-    if not (pole and pole.valid and pole.type == "electric-pole" and pole.electric_network_statistics) then
-        return 0
-    end
-
-    local stats = pole.electric_network_statistics
-    local total_production = 0
-
-    for prototype_name, count in pairs(stats.output_counts) do
-        if count > 0 and string.sub(prototype_name, 1, 3) ~= "eg-" then
-            for _, quality in ipairs(constants.EG_QUALITIES) do
-                local flow = stats.get_flow_count {
-                    name = { name = prototype_name, quality = quality },
-                    precision_index = defines.flow_precision_index.five_seconds,
-                    count = false,
-                    category = "output"
-                }
-
-                total_production = total_production + flow
-            end
-        end
-    end
-
-    return total_production * 60 -- Convert from per tick to per second
-end
-
-local function get_maximum_production(pole)
-    if not (pole and pole.valid and pole.type == "electric-pole" and pole.electric_network_statistics) then
-        return 0
-    end
-
-    local stats = pole.electric_network_statistics
-    local total_max_production = 0
-
-    -- Iterate over all prototypes producing power in the network
-    for prototype_name, count in pairs(stats.output_counts) do
-        if count > 0 then
-            local prototype = game.entity_prototypes[prototype_name]
-            if prototype and prototype.get_max_energy_production then
-                -- Get max energy production per entity in Joules per tick
-                local max_production_per_entity = prototype.get_max_energy_production()
-                -- Convert to Watts (Joules per second) and multiply by the count
-                total_max_production = total_max_production + (max_production_per_entity * count * 60)
-            end
-        end
-    end
-
-    return total_max_production -- Return the maximum power production in Watts
-end
-]]
-
 --- Checks if the pump in the transformator is disabled, and if so, clears its fluid and triggers a replacement of boiler/steam engine.
+-- Only reacts on the transition from enabled -> disabled.
 -- @param transformator table The transformator entity containing the pump reference.
 -- @field pump LuaEntity The pump entity associated with the transformator.
 -- @return nil
@@ -137,20 +67,57 @@ local function check_pump_disabled(transformator)
     local pump = transformator.pump
     if not (pump and pump.valid) then return end
 
-    local control_behavior = pump.get_control_behavior()
-    if control_behavior and control_behavior.disabled and pump.fluidbox[1] ~= nil then
-        pump.clear_fluid_inside()
-        replace_tiered_components(transformator)
+    local cb = pump.get_control_behavior()
+    local disabled = cb and cb.disabled or false
+
+    if transformator.pump_was_disabled == nil then
+        transformator.pump_was_disabled = disabled
+        return
     end
+
+    if not disabled then
+        transformator.pump_was_disabled = false
+        return
+    end
+
+    if transformator.pump_was_disabled then
+        return
+    end
+
+    transformator.pump_was_disabled = true
+    pump.clear_fluid_inside()
+    replace_tiered_components(transformator)
 end
 
---- Periodic checks on all transformers
--- Replaces buffered components if pump is disabled, quick power on/off
-local function nth_tick_checks()
-    local transformators = storage.eg_transformators
-    for _, transformator in pairs(transformators) do
-        check_pump_disabled(transformator)
+--- Per-tick sliced checks on transformers.
+-- Replaces buffered components if pump is disabled, quick power on/off.
+local function on_tick_pump_checks()
+    local keys = storage.eg_transformator_keys
+    local count = #keys
+    if count == 0 then
+        storage.eg_transformator_scan_index = 1
+        return
     end
+
+    local per_tick = constants.EG_PROCESS_PER_TICK
+    local index = storage.eg_transformator_scan_index
+
+    for _ = 1, math.min(per_tick, count) do
+        if index > count then
+            index = 1
+        end
+
+        local unit_number = keys[index]
+        local transformator = storage.eg_transformators[unit_number]
+
+        if transformator then
+            check_pump_disabled(transformator)
+        end
+
+        index = index + 1
+    end
+
+    storage.eg_transformator_scan_index = index
 end
 
 -- Places transformator or ugp_substation entities
@@ -164,8 +131,7 @@ local function on_entity_built(event)
         eg_transformator_built(entity)
     elseif entity.name == "eg-ugp-substation-displayer" then
         local unit_number = entity.unit_number
-        local interval = constants.EG_TICK_INTERVAL
-        local aligned_tick = math.ceil((game.tick + 180) / interval) * interval
+        local aligned_tick = align_to_scheduler_tick(game.tick + 180)
 
         job_queue.schedule(
             aligned_tick,
@@ -190,8 +156,7 @@ local function on_entity_built(event)
         end
 
         if string.sub(entity.name, 1, 7) == "F077ET-" or string.sub(entity.name, 1, 14) == "electric-proxy" then
-            local interval = constants.EG_TICK_INTERVAL
-            local aligned_tick = math.ceil((game.tick + 1) / interval) * interval
+            local aligned_tick = align_to_scheduler_tick(game.tick + 1)
             job_queue.schedule(
                 aligned_tick,
                 "short_circuit_check"
@@ -390,16 +355,19 @@ local function on_gui_closed(event)
                 local tier = string.sub(unit_name, -1)
 
                 if filter.name == "eg-fluid-disable" then
+                    transformator.pump_was_disabled = true
                     pump.clear_fluid_inside()
                     replace_tiered_components(transformator)
                     pump.fluidbox.set_filter(1, { name = "eg-fluid-disable" })
                 else
+                    transformator.pump_was_disabled = false
                     pump.clear_fluid_inside()
                     pump.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
                 end
             end
         end
     end
+
     close_transformator_gui(player)
 end
 
@@ -474,7 +442,17 @@ local function on_script_raised_built(event)
     on_entity_built(event)
 end
 
+local function on_periodic_tick(event)
+    job_queue.process(event.tick)
+end
+
+local function register_nth_tick_handlers()
+    script.on_nth_tick(constants.EG_TICK_INTERVAL, on_periodic_tick)
+end
+
 local function register_event_handlers()
+    script.on_event(defines.events.on_tick, on_tick_pump_checks)
+
     script.on_event(defines.events.on_player_pipette, on_entity_pipetted)
     script.on_event(defines.events.on_player_rotated_entity, on_entity_rotated)
     script.on_event(defines.events.on_player_flipped_entity, on_entity_rotated)
@@ -505,22 +483,17 @@ script.on_init(function()
     initialize_globals()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
-    job_queue.register_function("nth_tick_checks", nth_tick_checks)
     job_queue.register_function("short_circuit_check", short_circuit_check)
-    job_queue.update_registration()
+    sync_transformator_keys()
+    register_nth_tick_handlers()
     edp_blacklist()
     register_event_handlers()
-
-    local interval = constants.EG_TICK_INTERVAL
-    local aligned_tick = math.ceil(game.tick / interval) * interval
-    job_queue.schedule(aligned_tick, "nth_tick_checks", {}, interval)
 end)
 
 script.on_load(function()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
-    job_queue.register_function("nth_tick_checks", nth_tick_checks)
     job_queue.register_function("short_circuit_check", short_circuit_check)
-    job_queue.update_registration()
+    register_nth_tick_handlers()
     edp_blacklist()
     register_event_handlers()
 end)
@@ -530,12 +503,8 @@ script.on_configuration_changed(function()
     remove_invalid_transformators()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
-    job_queue.register_function("nth_tick_checks", nth_tick_checks)
     job_queue.register_function("short_circuit_check", short_circuit_check)
-    job_queue.update_registration()
+    sync_transformator_keys()
+    register_nth_tick_handlers()
     register_event_handlers()
-
-    local interval = constants.EG_TICK_INTERVAL
-    local aligned_tick = math.ceil(game.tick / interval) * interval
-    job_queue.schedule(aligned_tick, "nth_tick_checks", {}, interval)
 end)

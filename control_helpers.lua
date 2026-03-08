@@ -1,3 +1,21 @@
+function sync_transformator_keys()
+    if not storage then return end
+    if not storage.eg_transformators then return end
+    if storage.eg_transformator_keys == nil then return end
+
+    local keys = {}
+    for unit_number in pairs(storage.eg_transformators) do
+        keys[#keys + 1] = unit_number
+    end
+
+    storage.eg_transformator_keys = keys
+
+    storage.eg_transformator_scan_index = storage.eg_transformator_scan_index or 1
+    if storage.eg_transformator_scan_index > #keys then
+        storage.eg_transformator_scan_index = 1
+    end
+end
+
 --- Removes a transformator and safely destroys all its associated entities.
 -- This function ensures that all components of a transformator are properly destroyed,
 -- and the transformator is removed from storage.
@@ -6,14 +24,15 @@ function remove_transformator(unit_number)
     local eg_transformator = storage.eg_transformators[unit_number]
     if not eg_transformator then return end
 
-    if eg_transformator.boiler then eg_transformator.boiler.destroy() end
-    if eg_transformator.pump then eg_transformator.pump.destroy() end
-    if eg_transformator.infinity_pipe then eg_transformator.infinity_pipe.destroy() end
-    if eg_transformator.steam_engine then eg_transformator.steam_engine.destroy() end
-    if eg_transformator.high_voltage then eg_transformator.high_voltage.destroy() end
-    if eg_transformator.low_voltage then eg_transformator.low_voltage.destroy() end
+    if eg_transformator.boiler and eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
+    if eg_transformator.pump and eg_transformator.pump.valid then eg_transformator.pump.destroy() end
+    if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then eg_transformator.infinity_pipe.destroy() end
+    if eg_transformator.steam_engine and eg_transformator.steam_engine.valid then eg_transformator.steam_engine.destroy() end
+    if eg_transformator.high_voltage and eg_transformator.high_voltage.valid then eg_transformator.high_voltage.destroy() end
+    if eg_transformator.low_voltage and eg_transformator.low_voltage.valid then eg_transformator.low_voltage.destroy() end
 
     storage.eg_transformators[unit_number] = nil
+    sync_transformator_keys()
 end
 
 --- Checks if a transformator and all its components are valid.
@@ -85,6 +104,7 @@ end
 -- @param transformator table The transformator to replace components for
 function replace_tiered_components(transformator)
     if not transformator then return end
+    if not (transformator.unit and transformator.unit.valid) then return end
 
     local unit_name = transformator.unit.name
     local tier = string.sub(unit_name, -1)
@@ -97,34 +117,34 @@ function replace_tiered_components(transformator)
     if storage.eg_transformators[unit_number] then
         local eg_transformator = storage.eg_transformators[unit_number]
 
-        local name = eg_transformator.boiler.name
-        local direction = eg_transformator.boiler.direction
-        local position = eg_transformator.boiler.position
+        if not (eg_transformator.boiler and eg_transformator.boiler.valid) then return end
+        if not (eg_transformator.steam_engine and eg_transformator.steam_engine.valid) then return end
 
-        if eg_transformator.boiler and eg_transformator.boiler.valid then
-            eg_transformator.boiler.destroy()
-        end
+        local boiler_name = eg_transformator.boiler.name
+        local boiler_direction = eg_transformator.boiler.direction
+        local boiler_position = eg_transformator.boiler.position
+
+        eg_transformator.boiler.destroy()
 
         local eg_boiler = surface.create_entity {
-            name = name,
-            position = position,
+            name = boiler_name,
+            position = boiler_position,
             force = force,
-            direction = direction,
+            direction = boiler_direction,
             create_build_effect_smoke = false
         }
-        name = eg_transformator.steam_engine.name
-        direction = eg_transformator.steam_engine.direction
-        position = eg_transformator.steam_engine.position
 
-        if eg_transformator.steam_engine and eg_transformator.steam_engine.valid then
-            eg_transformator.steam_engine.destroy()
-        end
+        local steam_engine_name = eg_transformator.steam_engine.name
+        local steam_engine_direction = eg_transformator.steam_engine.direction
+        local steam_engine_position = eg_transformator.steam_engine.position
+
+        eg_transformator.steam_engine.destroy()
 
         local eg_steam_engine = surface.create_entity {
-            name = name,
-            position = position,
+            name = steam_engine_name,
+            position = steam_engine_position,
             force = force,
-            direction = direction,
+            direction = steam_engine_direction,
             create_build_effect_smoke = false
         }
 
@@ -140,7 +160,6 @@ end
 -- @param entity LuaEntity The entity being built
 function eg_transformator_built(entity)
     if not entity or not entity.name then return end
-
     if not is_transformator(entity.name) then return end
 
     local surface = entity.surface
@@ -278,8 +297,11 @@ function eg_transformator_built(entity)
         steam_engine = eg_steam_engine,
         high_voltage = eg_high_voltage_pole,
         low_voltage = eg_low_voltage_pole,
-        alert_tick = 0
+        alert_tick = 0,
+        pump_was_disabled = false
     }
+
+    sync_transformator_keys()
 end
 
 --- Replace the old_transformator components with new ones based on the selected rating
@@ -319,6 +341,7 @@ function replace_transformator(old_transformator, new_rating)
     if not (eg_transformator.unit and eg_transformator.unit.valid) then return end
     local eg_unit_position = eg_transformator.unit.position
     local eg_unit_direction = eg_transformator.unit.direction
+    local prior_pump_was_disabled = eg_transformator.pump_was_disabled
     eg_transformator.unit.destroy()
 
     if not (eg_transformator.boiler and eg_transformator.boiler.valid) then return end
@@ -353,6 +376,7 @@ function replace_transformator(old_transformator, new_rating)
         force = force,
         create_build_effect_smoke = false
     }
+
     local eg_infinity_pipe = surface.create_entity {
         name = "eg-infinity-pipe",
         position = eg_infinity_pipe_position,
@@ -397,10 +421,12 @@ function replace_transformator(old_transformator, new_rating)
         steam_engine = eg_steam_engine,
         high_voltage = eg_high_voltage_pole,
         low_voltage = eg_low_voltage_pole,
-        alert_tick = 0
+        alert_tick = 0,
+        pump_was_disabled = prior_pump_was_disabled
     }
 
     storage.eg_transformators[unit_number] = nil
+    sync_transformator_keys()
 end
 
 --- Find all electric poles within a radius around a mined entity's position.
@@ -433,7 +459,7 @@ function remove_invalid_transformators()
     local transformators = storage.eg_transformators
     local invalid_transformators = {}
 
-    for unit_number, _ in pairs(transformators) do
+    for unit_number in pairs(transformators) do
         if not is_transformator_valid(unit_number) then
             table.insert(invalid_transformators, unit_number)
         end
@@ -442,6 +468,10 @@ function remove_invalid_transformators()
     for _, unit_number in pairs(invalid_transformators) do
         log("Invalid transformator detected: " .. unit_number)
         remove_transformator(unit_number)
+    end
+
+    if #invalid_transformators > 0 then
+        sync_transformator_keys()
     end
 end
 
@@ -560,14 +590,6 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
             return true
         end
     end
-
-    -- Check if one of the poles is a high_voltage pole and execute get_maximum_production
-    --    for _, name in ipairs({ name_a, name_b }) do
-    --        if name:match("^eg%-high%-voltage%-pole%-") then
-    --            local max_power = get_maximum_production(name)
-    --            game.print("Max = " .. max_power)
-    --        end
-    --    end
 
     if constants.EG_WIRE_CONNECTIONS[name_a] and constants.EG_WIRE_CONNECTIONS[name_a][name_b] then
         return true
