@@ -68,18 +68,17 @@ A steam engine, which produces power from the heated fluid and provides power to
 A tough question, but let me try.  
 This mod will add some load... it must, it adds both code and entities.  
 
-There are two primary areas... the code that runs when events occur (ex. you place an entity) and the code that runs on_nth_tick.  
-As much code as possible is assigned to events, minimizing the on_nth_tick code.  
+There are two primary areas... the code that runs when events occur (ex. you place an entity) and the code that runs repeatedly on game ticks (on_tick).  
+As much code as possible is assigned to events, minimizing the code that runs on game ticks.  
 The code that runs when events take place should have little impact, I doubt it can be noticed in normal game play.  
-Usually the greater concern is the code that runs on_nth_tick, this code runs at quick intervals throughout the game session.  
-This mod uses the on_nth_tick to watch for when the Transformators are enabled/disabled via the circuit and logistics networks.  
+Usually the greater concern is the code that runs on game ticks, this code runs at regualr intervals throughout the game session.  
+This mod uses the game ticks to watch for when the Transformators are enabled/disabled via the circuit and logistics networks.  
 
-So adding a Transformator is the same as adding the seven entities. Quick enable/disable adds more.  
-I have tested 100 Transformators in operation with the on tick interval set to 1, it was not too much on my computer (M1 Mac Mini) and the performance profile was pretty good. Could you build with over 500 Transformators? Uh, maybe, maybe not.  I could probably make code adjustments to split the workload. Please contact me if you do run into performance issues. I would want a save to test with, if possible, I am not a megabase engineer.  
+I have tested 100 Transformators in operation and it was not too much on my computer (M1 Mac Mini) and the performance profile was pretty good.  Please post if you do run into performance issues.
 
 ---
-#### Why is there on_nth_tick code?  
-The Transformator's boiler and steam engine have an energy buffer and this buffer scales with the rating. When a Transformator is disabled, this buffer will continue to supply power until it is depleted. This can take some time depending on the rating chosen and power consumption. A fully buffered 10 GW Transformator with nothing more than an inserter as the consumer, will take a very long time to deplete the buffer. The on_nth_tick code flushes the buffers, so the power-off takes effect quickly.   
+#### Why is there on_tick code?  
+The Transformator's boiler and steam engine have an energy buffer and this buffer scales with the rating. When a Transformator is disabled, this buffer will continue to supply power until it is depleted. This can take some time depending on the rating chosen and power consumption. A fully buffered 10 GW Transformator with nothing more than an inserter as the consumer, will take a very long time to deplete the buffer. The on_tick code flushes the buffers, so the power-off takes effect quickly.   
 When the underground substations are placed, the on_nth_tick is used to replace the displayer entity with the actual underground substation, on a 3 second delay. This allows the underground substation to the placed via pole dragging, like other electric poles.  
 
 ---
