@@ -119,41 +119,41 @@ for _ in pairs(constants.EG_TRANSFORMATORS) do
     constants.EG_NUM_TIERS = constants.EG_NUM_TIERS + 1
 end
 
-constants.EG_LIGHT_COLOR            = { r = 1.0, g = 1.0, b = 0.7 }
-constants.EG_LIGHT_INTENSITY        = 0.7
-constants.EG_LIGHT_SIZE             = 12
+constants.EG_LIGHT_COLOR                = { r = 1.0, g = 1.0, b = 0.7 }
+constants.EG_LIGHT_INTENSITY            = 0.7
+constants.EG_LIGHT_SIZE                 = 12
 
-constants.EG_HUGE_POLE_LIGHT        =
+constants.EG_HUGE_POLE_LIGHT            =
 {
     color = constants.EG_LIGHT_COLOR,
     intensity = constants.EG_LIGHT_INTENSITY,
     size = constants.EG_LIGHT_SIZE
 }
 
-constants.EG_BIG_POLE_LIGHT         =
+constants.EG_BIG_POLE_LIGHT             =
 {
     color = constants.EG_LIGHT_COLOR,
     intensity = constants.EG_LIGHT_INTENSITY / 1.1,
     size = constants.EG_LIGHT_SIZE / 1.2
 }
 
-constants.EG_MEDIUM_POLE_LIGHT      =
+constants.EG_MEDIUM_POLE_LIGHT          =
 {
     color = constants.EG_LIGHT_COLOR,
     intensity = constants.EG_LIGHT_INTENSITY / 1.25,
     size = constants.EG_LIGHT_SIZE / 1.5
 }
 
-constants.EG_MINI_POLE_LIGHT        =
+constants.EG_MINI_POLE_LIGHT            =
 {
     color = constants.EG_LIGHT_COLOR,
     intensity = constants.EG_LIGHT_INTENSITY / 2,
     size = constants.EG_LIGHT_SIZE / 3
 }
 
-constants.EG_SUPPLY_AREA_DISTANCE   = 0.49
-constants.EG_WIRE_CONNECTION_OFFSET = 0.1
-constants.EG_WIRE_CONNECTION_POINTS = {
+constants.EG_SUPPLY_AREA_DISTANCE       = 0.49
+constants.EG_WIRE_CONNECTION_OFFSET     = 0.1
+constants.EG_WIRE_CONNECTION_POINTS     = {
     eg_high_voltage_pole = {
         north = { wire = { 0.0, -1.8 }, shadow = { 2.2, 0.7 } },
         east  = { wire = { -0.4, -1.6 }, shadow = { 1.5, -1.2 } },
@@ -168,9 +168,14 @@ constants.EG_WIRE_CONNECTION_POINTS = {
     },
 }
 
-constants.EG_TRANSFORMATOR_POLES    = "^eg%-[high%-low]+%-voltage%-pole%-"
+constants.EG_TRANSFORMATOR_POLE_PATTERN = "^eg%-[high%-low]+%-voltage%-pole%-"
+constants.EG_TRANSFORMATOR_POLE_NAMES  = {}
+for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
+    constants.EG_TRANSFORMATOR_POLE_NAMES["eg-high-voltage-pole-" .. direction] = true
+    constants.EG_TRANSFORMATOR_POLE_NAMES["eg-low-voltage-pole-" .. direction] = true
+end
 
-constants.EG_TRANSMISSION_POLES     =
+constants.EG_TRANSMISSION_POLES         =
 {
     ["big-electric-pole"] = true,
     ["medium-electric-pole"] = true,
@@ -182,7 +187,7 @@ constants.EG_TRANSMISSION_POLES     =
     ["big-wooden-pole"] = true,
 }
 
-constants.EG_SUPPLY_POLES           =
+constants.EG_SUPPLY_POLES               =
 {
     ["small-electric-pole"] = true,
     ["small-iron-electric-pole"] = true,
@@ -196,7 +201,7 @@ constants.EG_SUPPLY_POLES           =
     ["small-iron-pole"] = true,
 }
 
-constants.EG_HUGE_POLES             =
+constants.EG_HUGE_POLES                 =
 {
     ["huge-electric-pole"] = true,
     ["eg-huge-electric-pole"] = true,
@@ -205,7 +210,7 @@ constants.EG_HUGE_POLES             =
     ["bi-wooden-pole-huge"] = true,
 }
 
-constants.EG_WIRE_CONNECTIONS       = {
+constants.EG_WIRE_CONNECTIONS           = {
     ["small-electric-pole"] = {
         ["small-electric-pole"] = true,
         ["medium-electric-pole"] = true,

@@ -26,7 +26,9 @@ function remove_transformator(unit_number)
 
     if eg_transformator.boiler and eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
     if eg_transformator.pump and eg_transformator.pump.valid then eg_transformator.pump.destroy() end
-    if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then eg_transformator.infinity_pipe.destroy() end
+    if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
+        eg_transformator.infinity_pipe.destroy()
+    end
     if eg_transformator.steam_engine and eg_transformator.steam_engine.valid then eg_transformator.steam_engine.destroy() end
     if eg_transformator.high_voltage and eg_transformator.high_voltage.valid then eg_transformator.high_voltage.destroy() end
     if eg_transformator.low_voltage and eg_transformator.low_voltage.valid then eg_transformator.low_voltage.destroy() end
@@ -559,6 +561,82 @@ end
 -- @return boolean True if the connection is allowed, false otherwise.
 function is_copper_cable_connection_allowed(pole_a, pole_b)
     if storage.eg_transformators_only then return true end
+    if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
+        return false
+    end
+
+    local name_a = pole_a.name
+    local name_b = pole_b.name
+
+    local is_transformator_a = constants.EG_TRANSFORMATOR_POLE_NAMES[name_a]
+    local is_transformator_b = constants.EG_TRANSFORMATOR_POLE_NAMES[name_b]
+    local is_transmission_a = constants.EG_TRANSMISSION_POLES[name_a]
+    local is_transmission_b = constants.EG_TRANSMISSION_POLES[name_b]
+    local is_huge_a = constants.EG_HUGE_POLES[name_a]
+    local is_huge_b = constants.EG_HUGE_POLES[name_b]
+
+    local is_proxy_a = string.sub(name_a, 1, 15) == "electric-proxy-"
+    local is_proxy_b = string.sub(name_b, 1, 15) == "electric-proxy-"
+    local is_f077et_a = string.sub(name_a, 1, 7) == "F077ET-"
+    local is_f077et_b = string.sub(name_b, 1, 7) == "F077ET-"
+    local is_po_interface_a = string.sub(name_a, 1, 12) == "po-interface"
+    local is_po_interface_b = string.sub(name_b, 1, 12) == "po-interface"
+    local is_po_fuse_a = string.sub(name_a, 1, 3) == "po-" and string.find(name_a, "-fuse")
+    local is_po_fuse_b = string.sub(name_b, 1, 3) == "po-" and string.find(name_b, "-fuse")
+
+    local wire_connections_a = constants.EG_WIRE_CONNECTIONS[name_a]
+
+    if name_a == "power-combinator-meter-network" and name_b == "power-combinator-meter-network" then
+        return false
+    end
+
+    if is_transformator_a and is_transformator_b then
+        for _, transformator in pairs(storage.eg_transformators) do
+            local hv = transformator.high_voltage
+            local lv = transformator.low_voltage
+
+            if (hv == pole_a and lv == pole_b) or (hv == pole_b and lv == pole_a) then
+                return false
+            end
+        end
+    end
+
+    if pole_a.surface.name == "fulgora" then
+        if is_transmission_a and is_transmission_b then return true end
+        if (is_transmission_a and is_huge_b) or (is_transmission_b and is_huge_a) then return true end
+        if is_huge_a and is_huge_b then return true end
+    end
+
+    if wire_connections_a and wire_connections_a[name_b] then return true end
+
+    if is_transformator_a and is_transformator_b then return true end
+
+    if (is_transformator_a and is_transmission_b) or (is_transformator_b and is_transmission_a) then return true end
+
+    if (is_transformator_a and is_huge_b) or (is_transformator_b and is_huge_a) then return true end
+
+    if (is_transformator_a and is_po_interface_b) or (is_transformator_b and is_po_interface_a) then return true end
+
+    if (is_transformator_a and is_po_fuse_b) or (is_transformator_b and is_po_fuse_a) then return true end
+
+    if is_proxy_a and is_proxy_b then return true end
+
+    if is_f077et_a and is_f077et_b then return true end
+
+    if (is_huge_a and is_proxy_b) or (is_huge_b and is_proxy_a) then return false end
+
+    if (is_huge_a and is_f077et_b) or (is_huge_b and is_f077et_a) then return false end
+
+    if (is_transmission_a and is_proxy_b) or (is_transmission_b and is_proxy_a) then return true end
+
+    if (is_transmission_a and is_f077et_b) or (is_transmission_b and is_f077et_a) then return true end
+
+    return false
+end
+
+--[[
+function is_copper_cable_connection_allowed(pole_a, pole_b)
+    if storage.eg_transformators_only then return true end
 
     if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
         return false
@@ -570,11 +648,14 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         return false
     end
 
-    for _, transformator in pairs(storage.eg_transformators) do
-        local hv = transformator.high_voltage
-        local lv = transformator.low_voltage
-        if (hv == pole_a and lv == pole_b) or (hv == pole_b and lv == pole_a) then
-            return false
+    if constants.EG_TRANSFORMATOR_POLE_NAMES[name_a] and constants.EG_TRANSFORMATOR_POLE_NAMES[name_b] then
+        for _, transformator in pairs(storage.eg_transformators) do
+            local hv = transformator.high_voltage
+            local lv = transformator.low_voltage
+
+            if (hv == pole_a and lv == pole_b) or (hv == pole_b and lv == pole_a) then
+                return false
+            end
         end
     end
 
@@ -595,27 +676,27 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         return true
     end
 
-    if name_a:match(constants.EG_TRANSFORMATOR_POLES) and name_b:match(constants.EG_TRANSFORMATOR_POLES) then
+    if name_a:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) and name_b:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) then
         return true
     end
 
-    if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and constants.EG_TRANSMISSION_POLES[name_b]) or
-        (name_b:match(constants.EG_TRANSFORMATOR_POLES) and constants.EG_TRANSMISSION_POLES[name_a]) then
+    if (name_a:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) and constants.EG_TRANSMISSION_POLES[name_b]) or
+        (name_b:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) and constants.EG_TRANSMISSION_POLES[name_a]) then
         return true
     end
 
-    if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and constants.EG_HUGE_POLES[name_b]) or
-        (name_b:match(constants.EG_TRANSFORMATOR_POLES) and constants.EG_HUGE_POLES[name_a]) then
+    if (name_a:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) and constants.EG_HUGE_POLES[name_b]) or
+        (name_b:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) and constants.EG_HUGE_POLES[name_a]) then
         return true
     end
 
-    if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_b, 1, 12) == "po-interface") or
-        (name_b:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_a, 1, 12) == "po-interface") then
+    if (name_a:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) and string.sub(name_b, 1, 12) == "po-interface") or
+        (name_b:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) and string.sub(name_a, 1, 12) == "po-interface") then
         return true
     end
 
-    if (name_a:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_b, 1, 3) == "po-" and string.find(name_b, "-fuse")) or
-        (name_b:match(constants.EG_TRANSFORMATOR_POLES) and string.sub(name_a, 1, 3) == "po-" and string.find(name_a, "-fuse")) then
+    if (name_a:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) and string.sub(name_b, 1, 3) == "po-" and string.find(name_b, "-fuse")) or
+        (name_b:match(constants.EG_TRANSFORMATOR_POLE_PATTERN) and string.sub(name_a, 1, 3) == "po-" and string.find(name_a, "-fuse")) then
         return true
     end
 
@@ -647,6 +728,7 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
 
     return false
 end
+]]
 
 --- Enforce copper cable connection rules for a given electric pole.
 -- Iterates through all wire connectors for the pole and disconnects unauthorized connections
