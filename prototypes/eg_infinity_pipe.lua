@@ -13,9 +13,9 @@ local eg_infinity_pipe = {
     localised_name                 = { "entity-name.eg-infinity-pipe" },
     localised_description          = { "entity-description.eg-infinity-pipe" },
     quality_indicator_scale        = 0,
-    collision_mask                 = { layers = {} },
-    collision_box                  = { { -0.49, -0.49 }, { 0.49, 0.49 } },
-    --selection_box = { { -0.49, -0.49 }, { 0.49,  0.49 } },
+    collision_mask                 = constants.EG_COLLISION_MASK,
+    collision_box                  = { { -0.5, -0.5 }, { 0.5, 0.5 } },
+    selection_box                  = { { -0.5, -0.5 }, { 0.5, 0.5 } },
     horizontal_window_bounding_box = { { 0, 0 }, { 0, 0 } },
     vertical_window_bounding_box   = { { 0, 0 }, { 0, 0 } },
     fluid_box                      = {

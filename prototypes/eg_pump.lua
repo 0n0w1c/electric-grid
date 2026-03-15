@@ -144,33 +144,35 @@ local function get_pump_picture(tier)
 end
 
 function create_transformator_pump()
-    local collision_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
-    local selection_box = { { -1.49, -0.49 }, { 0.49, 0.49 } }
+    local collision_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
+    local selection_box = { { -1.5, -1.5 }, { 0.5, 0.5 } }
     --local selection_box = { { -0.49, -0.49 }, { 0.49,  0.49 } }
 
     return {
-        type                      = "pump",
-        name                      = "eg-pump",
-        icon                      = constants.EG_ICONS .. "eg-transformator.png",
-        icon_size                 = 128,
-        max_health                = constants.EG_MAX_HEALTH,
-        hidden                    = true,
-        hidden_in_factoriopedia   = true,
-        factoriopedia_alternative = "eg-transformator-displayer",
-        selectable_in_game        = true,
-        flags                     = constants.EG_PUMP_FLAGS,
-        alert_icon_scale          = 0,
-        minable                   = nil,
-        collision_mask            = { layers = {} },
-        selection_box             = selection_box,
-        collision_box             = collision_box,
-        localised_name            = { "entity-name.eg-pump" },
-        localised_description     = { "entity-description.eg-pump" },
-        integration_patch         = get_pump_picture(1),
-        pumping_speed             = 100,
-        energy_usage              = "1kW",
-        energy_source             = { type = "void" },
-        fluid_box                 = {
+        type                           = "pump",
+        name                           = "eg-pump",
+        icon                           = constants.EG_ICONS .. "eg-transformator.png",
+        icon_size                      = 128,
+        max_health                     = constants.EG_MAX_HEALTH,
+        hidden                         = false,
+        hidden_in_factoriopedia        = false,
+        factoriopedia_alternative      = "eg-transformator-displayer",
+        selectable_in_game             = true,
+        minable                        = { mining_time = 0.5, result = "eg-transformator" },
+        flags                          = { "placeable-player", "player-creation", "get-by-unit-number" },
+        alert_icon_scale               = 0,
+        placeable_by                   = { item = "eg-transformator", count = 1 },
+        collision_mask                 = constants.EG_COLLISION_MASK,
+        selection_box                  = selection_box,
+        collision_box                  = collision_box,
+        localised_name                 = { "entity-name.eg-pump" },
+        localised_description          = { "entity-description.eg-pump" },
+        integration_patch              = get_pump_picture(1),
+        integration_patch_render_layer = "lower-object",
+        pumping_speed                  = 100,
+        energy_usage                   = "1kW",
+        energy_source                  = { type = "void" },
+        fluid_box                      = {
             volume = constants.EG_FLUID_VOLUME,
             hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
             pipe_connections = {
@@ -178,24 +180,24 @@ function create_transformator_pump()
                     connection_category = "eg-guts-category",
                     direction = defines.direction.north,
                     flow_direction = "input",
-                    position = { 0, 0 }
+                    position = { 0, -0.1 }
                 },
                 {
                     connection_category = "eg-guts-category",
                     direction = defines.direction.west,
                     flow_direction = "output",
-                    position = { 0, 0 }
+                    position = { -0.1, 0 }
                 }
             }
         },
-        control_behavior          = {
+        control_behavior               = {
             circuit_enable_disable = true,
             connect_to_logistic_network = true,
         },
-        open_sound                = data.raw["sound"]["eg-transformator-gui-open"],
-        close_sound               = data.raw["sound"]["eg-transformator-gui-close"],
-        circuit_wire_max_distance = constants.EG_MAX_WIRE_TRANSFORMATOR,
-        circuit_connector         = circuit_connector_definitions.create_vector
+        open_sound                     = data.raw["sound"]["eg-transformator-gui-open"],
+        close_sound                    = data.raw["sound"]["eg-transformator-gui-close"],
+        circuit_wire_max_distance      = constants.EG_MAX_WIRE_TRANSFORMATOR,
+        circuit_connector              = circuit_connector_definitions.create_vector
             (
                 universal_connector_template,
                 {

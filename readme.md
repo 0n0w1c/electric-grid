@@ -57,7 +57,7 @@ Disrupted by the heavy planetary magnetic field and extreme electrical storms, T
 Wiring rules are relaxed, permitting copper wire connections between any of the transmission only poles.  
 
 *Limitations:*  
-Transformator circuit conditions and copper wiring are not included in blueprints.  
+Transformator copper wire connections are not included in blueprints.  
 
 *Notes*
 If Bob's Power and its startup setting for new power poles and substations is enabled, the Overhaul will be deactivated.

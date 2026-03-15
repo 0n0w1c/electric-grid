@@ -36,6 +36,13 @@ constants.EG_MAX_SUPPLY_WOODEN_SUPPORT = settings.startup["eg-max-supply-wooden-
 constants.EG_MAX_WIRE_STEEL_SUPPORT = tonumber(settings.startup["eg-max-wire-steel-support"].value)
 
 data.extend({
+  {
+    type = "collision-layer",
+    name = "eg_internal"
+  }
+})
+
+data.extend({
     {
         type = "item-subgroup",
         name = "eg-electric-distribution",
@@ -72,15 +79,6 @@ data.extend({
             tint = { r = 1, g = 1, b = 0 },
             icon_size = 32,
         } }
-    }
-})
-
-data.extend({
-    {
-        type = "custom-input",
-        name = "transformator-rating-selection",
-        key_sequence = "mouse-button-1",
-        linked_game_control = "open-gui"
     }
 })
 

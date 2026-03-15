@@ -1,19 +1,9 @@
 function create_transformator_steam_engine(variant, tier)
-    local name = "eg-steam-engine-" .. variant .. "-" .. tier
-    local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
+    local name          = "eg-steam-engine-" .. variant .. "-" .. tier
+    local rating        = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
-    local selection_box
-
-    if variant == "ne" then
-        selection_box = { { -0.49, -0.49 }, { 1.49, 0.49 } }
-    elseif variant == "sw" then
-        selection_box = { { -1.49, -0.49 }, { 0.49, 0.49 } }
-    else
-        selection_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
-    end
-
-    --selection_box       = { { -0.49, -0.49 }, { 0.49, 0.49 } }
-
+    local selection_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
+    --local selection_box = { { 0, 0 }, { 0, 0 } }
     local collision_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
 
     return {
@@ -27,7 +17,7 @@ function create_transformator_steam_engine(variant, tier)
         icon_size               = 128,
         impact_category         = "metal-large",
         max_health              = constants.EG_MAX_HEALTH,
-        hidden                  = true,
+        hidden                  = false,
         minable                 = nil,
         selectable_in_game      = false,
         alert_icon_scale        = 0,
@@ -35,10 +25,11 @@ function create_transformator_steam_engine(variant, tier)
         localised_name          = { "entity-name.eg-steam-engine" },
         localised_description   = { "entity-description.eg-steam-engine" },
         quality_indicator_scale = 0,
-        collision_mask          = { layers = {} },
+        collision_mask          = constants.EG_COLLISION_MASK,
         collision_box           = collision_box,
         selection_box           = selection_box,
         effectivity             = constants.STEAM_ENGINE_EFFECTIVITY,
+
         energy_source           = {
             type = "electric",
             usage_priority = "secondary-output"

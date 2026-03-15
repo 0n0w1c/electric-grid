@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.0
+Date: 15.03.2026
+  Bugfixes:
+    - None
+  Changes:
+    - Significant amount of refactoring
+    - Migration 1.22.0 transformators keyed by pump
+    - Support for blueprinting transformator tier and circuit conditions
+    - Transformator has a single gui
+---------------------------------------------------------------------------------------------------
 Version: 1.21.4
 Date: 08.03.2026
   Bugfixes:

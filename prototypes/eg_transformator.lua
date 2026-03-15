@@ -194,39 +194,8 @@ if mods["space-age"] then
     }
 end
 
-local function create_transformator_unit(tier)
-    local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
-
-    return {
-        type                       = "simple-entity-with-force",
-        name                       = "eg-unit-" .. tier,
-        icon                       = constants.EG_ICONS .. "eg-transformator.png",
-        icon_size                  = 128,
-        hidden_in_factoriopedia    = true,
-        flags                      = { "placeable-neutral", "placeable-player", "player-creation", "get-by-unit-number" },
-        minable                    = { mining_time = 0.5, result = "eg-transformator" },
-        selectable_in_game         = true,
-        corpse                     = "big-remnants",
-        dying_explosion            = "medium-explosion",
-        placeable_by               = { item = "eg-transformator", count = 1 },
-        max_health                 = constants.EG_MAX_HEALTH,
-        resistances                = data.raw["electric-pole"]["substation"].resistances,
-        random_variation_on_create = false,
-        collision_box              = { { -0.9, -1.9 }, { 0.9, 1.9 } },
-        selection_box              = { { -1.0, -1.0 }, { 1.0, 0.0 } },
-        collision_mask             = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
-        picture                    = get_transformator_picture(tier),
-        render_layer               = "object-under",
-        localised_name             = { "entity-name.eg-unit" },
-        localised_description      = { "entity-description.eg-unit" },
-        quality_indicator_scale    = 0,
-        surface_conditions         = surface_conditions
-    }
-end
-
 for tier = 1, constants.EG_NUM_TIERS do
     data.extend({
-        create_transformator_unit(tier),
         create_transformator_water(tier),
         create_transformator_steam(tier),
         create_transformator_boiler(tier),
@@ -287,9 +256,9 @@ local eg_transformator_item = {
     place_result          = "eg-transformator-displayer",
     stack_size            = 50,
     weight                = 20000,
-    inventory_move_sound = item_sounds.electric_large_inventory_move,
-    pick_sound = item_sounds.electric_large_inventory_pickup,
-    drop_sound = item_sounds.electric_large_inventory_move
+    inventory_move_sound  = item_sounds.electric_large_inventory_move,
+    pick_sound            = item_sounds.electric_large_inventory_pickup,
+    drop_sound            = item_sounds.electric_large_inventory_move
 }
 
 local eg_transformator_recipe = {
