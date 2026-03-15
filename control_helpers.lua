@@ -72,7 +72,9 @@ function sync_transformator_keys()
     storage.eg_entity_to_transformator = entity_to_transformator
 
     storage.eg_transformator_scan_index = storage.eg_transformator_scan_index or 1
-    if storage.eg_transformator_scan_index > #keys then
+    storage.eg_transformator_scan_accumulator = storage.eg_transformator_scan_accumulator or 0
+
+    if storage.eg_transformator_scan_index > #storage.eg_transformator_keys then
         storage.eg_transformator_scan_index = 1
     end
 end
@@ -91,8 +93,10 @@ function remove_transformator(pump_unit_number)
 
     if eg_transformator.boiler and eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
     if eg_transformator.pump and eg_transformator.pump.valid then eg_transformator.pump.destroy() end
-    if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then eg_transformator.infinity_pipe
-            .destroy() end
+    if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
+        eg_transformator.infinity_pipe
+            .destroy()
+    end
     if eg_transformator.steam_engine and eg_transformator.steam_engine.valid then eg_transformator.steam_engine.destroy() end
     if eg_transformator.high_voltage and eg_transformator.high_voltage.valid then eg_transformator.high_voltage.destroy() end
     if eg_transformator.low_voltage and eg_transformator.low_voltage.valid then eg_transformator.low_voltage.destroy() end
@@ -246,8 +250,6 @@ function replace_tiered_components(transformator)
 
     eg_transformator.boiler = eg_boiler
     eg_transformator.steam_engine = eg_steam_engine
-
-    sync_transformator_keys()
 end
 
 --- Build a transformator from a placed transformator root, item, or displayer.
@@ -683,6 +685,8 @@ function reset_short_circuit_alert_state()
 end
 
 function short_circuit_check()
+    storage.eg_short_circuit_check_tick = nil
+
     local transformators = storage.eg_transformators
     if not transformators then return end
 

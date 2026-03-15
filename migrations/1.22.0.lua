@@ -88,14 +88,3 @@ end
 
 storage.eg_transformators = migrated
 rebuild_transformator_indexes()
-
-if storage.jobs then
-    for tick, jobs in pairs(storage.jobs) do
-        for _, job in pairs(jobs) do
-            if job.repeat_interval ~= nil and job.is_repeating == nil then
-                job.is_repeating = job.repeat_interval and true or false
-                job.repeat_interval = nil
-            end
-        end
-    end
-end

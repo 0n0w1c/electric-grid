@@ -47,6 +47,23 @@ local function align_to_scheduler_tick(tick)
     return math.ceil(tick / scheduler_interval) * scheduler_interval
 end
 
+--- Schedule a coalesced short-circuit scan for the next aligned scheduler tick.
+---
+--- Multiple requests for the same aligned tick collapse into a single queued
+--- job. The pending marker is cleared when `short_circuit_check()` runs.
+---
+---@return nil
+local function schedule_short_circuit_check()
+    local scheduled_tick = align_to_scheduler_tick(game.tick + 1)
+
+    if storage.eg_short_circuit_check_tick == scheduled_tick then
+        return
+    end
+
+    storage.eg_short_circuit_check_tick = scheduled_tick
+    job_queue.schedule(scheduled_tick, "short_circuit_check")
+end
+
 --- Initialize or migrate persistent global state used by the mod.
 ---
 --- This function is safe to call from `on_init` and
@@ -65,6 +82,8 @@ local function initialize_globals()
     storage.eg_transformator_keys = storage.eg_transformator_keys or {}
     storage.eg_transformator_scan_index = storage.eg_transformator_scan_index or 1
     storage.eg_entity_to_transformator = storage.eg_entity_to_transformator or {}
+
+    storage.eg_transformator_scan_accumulator = storage.eg_transformator_scan_accumulator or 0
 
     storage.eg_transformators_only = false
 
@@ -93,57 +112,86 @@ end
 --- Only the transition from enabled -> disabled matters. When the pump is
 --- disabled, buffered fluid is cleared and the boiler/steam-engine pair is
 --- refreshed so their tiered prototypes match the transformator state.
---- @param transformator table Stored transformator state.
---- @return nil
+---
+---@param transformator table Stored transformator state.
+---@return nil
 local function check_pump_disabled(transformator)
     local pump = transformator.pump
-    if not (pump and pump.valid) then return end
-
-    local cb = pump.get_control_behavior()
-    local disabled = cb and cb.disabled or false
-
-    if transformator.pump_was_disabled == nil then
-        transformator.pump_was_disabled = disabled
+    if not (pump and pump.valid) then
         return
     end
 
-    if not disabled then
+    local cb = pump.get_control_behavior()
+
+    -- If the pump is not using circuit enable/disable,
+    -- it can never become disabled via circuit logic.
+    if not (cb and cb.circuit_enable_disable) then
         transformator.pump_was_disabled = false
         return
     end
 
-    if transformator.pump_was_disabled then
+    local disabled = cb.disabled
+    local prev = transformator.pump_was_disabled
+
+    -- First observation after load / creation
+    if prev == nil then
+        transformator.pump_was_disabled = disabled
         return
     end
 
-    transformator.pump_was_disabled = true
-    pump.clear_fluid_inside()
-    replace_tiered_components(transformator)
+    -- Detect enabled -> disabled transition only
+    if not prev and disabled then
+        transformator.pump_was_disabled = true
+        pump.clear_fluid_inside()
+        replace_tiered_components(transformator)
+        return
+    end
+
+    -- Otherwise just store current state
+    transformator.pump_was_disabled = disabled
 end
 
---- Perform the per-tick sliced transformator maintenance scan.
+--- Perform a rolling transformator scan so each transformator is checked
+--- approximately once every 60 ticks.
 ---
---- Work is intentionally bounded by `constants.EG_PROCESS_PER_TICK` to avoid
---- scanning all transformators every tick.
---- @return nil
+--- Work is spread across ticks using an accumulator, which avoids both:
+--- - overscanning small transformator counts
+--- - large once-per-second spikes for bigger bases
+---
+---@return nil
 local function on_tick_pump_checks()
     local keys = storage.eg_transformator_keys
-    local count = #keys
+    local count = keys and #keys or 0
+
     if count == 0 then
         storage.eg_transformator_scan_index = 1
+        storage.eg_transformator_scan_accumulator = 0
         return
     end
 
-    local per_tick = constants.EG_PROCESS_PER_TICK
-    local index = storage.eg_transformator_scan_index
+    local index = storage.eg_transformator_scan_index or 1
+    local accumulator = storage.eg_transformator_scan_accumulator or 0
 
-    for _ = 1, math.min(per_tick, count) do
+    -- Target rate: process the full transformator set once every 60 ticks.
+    accumulator = accumulator + (count / 60)
+
+    local to_process = math.floor(accumulator)
+    accumulator = accumulator - to_process
+
+    if to_process <= 0 then
+        storage.eg_transformator_scan_index = index
+        storage.eg_transformator_scan_accumulator = accumulator
+        return
+    end
+
+    for _ = 1, to_process do
         if index > count then
             index = 1
         end
 
         local pump_unit_number = keys[index]
         local transformator = storage.eg_transformators[pump_unit_number]
+
         if transformator then
             check_pump_disabled(transformator)
         end
@@ -152,6 +200,7 @@ local function on_tick_pump_checks()
     end
 
     storage.eg_transformator_scan_index = index
+    storage.eg_transformator_scan_accumulator = accumulator
 end
 
 
@@ -272,8 +321,7 @@ local function on_entity_built(event)
         end
 
         if string.sub(entity.name, 1, 7) == "F077ET-" or string.sub(entity.name, 1, 14) == "electric-proxy" then
-            local aligned_tick = align_to_scheduler_tick(game.tick + 1)
-            job_queue.schedule(aligned_tick, "short_circuit_check")
+            schedule_short_circuit_check()
         else
             short_circuit_check()
         end
