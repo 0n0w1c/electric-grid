@@ -147,6 +147,13 @@ function get_transformator_tier(transformator)
     return nil
 end
 
+function get_steam_engine_direction(direction)
+    if direction == defines.direction.east or direction == defines.direction.west then
+        return defines.direction.east
+    end
+    return defines.direction.north
+end
+
 --- Return the steam engine variant suffix used for the given direction.
 --- @param direction defines.direction
 --- @return string variant Either `"ne"` or `"sw"`.
@@ -336,12 +343,13 @@ function eg_transformator_built(entity, player_index)
         direction = direction,
         create_build_effect_smoke = false
     }
+    local steam_engine_direction = get_steam_engine_direction(direction)
 
     local eg_steam_engine = surface.create_entity {
         name = "eg-steam-engine-" .. get_steam_engine_variant(direction) .. "-" .. tier,
         position = position_from_offset(constants.EG_ENTITY_OFFSETS.steam_engine),
         force = force,
-        direction = direction,
+        direction = steam_engine_direction,
         create_build_effect_smoke = false
     }
 
@@ -433,10 +441,6 @@ function replace_transformator(old_transformator, new_rating)
     local eg_infinity_pipe_direction = eg_transformator.infinity_pipe.direction
     eg_transformator.infinity_pipe.destroy()
 
-    local eg_steam_engine_position = eg_transformator.steam_engine.position
-    local eg_steam_engine_direction = eg_transformator.steam_engine.direction
-    eg_transformator.steam_engine.destroy()
-
     local eg_boiler = surface.create_entity {
         name = "eg-boiler-" .. new_tier,
         position = eg_boiler_position,
@@ -453,8 +457,19 @@ function replace_transformator(old_transformator, new_rating)
         create_build_effect_smoke = false
     }
 
+    local old_steam_engine = eg_transformator.steam_engine
+    local eg_steam_engine_position = old_steam_engine.position
+
+    local current_engine_name = old_steam_engine.name
+    local current_variant =
+        current_engine_name:match("^eg%-steam%-engine%-(%a+)%-%d+$") or "ne"
+
+    local eg_steam_engine_direction = get_steam_engine_direction(eg_boiler_direction)
+
+    old_steam_engine.destroy()
+
     local eg_steam_engine = surface.create_entity {
-        name = "eg-steam-engine-" .. get_steam_engine_variant(eg_steam_engine_direction) .. "-" .. new_tier,
+        name = "eg-steam-engine-" .. current_variant .. "-" .. new_tier,
         position = eg_steam_engine_position,
         direction = eg_steam_engine_direction,
         force = force,

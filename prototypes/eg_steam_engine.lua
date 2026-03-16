@@ -1,9 +1,16 @@
 function create_transformator_steam_engine(variant, tier)
-    local name          = "eg-steam-engine-" .. variant .. "-" .. tier
-    local rating        = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
+    local name                          = "eg-steam-engine-" .. variant .. "-" .. tier
+    local rating                        = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
-    local selection_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
-    --local selection_box = { { 0, 0 }, { 0, 0 } }
+    local steam_engine_selection_box_ne = { { -0.5, -0.5 }, { 1.5, 1.5 } }
+    local steam_engine_selection_box_sw = { { -1.5, -1.5 }, { 0.5, 0.5 } }
+
+    local selection_box                 = steam_engine_selection_box_ne
+    if variant == "sw" then
+        selection_box = steam_engine_selection_box_sw
+    end
+
+    --local selection_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
     local collision_box = { { -0.49, -0.49 }, { 0.49, 0.49 } }
 
     return {

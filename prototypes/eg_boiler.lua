@@ -185,9 +185,8 @@ function create_transformator_boiler(tier)
     local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
 
     local collision_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
-    --local selection_box = { { -0.49, -0.49 }, { 1.49, 0.49 } }
-    local selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
-
+    --local selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
+    local selection_box = { { -0.5, -1.5 }, { 1.5, 0.5 } }
 
     return {
         type                           = "boiler",

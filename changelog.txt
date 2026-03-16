@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.3
+Date: 15.03.2026
+  Bugfixes:
+    - Visual: transformator component selection boxes should overlap the pump's selection box
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.22.2
 Date: 15.03.2026
   Bugfixes:
