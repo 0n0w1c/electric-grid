@@ -369,24 +369,28 @@ function eg_transformator_built(entity, player_index)
         create_build_effect_smoke = false
     }
 
-    eg_infinity_pipe.set_infinity_pipe_filter {
-        name = "eg-water-" .. tier,
-        percentage = 1,
-        temperature = 15,
-        mode = "at-least"
-    }
+    if eg_infinity_pipe then
+        eg_infinity_pipe.set_infinity_pipe_filter {
+            name = "eg-water-" .. tier,
+            percentage = 1,
+            temperature = 15,
+            mode = "at-least"
+        }
+    end
 
-    storage.eg_transformators[eg_pump.unit_number] = {
-        boiler = eg_boiler,
-        pump = eg_pump,
-        infinity_pipe = eg_infinity_pipe,
-        steam_engine = eg_steam_engine,
-        high_voltage = eg_high_voltage_pole,
-        low_voltage = eg_low_voltage_pole,
-        alert_tick = 0,
-        tier = tonumber(tier),
-        pump_was_disabled = false
-    }
+    if eg_pump then
+        storage.eg_transformators[eg_pump.unit_number] = {
+            boiler = eg_boiler,
+            pump = eg_pump,
+            infinity_pipe = eg_infinity_pipe,
+            steam_engine = eg_steam_engine,
+            high_voltage = eg_high_voltage_pole,
+            low_voltage = eg_low_voltage_pole,
+            alert_tick = 0,
+            tier = tonumber(tier),
+            pump_was_disabled = false
+        }
+    end
 
     sync_transformator_keys()
 end
@@ -535,10 +539,16 @@ function destroy_transformator_dependents(transformator)
     end
 end
 
---- Rebuild all transformator dependents around an already-rotated root pump.
+--- Rotate the full transformator about its geometric center.
+---
+--- The game rotates the root pump in place before the event fires. For this
+--- multi-entity structure, the pump must then be relocated so that all four
+--- internal 1x1 entities rotate about the transformator center rather than
+--- about the pump's own tile.
 --- @param pump LuaEntity Root pump that the game has already rotated.
+--- @param previous_direction defines.direction|nil Direction before the engine rotation.
 --- @return boolean success
-function rebuild_transformator_dependents_from_pump(pump)
+function rebuild_transformator_dependents_from_pump(pump, previous_direction)
     if not (pump and pump.valid and pump.name == "eg-pump" and pump.unit_number) then
         return false
     end
@@ -551,10 +561,11 @@ function rebuild_transformator_dependents_from_pump(pump)
     local direction = pump.direction
     local tier = get_transformator_tier(transformator) or 1
 
-    local pump_offset = rotate_position(constants.EG_ENTITY_OFFSETS.pump, direction)
+    local old_direction = previous_direction or direction
+    local old_pump_offset = rotate_position(constants.EG_ENTITY_OFFSETS.pump, old_direction)
     local transformator_position = {
-        x = pump.position.x - pump_offset.x,
-        y = pump.position.y - pump_offset.y
+        x = pump.position.x - old_pump_offset.x,
+        y = pump.position.y - old_pump_offset.y
     }
 
     local function pos_from_offset(offset)
@@ -563,6 +574,14 @@ function rebuild_transformator_dependents_from_pump(pump)
             x = transformator_position.x + r.x,
             y = transformator_position.y + r.y
         }
+    end
+
+    local new_pump_position = pos_from_offset(constants.EG_ENTITY_OFFSETS.pump)
+    if pump.position.x ~= new_pump_position.x or pump.position.y ~= new_pump_position.y then
+        local teleported = pump.teleport(new_pump_position)
+        if not teleported then
+            return false
+        end
     end
 
     destroy_transformator_dependents(transformator)
@@ -583,11 +602,12 @@ function rebuild_transformator_dependents_from_pump(pump)
         create_build_effect_smoke = false
     }
 
+    local steam_engine_direction = get_steam_engine_direction(direction)
     local steam_engine = surface.create_entity {
         name = "eg-steam-engine-" .. get_steam_engine_variant(direction) .. "-" .. tier,
         position = pos_from_offset(constants.EG_ENTITY_OFFSETS.steam_engine),
         force = force,
-        direction = direction,
+        direction = steam_engine_direction,
         create_build_effect_smoke = false
     }
 
@@ -607,13 +627,16 @@ function rebuild_transformator_dependents_from_pump(pump)
         create_build_effect_smoke = false
     }
 
-    infinity_pipe.set_infinity_pipe_filter {
-        name = "eg-water-" .. tier,
-        percentage = 1,
-        temperature = 15,
-        mode = "at-least"
-    }
+    if infinity_pipe then
+        infinity_pipe.set_infinity_pipe_filter {
+            name = "eg-water-" .. tier,
+            percentage = 1,
+            temperature = 15,
+            mode = "at-least"
+        }
+    end
 
+    transformator.pump = pump
     transformator.boiler = boiler
     transformator.infinity_pipe = infinity_pipe
     transformator.steam_engine = steam_engine
@@ -764,13 +787,15 @@ function replace_displayer_with_ugp_substation(args)
         create_build_effect_smoke = false
     }
 
-    enforce_pole_connections(eg_ugp_substation)
+    if eg_ugp_substation then
+        enforce_pole_connections(eg_ugp_substation)
 
-    local poles = get_nearby_poles(eg_ugp_substation)
-    if poles then
-        for _, pole in pairs(poles) do
-            if pole.valid then
-                enforce_pole_connections(pole)
+        local poles = get_nearby_poles(eg_ugp_substation)
+        if poles then
+            for _, pole in pairs(poles) do
+                if pole.valid then
+                    enforce_pole_connections(pole)
+                end
             end
         end
     end
@@ -853,7 +878,7 @@ function enforce_pole_connections(pole)
     if not pole or not pole.valid or pole.type ~= "electric-pole" then return true end
     if storage.eg_transformators_only then return true end
 
-    local connectors = pole.get_wire_connectors()
+    local connectors = pole.get_wire_connectors(false)
     if not connectors then return true end
 
     local allowed = true

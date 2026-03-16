@@ -357,12 +357,15 @@ local function on_entity_mined(event)
 end
 
 --- Rebuild transformator dependents after a player rotates the root pump.
+---
+--- The root pump is first rotated by the engine in place, then relocated so the
+--- whole transformator rotates about its center.
 --- @param event EventData.on_player_rotated_entity
 --- @return nil
 local function on_player_rotated_entity(event)
     local entity = event.entity
     if not (entity and entity.valid and entity.name == "eg-pump") then return end
-    rebuild_transformator_dependents_from_pump(entity)
+    rebuild_transformator_dependents_from_pump(entity, event.previous_direction)
 end
 
 --- Restrict special script-raised build handling to proxy pole entities that
