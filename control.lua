@@ -365,7 +365,27 @@ end
 local function on_player_rotated_entity(event)
     local entity = event.entity
     if not (entity and entity.valid and entity.name == "eg-pump") then return end
-    rebuild_transformator_dependents_from_pump(entity, event.previous_direction)
+
+    local success = rebuild_transformator_dependents_from_pump(entity, event.previous_direction)
+    if success then return end
+
+    local previous_direction = event.previous_direction or entity.direction
+    local old_pump_offset = rotate_position(constants.EG_ENTITY_OFFSETS.pump, previous_direction)
+    local transformator_position = {
+        x = entity.position.x - old_pump_offset.x,
+        y = entity.position.y - old_pump_offset.y
+    }
+
+    local player = game.get_player(event.player_index)
+
+    if player and player.valid then
+        player.play_sound { path = "utility/cannot_build", position = player.position, volume = 1 }
+        player.create_local_flying_text {
+            text = { "gui.eg-rotation-blocked" },
+            position = transformator_position,
+            surface = entity.surface
+        }
+    end
 end
 
 --- Restrict special script-raised build handling to proxy pole entities that

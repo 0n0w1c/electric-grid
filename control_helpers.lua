@@ -539,6 +539,84 @@ function destroy_transformator_dependents(transformator)
     end
 end
 
+--- Check whether a rotated transformator can place its new electric poles.
+---
+--- This validates only the new pole positions needed by a center-axis rotation
+--- and ignores the current transformator's own existing entities, because they
+--- will be rebuilt as part of the rotation.
+--- @param transformator table
+--- @param center MapPosition
+--- @param direction defines.direction
+--- @return boolean can_build
+function can_rotate_transformator_poles(transformator, center, direction)
+    if not (transformator and transformator.pump and transformator.pump.valid) then return false end
+
+    local surface = transformator.pump.surface
+    local force = transformator.pump.force
+
+    local own_entities = {}
+    for _, entity in pairs {
+        transformator.pump,
+        transformator.boiler,
+        transformator.infinity_pipe,
+        transformator.steam_engine,
+        transformator.high_voltage,
+        transformator.low_voltage
+    } do
+        if entity and entity.valid and entity.unit_number then
+            own_entities[entity.unit_number] = true
+        end
+    end
+
+    local function pos_from_offset(offset)
+        local r = rotate_position(offset, direction)
+        return {
+            x = center.x + r.x,
+            y = center.y + r.y
+        }
+    end
+
+    local function can_place_pole(name, position)
+        if surface.can_place_entity {
+                name = name,
+                position = position,
+                direction = direction,
+                force = force
+            }
+        then
+            return true
+        end
+
+        local blockers = surface.find_entities_filtered {
+            area = {
+                { position.x - 0.6, position.y - 0.6 },
+                { position.x + 0.6, position.y + 0.6 }
+            }
+        }
+
+        for _, blocker in pairs(blockers) do
+            if blocker.valid and blocker.unit_number and not own_entities[blocker.unit_number] then
+                return false
+            end
+        end
+
+        return true
+    end
+
+    local high_voltage_position = pos_from_offset(constants.EG_ENTITY_OFFSETS.high_voltage_pole)
+    local low_voltage_position = pos_from_offset(constants.EG_ENTITY_OFFSETS.low_voltage_pole)
+
+    if not can_place_pole("eg-high-voltage-pole-" .. direction, high_voltage_position) then
+        return false
+    end
+
+    if not can_place_pole("eg-low-voltage-pole-" .. direction, low_voltage_position) then
+        return false
+    end
+
+    return true
+end
+
 --- Rotate the full transformator about its geometric center.
 ---
 --- The game rotates the root pump in place before the event fires. For this
@@ -577,9 +655,16 @@ function rebuild_transformator_dependents_from_pump(pump, previous_direction)
     end
 
     local new_pump_position = pos_from_offset(constants.EG_ENTITY_OFFSETS.pump)
+
+    if not can_rotate_transformator_poles(transformator, transformator_position, direction) then
+        pump.direction = old_direction
+        return false
+    end
+
     if pump.position.x ~= new_pump_position.x or pump.position.y ~= new_pump_position.y then
         local teleported = pump.teleport(new_pump_position)
         if not teleported then
+            pump.direction = old_direction
             return false
         end
     end
