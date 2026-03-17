@@ -54,6 +54,15 @@ data.extend({
     },
     {
         type = "bool-setting",
+        name = "eg-invert-overlay",
+        setting_type = "startup",
+        default_value = true,
+        order = get_next_order(),
+        localised_name = { "mod-setting-name.eg-invert-overlay" },
+        localised_description = { "mod-setting-description.eg-invert-overlay" }
+    },
+    {
+        type = "bool-setting",
         name = "eg-medium-pole-lights",
         setting_type = "startup",
         default_value = true,

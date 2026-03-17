@@ -110,40 +110,56 @@ for _ in pairs(constants.EG_TRANSFORMATORS) do
     constants.EG_NUM_TIERS = constants.EG_NUM_TIERS + 1
 end
 
-constants.EG_LIGHT_COLOR                = { r = 1.0, g = 1.0, b = 0.7 }
-constants.EG_LIGHT_INTENSITY            = 0.7
-constants.EG_LIGHT_SIZE                 = 12
+constants.EG_LIGHT_COLOR            = { r = 1.0, g = 1.0, b = 0.7 }
+constants.EG_LIGHT_INTENSITY        = 0.7
+constants.EG_LIGHT_SIZE             = 12
 
-constants.EG_HUGE_POLE_LIGHT            =
+constants.EG_HUGE_POLE_LIGHT        =
 {
     color = constants.EG_LIGHT_COLOR,
     intensity = constants.EG_LIGHT_INTENSITY,
     size = constants.EG_LIGHT_SIZE
 }
 
-constants.EG_BIG_POLE_LIGHT             =
+constants.EG_BIG_POLE_LIGHT         =
 {
     color = constants.EG_LIGHT_COLOR,
     intensity = constants.EG_LIGHT_INTENSITY / 1.1,
     size = constants.EG_LIGHT_SIZE / 1.2
 }
 
-constants.EG_MEDIUM_POLE_LIGHT          =
+constants.EG_MEDIUM_POLE_LIGHT      =
 {
     color = constants.EG_LIGHT_COLOR,
     intensity = constants.EG_LIGHT_INTENSITY / 1.25,
     size = constants.EG_LIGHT_SIZE / 1.5
 }
 
-constants.EG_MINI_POLE_LIGHT            =
+constants.EG_MINI_POLE_LIGHT        =
 {
     color = constants.EG_LIGHT_COLOR,
     intensity = constants.EG_LIGHT_INTENSITY / 2,
     size = constants.EG_LIGHT_SIZE / 3
 }
 
-constants.EG_SUPPLY_AREA_DISTANCE       = 0.24
-constants.EG_WIRE_CONNECTION_OFFSET     = 0.1
+constants.EG_SUPPLY_AREA_DISTANCE   = 0.24
+constants.EG_WIRE_CONNECTION_OFFSET = 0.1
+constants.EG_WIRE_CONNECTION_POINTS = {
+    eg_high_voltage_pole = {
+        north = { wire = { 0.0, -2.1 }, shadow = { 2.2, 0.7 } },
+        east  = { wire = { -0.4, -2.1 }, shadow = { 1.5, 0.5 } },
+        south = { wire = { 0.0, -1.6 }, shadow = { 2.5, 0.5 } },
+        --west  = { wire = { 0.1, -2.0 }, shadow = { 1.9, 0.2 } },
+        west  = { wire = { 0.3, -2.0 }, shadow = { 1.9, 0.2 } },
+    },
+    eg_low_voltage_pole = {
+        north = { wire = { 0.0, -1.2 }, shadow = { 3.0, 0.6 } },
+        east  = { wire = { 0.3, -1.6 }, shadow = { 4.0, 0.7 } },
+        south = { wire = { 0.0, -1.8 }, shadow = { 2.9, 0.7 } },
+        west  = { wire = { -0.4, -1.6 }, shadow = { 1.7, 0.6 } },
+    },
+}
+--[[
 constants.EG_WIRE_CONNECTION_POINTS     = {
     eg_high_voltage_pole = {
         north = { wire = { 0.0, -1.8 }, shadow = { 2.2, 0.7 } },
@@ -158,7 +174,7 @@ constants.EG_WIRE_CONNECTION_POINTS     = {
         west  = { wire = { -0.5, -2.0 }, shadow = { 1.7, 0.2 } },
     },
 }
-
+]]
 constants.EG_TRANSFORMATOR_POLE_PATTERN = "^eg%-[high%-low]+%-voltage%-pole%-"
 constants.EG_TRANSFORMATOR_POLE_NAMES   = {}
 for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do

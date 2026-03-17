@@ -1,61 +1,115 @@
 local function get_pump_picture(tier)
-    local overlay = {
-        north = {
-            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
-            x = 466,
-            width = 466,
-            height = 310,
-            shift = { 2.1, -0.95 },
-            scale = 0.5,
-            blend_mode = constants.EG_TIER_BLEND_MODE,
-            tint = constants.EG_OVERLAY_TINT
-        },
-        east = {
-            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
-            x = 0,
-            width = 466,
-            height = 310,
-            shift = { 2.0, -1.65 },
-            scale = 0.5,
-            blend_mode = constants.EG_TIER_BLEND_MODE,
-            tint = constants.EG_OVERLAY_TINT
-        },
-        south = {
-            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
-            x = 1398,
-            width = 466,
-            height = 310,
-            shift = { 3.1, 0.05 },
-            scale = 0.5,
-            blend_mode = constants.EG_TIER_BLEND_MODE,
-            tint = constants.EG_OVERLAY_TINT
-        },
-        west = {
-            filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
-            x = 932,
-            width = 466,
-            height = 310,
-            shift = { 0.94, -0.7 },
-            scale = 0.5,
-            blend_mode = constants.EG_TIER_BLEND_MODE,
-            tint = constants.EG_OVERLAY_TINT
-        },
-    }
-
+    local overlay = {}
+    if constants.EG_INVERT_OVERLAY then
+        overlay = {
+            south = {
+                filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+                x = 1398,
+                width = 466,
+                height = 310,
+                shift = { 2.1, -0.95 },
+                scale = 0.5,
+                blend_mode = constants.EG_TIER_BLEND_MODE,
+                tint = constants.EG_OVERLAY_TINT
+            },
+            west = {
+                filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+                x = 932,
+                width = 466,
+                height = 310,
+                shift = { 1.8, -1.65 },
+                scale = 0.5,
+                blend_mode = constants.EG_TIER_BLEND_MODE,
+                tint = constants.EG_OVERLAY_TINT
+            },
+            north = {
+                filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+                x = 466,
+                width = 466,
+                height = 310,
+                shift = { 3.1, 0.05 },
+                scale = 0.5,
+                blend_mode = constants.EG_TIER_BLEND_MODE,
+                tint = constants.EG_OVERLAY_TINT
+            },
+            east = {
+                filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+                x = 0,
+                width = 466,
+                height = 310,
+                shift = { 1, -0.5 },
+                scale = 0.5,
+                blend_mode = constants.EG_TIER_BLEND_MODE,
+                tint = constants.EG_OVERLAY_TINT
+            },
+        }
+    else
+        overlay = {
+            south = {
+                filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+                x = 466,
+                width = 466,
+                height = 310,
+                shift = { 2.1, -0.95 },
+                scale = 0.5,
+                blend_mode = constants.EG_TIER_BLEND_MODE,
+                tint = constants.EG_OVERLAY_TINT
+            },
+            west = {
+                filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+                x = 0,
+                width = 466,
+                height = 310,
+                shift = { 2.0, -1.65 },
+                scale = 0.5,
+                blend_mode = constants.EG_TIER_BLEND_MODE,
+                tint = constants.EG_OVERLAY_TINT
+            },
+            north = {
+                filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+                x = 1398,
+                width = 466,
+                height = 310,
+                shift = { 3.1, 0.05 },
+                scale = 0.5,
+                blend_mode = constants.EG_TIER_BLEND_MODE,
+                tint = constants.EG_OVERLAY_TINT
+            },
+            east = {
+                filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
+                x = 932,
+                width = 466,
+                height = 310,
+                shift = { 0.94, -0.7 },
+                scale = 0.5,
+                blend_mode = constants.EG_TIER_BLEND_MODE,
+                tint = constants.EG_OVERLAY_TINT
+            },
+        }
+    end
     local template = {
         north = {
             layers = {
                 {
                     filename = constants.EG_ENTITIES .. "eg-unit-sprites.png",
-                    x = 466,
+                    x = 1398,
                     width = 466,
                     height = 310,
                     shift = { 2.1, -0.95 },
                     scale = 0.5,
                 },
                 {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 1398,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.1, -0.95 },
+                    scale = 0.5,
+                    draw_as_shadow = true,
+                },
+                {
                     filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
-                    x = 466,
+                    x = 1398,
                     width = 466,
                     height = 310,
                     shift = { 2.1, -0.95 },
@@ -69,15 +123,24 @@ local function get_pump_picture(tier)
             layers = {
                 {
                     filename = constants.EG_ENTITIES .. "eg-unit-sprites.png",
-                    x = 0,
+                    x = 932,
                     width = 466,
                     height = 310,
                     shift = { 2.0, -1.65 },
                     scale = 0.5,
                 },
                 {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 932,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.0, -1.65 },
+                    scale = 0.5,
+                    draw_as_shadow = true,
+                },
+                {
                     filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
-                    x = 0,
+                    x = 932,
                     width = 466,
                     height = 310,
                     shift = { 2.0, -1.65 },
@@ -91,15 +154,24 @@ local function get_pump_picture(tier)
             layers = {
                 {
                     filename = constants.EG_ENTITIES .. "eg-unit-sprites.png",
-                    x = 1398,
+                    x = 466,
                     width = 466,
                     height = 310,
                     shift = { 3.1, 0.05 },
                     scale = 0.5,
                 },
                 {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 466,
+                    width = 466,
+                    height = 310,
+                    shift = { 3.1, 0.05 },
+                    scale = 0.5,
+                    draw_as_shadow = true,
+                },
+                {
                     filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
-                    x = 1398,
+                    x = 466,
                     width = 466,
                     height = 310,
                     shift = { 3.1, 0.05 },
@@ -113,18 +185,18 @@ local function get_pump_picture(tier)
             layers = {
                 {
                     filename = constants.EG_ENTITIES .. "eg-unit-sprites.png",
-                    x = 932,
+                    x = 0,
                     width = 466,
                     height = 310,
-                    shift = { 0.94, -0.7 },
+                    shift = { 1.05, -0.6 },
                     scale = 0.5,
                 },
                 {
                     filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
-                    x = 932,
+                    x = 0,
                     width = 466,
                     height = 310,
-                    shift = { 0.94, -0.7 },
+                    shift = { 1.05, -0.6 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
                     tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
@@ -134,10 +206,17 @@ local function get_pump_picture(tier)
     }
 
     if constants.EG_OVERLAY then
-        table.insert(template.north.layers, overlay.north)
-        table.insert(template.east.layers, overlay.east)
-        table.insert(template.south.layers, overlay.south)
-        table.insert(template.west.layers, overlay.west)
+        if constants.EG_INVERT_OVERLAY then
+            table.insert(template.north.layers, overlay.south)
+            table.insert(template.east.layers, overlay.west)
+            table.insert(template.south.layers, overlay.north)
+            table.insert(template.west.layers, overlay.east)
+        else
+            table.insert(template.north.layers, overlay.north)
+            table.insert(template.east.layers, overlay.east)
+            table.insert(template.south.layers, overlay.south)
+            table.insert(template.west.layers, overlay.west)
+        end
     end
 
     return template

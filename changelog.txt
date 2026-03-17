@@ -1,8 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.6
+Date: 16.03.2026
+  Bugfixes:
+    - Restored transformator shadows
+  Changes:
+    - Inverted the transformator image direction (high voltage pole is now the taller)
+    - Added startup setting to invert the transformator electrical icons (default: enabled)
+---------------------------------------------------------------------------------------------------
 Version: 1.22.5
 Date: 16.03.2026
   Bugfixes:
-    - Valid rotation check added for Transforamtors
+    - Valid rotation check added for transforamtors
   Changes:
     - None
 ---------------------------------------------------------------------------------------------------
