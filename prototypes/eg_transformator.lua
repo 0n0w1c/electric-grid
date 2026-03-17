@@ -1,4 +1,4 @@
-local function get_transformator_picture(tier)
+local function get_transformator_picture()
     local overlay = {
         north = {
             filename = constants.EG_ENTITIES .. "eg-unit-overlay.png",
@@ -69,7 +69,7 @@ local function get_transformator_picture(tier)
                     height = 310,
                     shift = { 2.6, -0.45 },
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_PUMP_TINT,
                     scale = 0.5,
                 },
             },
@@ -101,7 +101,7 @@ local function get_transformator_picture(tier)
                     shift = { 1.5, -1.15 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_PUMP_TINT,
                 },
             },
         },
@@ -132,7 +132,7 @@ local function get_transformator_picture(tier)
                     shift = { 2.6, -0.45 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_PUMP_TINT,
                 },
             },
         },
@@ -163,7 +163,7 @@ local function get_transformator_picture(tier)
                     shift = { 1.55, -1.1 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_PUMP_TINT,
                 },
             },
         },
@@ -230,7 +230,7 @@ local eg_transformator_displayer = {
     collision_box           = { { -0.9, -1.9 }, { 0.9, 1.9 } },
     collision_mask          = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
     hidden_in_factoriopedia = true,
-    picture                 = get_transformator_picture(1),
+    picture                 = get_transformator_picture(),
     surface_conditions      = surface_conditions
 }
 

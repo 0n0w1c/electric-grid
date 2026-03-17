@@ -1,4 +1,4 @@
-local function get_pump_picture(tier)
+local function get_pump_picture()
     local overlay = {}
     if constants.EG_INVERT_OVERLAY then
         overlay = {
@@ -114,7 +114,7 @@ local function get_pump_picture(tier)
                     height = 310,
                     shift = { 2.1, -0.95 },
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_PUMP_TINT,
                     scale = 0.5,
                 },
             },
@@ -146,7 +146,7 @@ local function get_pump_picture(tier)
                     shift = { 2.0, -1.65 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_PUMP_TINT,
                 },
             },
         },
@@ -177,7 +177,7 @@ local function get_pump_picture(tier)
                     shift = { 3.1, 0.05 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_PUMP_TINT,
                 },
             },
         },
@@ -199,7 +199,7 @@ local function get_pump_picture(tier)
                     shift = { 1.05, -0.6 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_PUMP_TINT,
                 },
             },
         },
@@ -246,7 +246,7 @@ function create_transformator_pump()
         collision_box                  = collision_box,
         localised_name                 = { "entity-name.eg-pump" },
         localised_description          = { "entity-description.eg-pump" },
-        integration_patch              = get_pump_picture(1),
+        integration_patch              = get_pump_picture(),
         integration_patch_render_layer = "lower-object",
         pumping_speed                  = 100,
         energy_usage                   = "1kW",

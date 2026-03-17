@@ -1,6 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.7
+Date: 17.03.2026
+  Bugfixes:
+    - Adjusted the shadow connection points for the transformator electric poles
+  Changes:
+    - Updated the mod thumbnail and portal images
+    - Modified the color of the 10 MW transformator
+    - Transformator will display with a grey color, in the transformator gui and Factoriopedia
+---------------------------------------------------------------------------------------------------
 Version: 1.22.6
-Date: 16.03.2026
+Date: 17.03.2026
   Bugfixes:
     - Restored transformator shadows
   Changes:

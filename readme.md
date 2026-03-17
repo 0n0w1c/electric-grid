@@ -58,6 +58,7 @@ Wiring rules are relaxed, permitting copper wire connections between any of the 
 
 *Limitations:*  
 Transformator copper wire connections are not included in blueprints.  
+Transformator will display a grey colored transformator in the gui and factoriopedia.  
 
 *Notes*
 If Bob's Power and its startup setting for new power poles and substations is enabled, the Overhaul will be deactivated.
