@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.8
+Date: 22.03.2026
+  Bugfixes:
+    - Fixed misaligned transformator electrical icons in the gui
+    - Refactored: removed eg_internal collision layer and collision mask
+    - Refactored: moved shadows from pump to boiler due to shadow drawing issue in gui
+  Changes:
+    - Changed icons from red to grey
+---------------------------------------------------------------------------------------------------
 Version: 1.22.7
 Date: 17.03.2026
   Bugfixes:

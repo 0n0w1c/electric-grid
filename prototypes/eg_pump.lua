@@ -17,7 +17,7 @@ local function get_pump_picture()
                 x = 932,
                 width = 466,
                 height = 310,
-                shift = { 1.8, -1.65 },
+                shift = { 2, -1.65 },
                 scale = 0.5,
                 blend_mode = constants.EG_TIER_BLEND_MODE,
                 tint = constants.EG_OVERLAY_TINT
@@ -37,7 +37,7 @@ local function get_pump_picture()
                 x = 0,
                 width = 466,
                 height = 310,
-                shift = { 1, -0.5 },
+                shift = { 1.04, -0.6 },
                 scale = 0.5,
                 blend_mode = constants.EG_TIER_BLEND_MODE,
                 tint = constants.EG_OVERLAY_TINT
@@ -99,15 +99,6 @@ local function get_pump_picture()
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
-                    x = 1398,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.1, -0.95 },
-                    scale = 0.5,
-                    draw_as_shadow = true,
-                },
-                {
                     filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
                     x = 1398,
                     width = 466,
@@ -117,6 +108,17 @@ local function get_pump_picture()
                     tint = constants.EG_PUMP_TINT,
                     scale = 0.5,
                 },
+                --[[
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 1398,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.1, -0.95 },
+                    scale = 0.5,
+                    draw_as_shadow = true,
+                },
+                ]]
             },
         },
         east = {
@@ -130,15 +132,6 @@ local function get_pump_picture()
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
-                    x = 932,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.0, -1.65 },
-                    scale = 0.5,
-                    draw_as_shadow = true,
-                },
-                {
                     filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
                     x = 932,
                     width = 466,
@@ -148,6 +141,17 @@ local function get_pump_picture()
                     blend_mode = constants.EG_TIER_BLEND_MODE,
                     tint = constants.EG_PUMP_TINT,
                 },
+                --[[
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 932,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.0, -1.65 },
+                    scale = 0.5,
+                    draw_as_shadow = true,
+                },
+                ]]
             },
         },
         south = {
@@ -161,15 +165,6 @@ local function get_pump_picture()
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
-                    x = 466,
-                    width = 466,
-                    height = 310,
-                    shift = { 3.1, 0.05 },
-                    scale = 0.5,
-                    draw_as_shadow = true,
-                },
-                {
                     filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
                     x = 466,
                     width = 466,
@@ -179,6 +174,17 @@ local function get_pump_picture()
                     blend_mode = constants.EG_TIER_BLEND_MODE,
                     tint = constants.EG_PUMP_TINT,
                 },
+                --[[
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 466,
+                    width = 466,
+                    height = 310,
+                    shift = { 3.1, 0.05 },
+                    scale = 0.5,
+                    draw_as_shadow = true,
+                },
+                ]]
             },
         },
         west = {
@@ -201,6 +207,17 @@ local function get_pump_picture()
                     blend_mode = constants.EG_TIER_BLEND_MODE,
                     tint = constants.EG_PUMP_TINT,
                 },
+                --[[
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 0,
+                    width = 466,
+                    height = 310,
+                    shift = { 1.05, -0.6 },
+                    scale = 0.5,
+                    draw_as_shadow = true,
+                },
+                ]]
             },
         },
     }
@@ -241,9 +258,9 @@ function create_transformator_pump()
         flags                          = { "placeable-player", "player-creation", "get-by-unit-number" },
         alert_icon_scale               = 0,
         placeable_by                   = { item = "eg-transformator", count = 1 },
-        collision_mask                 = constants.EG_COLLISION_MASK,
         selection_box                  = selection_box,
         collision_box                  = collision_box,
+        drawing_box_vertical_extension = 1.5,
         localised_name                 = { "entity-name.eg-pump" },
         localised_description          = { "entity-description.eg-pump" },
         integration_patch              = get_pump_picture(),

@@ -109,6 +109,15 @@ local function get_boiler_picture(tier)
                     tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
                     scale = 0.5,
                 },
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 1398,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.1, -0.95 },
+                    scale = 0.5,
+                    draw_as_shadow = true
+                },
             },
         },
         west = {
@@ -130,6 +139,15 @@ local function get_boiler_picture(tier)
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
                     tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                },
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 932,
+                    width = 466,
+                    height = 310,
+                    shift = { 2.0, -1.65 },
+                    scale = 0.5,
+                    draw_as_shadow = true
                 },
             },
         },
@@ -153,6 +171,15 @@ local function get_boiler_picture(tier)
                     blend_mode = constants.EG_TIER_BLEND_MODE,
                     tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
                 },
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 466,
+                    width = 466,
+                    height = 310,
+                    shift = { 3.1, 0.05 },
+                    scale = 0.5,
+                    draw_as_shadow = true
+                },
             },
         },
         east = {
@@ -166,15 +193,6 @@ local function get_boiler_picture(tier)
                     scale = 0.5,
                 },
                 {
-                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
-                    x = 0,
-                    width = 466,
-                    height = 310,
-                    shift = { 1.05, -0.6 },
-                    scale = 0.5,
-                    draw_as_shadow = true,
-                },
-                {
                     filename = constants.EG_ENTITIES .. "eg-unit-mask.png",
                     x = 0,
                     width = 466,
@@ -183,6 +201,15 @@ local function get_boiler_picture(tier)
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
                     tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                },
+                {
+                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
+                    x = 0,
+                    width = 466,
+                    height = 310,
+                    shift = { 1.05, -0.6 },
+                    scale = 0.5,
+                    draw_as_shadow = true
                 },
             },
         },
@@ -253,9 +280,11 @@ function create_transformator_boiler(tier)
         max_health                     = constants.EG_MAX_HEALTH,
         alert_icon_scale               = 0,
         hidden                         = false,
+        hidden_in_factoriopedia        = true,
         minable                        = nil,
         selectable_in_game             = false,
         flags                          = constants.EG_INTERNAL_ENTITY_FLAGS,
+        drawing_box_vertical_extension = 1.5,
         localised_name                 = { "entity-name.eg-boiler" },
         localised_description          = { "entity-description.eg-boiler" },
         quality_indicator_scale        = 0,
@@ -269,7 +298,6 @@ function create_transformator_boiler(tier)
         },
         mode                           = "output-to-separate-pipe",
         burning_cooldown               = 0,
-        collision_mask                 = constants.EG_COLLISION_MASK,
         selection_box                  = selection_box,
         collision_box                  = collision_box,
 

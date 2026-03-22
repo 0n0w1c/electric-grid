@@ -228,7 +228,6 @@ local eg_transformator_displayer = {
     flags                   = { "placeable-neutral", "placeable-player", "player-creation" },
     max_health              = constants.EG_MAX_HEALTH,
     collision_box           = { { -0.9, -1.9 }, { 0.9, 1.9 } },
-    collision_mask          = { layers = { item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true } },
     hidden_in_factoriopedia = true,
     picture                 = get_transformator_picture(),
     surface_conditions      = surface_conditions

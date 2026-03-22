@@ -2,8 +2,8 @@ data.extend({
     {
         type                  = "technology",
         name                  = "eg-tech-1",
-        icon                  = constants.EG_ICONS .. "eg-transformator.png",
-        icon_size             = 128,
+        icon                  = constants.EG_ICONS .. "eg-tech-1.png",
+        icon_size             = 256,
         localised_name        = { "technology-name.eg-tech-1" },
         localised_description = { "technology-description.eg-tech-1" },
         order                 = "a",

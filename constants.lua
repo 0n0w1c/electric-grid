@@ -36,11 +36,6 @@ constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_OVERLAY_TINT = { r = 0.5, g = 0.5, b = 0.5, a = 1 }
 constants.EG_BLUEPRINT_TIER_TAG = "eg_transformator_tier"
 
-constants.EG_COLLISION_MASK = {
-    layers = { eg_internal = true, item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true, is_lower_object = true },
-    --not_colliding_with_itself = true
-}
-
 constants.EG_MAX_HEALTH = 500
 constants.EG_FLUID_VOLUME = 100
 

@@ -37,13 +37,6 @@ constants.EG_MAX_SUPPLY_WOODEN_SUPPORT = settings.startup["eg-max-supply-wooden-
 constants.EG_MAX_WIRE_STEEL_SUPPORT = tonumber(settings.startup["eg-max-wire-steel-support"].value)
 
 data.extend({
-  {
-    type = "collision-layer",
-    name = "eg_internal"
-  }
-})
-
-data.extend({
     {
         type = "item-subgroup",
         name = "eg-electric-distribution",
@@ -110,6 +103,7 @@ for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
                 width = 270,
                 height = 230,
                 scale = 0.5,
+                shift = { 23.1, 0.05 },
                 blend_mode = constants.EG_TIER_BLEND_MODE,
                 tint = transformator.tint
             }
