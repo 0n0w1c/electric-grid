@@ -1,6 +1,6 @@
 {
     "name": "electric-grid",
-    "version": "1.23.0",
+    "version": "1.23.1",
     "title": "Electric Grid",
     "author": "0n0w1c",
     "description": "An overhaul of the electric network, engineer an Electric Grid!",
@@ -26,6 +26,7 @@
         "? IR3_Assets_power",
         "(?) bobpower",
         "(?) even-pickier-dollies",
-        "! minimalwire"
+        "! minimalwire",
+        "! Engineersvsenvironmentalist-redux"
     ]
 }

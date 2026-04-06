@@ -39,7 +39,7 @@ for _, pole in pairs(poles) do
     pole.rewire_neighbours_when_destroying = false
 end
 
-if big_pole then
+if big_pole and big_pole.pictures and big_pole.pictures.layers then
     for _, layer in pairs(big_pole.pictures.layers) do
         layer.shift = layer.shift or { 0, 0 }
         layer.shift[2] = layer.shift[2] + 0.3
