@@ -36,6 +36,15 @@ constants.EG_MAX_WIRE_WOODEN_SUPPORT = tonumber(settings.startup["eg-max-wire-wo
 constants.EG_MAX_SUPPLY_WOODEN_SUPPORT = settings.startup["eg-max-supply-wooden-support"].value / 2
 constants.EG_MAX_WIRE_STEEL_SUPPORT = tonumber(settings.startup["eg-max-wire-steel-support"].value)
 
+data:extend({
+    {
+        type = "custom-input",
+        name = "eg-wire-build",
+        key_sequence = "mouse-button-1",
+        linked_game_control = "build"
+    }
+})
+
 data.extend({
     {
         type = "item-subgroup",

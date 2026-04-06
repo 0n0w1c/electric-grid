@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.23.0
+Date: 05.04.2026
+  Bugfixes:
+    - Refactored: reduced transformator and wiring rule processing
+  Changes:
+    - Overhaul: modified the handling of copper wire connections that violate wiring rules
+---------------------------------------------------------------------------------------------------
 Version: 1.22.8
 Date: 22.03.2026
   Bugfixes:

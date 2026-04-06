@@ -6,11 +6,31 @@
 --
 -- Helper functions that build, rebuild, replace, validate, and query
 -- transformators live in `control_helpers.lua` and are loaded below.
+---
+
+--- @class EgStorage
+--- @field eg_transformators table<uint, EgTransformator>
+--- @field eg_transformator_keys uint[]
+--- @field eg_transformator_scan_index uint
+--- @field eg_transformator_scan_accumulator number
+--- @field eg_entity_to_transformator table<uint, uint>
+--- @field eg_transformator_partner_by_pole table<uint, uint>
+--- @field eg_selected_transformator table<uint, EgTransformator>
+--- @field eg_copper_wire_on_cursor table<uint, boolean>
+--- @field eg_wire_click_source table<uint, LuaEntity>
+--- @field eg_pending_wire_cleanup table<uint, {source: LuaEntity, target: LuaEntity, tick: uint}>
+--- @field eg_last_selected_pole table<uint, LuaEntity>
+--- @field eg_selected_rating table<uint, string>
+--- @field eg_transformator_to_build table<uint, string>
+--- @field eg_short_circuit_check_tick uint|nil
+--- @field eg_transformators_only boolean
 
 constants = require("constants")
 local job_queue = require("job_queue")
 require("control_helpers")
 
+--- @type EgStorage
+storage = storage
 
 -- ---------------------------------------------------------------------------
 -- Initialization helpers
@@ -52,8 +72,8 @@ end
 --- Multiple requests for the same aligned tick collapse into a single queued
 --- job. The pending marker is cleared when `short_circuit_check()` runs.
 ---
----@return nil
-local function schedule_short_circuit_check()
+--- @return nil
+function eg_schedule_short_circuit_check()
     local scheduled_tick = align_to_scheduler_tick(game.tick + 1)
 
     if storage.eg_short_circuit_check_tick == scheduled_tick then
@@ -76,12 +96,15 @@ local function initialize_globals()
     storage.eg_copper_wire_on_cursor = storage.eg_copper_wire_on_cursor or {}
     storage.eg_last_selected_pole = storage.eg_last_selected_pole or {}
     storage.eg_selected_rating = storage.eg_selected_rating or {}
+    storage.eg_wire_click_source = storage.eg_wire_click_source or {}
+    storage.eg_pending_wire_cleanup = storage.eg_pending_wire_cleanup or {}
     if type(storage.eg_transformator_to_build) ~= "table" then
         storage.eg_transformator_to_build = {}
     end
     storage.eg_transformator_keys = storage.eg_transformator_keys or {}
     storage.eg_transformator_scan_index = storage.eg_transformator_scan_index or 1
     storage.eg_entity_to_transformator = storage.eg_entity_to_transformator or {}
+    storage.eg_transformator_partner_by_pole = storage.eg_transformator_partner_by_pole or {}
 
     storage.eg_transformator_scan_accumulator = storage.eg_transformator_scan_accumulator or 0
 
@@ -113,8 +136,8 @@ end
 --- disabled, buffered fluid is cleared and the boiler/steam-engine pair is
 --- refreshed so their tiered prototypes match the transformator state.
 ---
----@param transformator table Stored transformator state.
----@return nil
+--- @param transformator table Stored transformator state.
+--- @return nil
 local function check_pump_disabled(transformator)
     local pump = transformator.pump
     if not (pump and pump.valid) then
@@ -158,8 +181,70 @@ end
 --- - overscanning small transformator counts
 --- - large once-per-second spikes for bigger bases
 ---
----@return nil
+--- @return nil
+local function process_pending_wire_cleanup()
+    local pending = storage.eg_pending_wire_cleanup
+    if not pending then return end
+
+    for player_index, job in pairs(pending) do
+        if job.tick and job.tick <= game.tick then
+            local player = game.get_player(player_index)
+            local source = job.source
+            local target = job.target
+
+            local allowed = true
+
+            if source and source.valid then
+                allowed = enforce_pole_connections(source) and allowed
+            end
+
+            if target and target.valid then
+                allowed = enforce_pole_connections(target) and allowed
+            end
+
+            local poles_to_check = {}
+
+            if source and source.valid then
+                local nearby_source_poles = get_nearby_poles(source)
+                if nearby_source_poles then
+                    for _, pole in pairs(nearby_source_poles) do
+                        poles_to_check[pole.unit_number] = pole
+                    end
+                end
+            end
+
+            if target and target.valid then
+                local nearby_target_poles = get_nearby_poles(target)
+                if nearby_target_poles then
+                    for _, pole in pairs(nearby_target_poles) do
+                        poles_to_check[pole.unit_number] = pole
+                    end
+                end
+            end
+
+            for _, pole in pairs(poles_to_check) do
+                enforce_pole_connections(pole)
+            end
+
+            if next(poles_to_check) then
+                eg_schedule_short_circuit_check()
+            end
+
+            if not allowed and player and player.valid then
+                player.clear_cursor()
+                storage.eg_copper_wire_on_cursor[player_index] = nil
+                storage.eg_wire_click_source[player_index] = nil
+            end
+
+            storage.eg_last_selected_pole[player_index] = nil
+            pending[player_index] = nil
+        end
+    end
+end
+
 local function on_tick_pump_checks()
+    process_pending_wire_cleanup()
+
     local keys = storage.eg_transformator_keys
     local count = keys and #keys or 0
 
@@ -251,14 +336,20 @@ local function on_player_setup_blueprint(event)
     local blueprint = event.stack or event.record
     if not blueprint then return end
 
-    local mapping = event.mapping
-    if mapping and mapping.get then
-        mapping = mapping.get()
-    end
+    local lazy_mapping = event.mapping
+    if not lazy_mapping then return end
+
+    --- @diagnostic disable-next-line: assign-type-mismatch
+    local mapping = lazy_mapping.get()
     if not mapping then return end
 
+    --- @cast mapping table<uint, LuaEntity>
+
     for blueprint_entity_index, source_entity in pairs(mapping) do
-        if source_entity and source_entity.valid and source_entity.name == "eg-pump" then
+        --- @cast blueprint_entity_index uint
+        --- @cast source_entity LuaEntity
+
+        if source_entity.valid and source_entity.name == "eg-pump" then
             local transformator = get_transformator_by_entity(source_entity)
             local tier = get_transformator_tier(transformator)
             if tier then
@@ -321,9 +412,9 @@ local function on_entity_built(event)
         end
 
         if string.sub(entity.name, 1, 7) == "F077ET-" or string.sub(entity.name, 1, 14) == "electric-proxy" then
-            schedule_short_circuit_check()
+            eg_schedule_short_circuit_check()
         else
-            short_circuit_check()
+            eg_schedule_short_circuit_check()
         end
     end
 end
@@ -352,7 +443,7 @@ local function on_entity_mined(event)
                 end
             end
         end
-        short_circuit_check()
+        eg_schedule_short_circuit_check()
     end
 end
 
@@ -418,10 +509,13 @@ local function on_cursor_stack_changed(event)
     local player = game.players[event.player_index]
     local cursor_stack = player.cursor_stack
 
+    storage.eg_wire_click_source = storage.eg_wire_click_source or {}
+
     if cursor_stack and cursor_stack.valid_for_read and cursor_stack.name == "copper-wire" then
         storage.eg_copper_wire_on_cursor[player.index] = true
     else
         storage.eg_copper_wire_on_cursor[player.index] = nil
+        storage.eg_wire_click_source[event.player_index] = nil
     end
 
     if not (cursor_stack and cursor_stack.valid_for_read) then
@@ -447,7 +541,7 @@ local function on_selected_entity_changed(event)
             for _, pole in pairs(poles) do
                 enforce_pole_connections(pole)
             end
-            short_circuit_check()
+            eg_schedule_short_circuit_check()
         end
 
         storage.eg_last_selected_pole[player_index] = nil
@@ -665,6 +759,8 @@ local function on_dropdown_selection_changed(event)
 
     if element.name == "rating_dropdown" then
         local selected_rating = element.items[element.selected_index]
+        if type(selected_rating) ~= "string" then return end
+
         update_sprite(player, selected_rating)
         return
     end
@@ -678,8 +774,10 @@ local function on_dropdown_selection_changed(event)
         end
 
         local selected_rating = element.items[element.selected_index]
+        if type(selected_rating) ~= "string" then return end
+
         local current_rating = get_current_transformator_rating(transformator)
-        if not selected_rating or not current_rating then return end
+        if not current_rating then return end
 
         if selected_rating ~= current_rating then
             local pump_unit_number = transformator.pump.unit_number
@@ -695,7 +793,7 @@ end
 -- ---------------------------------------------------------------------------
 
 --- Process any queued delayed jobs due on the current bucket tick.
---- @param event EventData.on_nth_tick
+--- @param event { tick: uint }
 --- @return nil
 local function on_periodic_tick(event)
     job_queue.process(event.tick)
@@ -707,6 +805,63 @@ local function register_nth_tick_handlers()
     script.on_nth_tick(constants.EG_TICK_INTERVAL, on_periodic_tick)
 end
 
+--- Handle custom copper-wire build input.
+---
+--- Implements a two-click state machine:
+--- 1. First click stores the source pole
+--- 2. Second click queues a deferred validation job
+---
+--- Validation and disconnection occur on the next tick via
+--- `process_pending_wire_cleanup()` to ensure vanilla wiring has completed.
+---
+--- @param event { player_index: uint }
+--- @return nil
+local function on_wire_build(event)
+    local player = game.get_player(event.player_index)
+    if not player then return end
+    if storage.eg_transformators_only then return end
+
+    if player:is_cursor_empty()
+        or not player.cursor_stack
+        or not player.cursor_stack.valid_for_read
+        or player.cursor_stack.name ~= "copper-wire"
+        or not player.selected
+        or not player.selected.valid
+        or player.selected.type ~= "electric-pole"
+    then
+        return
+    end
+
+    storage.eg_wire_click_source = storage.eg_wire_click_source or {}
+    storage.eg_pending_wire_cleanup = storage.eg_pending_wire_cleanup or {}
+
+    local player_index = event.player_index
+
+    --- @type LuaEntity
+    local selected = player.selected
+
+    --- @type LuaEntity?
+    local previous = storage.eg_wire_click_source[player_index]
+
+    if previous and not previous.valid then
+        previous = nil
+        storage.eg_wire_click_source[player_index] = nil
+    end
+
+    if not previous then
+        storage.eg_last_selected_pole[player_index] = selected
+        storage.eg_wire_click_source[player_index] = selected
+        return
+    end
+
+    storage.eg_pending_wire_cleanup[player_index] = {
+        source = previous,
+        target = selected,
+        tick = game.tick + 1
+    }
+
+    storage.eg_wire_click_source[player_index] = nil
+end
 
 -- ---------------------------------------------------------------------------
 -- Event registration and script lifecycle
@@ -735,7 +890,7 @@ local function register_event_handlers()
     script.on_event(defines.events.script_raised_destroy, on_entity_mined)
 
     script.on_event(defines.events.on_player_cursor_stack_changed, on_cursor_stack_changed)
-    script.on_event(defines.events.on_selected_entity_changed, on_selected_entity_changed)
+    script.on_event("eg-wire-build", on_wire_build)
 
     script.on_event(defines.events.on_gui_opened, on_gui_opened)
     script.on_event(defines.events.on_gui_selection_state_changed, on_dropdown_selection_changed)

@@ -1,4 +1,4 @@
---- Shared runtime helpers for Electric Grid.
+-- Shared runtime helpers for Electric Grid.
 --
 -- This file exposes the helper API used by `control.lua`. Functions are defined
 -- globally because the mod loads this file with `require("control_helpers")` and
@@ -10,22 +10,32 @@
 --   * electric pole connection enforcement and short-circuit detection
 --   * transformator GUI construction helpers
 
+--- @class EgTransformator
+--- @field boiler LuaEntity?
+--- @field pump LuaEntity?
+--- @field infinity_pipe LuaEntity?
+--- @field steam_engine LuaEntity?
+--- @field high_voltage LuaEntity?
+--- @field low_voltage LuaEntity?
+--- @field alert_tick uint
+--- @field tier integer?
+--- @field pump_was_disabled boolean?
 
 -- ---------------------------------------------------------------------------
 -- Transformator lookup and synchronization
 -- ---------------------------------------------------------------------------
 
 --- Fetch a stored transformator by its root pump unit number.
---- @param pump_unit_number uint|nil
---- @return table|nil transformator
+--- @param pump_unit_number uint?
+--- @return EgTransformator? transformator
 function get_transformator_by_pump_unit_number(pump_unit_number)
     if not pump_unit_number then return nil end
     return storage.eg_transformators[pump_unit_number]
 end
 
 --- Resolve any tracked transformator component back to the owning transformator.
---- @param entity LuaEntity|nil Any tracked transformator entity.
---- @return table|nil transformator
+--- @param entity LuaEntity? Any tracked transformator entity.
+--- @return EgTransformator? transformator
 function get_transformator_by_entity(entity)
     if not (entity and entity.valid and entity.unit_number) then return nil end
 
@@ -36,11 +46,15 @@ function get_transformator_by_entity(entity)
     return storage.eg_transformators[pump_unit_number]
 end
 
---- Rebuild the cached transformator key list and entity-to-transformator index.
+--- Rebuild cached transformator indexes derived from runtime storage.
 ---
---- This should be called after any operation that creates, destroys, or
---- replaces tracked transformator components.
---- @return nil
+--- This refreshes:
+--- - the transformator pump-unit key list
+--- - the entity-to-transformator lookup index
+--- - the transformator HV/LV partner-by-pole lookup table
+---
+--- This should be called after any operation that creates, destroys, rotates,
+--- or replaces tracked transformator components.
 function sync_transformator_keys()
     if not storage then return end
     if not storage.eg_transformators then return end
@@ -48,6 +62,7 @@ function sync_transformator_keys()
 
     local keys = {}
     local entity_to_transformator = {}
+    local transformator_partner_by_pole = {}
 
     for pump_unit_number, transformator in pairs(storage.eg_transformators) do
         keys[#keys + 1] = pump_unit_number
@@ -66,10 +81,20 @@ function sync_transformator_keys()
                 entity_to_transformator[entity.unit_number] = pump_unit_number
             end
         end
+
+        local high_voltage = transformator.high_voltage
+        local low_voltage = transformator.low_voltage
+        if high_voltage and high_voltage.valid and high_voltage.unit_number
+            and low_voltage and low_voltage.valid and low_voltage.unit_number
+        then
+            transformator_partner_by_pole[high_voltage.unit_number] = low_voltage.unit_number
+            transformator_partner_by_pole[low_voltage.unit_number] = high_voltage.unit_number
+        end
     end
 
     storage.eg_transformator_keys = keys
     storage.eg_entity_to_transformator = entity_to_transformator
+    storage.eg_transformator_partner_by_pole = transformator_partner_by_pole
 
     storage.eg_transformator_scan_index = storage.eg_transformator_scan_index or 1
     storage.eg_transformator_scan_accumulator = storage.eg_transformator_scan_accumulator or 0
@@ -86,16 +111,15 @@ end
 --- Destroy an entire transformator, including its root pump, and remove it from
 --- persistent storage.
 --- @param pump_unit_number uint Root pump unit number.
---- @return nil
 function remove_transformator(pump_unit_number)
+    --- @type EgTransformator?
     local eg_transformator = storage.eg_transformators[pump_unit_number]
     if not eg_transformator then return end
 
     if eg_transformator.boiler and eg_transformator.boiler.valid then eg_transformator.boiler.destroy() end
     if eg_transformator.pump and eg_transformator.pump.valid then eg_transformator.pump.destroy() end
     if eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid then
-        eg_transformator.infinity_pipe
-            .destroy()
+        eg_transformator.infinity_pipe.destroy()
     end
     if eg_transformator.steam_engine and eg_transformator.steam_engine.valid then eg_transformator.steam_engine.destroy() end
     if eg_transformator.high_voltage and eg_transformator.high_voltage.valid then eg_transformator.high_voltage.destroy() end
@@ -111,6 +135,7 @@ end
 --- @param pump_unit_number uint Root pump unit number.
 --- @return boolean is_valid
 function is_transformator_valid(pump_unit_number)
+    --- @type EgTransformator?
     local eg_transformator = storage.eg_transformators[pump_unit_number]
     if not eg_transformator then return false end
 
@@ -125,8 +150,8 @@ function is_transformator_valid(pump_unit_number)
 end
 
 --- Derive a transformator tier from cached state or component prototype names.
---- @param transformator table|LuaEntity|nil
---- @return integer|nil tier
+--- @param transformator EgTransformator|LuaEntity|nil
+--- @return integer? tier
 function get_transformator_tier(transformator)
     if not transformator then return nil end
 
@@ -147,6 +172,9 @@ function get_transformator_tier(transformator)
     return nil
 end
 
+--- Normalize the steam-engine facing used by the transformator layout.
+--- @param direction defines.direction
+--- @return defines.direction steam_engine_direction
 function get_steam_engine_direction(direction)
     if direction == defines.direction.east or direction == defines.direction.west then
         return defines.direction.east
@@ -154,7 +182,7 @@ function get_steam_engine_direction(direction)
     return defines.direction.north
 end
 
---- Return the steam engine variant suffix used for the given direction.
+--- Return the steam-engine variant suffix used for the given direction.
 --- @param direction defines.direction
 --- @return string variant Either `"ne"` or `"sw"`.
 function get_steam_engine_variant(direction)
@@ -185,7 +213,7 @@ function rotate_position(position, direction)
 end
 
 --- Check whether an entity or item name belongs to the transformator family.
---- @param name string|nil
+--- @param name string?
 --- @return boolean is_transformator_name
 function is_transformator(name)
     return name == "eg-pump"
@@ -194,8 +222,8 @@ function is_transformator(name)
 end
 
 --- Fetch a stored transformator directly from a root pump entity.
---- @param pump LuaEntity|nil
---- @return table|nil transformator
+--- @param pump LuaEntity?
+--- @return EgTransformator? transformator
 function find_transformator_by_pump(pump)
     if not (pump and pump.valid and pump.unit_number) then return nil end
     return storage.eg_transformators[pump.unit_number]
@@ -209,10 +237,8 @@ end
 ---
 --- Used when the pump disable state requires refreshing tiered prototypes while
 --- preserving the rest of the transformator.
---- @param transformator table Stored transformator state.
---- @return nil
+--- @param transformator EgTransformator
 function replace_tiered_components(transformator)
-    if not transformator then return end
     if not (transformator.pump and transformator.pump.valid) then return end
 
     local tier = get_transformator_tier(transformator)
@@ -221,19 +247,23 @@ function replace_tiered_components(transformator)
     local force = transformator.pump.force
     local surface = transformator.pump.surface
     local pump_unit_number = transformator.pump.unit_number
+    if not pump_unit_number then return end
 
+    --- @type EgTransformator?
     local eg_transformator = storage.eg_transformators[pump_unit_number]
     if not eg_transformator then
         log("Error: Transformator with pump unit_number " .. pump_unit_number .. " not found.")
         return
     end
 
-    if not (eg_transformator.boiler and eg_transformator.boiler.valid) then return end
-    if not (eg_transformator.steam_engine and eg_transformator.steam_engine.valid) then return end
+    local old_boiler = eg_transformator.boiler
+    local old_steam_engine = eg_transformator.steam_engine
+    if not (old_boiler and old_boiler.valid) then return end
+    if not (old_steam_engine and old_steam_engine.valid) then return end
 
-    local boiler_direction = eg_transformator.boiler.direction
-    local boiler_position = eg_transformator.boiler.position
-    eg_transformator.boiler.destroy()
+    local boiler_direction = old_boiler.direction
+    local boiler_position = old_boiler.position
+    old_boiler.destroy()
 
     local eg_boiler = surface.create_entity {
         name = "eg-boiler-" .. tier,
@@ -243,9 +273,9 @@ function replace_tiered_components(transformator)
         create_build_effect_smoke = false
     }
 
-    local steam_engine_direction = eg_transformator.steam_engine.direction
-    local steam_engine_position = eg_transformator.steam_engine.position
-    eg_transformator.steam_engine.destroy()
+    local steam_engine_direction = old_steam_engine.direction
+    local steam_engine_position = old_steam_engine.position
+    old_steam_engine.destroy()
 
     local eg_steam_engine = surface.create_entity {
         name = "eg-steam-engine-" .. get_steam_engine_variant(steam_engine_direction) .. "-" .. tier,
@@ -264,8 +294,7 @@ end
 --- When the root is already an `eg-pump`, the existing pump is kept and the
 --- surrounding internal entities are created around it.
 --- @param entity LuaEntity Built entity.
---- @param player_index uint|nil Player index for player-specific build intent.
---- @return nil
+--- @param player_index uint? Player index for player-specific build intent.
 function eg_transformator_built(entity, player_index)
     if not entity or not entity.name then return end
     if not is_transformator(entity.name) then return end
@@ -277,6 +306,7 @@ function eg_transformator_built(entity, player_index)
 
     local transformator_position = { x = position.x, y = position.y }
     local tier
+    --- @type LuaEntity?
     local eg_pump = nil
 
     if entity.name == "eg-transformator-displayer" then
@@ -378,8 +408,9 @@ function eg_transformator_built(entity, player_index)
         }
     end
 
-    if eg_pump then
-        storage.eg_transformators[eg_pump.unit_number] = {
+    if eg_pump and eg_pump.unit_number then
+        --- @type EgTransformator
+        local transformator = {
             boiler = eg_boiler,
             pump = eg_pump,
             infinity_pipe = eg_infinity_pipe,
@@ -390,6 +421,7 @@ function eg_transformator_built(entity, player_index)
             tier = tonumber(tier),
             pump_was_disabled = false
         }
+        storage.eg_transformators[eg_pump.unit_number] = transformator
     end
 
     sync_transformator_keys()
@@ -397,9 +429,11 @@ end
 
 --- Replace a transformator's tiered internals while preserving the root pump
 --- and voltage poles.
---- @param old_transformator table
+---
+--- The transformator's short-circuit alert state is reset because the tracked
+--- tiered entities are recreated.
+--- @param old_transformator EgTransformator?
 --- @param new_rating string Requested rating string.
---- @return nil
 function replace_transformator(old_transformator, new_rating)
     if not old_transformator then return end
     if not new_rating then return end
@@ -415,35 +449,40 @@ function replace_transformator(old_transformator, new_rating)
     local new_tier = tonumber(string.sub(new_unit, -1))
     if not new_tier then return end
 
-    local eg_transformator = old_transformator
-    if not (eg_transformator.pump and eg_transformator.pump.valid) then return end
+    if not (old_transformator.pump and old_transformator.pump.valid) then return end
 
-    local force = eg_transformator.pump.force
-    local surface = eg_transformator.pump.surface
-    local pump_unit_number = eg_transformator.pump.unit_number
+    local force = old_transformator.pump.force
+    local surface = old_transformator.pump.surface
+    local pump_unit_number = old_transformator.pump.unit_number
+    if not pump_unit_number then return end
 
-    eg_transformator = storage.eg_transformators[pump_unit_number]
+    --- @type EgTransformator?
+    local eg_transformator = storage.eg_transformators[pump_unit_number]
     if not eg_transformator then return end
-
-    if not (eg_transformator.high_voltage and eg_transformator.high_voltage.valid) then return end
-    if not (eg_transformator.low_voltage and eg_transformator.low_voltage.valid) then return end
-    if not (eg_transformator.pump and eg_transformator.pump.valid) then return end
-    if not (eg_transformator.boiler and eg_transformator.boiler.valid) then return end
-    if not (eg_transformator.infinity_pipe and eg_transformator.infinity_pipe.valid) then return end
-    if not (eg_transformator.steam_engine and eg_transformator.steam_engine.valid) then return end
 
     local eg_high_voltage_pole = eg_transformator.high_voltage
     local eg_low_voltage_pole = eg_transformator.low_voltage
     local eg_pump = eg_transformator.pump
+    local old_boiler = eg_transformator.boiler
+    local old_infinity_pipe = eg_transformator.infinity_pipe
+    local old_steam_engine = eg_transformator.steam_engine
+
+    if not (eg_high_voltage_pole and eg_high_voltage_pole.valid) then return end
+    if not (eg_low_voltage_pole and eg_low_voltage_pole.valid) then return end
+    if not (eg_pump and eg_pump.valid) then return end
+    if not (old_boiler and old_boiler.valid) then return end
+    if not (old_infinity_pipe and old_infinity_pipe.valid) then return end
+    if not (old_steam_engine and old_steam_engine.valid) then return end
+
     local prior_pump_was_disabled = eg_transformator.pump_was_disabled
 
-    local eg_boiler_position = eg_transformator.boiler.position
-    local eg_boiler_direction = eg_transformator.boiler.direction
-    eg_transformator.boiler.destroy()
+    local eg_boiler_position = old_boiler.position
+    local eg_boiler_direction = old_boiler.direction
+    old_boiler.destroy()
 
-    local eg_infinity_pipe_position = eg_transformator.infinity_pipe.position
-    local eg_infinity_pipe_direction = eg_transformator.infinity_pipe.direction
-    eg_transformator.infinity_pipe.destroy()
+    local eg_infinity_pipe_position = old_infinity_pipe.position
+    local eg_infinity_pipe_direction = old_infinity_pipe.direction
+    old_infinity_pipe.destroy()
 
     local eg_boiler = surface.create_entity {
         name = "eg-boiler-" .. new_tier,
@@ -453,7 +492,7 @@ function replace_transformator(old_transformator, new_rating)
         create_build_effect_smoke = false
     }
 
-    local eg_infinity_pipe = surface.create_entity {
+    local new_infinity_pipe = surface.create_entity {
         name = "eg-infinity-pipe",
         position = eg_infinity_pipe_position,
         direction = eg_infinity_pipe_direction,
@@ -461,13 +500,9 @@ function replace_transformator(old_transformator, new_rating)
         create_build_effect_smoke = false
     }
 
-    local old_steam_engine = eg_transformator.steam_engine
     local eg_steam_engine_position = old_steam_engine.position
-
     local current_engine_name = old_steam_engine.name
-    local current_variant =
-        current_engine_name:match("^eg%-steam%-engine%-(%a+)%-%d+$") or "ne"
-
+    local current_variant = current_engine_name:match("^eg%-steam%-engine%-(%a+)%-%d+$") or "ne"
     local eg_steam_engine_direction = get_steam_engine_direction(eg_boiler_direction)
 
     old_steam_engine.destroy()
@@ -486,17 +521,20 @@ function replace_transformator(old_transformator, new_rating)
         eg_pump.fluidbox.set_filter(1, { name = "eg-water-" .. new_tier })
     end
 
-    eg_infinity_pipe.set_infinity_pipe_filter {
-        name = "eg-water-" .. new_tier,
-        percentage = 1,
-        temperature = 15,
-        mode = "at-least"
-    }
+    if new_infinity_pipe and new_infinity_pipe.valid then
+        new_infinity_pipe.set_infinity_pipe_filter {
+            name = "eg-water-" .. new_tier,
+            percentage = 1,
+            temperature = 15,
+            mode = "at-least"
+        }
+    end
 
-    storage.eg_transformators[pump_unit_number] = {
+    --- @type EgTransformator
+    local replacement = {
         boiler = eg_boiler,
         pump = eg_pump,
-        infinity_pipe = eg_infinity_pipe,
+        infinity_pipe = new_infinity_pipe,
         steam_engine = eg_steam_engine,
         high_voltage = eg_high_voltage_pole,
         low_voltage = eg_low_voltage_pole,
@@ -505,6 +543,7 @@ function replace_transformator(old_transformator, new_rating)
         pump_was_disabled = prior_pump_was_disabled
     }
 
+    storage.eg_transformators[pump_unit_number] = replacement
     sync_transformator_keys()
 end
 
@@ -512,11 +551,8 @@ end
 ---
 --- Used by rotation rebuilds that keep the game-rotated pump as the stable
 --- owner/root entity.
---- @param transformator table
---- @return nil
+--- @param transformator EgTransformator
 function destroy_transformator_dependents(transformator)
-    if not transformator then return end
-
     if transformator.boiler and transformator.boiler.valid then
         transformator.boiler.destroy()
         transformator.boiler = nil
@@ -544,12 +580,12 @@ end
 --- This validates only the new pole positions needed by a center-axis rotation
 --- and ignores the current transformator's own existing entities, because they
 --- will be rebuilt as part of the rotation.
---- @param transformator table
+--- @param transformator EgTransformator
 --- @param center MapPosition
 --- @param direction defines.direction
 --- @return boolean can_build
 function can_rotate_transformator_poles(transformator, center, direction)
-    if not (transformator and transformator.pump and transformator.pump.valid) then return false end
+    if not (transformator.pump and transformator.pump.valid) then return false end
 
     local surface = transformator.pump.surface
     local force = transformator.pump.force
@@ -623,14 +659,17 @@ end
 --- multi-entity structure, the pump must then be relocated so that all four
 --- internal 1x1 entities rotate about the transformator center rather than
 --- about the pump's own tile.
+--- After rebuilding dependents, pole connection rules are re-enforced and a
+--- deferred short-circuit scan is scheduled.
 --- @param pump LuaEntity Root pump that the game has already rotated.
---- @param previous_direction defines.direction|nil Direction before the engine rotation.
+--- @param previous_direction defines.direction? Direction before the engine rotation.
 --- @return boolean success
 function rebuild_transformator_dependents_from_pump(pump, previous_direction)
     if not (pump and pump.valid and pump.name == "eg-pump" and pump.unit_number) then
         return false
     end
 
+    --- @type EgTransformator?
     local transformator = get_transformator_by_pump_unit_number(pump.unit_number)
     if not transformator then return false end
 
@@ -732,7 +771,7 @@ function rebuild_transformator_dependents_from_pump(pump, previous_direction)
     sync_transformator_keys()
     enforce_pole_connections(high_voltage)
     enforce_pole_connections(low_voltage)
-    short_circuit_check()
+    eg_schedule_short_circuit_check()
 
     return true
 end
@@ -743,7 +782,7 @@ end
 
 --- Find nearby electric poles within copper wire reach of the given pole.
 --- @param entity LuaEntity Mined or changed electric pole.
---- @return LuaEntity[]|nil poles
+--- @return LuaEntity[]? poles
 function get_nearby_poles(entity)
     if not (entity and entity.valid and entity.type == "electric-pole") then return end
 
@@ -763,7 +802,6 @@ function get_nearby_poles(entity)
 end
 
 --- Remove any stored transformators whose component set has become invalid.
---- @return nil
 function remove_invalid_transformators()
     local transformators = storage.eg_transformators
     local invalid_transformators = {}
@@ -784,19 +822,11 @@ function remove_invalid_transformators()
     end
 end
 
---- Check for illegal short-circuit conditions between transformator HV/LV poles.
----
---- When a transformator's high-voltage and low-voltage poles land on the same
---- electric network, a custom alert is added once and later removed when the
---- short is cleared.
---- @return nil
-
-
 --- Reset cached short-circuit alert state for all stored transformators.
--- This is useful after migrations where the alert entity changed from the old
--- transformator unit to the pump root, because preserved alert_tick values can
--- suppress new alerts for migrated records.
--- @return nil
+---
+--- This is useful after migrations where the alert entity changed from the old
+--- transformator unit to the pump root, because preserved `alert_tick` values
+--- can suppress new alerts for migrated records.
 function reset_short_circuit_alert_state()
     if not (storage and storage.eg_transformators) then return end
 
@@ -807,6 +837,12 @@ function reset_short_circuit_alert_state()
     end
 end
 
+--- Check for illegal short-circuit conditions between transformator HV/LV poles.
+---
+--- When a transformator's high-voltage and low-voltage poles land on the same
+--- electric network, a custom alert is added once and later removed when the
+--- short is cleared. The pending scheduled-check marker is cleared at the start
+--- of the scan.
 function short_circuit_check()
     storage.eg_short_circuit_check_tick = nil
 
@@ -848,7 +884,6 @@ end
 
 --- Replace the delayed substation displayer with the real substation entity.
 --- @param args {unit_number:uint}
---- @return nil
 function replace_displayer_with_ugp_substation(args)
     if not args or not args.unit_number then return end
 
@@ -885,10 +920,14 @@ function replace_displayer_with_ugp_substation(args)
         end
     end
 
-    short_circuit_check()
+    eg_schedule_short_circuit_check()
 end
 
 --- Check whether a copper cable connection is allowed between two poles.
+---
+--- Direct copper connections between a transformator's own HV and LV poles are
+--- always forbidden. This check uses the cached partner-by-pole lookup rebuilt
+--- by `sync_transformator_keys()`.
 --- @param pole_a LuaEntity
 --- @param pole_b LuaEntity
 --- @return boolean is_allowed
@@ -914,8 +953,8 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     local is_f077et_b = string.sub(name_b, 1, 7) == "F077ET-"
     local is_po_interface_a = string.sub(name_a, 1, 12) == "po-interface"
     local is_po_interface_b = string.sub(name_b, 1, 12) == "po-interface"
-    local is_po_fuse_a = string.sub(name_a, 1, 3) == "po-" and string.find(name_a, "-fuse")
-    local is_po_fuse_b = string.sub(name_b, 1, 3) == "po-" and string.find(name_b, "-fuse")
+    local is_po_fuse_a = string.sub(name_a, 1, 3) == "po-" and string.find(name_a, "-fuse", 1, true)
+    local is_po_fuse_b = string.sub(name_b, 1, 3) == "po-" and string.find(name_b, "-fuse", 1, true)
 
     local wire_connections_a = constants.EG_WIRE_CONNECTIONS[name_a]
 
@@ -924,12 +963,12 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     end
 
     if is_transformator_a and is_transformator_b then
-        for _, transformator in pairs(storage.eg_transformators) do
-            local hv = transformator.high_voltage
-            local lv = transformator.low_voltage
-            if (hv == pole_a and lv == pole_b) or (hv == pole_b and lv == pole_a) then
-                return false
-            end
+        local unit_a = pole_a.unit_number
+        local unit_b = pole_b.unit_number
+        local partner_by_pole = storage.eg_transformator_partner_by_pole
+
+        if unit_a and unit_b and partner_by_pole and partner_by_pole[unit_a] == unit_b then
+            return false
         end
     end
 
@@ -957,7 +996,7 @@ end
 
 --- Enforce the custom copper cable rules for a pole by disconnecting invalid
 --- copper-wire neighbors.
---- @param pole LuaEntity|nil
+--- @param pole LuaEntity?
 --- @return boolean allowed True when no invalid connections were found.
 function enforce_pole_connections(pole)
     if not pole or not pole.valid or pole.type ~= "electric-pole" then return true end
@@ -1046,13 +1085,16 @@ function get_or_create_transformator_frame(player)
 end
 
 --- Resolve a transformator's configured rating string.
---- @param transformator table|LuaEntity|nil Transformator table or transformator entity.
---- @return string|nil rating
+--- @param transformator EgTransformator|LuaEntity|nil Transformator table or transformator entity.
+--- @return string? rating
 function get_current_transformator_rating(transformator)
     if not transformator then return nil end
 
     if transformator.valid then
-        transformator = get_transformator_by_entity(transformator)
+        --- @cast transformator LuaEntity
+        local transformator_entity = transformator
+
+        transformator = get_transformator_by_entity(transformator_entity)
         if not transformator then return nil end
     end
 
@@ -1066,7 +1108,6 @@ end
 
 --- Close either transformator GUI variant for the given player.
 --- @param player LuaPlayer
---- @return nil
 function close_transformator_gui(player)
     local closed = false
 
@@ -1114,7 +1155,6 @@ end
 --- Populate the relative transformator GUI with the rating dropdown.
 --- @param parent_frame LuaGuiElement
 --- @param current_rating string
---- @return nil
 function add_relative_rating_dropdown(parent_frame, current_rating)
     if not (parent_frame and parent_frame.valid) then return end
 
@@ -1155,7 +1195,6 @@ end
 --- Populate the full-screen transformator GUI with rating controls.
 --- @param parent_frame LuaGuiElement
 --- @param current_rating string
---- @return nil
 function add_rating_dropdown(parent_frame, current_rating)
     if not (parent_frame and parent_frame.valid) then return end
 

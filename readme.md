@@ -90,3 +90,11 @@ If Bob's Power and its startup setting for new power poles and substations is en
 *Alternate locales:*  
 `pl` provided by S3BA-pl (human)  
 `cs`, `de`, `es`, `fr`, `it`, `ja`, `ko`, `pt-BR`, `ru`, `tr`, `uk`, `zh-CN`, `zh-TW` provided by ChatGPT
+
+*Credits:*
+Code, audio, graphics and/or ideas provided by:  
+(MIT) Copyright © 2021 max2344 [Transformators](https://mods.factorio.com/mod/Electric_Transformators)  
+(MIT) Copyright © 2020 OwnlyMe [Transformators](https://mods.factorio.com/mod/Electric_Transformators)  
+(MIT) Copyright © 2022 Tom Burrows [Power Overload](https://github.com/tburrows13/PowerOverload)  
+(MIT) Copyright © 2024 GreatGrogrodor [Underground Energy Distribution](https://github.com/GeorgeBroughton/underground-energy-distribution)  
+(MIT) Copyright © 2024 darkfrei [ConnectionBox](https://mods.factorio.com/mod/ConnectionBox)  
