@@ -24,8 +24,6 @@ visibility.hidden_if_mod_present = {
     },
 
     ["Engineersvsenvironmentalist-redux"] = {
-        ["eg-max-wire-small"] = true,
-        ["eg-max-supply-small"] = true,
         ["eg-max-wire-medium"] = true,
         ["eg-max-wire-big"] = true,
         ["eg-max-wire-substation"] = true,
