@@ -24,6 +24,7 @@ ugp_substation.draw_circuit_wires             = false
 ugp_substation.drawing_box_vertical_extension = 0
 ugp_substation.minable                        = { mining_time = 0.5, result = "eg-ugp-substation-displayer" }
 ugp_substation.next_upgrade                   = nil
+ugp_substation.fast_replaceable_group         = "substation"
 ugp_substation.selection_priority             = 1
 ugp_substation.collision_mask                 = { colliding_with_tiles_only = true, layers = {} }
 ugp_substation.integration_patch_render_layer = "ground-patch"
@@ -76,6 +77,8 @@ ugp_substation_displayer.hidden                  = false
 ugp_substation_displayer.hidden_in_factoriopedia = false
 ugp_substation_displayer.draw_copper_wires       = true
 ugp_substation_displayer.collision_mask          = data.raw["electric-pole"]["substation"].collision_mask
+ugp_substation_displayer.next_upgrade            = nil
+ugp_substation_displayer.fast_replaceable_group  = "substation"
 ugp_substation_displayer.flags                   =
 {
     "placeable-player",
@@ -92,7 +95,7 @@ local ugp_substation_displayer_item              =
     name                    = name,
     localised_name          = { "item-name.eg-ugp-substation" },
     localised_description   = { "item-description.eg-ugp-substation" },
-    subgroup                = "eg-electric-distribution",
+    subgroup                = constants.EG_SUBGROUP,
     order                   = data.raw["item"]["substation"].order .. "z",
     icon                    = constants.EG_ICONS .. "eg-ugp-substation.png",
     icon_size               = 64,

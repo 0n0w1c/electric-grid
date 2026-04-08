@@ -4,31 +4,79 @@ if mods["quality"] then
     recycling = require("__quality__/prototypes/recycling")
 end
 
-local items                       = data.raw["item"]
-local recipes                     = data.raw["recipe"]
-local technologies                = data.raw["technology"]
-local poles                       = data.raw["electric-pole"]
+local items        = data.raw["item"]
+local recipes      = data.raw["recipe"]
+local technologies = data.raw["technology"]
+local poles        = data.raw["electric-pole"]
 
-local small_pole                  = poles["small-electric-pole"]
-local medium_pole                 = poles["medium-electric-pole"]
-local big_pole                    = poles["big-electric-pole"]
-local substation                  = poles["substation"]
+local small_pole   = poles["small-electric-pole"]
+local medium_pole  = poles["medium-electric-pole"]
+local big_pole     = poles["big-electric-pole"]
+local substation   = poles["substation"]
 
-small_pole.maximum_wire_distance  = constants.EG_MAX_WIRE_SMALL
-small_pole.supply_area_distance   = constants.EG_MAX_SUPPLY_SMALL
+local function apply_medium_pole_settings(pole)
+    if not pole then return end
+    pole.supply_area_distance  = 0
+    pole.maximum_wire_distance = constants.EG_MAX_WIRE_MEDIUM
+    pole.light                 = constants.EG_MEDIUM_POLE_LIGHTS and constants.EG_MEDIUM_POLE_LIGHT or nil
+end
 
-medium_pole.supply_area_distance  = 0
-medium_pole.maximum_wire_distance = constants.EG_MAX_WIRE_MEDIUM
-medium_pole.light                 = constants.EG_MEDIUM_POLE_LIGHTS and constants.EG_MEDIUM_POLE_LIGHT or nil
+local function apply_big_pole_settings(pole)
+    if not pole then return end
+    pole.supply_area_distance  = 0
+    pole.maximum_wire_distance = constants.EG_MAX_WIRE_BIG
+    pole.light                 = constants.EG_BIG_POLE_LIGHTS and constants.EG_BIG_POLE_LIGHT or nil
+end
 
-big_pole.supply_area_distance     = 0
-big_pole.maximum_wire_distance    = constants.EG_MAX_WIRE_BIG
-big_pole.light                    = constants.EG_BIG_POLE_LIGHTS and constants.EG_BIG_POLE_LIGHT or nil
-big_pole.subgroup                 = "eg-electric-distribution"
+local function apply_substation_settings(pole)
+    if not pole then return end
+    pole.maximum_wire_distance = constants.EG_MAX_WIRE_SUBSTATION
+    pole.supply_area_distance  = constants.EG_MAX_SUPPLY_SUBSTATION
+end
 
-substation.subgroup               = "eg-electric-distribution"
-substation.maximum_wire_distance  = constants.EG_MAX_WIRE_SUBSTATION
-substation.supply_area_distance   = constants.EG_MAX_SUPPLY_SUBSTATION
+local function apply_transmission_pole_only(pole)
+    if not pole then return end
+    pole.supply_area_distance = 0
+    if string.sub(pole.name, 1, 6) == "medium" then
+        pole.light = constants.EG_MEDIUM_POLE_LIGHTS and constants.EG_MEDIUM_POLE_LIGHT or nil
+    elseif string.sub(pole.name, 1, 3) == "big" then
+        pole.light = constants.EG_BIG_POLE_LIGHTS and constants.EG_BIG_POLE_LIGHT or nil
+    end
+end
+
+local function shift_big_pole_visuals(pole)
+    if not (pole and pole.pictures and pole.pictures.layers) then return end
+
+    for _, layer in pairs(pole.pictures.layers) do
+        layer.shift = layer.shift or { 0, 0 }
+        layer.shift[2] = layer.shift[2] + 0.3
+    end
+
+    if pole.connection_points then
+        for _, connection in pairs(pole.connection_points) do
+            for _, point in ipairs({ "wire", "shadow" }) do
+                if connection[point] then
+                    for _, color in pairs({ "red", "green", "copper" }) do
+                        if connection[point][color] then
+                            connection[point][color][2] = connection[point][color][2] + 0.3
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+small_pole.maximum_wire_distance = constants.EG_MAX_WIRE_SMALL
+small_pole.supply_area_distance  = constants.EG_MAX_SUPPLY_SMALL
+
+apply_medium_pole_settings(medium_pole)
+apply_big_pole_settings(big_pole)
+apply_substation_settings(substation)
+
+if not substation.next_upgrade and poles["eg-ugp-substation-displayer"] then
+    substation.next_upgrade = "eg-ugp-substation-displayer"
+end
 
 if recipes["eg-huge-electric-pole"] then
     local technology = technologies["eg-tech-1"]
@@ -39,24 +87,20 @@ for _, pole in pairs(poles) do
     pole.rewire_neighbours_when_destroying = false
 end
 
-if big_pole and big_pole.pictures and big_pole.pictures.layers then
-    for _, layer in pairs(big_pole.pictures.layers) do
-        layer.shift = layer.shift or { 0, 0 }
-        layer.shift[2] = layer.shift[2] + 0.3
-    end
+shift_big_pole_visuals(big_pole)
 
-    for _, connection in pairs(big_pole.connection_points) do
-        local points = { "wire", "shadow" }
-        for _, point in ipairs(points) do
-            if connection[point] then
-                for _, color in pairs({ "red", "green", "copper" }) do
-                    if connection[point][color] then
-                        connection[point][color][2] = connection[point][color][2] + 0.3
-                    end
-                end
-            end
-        end
-    end
+if mods["Engineersvsenvironmentalist-redux"] then
+    apply_transmission_pole_only(poles["medium-electric-pole-2"])
+    apply_transmission_pole_only(poles["medium-electric-pole-3"])
+    apply_transmission_pole_only(poles["medium-electric-pole-4"])
+
+    apply_transmission_pole_only(poles["big-electric-pole-2"])
+    apply_transmission_pole_only(poles["big-electric-pole-3"])
+    apply_transmission_pole_only(poles["big-electric-pole-4"])
+
+    shift_big_pole_visuals(poles["big-electric-pole-2"])
+    shift_big_pole_visuals(poles["big-electric-pole-3"])
+    shift_big_pole_visuals(poles["big-electric-pole-4"])
 end
 
 if mods["Subsurface"] then
@@ -69,14 +113,10 @@ if mods["Subsurface"] then
     steel_support.supply_area_distance   = 0
 end
 
-if not mods["PowerOverload"] and not mods["Krastorio2"] and not mods["Krastorio2-spaced-out"] then
-    substation.next_upgrade = "eg-ugp-substation-displayer"
-end
-
-items["small-electric-pole"].subgroup           = "eg-electric-distribution"
-items["medium-electric-pole"].subgroup          = "eg-electric-distribution"
-items["big-electric-pole"].subgroup             = "eg-electric-distribution"
-items["substation"].subgroup                    = "eg-electric-distribution"
+items["small-electric-pole"].subgroup           = constants.EG_SUBGROUP
+items["medium-electric-pole"].subgroup          = constants.EG_SUBGROUP
+items["big-electric-pole"].subgroup             = constants.EG_SUBGROUP
+items["substation"].subgroup                    = constants.EG_SUBGROUP
 
 data.raw["power-switch"]["power-switch"].hidden = true
 items["power-switch"].hidden                    = true
@@ -90,17 +130,16 @@ end
 if mods["PowerOverload"] then
     local po_huge_pole                          = poles["po-huge-electric-pole"]
     po_huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and
-        constants.EG_HUGE_POLE_LIGHT or
-        nil
+        constants.EG_HUGE_POLE_LIGHT or nil
     po_huge_pole.maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value)
     po_huge_pole.drawing_box_vertical_extension = 3
 
-    items["po-huge-electric-pole"].subgroup     = "eg-electric-distribution"
-    items["po-interface"].subgroup              = "eg-electric-distribution"
+    items["po-huge-electric-pole"].subgroup     = constants.EG_SUBGROUP
+    items["po-interface"].subgroup              = constants.EG_SUBGROUP
 
-    items["po-transformer"].subgroup            = "eg-electric-distribution"
-    items["po-transformer-high"].subgroup       = "eg-electric-distribution"
-    items["po-transformer-low"].subgroup        = "eg-electric-distribution"
+    items["po-transformer"].subgroup            = constants.EG_SUBGROUP
+    items["po-transformer-high"].subgroup       = constants.EG_SUBGROUP
+    items["po-transformer-low"].subgroup        = constants.EG_SUBGROUP
 
     if mods["quality"] then
         recipes["po-transformer-recycling"].hidden = true
@@ -108,7 +147,7 @@ if mods["PowerOverload"] then
 
     for _, pole in pairs(poles) do
         if string.sub(pole.name, 1, 3) == "po-" and string.find(pole.name, "-fuse") then
-            items[pole.name].subgroup = "eg-electric-distribution"
+            items[pole.name].subgroup = constants.EG_SUBGROUP
         end
     end
 
@@ -136,9 +175,9 @@ if mods["factorioplus"] then
     huge_pole.supply_area_distance = 0
     huge_pole.maximum_wire_distance = tonumber(settings.startup["eg-max-wire-huge"].value)
 
-    items["medium-wooden-electric-pole"].subgroup = "eg-electric-distribution"
-    items["huge-electric-pole"].subgroup = "eg-electric-distribution"
-    items["electrical-distributor"].subgroup = "eg-electric-distribution"
+    items["medium-wooden-electric-pole"].subgroup = constants.EG_SUBGROUP
+    items["huge-electric-pole"].subgroup = constants.EG_SUBGROUP
+    items["electrical-distributor"].subgroup = constants.EG_SUBGROUP
 
     table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
         { type = "unlock-recipe", recipe = "huge-electric-pole" })
@@ -146,17 +185,17 @@ end
 
 if mods["Bio_Industries_2"] then
     poles["bi-wooden-pole-big"].supply_area_distance = 0
-    items["bi-wooden-pole-big"].subgroup = "eg-electric-distribution"
+    items["bi-wooden-pole-big"].subgroup = constants.EG_SUBGROUP
 
     poles["bi-wooden-pole-huge"].supply_area_distance = 0
-    items["bi-wooden-pole-huge"].subgroup = "eg-electric-distribution"
+    items["bi-wooden-pole-huge"].subgroup = constants.EG_SUBGROUP
 end
 
 if mods["aai-industry"] then
     local small_iron_pole = poles["small-iron-electric-pole"]
     if small_iron_pole then
         local small_iron_pole_item            = items["small-iron-electric-pole"]
-        small_iron_pole_item.subgroup         = "eg-electric-distribution"
+        small_iron_pole_item.subgroup         = constants.EG_SUBGROUP
 
         small_iron_pole.maximum_wire_distance = constants.EG_MAX_WIRE_SMALL_IRON
         small_iron_pole.supply_area_distance  = constants.EG_MAX_SUPPLY_SMALL_IRON
@@ -179,14 +218,14 @@ if mods["aai-industry"] then
 end
 
 if mods["cargo-ships"] and items["floating-electric-pole"] then
-    items["floating-electric-pole"].subgroup = "eg-electric-distribution"
+    items["floating-electric-pole"].subgroup = constants.EG_SUBGROUP
 end
 
 if mods["Krastorio2"] or mods["Krastorio2-spaced-out"] then
     local item = items["kr-superior-substation"]
     if item then
         item.order = items["substation"].order .. "y"
-        item.subgroup = "eg-electric-distribution"
+        item.subgroup = constants.EG_SUBGROUP
     end
 end
 
@@ -196,42 +235,42 @@ if mods["energy-combinator"] then
 end
 
 if mods["Foundations"] and items["F077ET-esp-foundation"] then
-    items["F077ET-esp-foundation"].subgroup = "eg-electric-distribution"
+    items["F077ET-esp-foundation"].subgroup = constants.EG_SUBGROUP
 end
 
 if mods["fixLargeElectricPole"] then
     local item = data.raw["item-with-entity-data"]["large-electric-pole"]
     if item then
-        item.subgroup = "eg-electric-distribution"
+        item.subgroup = constants.EG_SUBGROUP
     end
 
     local recipe = recipes["large-electric-pole"]
     if recipe then
-        recipe.subgroup = "eg-electric-distribution"
+        recipe.subgroup = constants.EG_SUBGROUP
     end
 end
 
 if mods["IR3_Assets_bronze"] then
     local item = data.raw["item"]["small-bronze-pole"]
     if item then
-        item.subgroup = "eg-electric-distribution"
+        item.subgroup = constants.EG_SUBGROUP
     end
 
     local recipe = recipes["small-bronze-pole"]
     if recipe then
-        recipe.subgroup = "eg-electric-distribution"
+        recipe.subgroup = constants.EG_SUBGROUP
     end
 end
 
 if mods["IR3_Assets_power"] and settings.startup["IR3-enable-electric-poles"].value then
     local item = data.raw["item"]["small-iron-pole"]
     if item then
-        item.subgroup = "eg-electric-distribution"
+        item.subgroup = constants.EG_SUBGROUP
     end
 
     local recipe = recipes["small-iron-pole"]
     if recipe then
-        recipe.subgroup = "eg-electric-distribution"
+        recipe.subgroup = constants.EG_SUBGROUP
     end
 
     local medium_steel_pole                = poles["medium-steel-pole"]
@@ -239,12 +278,12 @@ if mods["IR3_Assets_power"] and settings.startup["IR3-enable-electric-poles"].va
 
     item                                   = items["medium-steel-pole"]
     if item then
-        item.subgroup = "eg-electric-distribution"
+        item.subgroup = constants.EG_SUBGROUP
     end
 
     recipe = recipes["medium-steel-pole"]
     if recipe then
-        recipe.subgroup = "eg-electric-distribution"
+        recipe.subgroup = constants.EG_SUBGROUP
     end
 
     local big_wooden_pole                = poles["big-wooden-pole"]
@@ -252,11 +291,11 @@ if mods["IR3_Assets_power"] and settings.startup["IR3-enable-electric-poles"].va
 
     item                                 = items["big-wooden-pole"]
     if item then
-        item.subgroup = "eg-electric-distribution"
+        item.subgroup = constants.EG_SUBGROUP
     end
 
     recipe = recipes["big-wooden-pole"]
     if recipe then
-        recipe.subgroup = "eg-electric-distribution"
+        recipe.subgroup = constants.EG_SUBGROUP
     end
 end

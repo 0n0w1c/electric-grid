@@ -47,15 +47,15 @@ small_iron_pole.pictures              = {
     }
 }
 
-local item_sounds                     = require("__base__/prototypes/item_sounds")
+local item_sounds            = require("__base__/prototypes/item_sounds")
 
-local small_iron_pole_item            =
+local small_iron_pole_item   =
 {
     type                  = "item",
     name                  = "small-iron-electric-pole",
     localised_name        = { "item-name.eg-small-iron-electric-pole" },
     localised_description = { "item-description.eg-small-iron-electric-pole" },
-    subgroup              = "eg-electric-distribution",
+    subgroup              = constants.EG_SUBGROUP,
     order                 = data.raw["item"]["small-electric-pole"].order .. "z",
     icon                  = constants.EG_ICONS .. "eg-small-iron-electric-pole.png",
     icon_size             = 64,
@@ -66,7 +66,7 @@ local small_iron_pole_item            =
     drop_sound            = item_sounds.electric_small_inventory_move
 }
 
-local small_iron_pole_recipe          =
+local small_iron_pole_recipe =
 {
     type        = "recipe",
     name        = "small-iron-electric-pole",

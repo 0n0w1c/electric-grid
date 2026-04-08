@@ -237,7 +237,7 @@ local subgroup
 if constants.EG_TRANSFORMATORS_ONLY then
     subgroup = "energy-pipe-distribution"
 else
-    subgroup = "eg-electric-distribution"
+    subgroup = constants.EG_SUBGROUP
 end
 
 local order

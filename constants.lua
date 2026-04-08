@@ -35,6 +35,7 @@ constants.EG_SOUND = constants.EG_MOD .. "/sound/"
 constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_OVERLAY_TINT = { r = 0.5, g = 0.5, b = 0.5, a = 1 }
 constants.EG_BLUEPRINT_TIER_TAG = "eg_transformator_tier"
+constants.EG_SUBGROUP = "eg-electric-distribution"
 
 constants.EG_MAX_HEALTH = 500
 constants.EG_FLUID_VOLUME = 100
@@ -173,6 +174,12 @@ constants.EG_TRANSMISSION_POLES =
     ["steel-support"] = true,
     ["medium-steel-pole"] = true,
     ["big-wooden-pole"] = true,
+    ["medium-electric-pole-2"] = true,
+    ["medium-electric-pole-3"] = true,
+    ["medium-electric-pole-4"] = true,
+    ["big-electric-pole-2"] = true,
+    ["big-electric-pole-3"] = true,
+    ["big-electric-pole-4"] = true,
 }
 
 constants.EG_SUPPLY_POLES       =
@@ -187,6 +194,9 @@ constants.EG_SUPPLY_POLES       =
     ["electrical-distributor"] = true,
     ["small-bronze-pole"] = true,
     ["small-iron-pole"] = true,
+    ["substation-2"] = true,
+    ["substation-3"] = true,
+    ["substation-4"] = true,
 }
 
 constants.EG_HUGE_POLES         =
@@ -551,5 +561,68 @@ constants.EG_WIRE_CONNECTIONS   = {
         ["po-hidden-electric-pole-out"] = true,
     },
 }
+
+local function copy_connection_set(source_name)
+    local copy = {}
+    for k, v in pairs(constants.EG_WIRE_CONNECTIONS[source_name]) do
+        copy[k] = v
+    end
+    return copy
+end
+
+local function add_wire_connection_aliases(base_name, alias_names)
+    for _, alias in pairs(alias_names) do
+        constants.EG_WIRE_CONNECTIONS[alias] = copy_connection_set(base_name)
+
+        constants.EG_WIRE_CONNECTIONS[alias][base_name] = true
+        constants.EG_WIRE_CONNECTIONS[alias][alias] = true
+
+        for _, other_alias in pairs(alias_names) do
+            constants.EG_WIRE_CONNECTIONS[alias][other_alias] = true
+        end
+    end
+
+    for _, connections in pairs(constants.EG_WIRE_CONNECTIONS) do
+        if connections[base_name] then
+            for _, alias in pairs(alias_names) do
+                connections[alias] = true
+            end
+        end
+    end
+
+    for _, alias in pairs(alias_names) do
+        constants.EG_WIRE_CONNECTIONS[base_name][alias] = true
+    end
+end
+
+local function make_wire_connections_symmetric()
+    for source, connections in pairs(constants.EG_WIRE_CONNECTIONS) do
+        for target, allowed in pairs(connections) do
+            if allowed and constants.EG_WIRE_CONNECTIONS[target] then
+                constants.EG_WIRE_CONNECTIONS[target][source] = true
+            end
+        end
+    end
+end
+
+add_wire_connection_aliases("medium-electric-pole", {
+    "medium-electric-pole-2",
+    "medium-electric-pole-3",
+    "medium-electric-pole-4",
+})
+
+add_wire_connection_aliases("big-electric-pole", {
+    "big-electric-pole-2",
+    "big-electric-pole-3",
+    "big-electric-pole-4",
+})
+
+add_wire_connection_aliases("substation", {
+    "substation-2",
+    "substation-3",
+    "substation-4",
+})
+
+make_wire_connections_symmetric()
 
 return constants

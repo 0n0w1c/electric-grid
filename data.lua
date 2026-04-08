@@ -1,4 +1,13 @@
 constants = require("constants")
+local defaults = require("settings_defaults")
+local visibility = require("settings_visibility")
+
+local function get_startup_value(setting_name)
+    if visibility.is_setting_hidden(setting_name) then
+        return defaults[setting_name]
+    end
+    return settings.startup[setting_name].value
+end
 
 if settings.startup["eg-transformator-sound"].value == true then
     constants.EG_TRANSFORMATOR_VOLUME = 0.175
@@ -20,21 +29,21 @@ constants.EG_BIG_POLE_LIGHTS = settings.startup["eg-big-pole-lights"].value == t
 constants.EG_HUGE_POLE_LIGHTS = settings.startup["eg-huge-pole-lights"].value == true
 constants.EG_CIRCUIT_POLE_LIGHTS = settings.startup["eg-circuit-pole-lights"].value == true
 
-constants.EG_MAX_WIRE_TRANSFORMATOR = tonumber(settings.startup["eg-max-wire-transformator"].value)
-constants.EG_MAX_WIRE_SMALL = tonumber(settings.startup["eg-max-wire-small"].value)
-constants.EG_MAX_WIRE_SMALL_IRON = tonumber(settings.startup["eg-max-wire-small-iron"].value)
-constants.EG_MAX_WIRE_MEDIUM = tonumber(settings.startup["eg-max-wire-medium"].value)
-constants.EG_MAX_WIRE_BIG = tonumber(settings.startup["eg-max-wire-big"].value)
-constants.EG_MAX_WIRE_HUGE = tonumber(settings.startup["eg-max-wire-huge"].value)
-constants.EG_MAX_WIRE_SUBSTATION = tonumber(settings.startup["eg-max-wire-substation"].value)
+constants.EG_MAX_WIRE_TRANSFORMATOR = tonumber(get_startup_value("eg-max-wire-transformator"))
+constants.EG_MAX_WIRE_SMALL = tonumber(get_startup_value("eg-max-wire-small"))
+constants.EG_MAX_WIRE_SMALL_IRON = tonumber(get_startup_value("eg-max-wire-small-iron"))
+constants.EG_MAX_WIRE_MEDIUM = tonumber(get_startup_value("eg-max-wire-medium"))
+constants.EG_MAX_WIRE_BIG = tonumber(get_startup_value("eg-max-wire-big"))
+constants.EG_MAX_WIRE_HUGE = tonumber(get_startup_value("eg-max-wire-huge"))
+constants.EG_MAX_WIRE_SUBSTATION = tonumber(get_startup_value("eg-max-wire-substation"))
 
-constants.EG_MAX_SUPPLY_SMALL = settings.startup["eg-max-supply-small"].value / 2
-constants.EG_MAX_SUPPLY_SMALL_IRON = settings.startup["eg-max-supply-small-iron"].value / 2
-constants.EG_MAX_SUPPLY_SUBSTATION = settings.startup["eg-max-supply-substation"].value / 2
+constants.EG_MAX_SUPPLY_SMALL = get_startup_value("eg-max-supply-small") / 2
+constants.EG_MAX_SUPPLY_SMALL_IRON = get_startup_value("eg-max-supply-small-iron") / 2
+constants.EG_MAX_SUPPLY_SUBSTATION = get_startup_value("eg-max-supply-substation") / 2
 
-constants.EG_MAX_WIRE_WOODEN_SUPPORT = tonumber(settings.startup["eg-max-wire-wooden-support"].value)
-constants.EG_MAX_SUPPLY_WOODEN_SUPPORT = settings.startup["eg-max-supply-wooden-support"].value / 2
-constants.EG_MAX_WIRE_STEEL_SUPPORT = tonumber(settings.startup["eg-max-wire-steel-support"].value)
+constants.EG_MAX_WIRE_WOODEN_SUPPORT = tonumber(get_startup_value("eg-max-wire-wooden-support"))
+constants.EG_MAX_SUPPLY_WOODEN_SUPPORT = get_startup_value("eg-max-supply-wooden-support") / 2
+constants.EG_MAX_WIRE_STEEL_SUPPORT = tonumber(get_startup_value("eg-max-wire-steel-support"))
 
 data:extend({
     {

@@ -79,6 +79,7 @@ If Bob's Power and its startup setting for new power poles and substations is en
 [Dredgeworks](https://mods.factorio.com/mod/dredgeworks)  
 [Electric Tiles](https://mods.factorio.com/mod/electric-tiles)  
 [Energy Combinator](https://mods.factorio.com/mod/energy-combinator)  
+[Engineers vs Environmentalist Redux](https://mods.factorio.com/mod/Engineersvsenvironmentalist-redux)  
 [Factorio+](https://mods.factorio.com/mod/factorioplus)  
 [Foundations](https://mods.factorio.com/mod/Foundations)  
 [James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod)  
