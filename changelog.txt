@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.25.1
+Date: 11.04.2026
+  Bugfixes:
+    - Disconnect transformator if overload condition results when the rating is changed
+  Changes:
+    - None
+---------------------------------------------------------------------------------------------------
 Version: 1.25.0
 Date: 11.04.2026
   Bugfixes:

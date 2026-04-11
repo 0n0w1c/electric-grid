@@ -481,6 +481,31 @@ function eg_transformator_built(entity, player_index)
     return eg_pump
 end
 
+--- Enforce overload rules after a transformator rating change.
+--- Disconnects HV pole if overload occurs.
+--- @param transformator EgTransformator
+--- @return nil
+function enforce_overload_after_rating_change(transformator)
+    if not is_transformator_overload_protection_enabled() then return end
+    if not transformator then return end
+
+    local high_voltage = transformator.high_voltage
+    if not (high_voltage and high_voltage.valid) then return end
+
+    if is_high_voltage_connection_overloaded(high_voltage) then
+        local connectors = high_voltage.get_wire_connectors(false)
+        if not connectors then return end
+
+        for _, connector in pairs(connectors) do
+            if connector.wire_type == defines.wire_type.copper then
+                for _, connection in pairs(connector.connections) do
+                    connector.disconnect_from(connection.target)
+                end
+            end
+        end
+    end
+end
+
 --- Replace a transformator's tiered internals while preserving the root pump
 --- and voltage poles.
 ---
@@ -600,6 +625,7 @@ function replace_transformator(old_transformator, new_rating)
 
     storage.eg_transformators[pump_unit_number] = replacement
     sync_transformator_keys()
+    enforce_overload_after_rating_change(replacement)
 end
 
 --- Destroy only the non-root transformator components.
@@ -905,7 +931,7 @@ end
 --- Check whether an entity is a transformator high-voltage pole.
 --- @param entity LuaEntity?
 --- @return boolean is_high_voltage_pole
-local function is_transformator_high_voltage_pole(entity)
+function is_transformator_high_voltage_pole(entity)
     if not entity then return false end
     return entity.valid
         and entity.type == "electric-pole"
@@ -914,7 +940,7 @@ end
 
 --- Check whether transformator overload protection is enabled.
 --- @return boolean is_enabled
-local function is_transformator_overload_protection_enabled()
+function is_transformator_overload_protection_enabled()
     local setting = settings.startup["eg-prevent-transformator-overload"]
     return setting ~= nil and setting.value == true
 end
@@ -922,7 +948,7 @@ end
 --- Resolve a transformator's configured rating in watts.
 --- @param transformator EgTransformator|LuaEntity|nil
 --- @return number rating_watts
-local function get_transformator_rating_watts(transformator)
+function get_transformator_rating_watts(transformator)
     local tier = get_transformator_tier(transformator)
     if not tier then return 0 end
 
@@ -943,7 +969,7 @@ end
 ---
 --- @param network_id uint?
 --- @return {load_watts:number, supply_watts:number, load_count:integer, supply_count:integer} totals
-local function get_network_transformator_capacity(network_id)
+function get_network_transformator_capacity(network_id)
     local totals = {
         load_watts = 0,
         supply_watts = 0,
@@ -986,7 +1012,7 @@ end
 ---
 --- @param high_voltage_pole LuaEntity?
 --- @return boolean is_overloaded
-local function is_high_voltage_connection_overloaded(high_voltage_pole)
+function is_high_voltage_connection_overloaded(high_voltage_pole)
     if not high_voltage_pole then return false end
     if not is_transformator_overload_protection_enabled() then return false end
     if not is_transformator_high_voltage_pole(high_voltage_pole) then return false end
@@ -1019,7 +1045,7 @@ end
 --- @param locale_key string
 --- @param show_message boolean|nil
 --- @return nil
-local function notify_blocked_copper_connection(player, pole, locale_key, show_message)
+function notify_blocked_copper_connection(player, pole, locale_key, show_message)
     show_message = show_message == true
     if not show_message then return end
     if not (player and player.valid and pole and pole.valid) then return end
@@ -1043,7 +1069,7 @@ end
 --- @param source_pole LuaEntity?
 --- @param target_pole LuaEntity?
 --- @return boolean disconnected
-local function disconnect_specific_copper_connection(source_pole, target_pole)
+function disconnect_specific_copper_connection(source_pole, target_pole)
     if not (source_pole and source_pole.valid and target_pole and target_pole.valid) then return false end
 
     local connectors = source_pole.get_wire_connectors(false)
@@ -1127,8 +1153,8 @@ end
 --- @param player LuaPlayer|nil
 --- @param show_message boolean|nil
 --- @return boolean allowed
-local function enforce_transformator_overload_connection(connector, target_connector, pole, target_pole, player,
-                                                         show_message)
+function enforce_transformator_overload_connection(connector, target_connector, pole, target_pole, player,
+                                                   show_message)
     show_message = show_message == true
 
     if not is_transformator_overload_protection_enabled() then return true end
