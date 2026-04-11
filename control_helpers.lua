@@ -55,6 +55,7 @@ end
 ---
 --- This should be called after any operation that creates, destroys, rotates,
 --- or replaces tracked transformator components.
+--- @return nil
 function sync_transformator_keys()
     if not storage then return end
     if not storage.eg_transformators then return end
@@ -111,6 +112,7 @@ end
 --- Destroy an entire transformator, including its root pump, and remove it from
 --- persistent storage.
 --- @param pump_unit_number uint Root pump unit number.
+--- @return nil
 function remove_transformator(pump_unit_number)
     --- @type EgTransformator?
     local eg_transformator = storage.eg_transformators[pump_unit_number]
@@ -238,6 +240,7 @@ end
 --- Used when the pump disable state requires refreshing tiered prototypes while
 --- preserving the rest of the transformator.
 --- @param transformator EgTransformator
+--- @return nil
 function replace_tiered_components(transformator)
     if not (transformator.pump and transformator.pump.valid) then return end
 
@@ -289,15 +292,65 @@ function replace_tiered_components(transformator)
     eg_transformator.steam_engine = eg_steam_engine
 end
 
---- Build a transformator from a placed transformator root, item, or displayer.
+--- Translate a transformator tier into the configured rating string.
+--- @param tier integer|string|nil
+--- @return string|nil rating
+function get_transformator_rating_for_tier(tier)
+    if not tier then return nil end
+    local spec = constants.EG_TRANSFORMATORS["eg-unit-" .. tostring(tier)]
+    return spec and spec.rating or nil
+end
+
+--- Apply a blueprint-stored tier to a transformator after it is built.
 ---
---- When the root is already an `eg-pump`, the existing pump is kept and the
---- surrounding internal entities are created around it.
---- @param entity LuaEntity Built entity.
---- @param player_index uint? Player index for player-specific build intent.
+--- This must be called after `eg_transformator_built(...)`, using the returned
+--- root pump entity when available.
+---
+--- Behavior:
+--- - Reads the tier from `tags[constants.EG_BLUEPRINT_TIER_TAG]`
+--- - Compares against the current transformator tier
+--- - Replaces the transformator if the tiers differ
+---
+--- Safe to call with nil or invalid entities.
+---
+--- @param entity LuaEntity|nil Root pump entity (`eg-pump`)
+--- @param tags table|nil Blueprint tags from the build event
+--- @return nil
+function apply_transformator_blueprint_tier(entity, tags)
+    if not (entity and entity.valid and entity.name == "eg-pump") then return end
+    if not tags then return end
+
+    local tier = tonumber(tags[constants.EG_BLUEPRINT_TIER_TAG])
+    if not tier then return end
+
+    local transformator = get_transformator_by_pump_unit_number(entity.unit_number)
+    if not transformator then return end
+
+    local current_tier = get_transformator_tier(transformator)
+    if current_tier == tier then return end
+
+    local rating = get_transformator_rating_for_tier(tier)
+    if not rating then return end
+
+    replace_transformator(transformator, rating)
+end
+
+--- Build or rebuild a transformator from a placed entity.
+---
+--- This function ensures that the full transformator structure is created
+--- around the root pump entity and registers it in runtime storage.
+---
+--- Returns the root `eg-pump` entity for the transformator. This return value
+--- is used by blueprint-tier restoration code to apply stored tier metadata to
+--- the correct final entity, even when the original built entity was a
+--- displayer or item placeholder.
+---
+--- @param entity LuaEntity The entity that triggered transformator creation.
+--- @param player_index uint|nil Optional acting player index for placement intent.
+--- @return LuaEntity|nil root_pump
 function eg_transformator_built(entity, player_index)
-    if not entity or not entity.name then return end
-    if not is_transformator(entity.name) then return end
+    if not entity or not entity.name then return nil end
+    if not is_transformator(entity.name) then return nil end
 
     local surface = entity.surface
     local force = entity.force
@@ -425,6 +478,7 @@ function eg_transformator_built(entity, player_index)
     end
 
     sync_transformator_keys()
+    return eg_pump
 end
 
 --- Replace a transformator's tiered internals while preserving the root pump
@@ -434,6 +488,7 @@ end
 --- tiered entities are recreated.
 --- @param old_transformator EgTransformator?
 --- @param new_rating string Requested rating string.
+--- @return nil
 function replace_transformator(old_transformator, new_rating)
     if not old_transformator then return end
     if not new_rating then return end
@@ -552,6 +607,7 @@ end
 --- Used by rotation rebuilds that keep the game-rotated pump as the stable
 --- owner/root entity.
 --- @param transformator EgTransformator
+--- @return nil
 function destroy_transformator_dependents(transformator)
     if transformator.boiler and transformator.boiler.valid then
         transformator.boiler.destroy()
@@ -659,6 +715,7 @@ end
 --- multi-entity structure, the pump must then be relocated so that all four
 --- internal 1x1 entities rotate about the transformator center rather than
 --- about the pump's own tile.
+---
 --- After rebuilding dependents, pole connection rules are re-enforced and a
 --- deferred short-circuit scan is scheduled.
 --- @param pump LuaEntity Root pump that the game has already rotated.
@@ -769,8 +826,14 @@ function rebuild_transformator_dependents_from_pump(pump, previous_direction)
     transformator.tier = tonumber(tier)
 
     sync_transformator_keys()
-    enforce_pole_connections(high_voltage)
-    enforce_pole_connections(low_voltage)
+
+    if high_voltage then
+        enforce_pole_connections(high_voltage)
+    end
+    if low_voltage then
+        enforce_pole_connections(low_voltage)
+    end
+
     eg_schedule_short_circuit_check()
 
     return true
@@ -802,6 +865,7 @@ function get_nearby_poles(entity)
 end
 
 --- Remove any stored transformators whose component set has become invalid.
+--- @return nil
 function remove_invalid_transformators()
     local transformators = storage.eg_transformators
     local invalid_transformators = {}
@@ -827,6 +891,7 @@ end
 --- This is useful after migrations where the alert entity changed from the old
 --- transformator unit to the pump root, because preserved `alert_tick` values
 --- can suppress new alerts for migrated records.
+--- @return nil
 function reset_short_circuit_alert_state()
     if not (storage and storage.eg_transformators) then return end
 
@@ -837,12 +902,269 @@ function reset_short_circuit_alert_state()
     end
 end
 
+--- Check whether an entity is a transformator high-voltage pole.
+--- @param entity LuaEntity?
+--- @return boolean is_high_voltage_pole
+local function is_transformator_high_voltage_pole(entity)
+    if not entity then return false end
+    return entity.valid
+        and entity.type == "electric-pole"
+        and string.sub(entity.name, 1, 21) == "eg-high-voltage-pole-"
+end
+
+--- Check whether transformator overload protection is enabled.
+--- @return boolean is_enabled
+local function is_transformator_overload_protection_enabled()
+    local setting = settings.startup["eg-prevent-transformator-overload"]
+    return setting ~= nil and setting.value == true
+end
+
+--- Resolve a transformator's configured rating in watts.
+--- @param transformator EgTransformator|LuaEntity|nil
+--- @return number rating_watts
+local function get_transformator_rating_watts(transformator)
+    local tier = get_transformator_tier(transformator)
+    if not tier then return 0 end
+
+    local unit_name = "eg-unit-" .. tier
+    local specs = constants.EG_TRANSFORMATORS[unit_name]
+    if not specs then return 0 end
+
+    return specs.rating_watts or 0
+end
+
+--- Compute total transformator load and supply for a network.
+---
+--- Load: sum of ratings for transformator high-voltage poles on the network
+---
+--- Supply: sum of ratings for transformator low-voltage poles on the network
+---
+--- Used for overload protection logic.
+---
+--- @param network_id uint?
+--- @return {load_watts:number, supply_watts:number, load_count:integer, supply_count:integer} totals
+local function get_network_transformator_capacity(network_id)
+    local totals = {
+        load_watts = 0,
+        supply_watts = 0,
+        load_count = 0,
+        supply_count = 0
+    }
+
+    if not network_id then return totals end
+
+    for _, transformator in pairs(storage.eg_transformators or {}) do
+        if transformator
+            and transformator.high_voltage and transformator.high_voltage.valid
+            and transformator.low_voltage and transformator.low_voltage.valid
+        then
+            local rating_watts = get_transformator_rating_watts(transformator)
+
+            if transformator.high_voltage.electric_network_id == network_id then
+                totals.load_watts = totals.load_watts + rating_watts
+                totals.load_count = totals.load_count + 1
+            end
+
+            if transformator.low_voltage.electric_network_id == network_id then
+                totals.supply_watts = totals.supply_watts + rating_watts
+                totals.supply_count = totals.supply_count + 1
+            end
+        end
+    end
+
+    return totals
+end
+
+--- Check whether a transformator high-voltage pole is overloaded on its
+--- current network.
+---
+--- Overload protection is bypassed entirely when:
+--- - the feature is disabled
+--- - the entity is not a transformator high-voltage pole
+--- - the pole is not on an electric network
+--- - the network has zero LV-side supply transformators connected
+---
+--- @param high_voltage_pole LuaEntity?
+--- @return boolean is_overloaded
+local function is_high_voltage_connection_overloaded(high_voltage_pole)
+    if not high_voltage_pole then return false end
+    if not is_transformator_overload_protection_enabled() then return false end
+    if not is_transformator_high_voltage_pole(high_voltage_pole) then return false end
+
+    local network_id = high_voltage_pole.electric_network_id
+    if not network_id then return false end
+
+    local totals = get_network_transformator_capacity(network_id)
+
+    if totals.supply_count == 0 then
+        return false
+    end
+
+    return totals.load_watts > totals.supply_watts
+end
+
+--- Show player feedback for a rejected copper wire connection.
+---
+--- Only displays when `show_message == true`, which is used for manual wire
+--- connections through the custom wire-build flow. Automatic cleanup paths call
+--- the same validation helpers with `show_message` omitted or false, which
+--- keeps those paths silent.
+---
+--- Includes:
+--- - local flying text
+--- - the standard "cannot build" sound
+---
+--- @param player LuaPlayer|nil
+--- @param pole LuaEntity?
+--- @param locale_key string
+--- @param show_message boolean|nil
+--- @return nil
+local function notify_blocked_copper_connection(player, pole, locale_key, show_message)
+    show_message = show_message == true
+    if not show_message then return end
+    if not (player and player.valid and pole and pole.valid) then return end
+
+    player.play_sound { path = "utility/cannot_build" }
+    player.create_local_flying_text {
+        text = { locale_key or "eg.connection-not-allowed" },
+        position = {
+            x = pole.position.x,
+            y = pole.position.y - 1
+        },
+        surface = pole.surface
+    }
+end
+
+--- Disconnect one specific copper-wire edge between two poles.
+---
+--- This is used by the manual-wire validation path so the just-attempted wire
+--- is removed first, instead of disconnecting some other overloaded neighbor on
+--- the same network.
+--- @param source_pole LuaEntity?
+--- @param target_pole LuaEntity?
+--- @return boolean disconnected
+local function disconnect_specific_copper_connection(source_pole, target_pole)
+    if not (source_pole and source_pole.valid and target_pole and target_pole.valid) then return false end
+
+    local connectors = source_pole.get_wire_connectors(false)
+    if not connectors then return false end
+
+    for _, connector in pairs(connectors) do
+        if connector.wire_type == defines.wire_type.copper then
+            for _, connection in pairs(connector.connections) do
+                local target_connector = connection.target
+                if target_connector and target_connector.valid and target_connector.owner == target_pole then
+                    connector.disconnect_from(target_connector)
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
+end
+
+--- Validate a specific attempted copper wire connection between two poles.
+---
+--- This is used for manual wire placement and ensures:
+--- - the exact attempted connection is evaluated first
+--- - if invalid, that connection is removed instead of some unrelated neighbor
+---
+--- This prevents unrelated transformator connections from being disconnected
+--- when overload cleanup is triggered by a newly placed wire.
+---
+--- @param source_pole LuaEntity
+--- @param target_pole LuaEntity
+--- @param player LuaPlayer|nil
+--- @param show_message boolean|nil
+--- @return boolean allowed
+function enforce_specific_copper_connection(source_pole, target_pole, player, show_message)
+    show_message = show_message == true
+
+    if not (source_pole and source_pole.valid and target_pole and target_pole.valid) then return true end
+    if source_pole.type ~= "electric-pole" or target_pole.type ~= "electric-pole" then return true end
+    if storage.eg_transformators_only then return true end
+
+    if not is_copper_cable_connection_allowed(source_pole, target_pole) then
+        disconnect_specific_copper_connection(source_pole, target_pole)
+        notify_blocked_copper_connection(player, source_pole, "eg.connection-not-allowed", show_message)
+        return false
+    end
+
+    local high_voltage_pole = nil
+    if is_transformator_high_voltage_pole(source_pole) then
+        high_voltage_pole = source_pole
+    elseif is_transformator_high_voltage_pole(target_pole) then
+        high_voltage_pole = target_pole
+    end
+
+    if high_voltage_pole and is_high_voltage_connection_overloaded(high_voltage_pole) then
+        disconnect_specific_copper_connection(source_pole, target_pole)
+        notify_blocked_copper_connection(player, high_voltage_pole, "eg.transformator-overload", show_message)
+        return false
+    end
+
+    return true
+end
+
+--- Enforce transformator overload rules on one copper wire connection.
+---
+--- Behavior:
+--- - identifies whether either side is a transformator high-voltage pole
+--- - computes total load vs supply for that electric network
+--- - allows the connection if:
+---   - the network has zero LV-side supply transformators, or
+---   - load does not exceed supply
+--- - otherwise disconnects this connection
+---
+--- This helper validates only the provided connector pair. Broader pole/network
+--- cleanup is handled by the caller.
+---
+--- @param connector LuaWireConnector
+--- @param target_connector LuaWireConnector
+--- @param pole LuaEntity
+--- @param target_pole LuaEntity
+--- @param player LuaPlayer|nil
+--- @param show_message boolean|nil
+--- @return boolean allowed
+local function enforce_transformator_overload_connection(connector, target_connector, pole, target_pole, player,
+                                                         show_message)
+    show_message = show_message == true
+
+    if not is_transformator_overload_protection_enabled() then return true end
+
+    local high_voltage_pole = nil
+    if is_transformator_high_voltage_pole(pole) then
+        high_voltage_pole = pole
+    elseif is_transformator_high_voltage_pole(target_pole) then
+        high_voltage_pole = target_pole
+    end
+
+    if not high_voltage_pole then
+        return true
+    end
+
+    if is_high_voltage_connection_overloaded(high_voltage_pole) then
+        connector.disconnect_from(target_connector)
+        notify_blocked_copper_connection(
+            player,
+            high_voltage_pole,
+            "eg.transformator-overload",
+            show_message
+        )
+        return false
+    end
+
+    return true
+end
+
 --- Check for illegal short-circuit conditions between transformator HV/LV poles.
 ---
 --- When a transformator's high-voltage and low-voltage poles land on the same
 --- electric network, a custom alert is added once and later removed when the
 --- short is cleared. The pending scheduled-check marker is cleared at the start
 --- of the scan.
+--- @return nil
 function short_circuit_check()
     storage.eg_short_circuit_check_tick = nil
 
@@ -884,6 +1206,7 @@ end
 
 --- Replace the delayed substation displayer with the real substation entity.
 --- @param args {unit_number:uint}
+--- @return nil
 function replace_displayer_with_ugp_substation(args)
     if not args or not args.unit_number then return end
 
@@ -994,11 +1317,29 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     return false
 end
 
---- Enforce the custom copper cable rules for a pole by disconnecting invalid
---- copper-wire neighbors.
---- @param pole LuaEntity?
---- @return boolean allowed True when no invalid connections were found.
-function enforce_pole_connections(pole)
+--- Validate and enforce all copper wire connections on a pole.
+---
+--- Behavior:
+--- - iterates all copper-wire connections on the pole
+--- - removes invalid connections based on:
+---   - general pole compatibility rules
+---   - transformator overload rules
+---
+--- Modes:
+--- - manual wiring (`show_message == true`):
+---   - shows player-local feedback
+--- - automatic enforcement (`show_message` omitted or false):
+---   - silent cleanup during build, robot placement, rotation, or topology updates
+---
+--- Returns `false` if any connection was removed.
+---
+--- @param pole LuaEntity
+--- @param player LuaPlayer|nil
+--- @param show_message boolean|nil
+--- @return boolean allowed
+function enforce_pole_connections(pole, player, show_message)
+    show_message = show_message == true
+
     if not pole or not pole.valid or pole.type ~= "electric-pole" then return true end
     if storage.eg_transformators_only then return true end
 
@@ -1006,6 +1347,7 @@ function enforce_pole_connections(pole)
     if not connectors then return true end
 
     local allowed = true
+    local notified = false
     for _, connector in pairs(connectors) do
         if connector.wire_type == defines.wire_type.copper then
             for _, connection in pairs(connector.connections) do
@@ -1015,6 +1357,20 @@ function enforce_pole_connections(pole)
                 if target_pole and target_pole.valid and target_pole.type == "electric-pole" then
                     if not is_copper_cable_connection_allowed(pole, target_pole) then
                         connector.disconnect_from(target_connector)
+                        if not notified then
+                            notify_blocked_copper_connection(player, pole, "eg.connection-not-allowed", show_message)
+                            notified = true
+                        end
+                        allowed = false
+                    elseif not enforce_transformator_overload_connection(
+                            connector,
+                            target_connector,
+                            pole,
+                            target_pole,
+                            notified and nil or player,
+                            show_message and not notified
+                        ) then
+                        notified = true
                         allowed = false
                     end
                 end
@@ -1108,6 +1464,7 @@ end
 
 --- Close either transformator GUI variant for the given player.
 --- @param player LuaPlayer
+--- @return nil
 function close_transformator_gui(player)
     local closed = false
 
@@ -1155,6 +1512,7 @@ end
 --- Populate the relative transformator GUI with the rating dropdown.
 --- @param parent_frame LuaGuiElement
 --- @param current_rating string
+--- @return nil
 function add_relative_rating_dropdown(parent_frame, current_rating)
     if not (parent_frame and parent_frame.valid) then return end
 
@@ -1195,6 +1553,7 @@ end
 --- Populate the full-screen transformator GUI with rating controls.
 --- @param parent_frame LuaGuiElement
 --- @param current_rating string
+--- @return nil
 function add_rating_dropdown(parent_frame, current_rating)
     if not (parent_frame and parent_frame.valid) then return end
 

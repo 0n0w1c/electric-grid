@@ -37,10 +37,21 @@ Why I tagged this mod as an Overhaul, the power distribution portion will likely
 Just an attempt to be thematic, it is equally correct to refer to them as: input/output, source/target, production/consumption, etc.  
 
 ---
-#### What are the four different selectable sections of the Transformator?  
+#### What is transformator overload protection?
+
+When enabled via the startup setting, overload protection prevents connecting a Transformator's high voltage pole to an electric network if doing so would exceed the available supply capacity.
+
+Each Transformator has a selectable rating.  
+When connected on the high voltage side, this rating is treated as electrical load on that network.  
+When connected on the low voltage side, the rating is treated as available supply.
+
+The mod calculates the total load and total supply across all Transformators connected to the same electric network.
+If the total load would exceed the total supply, the connection is not allowed.
+
+---
+#### What are the three different selectable sections of the Transformator?  
 The two on either end are electric poles, to which you connect copper wires, but not across them. Circuit wires can cross.  
-There are two middle sections. The pump, which connects the Transformator to the circuit and/or logistics network, or can be disabled.  
-The final section allows you change the electrical rating, how much electricity is allowed to pass through, from pole to pole.  
+The middle section contains the pump, which connects the Transformator to the circuit and/or logistics network, or can be disabled.  
 This is also the section to right-click and hold to pickup the Transformator.
 
 ---

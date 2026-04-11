@@ -28,6 +28,16 @@ data.extend({
     },
     {
         type = "bool-setting",
+        name = "eg-prevent-transformator-overload",
+        setting_type = "startup",
+        default_value = false,
+        order = get_next_order(),
+        localised_name = { "mod-setting-name.eg-prevent-transformator-overload" },
+        localised_description = { "mod-setting-description.eg-prevent-transformator-overload" },
+        hidden = is_setting_hidden("eg-prevent-transformator-overload")
+    },
+    {
+        type = "bool-setting",
         name = "eg-old-huge-pole",
         setting_type = "startup",
         default_value = false,

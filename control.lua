@@ -86,8 +86,7 @@ end
 
 --- Initialize or migrate persistent global state used by the mod.
 ---
---- This function is safe to call from `on_init` and
---- `on_configuration_changed`.
+--- This function is safe to call from `on_init` and on_configuration_changed`.
 --- @return nil
 local function initialize_globals()
     storage = storage or {}
@@ -146,8 +145,6 @@ local function check_pump_disabled(transformator)
 
     local cb = pump.get_control_behavior()
 
-    -- If the pump is not using circuit enable/disable,
-    -- it can never become disabled via circuit logic.
     if not (cb and cb.circuit_enable_disable) then
         transformator.pump_was_disabled = false
         return
@@ -156,13 +153,11 @@ local function check_pump_disabled(transformator)
     local disabled = cb.disabled
     local prev = transformator.pump_was_disabled
 
-    -- First observation after load / creation
     if prev == nil then
         transformator.pump_was_disabled = disabled
         return
     end
 
-    -- Detect enabled -> disabled transition only
     if not prev and disabled then
         transformator.pump_was_disabled = true
         pump.clear_fluid_inside()
@@ -170,16 +165,15 @@ local function check_pump_disabled(transformator)
         return
     end
 
-    -- Otherwise just store current state
     transformator.pump_was_disabled = disabled
 end
 
---- Perform a rolling transformator scan so each transformator is checked
---- approximately once every 60 ticks.
+--- Resolve deferred manual copper-wire actions after vanilla wiring has settled.
 ---
---- Work is spread across ticks using an accumulator, which avoids both:
---- - overscanning small transformator counts
---- - large once-per-second spikes for bigger bases
+--- The exact attempted `source <-> target` connection is validated first so an
+--- overload or illegal pairing disconnects the newly created wire rather than a
+--- nearby pre-existing one. After that, nearby poles are re-enforced silently
+--- to restore network invariants without showing extra player feedback.
 ---
 --- @return nil
 local function process_pending_wire_cleanup()
@@ -194,12 +188,16 @@ local function process_pending_wire_cleanup()
 
             local allowed = true
 
+            if source and source.valid and target and target.valid then
+                allowed = enforce_specific_copper_connection(source, target, player, true) and allowed
+            end
+
             if source and source.valid then
-                allowed = enforce_pole_connections(source) and allowed
+                allowed = enforce_pole_connections(source, player, false) and allowed
             end
 
             if target and target.valid then
-                allowed = enforce_pole_connections(target) and allowed
+                allowed = enforce_pole_connections(target, player, false) and allowed
             end
 
             local poles_to_check = {}
@@ -223,7 +221,7 @@ local function process_pending_wire_cleanup()
             end
 
             for _, pole in pairs(poles_to_check) do
-                enforce_pole_connections(pole)
+                enforce_pole_connections(pole, player, false)
             end
 
             if next(poles_to_check) then
@@ -257,25 +255,26 @@ local function on_tick_pump_checks()
     local index = storage.eg_transformator_scan_index or 1
     local accumulator = storage.eg_transformator_scan_accumulator or 0
 
-    -- Target rate: process the full transformator set once every 60 ticks.
     accumulator = accumulator + (count / 60)
 
-    local to_process = math.floor(accumulator)
-    accumulator = accumulator - to_process
-
-    if to_process <= 0 then
-        storage.eg_transformator_scan_index = index
+    local budget = math.floor(accumulator)
+    if budget < 1 then
         storage.eg_transformator_scan_accumulator = accumulator
+        storage.eg_transformator_scan_index = index
         return
     end
 
-    for _ = 1, to_process do
+    accumulator = accumulator - budget
+
+    for _ = 1, budget do
+        if count == 0 then break end
+
         if index > count then
             index = 1
         end
 
         local pump_unit_number = keys[index]
-        local transformator = storage.eg_transformators[pump_unit_number]
+        local transformator = pump_unit_number and storage.eg_transformators[pump_unit_number] or nil
 
         if transformator then
             check_pump_disabled(transformator)
@@ -284,52 +283,23 @@ local function on_tick_pump_checks()
         index = index + 1
     end
 
+    if index > count then
+        index = 1
+    end
+
     storage.eg_transformator_scan_index = index
     storage.eg_transformator_scan_accumulator = accumulator
 end
-
 
 -- ---------------------------------------------------------------------------
 -- Blueprint helpers
 -- ---------------------------------------------------------------------------
 
---- Translate a transformator tier into the configured rating string.
---- @param tier integer|string|nil
---- @return string|nil rating
-local function get_transformator_rating_for_tier(tier)
-    if not tier then return nil end
-    local spec = constants.EG_TRANSFORMATORS["eg-unit-" .. tostring(tier)]
-    return spec and spec.rating or nil
-end
-
---- Apply a blueprint-stored tier tag after a pump-rooted transformator has
---- been created.
---- @param entity LuaEntity Built root pump.
---- @param tags table|nil Blueprint placement tags.
---- @return nil
-local function apply_transformator_blueprint_tier(entity, tags)
-    if not (entity and entity.valid and entity.name == "eg-pump") then return end
-    if not tags then return end
-
-    local tier = tonumber(tags[constants.EG_BLUEPRINT_TIER_TAG])
-    if not tier then return end
-
-    local transformator = get_transformator_by_pump_unit_number(entity.unit_number)
-    if not transformator then return end
-
-    local current_tier = get_transformator_tier(transformator)
-    if current_tier == tier then return end
-
-    local rating = get_transformator_rating_for_tier(tier)
-    if not rating then return end
-
-    replace_transformator(transformator, rating)
-end
-
 --- Write transformator tier data into blueprint entity tags.
 ---
---- Only `eg-pump` entities are tagged. The tier is later restored when the
---- blueprint is placed and the transformator is rebuilt around the placed pump.
+--- Only `eg-pump` entities are tagged. This preserves the configured tier for
+--- blueprint placement, copy, and cut/copy style flows without assuming the
+--- mapping contains ghost entities.
 --- @param event EventData.on_player_setup_blueprint
 --- @return nil
 local function on_player_setup_blueprint(event)
@@ -361,43 +331,39 @@ local function on_player_setup_blueprint(event)
     end
 end
 
-
 -- ---------------------------------------------------------------------------
--- Build / mine / rotate handlers
+-- Entity lifecycle handlers
 -- ---------------------------------------------------------------------------
 
---- Common build handler for player, robot, script, and clone build events.
+--- Handle all build-like events that can create Electric Grid entities.
 ---
---- This function builds transformator internals, applies blueprint tier tags,
---- schedules delayed substation replacement jobs, and enforces pole wiring
---- rules for newly built electric poles.
---- @param event table Build-like event containing `entity`.
+--- Transformator builds may originate from a placed pump, a transformator item,
+--- or a displayer proxy. `eg_transformator_built()` returns the root pump when
+--- one exists so any blueprint-stored tier tag can be restored onto the final
+--- transformator after reconstruction.
+--- @param event EventData.on_built_entity
+--- | EventData.on_robot_built_entity
+--- | EventData.on_space_platform_built_entity
+--- | EventData.on_entity_cloned
+--- | EventData.script_raised_revive
+--- | EventData.script_raised_built
 --- @return nil
 local function on_entity_built(event)
-    if not event or not event.entity or not event.entity.valid then return end
-    local entity = event.entity
+    local entity = event.entity or event.destination
+    if not (entity and entity.valid) then return end
 
-    if is_transformator(entity.name) then
-        eg_transformator_built(entity, event.player_index)
-        apply_transformator_blueprint_tier(entity, event.tags)
-        return
-    end
+    local player = event.player_index and game.get_player(event.player_index) or nil
 
     if entity.name == "eg-ugp-substation-displayer" then
-        local aligned_tick = align_to_scheduler_tick(game.tick + 180)
-        job_queue.schedule(aligned_tick, "replace_displayer_with_ugp_substation", {
+        job_queue.schedule(game.tick + 1, "replace_displayer_with_ugp_substation", {
             unit_number = entity.unit_number
         })
         return
     end
 
-    if entity.name == "power-combinator" or entity.name == "power-combinator-MK2" then
-        if not storage.eg_transformators_only then
-            local pole = entity.surface.find_entity("power-combinator-meter-network", entity.position)
-            if pole then
-                enforce_pole_connections(pole)
-            end
-        end
+    if is_transformator(entity.name) then
+        local built_root = eg_transformator_built(entity, event.player_index)
+        apply_transformator_blueprint_tier(built_root or entity, event.tags)
         return
     end
 
@@ -406,25 +372,22 @@ local function on_entity_built(event)
             local poles = get_nearby_poles(entity)
             if poles then
                 for _, pole in pairs(poles) do
-                    enforce_pole_connections(pole)
+                    enforce_pole_connections(pole, player, false)
                 end
             end
         end
-
-        if string.sub(entity.name, 1, 7) == "F077ET-" or string.sub(entity.name, 1, 14) == "electric-proxy" then
-            eg_schedule_short_circuit_check()
-        else
-            eg_schedule_short_circuit_check()
-        end
+        eg_schedule_short_circuit_check()
     end
 end
 
---- Common mine / destroy handler.
---- @param event table Mine-like event containing `entity`.
+--- Handle removal/destruction of transformator pieces and electric poles.
+--- @param event EventData.on_player_mined_entity|EventData.on_robot_mined_entity|EventData.on_space_platform_mined_entity|EventData.on_entity_died|EventData.script_raised_destroy
 --- @return nil
 local function on_entity_mined(event)
     local entity = event.entity
     if not (entity and entity.valid) then return end
+
+    local player = event.player_index and game.get_player(event.player_index) or nil
 
     if is_transformator(entity.name) then
         local transformator = get_transformator_by_entity(entity)
@@ -439,7 +402,7 @@ local function on_entity_mined(event)
             local poles = get_nearby_poles(entity)
             if poles then
                 for _, pole in pairs(poles) do
-                    enforce_pole_connections(pole)
+                    enforce_pole_connections(pole, player, false)
                 end
             end
         end
@@ -481,7 +444,7 @@ end
 
 --- Restrict special script-raised build handling to proxy pole entities that
 --- need the normal build path.
---- @param event EventData.script_raised_built
+--- @param event EventData.script_raised_built|EventData.script_raised_revive
 --- @return nil
 local function on_script_raised_built(event)
     local entity = event.entity
@@ -519,47 +482,6 @@ local function on_cursor_stack_changed(event)
     end
 
     if not (cursor_stack and cursor_stack.valid_for_read) then
-        storage.eg_transformator_to_build[player.index] = nil
-    end
-end
-
---- Track the player selection needed for wire enforcement and transformator
---- placement intent.
---- @param event EventData.on_selected_entity_changed
---- @return nil
-local function on_selected_entity_changed(event)
-    local player_index = event.player_index
-    local player = game.get_player(player_index)
-    if not player then return end
-    if storage.eg_transformators_only then return end
-
-    local selected_entity = player.selected
-
-    if not selected_entity and storage.eg_last_selected_pole[player_index] then
-        local poles = get_nearby_poles(storage.eg_last_selected_pole[player_index])
-        if poles then
-            for _, pole in pairs(poles) do
-                enforce_pole_connections(pole)
-            end
-            eg_schedule_short_circuit_check()
-        end
-
-        storage.eg_last_selected_pole[player_index] = nil
-        return
-    end
-
-    if storage.eg_copper_wire_on_cursor[player_index]
-        and selected_entity
-        and selected_entity.type == "electric-pole"
-    then
-        storage.eg_last_selected_pole[player_index] = selected_entity
-    end
-
-    if selected_entity and is_transformator(selected_entity.name) and not storage.eg_transformator_to_build[player.index] then
-        storage.eg_transformator_to_build[player.index] = selected_entity.name
-    end
-
-    if not (player.cursor_stack and player.cursor_stack.valid_for_read) then
         storage.eg_transformator_to_build[player.index] = nil
     end
 end
@@ -813,6 +735,8 @@ end
 ---
 --- Validation and disconnection occur on the next tick via
 --- `process_pending_wire_cleanup()` to ensure vanilla wiring has completed.
+--- Player-facing flying text is only shown for this manual-wire path; build,
+--- mining, and topology cleanup rechecks remain silent.
 ---
 --- @param event { player_index: uint }
 --- @return nil

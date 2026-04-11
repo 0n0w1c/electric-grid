@@ -100,6 +100,7 @@ constants.EG_TRANSFORMATORS = {
 for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
     local rating_in_watts = normalize_rating(transformator.rating)
     local rating_in_MW = rating_in_watts / 1e6
+    transformator.rating_watts = rating_in_watts
     transformator.heat_capacity = (rating_in_MW * constants.HEAT_CAPACITY_PER_MW) .. "kJ"
 end
 

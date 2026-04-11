@@ -39,6 +39,7 @@ Substations and underground substations are fast-replaceable
 Circuit poles create copper wire connections for performance considerations, but they are hidden  
 
 Startup setting to disable the electric network overhaul, effectively Transformator only.  
+Startup setting to enable transformator overload protection, preventing connections that would overload the electric network.  
 Startup settings to modify electric poles, they only take effect if the overhaul is active.  
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
