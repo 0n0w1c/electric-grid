@@ -1526,7 +1526,7 @@ function get_or_create_transformator_relative_frame(player)
         direction = "vertical",
         anchor = {
             gui = defines.relative_gui_type.pump_gui,
-            position = defines.relative_gui_position.right,
+            position = defines.relative_gui_position.left,
             name = "eg-pump"
         }
     }
