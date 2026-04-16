@@ -4,14 +4,14 @@ Date: 16.04.2026
   Bugfixes:
     - None
   Changes:
-    - Replaced the transformator rating selector from a dropdown to radio buttons
+    - Changed the transformator rating selector from a dropdown to radio buttons
 ---------------------------------------------------------------------------------------------------
 Version: 1.26.1
 Date: 15.04.2026
   Bugfixes:
     - None
   Changes:
-    - Set Filter via circuit conditions is disabled, if enabled
+    - Set filter via circuit conditions will be disabled, if enabled
 ---------------------------------------------------------------------------------------------------
 Version: 1.26.0
 Date: 15.04.2026
@@ -19,15 +19,6 @@ Date: 15.04.2026
     - Refactored to use a tiered pump
   Changes:
     - Transformators now display the rating color in Factoriopedia and the gui
----------------------------------------------------------------------------------------------------
-Version: 1.25.3
-Date: 15.04.2026
-  Bugfixes:
-    - Transformator rating changes now replace the root eg-pump with a tier-matching pump prototype
-    - Preserved pump circuit connections and control behavior when replacing the transformator pump
-    - Migrated transformator storage identity when the root pump unit number changes
-  Changes:
-    - Added tier-specific pump prototypes for internal transformator entities
 ---------------------------------------------------------------------------------------------------
 Version: 1.25.2
 Date: 12.04.2026
