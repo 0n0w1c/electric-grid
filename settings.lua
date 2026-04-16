@@ -28,13 +28,13 @@ data.extend({
     },
     {
         type = "bool-setting",
-        name = "eg-prevent-transformator-overload",
+        name = "eg-enable-transformator-overload",
         setting_type = "startup",
         default_value = false,
         order = get_next_order(),
-        localised_name = { "mod-setting-name.eg-prevent-transformator-overload" },
-        localised_description = { "mod-setting-description.eg-prevent-transformator-overload" },
-        hidden = is_setting_hidden("eg-prevent-transformator-overload")
+        localised_name = { "mod-setting-name.eg-enable-transformator-overload" },
+        localised_description = { "mod-setting-description.eg-enable-transformator-overload" },
+        hidden = is_setting_hidden("eg-enable-transformator-overload")
     },
     {
         type = "bool-setting",

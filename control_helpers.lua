@@ -516,7 +516,7 @@ end
 --- @param transformator EgTransformator
 --- @return nil
 function enforce_overload_after_rating_change(transformator)
-    if not is_transformator_overload_protection_enabled() then return end
+    if is_transformator_overload_allowed() then return end
     if not transformator then return end
 
     local high_voltage = transformator.high_voltage
@@ -1152,11 +1152,10 @@ function is_transformator_high_voltage_pole(entity)
         and string.sub(entity.name, 1, 21) == "eg-high-voltage-pole-"
 end
 
---- Check whether transformator overload protection is enabled.
---- @return boolean is_enabled
-function is_transformator_overload_protection_enabled()
-    local setting = settings.startup["eg-prevent-transformator-overload"]
-    return setting ~= nil and setting.value == true
+--- Check whether transformator overloads are allowed.
+--- @return boolean
+function is_transformator_overload_allowed()
+    return settings.startup["eg-enable-transformator-overload"].value == true
 end
 
 --- Resolve a transformator's configured rating in watts.
@@ -1227,7 +1226,7 @@ end
 --- @return boolean is_overloaded
 function is_high_voltage_connection_overloaded(high_voltage_pole)
     if not high_voltage_pole then return false end
-    if not is_transformator_overload_protection_enabled() then return false end
+    if is_transformator_overload_allowed() then return false end
     if not is_transformator_high_voltage_pole(high_voltage_pole) then return false end
 
     local network_id = high_voltage_pole.electric_network_id
@@ -1370,7 +1369,7 @@ function enforce_transformator_overload_connection(connector, target_connector, 
                                                    show_message)
     show_message = show_message == true
 
-    if not is_transformator_overload_protection_enabled() then return true end
+    if not is_transformator_overload_allowed() then return true end
 
     local high_voltage_pole = nil
     if is_transformator_high_voltage_pole(pole) then

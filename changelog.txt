@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.26.3
+Date: 16.04.2026
+  Bugfixes:
+    - None
+  Changes:
+    - Transformators can not be connected if the electric network would become overloaded
+    - Removed startup setting: Prevent transformator overload
+    - Added startup setting: Enable transformator overload (default: false)
+    - Changed the default for startup setting: Disable electric network overhaul (default: false)
+---------------------------------------------------------------------------------------------------
 Version: 1.26.2
 Date: 16.04.2026
   Bugfixes:
