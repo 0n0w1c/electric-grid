@@ -133,6 +133,40 @@ end
 -- Transformator monitoring helpers
 -- ---------------------------------------------------------------------------
 
+--- Ensure transformator pumps never use circuit-driven "Set filter".
+---
+--- This mod owns the pump fluid filter as part of transformator state, so the
+--- pump's circuit "Set filter" option must stay disabled. If a player enables
+--- it, the setting is reverted and the expected managed filter is restored.
+--- @param transformator EgTransformator Stored transformator state.
+--- @return nil
+local function enforce_transformator_pump_filter_mode(transformator)
+    local pump = transformator.pump
+    if not (pump and pump.valid) then
+        return
+    end
+
+    local cb = pump.get_control_behavior()
+    if not cb then
+        return
+    end
+
+    --- @cast cb LuaPumpControlBehavior
+    if cb.set_filter then
+        cb.set_filter = false
+
+        local tier = get_transformator_tier(transformator)
+        if tier then
+            local expected_filter = transformator.pump_was_disabled
+                and constants.DISABLED_FLUID
+                or ("eg-water-" .. tier)
+
+            pump.clear_fluid_inside()
+            pump.fluidbox.set_filter(1, { name = expected_filter })
+        end
+    end
+end
+
 --- React to a pump being disabled through circuit control.
 ---
 --- Only the transition from enabled -> disabled matters. When the pump is
@@ -146,6 +180,8 @@ local function check_pump_disabled(transformator)
     if not (pump and pump.valid) then
         return
     end
+
+    enforce_transformator_pump_filter_mode(transformator)
 
     local cb = pump.get_control_behavior()
 
@@ -653,6 +689,8 @@ local function on_gui_closed(event)
     if entity and entity.valid and is_transformator_pump(entity.name) then
         local transformator = find_transformator_by_pump(entity)
         if transformator then
+            enforce_transformator_pump_filter_mode(transformator)
+
             local pump = transformator.pump
             if pump and pump.valid then
                 local filter = pump.fluidbox.get_filter(1)

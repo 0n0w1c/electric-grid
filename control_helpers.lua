@@ -617,6 +617,7 @@ local function apply_pump_control_behavior(target_pump, settings)
     if not target_cb then return end
 
     --- @cast target_cb LuaPumpControlBehavior
+    target_cb.set_filter = false
     target_cb.circuit_enable_disable = settings.circuit_enable_disable
     target_cb.connect_to_logistic_network = settings.connect_to_logistic_network
     target_cb.circuit_condition = settings.circuit_condition
