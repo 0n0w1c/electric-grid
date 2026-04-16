@@ -45,12 +45,12 @@ Startup settings to modify electric poles, they only take effect if the overhaul
 *Transformators can be controlled via the circuit and/or logistic networks.*  
 
 Set the Fluid filter to special fluids to manually enable and disable.  
+However, *Set Filter* via circuit conditions is not supported.  
 Selectable power rating (1MW to 10GW)  
 
 No quality bonus is applied to Transformators.
 
 Transformators do function as expected if connected in parallel.  
-Very similar to [Electric Transformators](https://mods.factorio.com/mod/Electric_Transformators) but a little different.  
 *Do not place the Transformator in the supply area of an electric pole.*  
 
 *Fulgora*
