@@ -544,7 +544,7 @@ local function on_player_rotated_entity(event)
     if player and player.valid then
         player.play_sound { path = "utility/cannot_build", position = player.position, volume = 1 }
         player.create_local_flying_text {
-            text = { "gui.eg-rotation-blocked" },
+            text = { "eg.eg-rotation-blocked" },
             position = transformator_position,
             surface = entity.surface
         }
@@ -653,7 +653,7 @@ local function on_gui_opened(event)
         local frame = get_or_create_transformator_relative_frame(player)
         if not (frame and frame.valid) then return end
 
-        add_relative_rating_dropdown(frame, current_rating)
+        add_rating_radio_buttons(frame, current_rating)
         storage.eg_selected_transformator[player.index] = transformator
         storage.eg_opened_pump_filter_name[player.index] = get_transformator_pump_filter_name(entity)
         storage.eg_opened_pump_unit_number[player.index] = entity.unit_number
@@ -735,39 +735,54 @@ local function on_gui_click(event)
         remove_invalid_transformators()
         return
     end
-
 end
 
---- Handle rating dropdown changes for both the full-screen and relative GUI
---- variants.
---- @param event EventData.on_gui_selection_state_changed
+--- Handle rating radio button changes for the relative GUI.
+--- @param event EventData.on_gui_checked_state_changed
 --- @return nil
-local function on_dropdown_selection_changed(event)
+local function on_rating_radio_checked_state_changed(event)
     local element = event.element
     if not (element and element.valid) then return end
+    if element.type ~= "radiobutton" then return end
+    if not string.find(element.name, "^eg_relative_rating_radio_") then return end
 
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
 
-    if element.name == "eg_relative_rating_dropdown" then
-        local transformator = storage.eg_selected_transformator[player.index]
-        if not transformator then return end
-        if not (transformator.pump and transformator.pump.valid) then
-            close_transformator_gui(player)
-            return
-        end
+    if not element.state then return end
 
-        local selected_rating = element.items[element.selected_index]
-        if type(selected_rating) ~= "string" then return end
-
-        local current_rating = get_current_transformator_rating(transformator)
-        if not current_rating then return end
-
-        if selected_rating ~= current_rating then
-            local replacement = replace_transformator(transformator, selected_rating)
-            storage.eg_selected_transformator[player.index] = replacement
+    local parent = element.parent
+    if parent and parent.valid then
+        for _, child in pairs(parent.children) do
+            if child.valid and child.type == "radiobutton" and child ~= element and child.state then
+                child.state = false
+            end
         end
     end
+
+    local transformator = storage.eg_selected_transformator[player.index]
+    if not transformator then return end
+    if not (transformator.pump and transformator.pump.valid) then
+        close_transformator_gui(player)
+        return
+    end
+
+    local selected_rating = element.tags and element.tags.eg_relative_rating
+    if type(selected_rating) ~= "string" then return end
+
+    local current_rating = get_current_transformator_rating(transformator)
+    if not current_rating then return end
+    if selected_rating == current_rating then return end
+
+    local replacement = replace_transformator(transformator, selected_rating)
+    if not replacement then
+        close_transformator_gui(player)
+        return
+    end
+
+    storage.eg_selected_transformator[player.index] = replacement
+    storage.eg_opened_pump_filter_name[player.index] = get_transformator_pump_filter_name(replacement.pump)
+    storage.eg_opened_pump_unit_number[player.index] = replacement.pump and replacement.pump.unit_number or nil
 end
 
 
@@ -876,8 +891,9 @@ local function register_event_handlers()
     script.on_event(defines.events.on_player_cursor_stack_changed, on_cursor_stack_changed)
     script.on_event("eg-wire-build", on_wire_build)
 
+
     script.on_event(defines.events.on_gui_opened, on_gui_opened)
-    script.on_event(defines.events.on_gui_selection_state_changed, on_dropdown_selection_changed)
+    script.on_event(defines.events.on_gui_checked_state_changed, on_rating_radio_checked_state_changed)
     script.on_event(defines.events.on_gui_click, on_gui_click)
     script.on_event(defines.events.on_gui_closed, on_gui_closed)
 end

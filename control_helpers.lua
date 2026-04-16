@@ -1265,7 +1265,7 @@ function notify_blocked_copper_connection(player, pole, locale_key, show_message
 
     player.play_sound { path = "utility/cannot_build" }
     player.create_local_flying_text {
-        text = { locale_key or "eg.connection-not-allowed" },
+        text = { locale_key or "eg.eg-connection-not-allowed" },
         position = {
             x = pole.position.x,
             y = pole.position.y - 1
@@ -1326,7 +1326,7 @@ function enforce_specific_copper_connection(source_pole, target_pole, player, sh
 
     if not is_copper_cable_connection_allowed(source_pole, target_pole) then
         disconnect_specific_copper_connection(source_pole, target_pole)
-        notify_blocked_copper_connection(player, source_pole, "eg.connection-not-allowed", show_message)
+        notify_blocked_copper_connection(player, source_pole, "eg.eg-connection-not-allowed", show_message)
         return false
     end
 
@@ -1339,7 +1339,7 @@ function enforce_specific_copper_connection(source_pole, target_pole, player, sh
 
     if high_voltage_pole and is_high_voltage_connection_overloaded(high_voltage_pole) then
         disconnect_specific_copper_connection(source_pole, target_pole)
-        notify_blocked_copper_connection(player, high_voltage_pole, "eg.transformator-overload", show_message)
+        notify_blocked_copper_connection(player, high_voltage_pole, "eg.eg-transformator-overload", show_message)
         return false
     end
 
@@ -1388,7 +1388,7 @@ function enforce_transformator_overload_connection(connector, target_connector, 
         notify_blocked_copper_connection(
             player,
             high_voltage_pole,
-            "eg.transformator-overload",
+            "eg.eg-transformator-overload",
             show_message
         )
         return false
@@ -1598,7 +1598,7 @@ function enforce_pole_connections(pole, player, show_message)
                     if not is_copper_cable_connection_allowed(pole, target_pole) then
                         connector.disconnect_from(target_connector)
                         if not notified then
-                            notify_blocked_copper_connection(player, pole, "eg.connection-not-allowed", show_message)
+                            notify_blocked_copper_connection(player, pole, "eg.eg-connection-not-allowed", show_message)
                             notified = true
                         end
                         allowed = false
@@ -1720,7 +1720,7 @@ end
 --- @param parent_frame LuaGuiElement
 --- @param current_rating string
 --- @return nil
-function add_relative_rating_dropdown(parent_frame, current_rating)
+function add_rating_radio_buttons(parent_frame, current_rating)
     if not (parent_frame and parent_frame.valid) then return end
 
     local content = parent_frame.add {
@@ -1728,32 +1728,48 @@ function add_relative_rating_dropdown(parent_frame, current_rating)
         name = "eg_transformator_rating_content",
         direction = "vertical"
     }
-    content.style.vertical_spacing = 4
+    content.style.vertical_spacing = 8
 
-    content.add {
+    local label = content.add {
         type = "label",
         caption = { "gui.eg-select-rating" },
-        style = "caption_label"
+        style = "heading_2_label"
     }
+    label.style.left_margin = 2
 
-    local dropdown_items = {}
-    local selected_index = 1
-    local idx = 1
+    local rating_frame = content.add {
+        type = "frame",
+        name = "eg_relative_rating_frame",
+        style = "inside_shallow_frame_with_padding",
+        direction = "vertical"
+    }
+    rating_frame.style.top_padding = 8
+    rating_frame.style.bottom_padding = 8
+    rating_frame.style.left_padding = 6
+    rating_frame.style.right_padding = 6
+
+    local radio_flow = rating_frame.add {
+        type = "flow",
+        name = "eg_relative_rating_radio_flow",
+        direction = "vertical"
+    }
+    radio_flow.style.vertical_spacing = 10
+
     for _, specs in ipairs(constants.EG_TRANSFORMATORS) do
         if specs.rating then
-            table.insert(dropdown_items, specs.rating)
-            if specs.rating == current_rating then
-                selected_index = idx
-            end
-            idx = idx + 1
+            local radio = radio_flow.add {
+                type = "radiobutton",
+                name = "eg_relative_rating_radio_" .. specs.rating,
+                caption = specs.rating,
+                state = (specs.rating == current_rating),
+                tags = {
+                    eg_relative_rating = specs.rating
+                }
+            }
+
+            radio.style.margin = 0
+            radio.style.top_margin = 0
+            radio.style.bottom_margin = 0
         end
     end
-
-    content.add {
-        type = "drop-down",
-        name = "eg_relative_rating_dropdown",
-        items = dropdown_items,
-        selected_index = selected_index
-    }
 end
-
