@@ -19,9 +19,9 @@
 --- @field eg_copper_wire_on_cursor table<uint, boolean>
 --- @field eg_wire_click_source table<uint, LuaEntity>
 --- @field eg_pending_wire_cleanup table<uint, {source: LuaEntity, target: LuaEntity, tick: uint}>
---- @field eg_last_selected_pole table<uint, LuaEntity>
---- @field eg_selected_rating table<uint, string>
---- @field eg_transformator_to_build table<uint, string>
+--- @field eg_transformator_to_build table<uint, string|integer>
+--- @field eg_opened_pump_filter_name table<uint, string|nil>
+--- @field eg_opened_pump_unit_number table<uint, uint|nil>
 --- @field eg_short_circuit_check_tick uint|nil
 --- @field eg_transformators_only boolean
 
@@ -43,7 +43,7 @@ local function edp_blacklist()
     if not remote.interfaces["PickerDollies"] then return end
 
     local blacklist_names = {
-        "eg-pump",
+        get_transformator_pump_name(1),
         "eg-low-voltage-pole-" .. defines.direction.north,
         "eg-low-voltage-pole-" .. defines.direction.east,
         "eg-low-voltage-pole-" .. defines.direction.south,
@@ -53,6 +53,10 @@ local function edp_blacklist()
         "eg-high-voltage-pole-" .. defines.direction.south,
         "eg-high-voltage-pole-" .. defines.direction.west
     }
+
+    for tier = 2, constants.EG_NUM_TIERS do
+        blacklist_names[#blacklist_names + 1] = get_transformator_pump_name(tier)
+    end
 
     for _, name in pairs(blacklist_names) do
         remote.call("PickerDollies", "add_blacklist_name", name)
@@ -93,9 +97,9 @@ local function initialize_globals()
     storage.eg_transformators = storage.eg_transformators or {}
     storage.eg_selected_transformator = storage.eg_selected_transformator or {}
     storage.eg_copper_wire_on_cursor = storage.eg_copper_wire_on_cursor or {}
-    storage.eg_last_selected_pole = storage.eg_last_selected_pole or {}
-    storage.eg_selected_rating = storage.eg_selected_rating or {}
     storage.eg_wire_click_source = storage.eg_wire_click_source or {}
+    storage.eg_opened_pump_filter_name = storage.eg_opened_pump_filter_name or {}
+    storage.eg_opened_pump_unit_number = storage.eg_opened_pump_unit_number or {}
     storage.eg_pending_wire_cleanup = storage.eg_pending_wire_cleanup or {}
     if type(storage.eg_transformator_to_build) ~= "table" then
         storage.eg_transformator_to_build = {}
@@ -135,7 +139,7 @@ end
 --- disabled, buffered fluid is cleared and the boiler/steam-engine pair is
 --- refreshed so their tiered prototypes match the transformator state.
 ---
---- @param transformator table Stored transformator state.
+--- @param transformator EgTransformator Stored transformator state.
 --- @return nil
 local function check_pump_disabled(transformator)
     local pump = transformator.pump
@@ -145,11 +149,15 @@ local function check_pump_disabled(transformator)
 
     local cb = pump.get_control_behavior()
 
+    -- LuaLS sees `get_control_behavior()` as a broad union type, so these
+    -- pump-specific fields need explicit diagnostic suppression.
+    --- @diagnostic disable-next-line: undefined-field
     if not (cb and cb.circuit_enable_disable) then
         transformator.pump_was_disabled = false
         return
     end
 
+    --- @diagnostic disable-next-line: undefined-field
     local disabled = cb.disabled
     local prev = transformator.pump_was_disabled
 
@@ -234,14 +242,79 @@ local function process_pending_wire_cleanup()
                 storage.eg_wire_click_source[player_index] = nil
             end
 
-            storage.eg_last_selected_pole[player_index] = nil
             pending[player_index] = nil
         end
     end
 end
 
+--- Track changes to open transformator pump GUIs and close them when
+--- circuit-control fluid transitions require the vanilla pump window to be
+--- dismissed.
+---
+--- While a transformator pump GUI is open, this watches the current fluid
+--- filter against the last observed value for each player. When the pump
+--- leaves the disabled state or enters any managed control fluid, the tracked
+--- GUI state is cleared and the player's opened entity is closed so the mod can
+--- reassert the intended transformator UI flow.
+--- @return nil
+local function process_open_pump_gui_changes()
+    local opened_filter_names = storage.eg_opened_pump_filter_name
+    local opened_pump_unit_numbers = storage.eg_opened_pump_unit_number
+    if not (opened_filter_names and opened_pump_unit_numbers) then return end
+
+    for player_index, tracked_unit_number in pairs(opened_pump_unit_numbers) do
+        if tracked_unit_number ~= nil then
+            local player = game.get_player(player_index)
+
+            if not (player and player.valid) then
+                opened_filter_names[player_index] = nil
+                opened_pump_unit_numbers[player_index] = nil
+            else
+                local opened_object = player.opened
+
+                if not (opened_object and opened_object.valid and opened_object.object_name == "LuaEntity") then
+                    opened_filter_names[player_index] = nil
+                    opened_pump_unit_numbers[player_index] = nil
+                else
+                    --- @cast opened_object LuaEntity
+                    local opened = opened_object
+
+                    if not (is_transformator_pump(opened.name) and opened.unit_number == tracked_unit_number) then
+                        opened_filter_names[player_index] = nil
+                        opened_pump_unit_numbers[player_index] = nil
+                    else
+                        local current_filter_name = get_transformator_pump_filter_name(opened)
+                        local previous_filter_name = opened_filter_names[player_index]
+
+                        if current_filter_name ~= previous_filter_name then
+                            local leaving_disabled = (previous_filter_name == constants.DISABLED_FLUID)
+                            local entering_control_fluid = is_transformator_control_fluid(current_filter_name)
+
+                            opened_filter_names[player_index] = current_filter_name
+
+                            if leaving_disabled or entering_control_fluid then
+                                opened_filter_names[player_index] = nil
+                                opened_pump_unit_numbers[player_index] = nil
+                                player.opened = nil
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+--- Run per-tick transformator maintenance.
+---
+--- This processes deferred copper-wire cleanup, watches open pump GUIs for
+--- filter-state transitions, and incrementally scans tracked transformators so
+--- pump disable transitions are handled over time without spiking work in a
+--- single tick.
+--- @return nil
 local function on_tick_pump_checks()
     process_pending_wire_cleanup()
+    process_open_pump_gui_changes()
 
     local keys = storage.eg_transformator_keys
     local count = keys and #keys or 0
@@ -297,7 +370,7 @@ end
 
 --- Write transformator tier data into blueprint entity tags.
 ---
---- Only `eg-pump` entities are tagged. This preserves the configured tier for
+--- Only transformator root pump entities are tagged. This preserves the configured tier for
 --- blueprint placement, copy, and cut/copy style flows without assuming the
 --- mapping contains ghost entities.
 --- @param event EventData.on_player_setup_blueprint
@@ -319,7 +392,7 @@ local function on_player_setup_blueprint(event)
         --- @cast blueprint_entity_index uint
         --- @cast source_entity LuaEntity
 
-        if source_entity.valid and source_entity.name == "eg-pump" then
+        if source_entity.valid and is_transformator_pump(source_entity.name) then
             local transformator = get_transformator_by_entity(source_entity)
             local tier = get_transformator_tier(transformator)
             if tier then
@@ -418,7 +491,7 @@ end
 --- @return nil
 local function on_player_rotated_entity(event)
     local entity = event.entity
-    if not (entity and entity.valid and entity.name == "eg-pump") then return end
+    if not (entity and entity.valid and is_transformator_pump(entity.name)) then return end
 
     local success = rebuild_transformator_dependents_from_pump(entity, event.previous_direction)
     if success then return end
@@ -486,8 +559,9 @@ local function on_cursor_stack_changed(event)
     end
 end
 
---- Remember the currently selected transformator-ish entity when the player uses
---- pipette, so later placement can inherit the intended transformator tier.
+--- Remember the currently selected transformator entity or displayer when the
+--- player uses pipette, so later placement can inherit the intended
+--- transformator tier or prototype choice.
 --- @param event EventData.on_player_pipette
 --- @return nil
 local function on_entity_pipetted(event)
@@ -497,6 +571,15 @@ local function on_entity_pipetted(event)
     local selected = player.selected
     if not (selected and selected.valid and is_transformator(selected.name)) then return end
 
+    if is_transformator_pump(selected.name) then
+        local transformator = get_transformator_by_entity(selected)
+        local tier = get_transformator_tier(transformator)
+        if tier then
+            storage.eg_transformator_to_build[player.index] = tier
+            return
+        end
+    end
+
     storage.eg_transformator_to_build[player.index] = selected.name
 end
 
@@ -505,38 +588,20 @@ end
 -- GUI helpers
 -- ---------------------------------------------------------------------------
 
---- Update the rating preview sprite inside the full-screen transformator GUI.
---- @param player LuaPlayer
---- @param selected_rating string
---- @return nil
-local function update_sprite(player, selected_rating)
-    if not player or not player.valid then return end
 
-    local frame = player.gui.screen.transformator_rating_selection_frame
-    if not frame then return end
-
-    local bordered_frame = frame.rating_selection_bordered_frame
-    if not bordered_frame then return end
-
-    local sprite_background_frame = bordered_frame["sprite_background_frame"]
-    if not sprite_background_frame then return end
-
-    local sprite_element = sprite_background_frame["current_rating_sprite"]
-    if not sprite_element then return end
-
-    sprite_element.sprite = selected_rating
-    sprite_element.tooltip = "Rating: " .. selected_rating
-end
-
---- Open the relative transformator rating GUI when the player opens the pump.
+--- Open or refresh the relative transformator rating GUI when the player opens
+--- a transformator pump.
 --- @param event EventData.on_gui_opened
 --- @return nil
 local function on_gui_opened(event)
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
 
+    storage.eg_opened_pump_filter_name = storage.eg_opened_pump_filter_name or {}
+    storage.eg_opened_pump_unit_number = storage.eg_opened_pump_unit_number or {}
+
     local entity = event.entity
-    if entity and entity.valid and entity.name == "eg-pump" then
+    if entity and entity.valid and is_transformator_pump(entity.name) then
         local transformator = find_transformator_by_pump(entity)
         if not transformator then
             close_transformator_gui(player)
@@ -554,39 +619,38 @@ local function on_gui_opened(event)
 
         add_relative_rating_dropdown(frame, current_rating)
         storage.eg_selected_transformator[player.index] = transformator
+        storage.eg_opened_pump_filter_name[player.index] = get_transformator_pump_filter_name(entity)
+        storage.eg_opened_pump_unit_number[player.index] = entity.unit_number
         return
     end
 
     if player.gui.relative.eg_transformator_rating_relative_frame then
+        storage.eg_opened_pump_filter_name[player.index] = nil
+        storage.eg_opened_pump_unit_number[player.index] = nil
         close_transformator_gui(player)
     end
 end
 
---- Handle the transformator rating GUIs being closed.
+--- Handle the relative transformator rating GUI being closed.
 ---
---- Also restores the pump's expected fluid filter state after the pump GUI
---- closes.
+--- When a pump GUI closes, this also restores the pump's expected filter state
+--- and refreshes tiered components if the disabled control fluid was selected.
 --- @param event EventData.on_gui_closed
 --- @return nil
 local function on_gui_closed(event)
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
 
-    if event.element and event.element.name == "transformator_rating_selection_frame" then
-        storage.eg_selected_transformator[player.index] = nil
-        player.opened = nil
-        close_transformator_gui(player)
-        return
-    end
-
     if event.element and event.element.name == "eg_transformator_rating_relative_frame" then
         storage.eg_selected_transformator[player.index] = nil
+        storage.eg_opened_pump_filter_name[player.index] = nil
+        storage.eg_opened_pump_unit_number[player.index] = nil
         close_transformator_gui(player)
         return
     end
 
     local entity = event.entity
-    if entity and entity.valid and entity.name == "eg-pump" then
+    if entity and entity.valid and is_transformator_pump(entity.name) then
         local transformator = find_transformator_by_pump(entity)
         if transformator then
             local pump = transformator.pump
@@ -595,11 +659,11 @@ local function on_gui_closed(event)
                 if filter and filter.name then
                     local tier = transformator.tier
                     if tier then
-                        if filter.name == "eg-fluid-disable" then
+                        if filter.name == constants.DISABLED_FLUID then
                             transformator.pump_was_disabled = true
                             pump.clear_fluid_inside()
                             replace_tiered_components(transformator)
-                            pump.fluidbox.set_filter(1, { name = "eg-fluid-disable" })
+                            pump.fluidbox.set_filter(1, { name = constants.DISABLED_FLUID })
                         else
                             transformator.pump_was_disabled = false
                             pump.clear_fluid_inside()
@@ -612,6 +676,8 @@ local function on_gui_closed(event)
     end
 
     if player.gui.relative.eg_transformator_rating_relative_frame then
+        storage.eg_opened_pump_filter_name[player.index] = nil
+        storage.eg_opened_pump_unit_number[player.index] = nil
         close_transformator_gui(player)
     end
 end
@@ -632,44 +698,10 @@ local function on_gui_click(event)
         return
     end
 
-    if element.name == "confirm_transformator_rating" then
-        local transformator = storage.eg_selected_transformator[player.index]
-        if transformator and transformator.pump and transformator.pump.valid then
-            local frame = player.gui.screen.transformator_rating_selection_frame
-            if not frame then return end
-
-            local bordered_frame = frame.rating_selection_bordered_frame
-            if not bordered_frame then return end
-
-            local dropdown = nil
-            for _, child in pairs(bordered_frame.children) do
-                if child.name == "dropdown_flow" then
-                    for _, inner_child in pairs(child.children) do
-                        if inner_child.name == "rating_dropdown" then
-                            dropdown = inner_child
-                            break
-                        end
-                    end
-                end
-            end
-
-            if dropdown and dropdown.items then
-                local selected_rating = dropdown.items[dropdown.selected_index]
-                local current_rating = get_current_transformator_rating(transformator)
-
-                if selected_rating and selected_rating ~= current_rating then
-                    replace_transformator(transformator, selected_rating)
-                    storage.eg_selected_transformator[player.index] = nil
-                end
-            end
-        end
-
-        close_transformator_gui(player)
-        remove_invalid_transformators()
-    end
 end
 
---- Handle transformator rating dropdown changes for both GUI variants.
+--- Handle rating dropdown changes for both the full-screen and relative GUI
+--- variants.
 --- @param event EventData.on_gui_selection_state_changed
 --- @return nil
 local function on_dropdown_selection_changed(event)
@@ -678,14 +710,6 @@ local function on_dropdown_selection_changed(event)
 
     local player = game.get_player(event.player_index)
     if not player or not player.valid then return end
-
-    if element.name == "rating_dropdown" then
-        local selected_rating = element.items[element.selected_index]
-        if type(selected_rating) ~= "string" then return end
-
-        update_sprite(player, selected_rating)
-        return
-    end
 
     if element.name == "eg_relative_rating_dropdown" then
         local transformator = storage.eg_selected_transformator[player.index]
@@ -702,9 +726,8 @@ local function on_dropdown_selection_changed(event)
         if not current_rating then return end
 
         if selected_rating ~= current_rating then
-            local pump_unit_number = transformator.pump.unit_number
-            replace_transformator(transformator, selected_rating)
-            storage.eg_selected_transformator[player.index] = storage.eg_transformators[pump_unit_number]
+            local replacement = replace_transformator(transformator, selected_rating)
+            storage.eg_selected_transformator[player.index] = replacement
         end
     end
 end
@@ -714,7 +737,7 @@ end
 -- Scheduled job helpers
 -- ---------------------------------------------------------------------------
 
---- Process any queued delayed jobs due on the current bucket tick.
+--- Process queued delayed jobs due on the current scheduler bucket tick.
 --- @param event { tick: uint }
 --- @return nil
 local function on_periodic_tick(event)
@@ -773,7 +796,6 @@ local function on_wire_build(event)
     end
 
     if not previous then
-        storage.eg_last_selected_pole[player_index] = selected
         storage.eg_wire_click_source[player_index] = selected
         return
     end
@@ -847,6 +869,7 @@ script.on_configuration_changed(function()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("short_circuit_check", short_circuit_check)
+    normalize_transformator_pumps_to_tier()
     sync_transformator_keys()
     reset_short_circuit_alert_state()
     short_circuit_check()

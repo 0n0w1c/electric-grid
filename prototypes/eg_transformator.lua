@@ -207,30 +207,35 @@ for tier = 1, constants.EG_NUM_TIERS do
         create_transformator_steam(tier),
         create_transformator_boiler(tier),
         create_transformator_steam_engine("ne", tier),
-        create_transformator_steam_engine("sw", tier)
+        create_transformator_steam_engine("sw", tier),
+        create_transformator_pump(tier)
     })
 end
 
+-- Legacy compatibility prototype for older saves and blueprints. Runtime code
+-- migrates existing roots to the canonical numbered pump name.
 data.extend({
+    create_transformator_pump(1, "eg-pump"),
     create_transformator_fluid_disable(),
     create_transformator_fluid_enable(),
-    create_transformator_pump(),
 })
+data.raw["pump"]["eg-pump"].hidden_in_factoriopedia = true
 
 local eg_transformator_displayer = {
-    type                    = "simple-entity-with-force",
-    name                    = "eg-transformator-displayer",
-    localised_name          = { "entity-name.eg-transformator-displayer" },
-    localised_description   = { "entity-description.eg-transformator-displayer" },
-    quality_indicator_scale = 0,
-    icon                    = constants.EG_ICONS .. "eg-transformator.png",
-    icon_size               = 128,
-    flags                   = { "placeable-neutral", "placeable-player", "player-creation" },
-    max_health              = constants.EG_MAX_HEALTH,
-    collision_box           = { { -0.9, -1.9 }, { 0.9, 1.9 } },
-    hidden_in_factoriopedia = true,
-    picture                 = get_transformator_picture(),
-    surface_conditions      = surface_conditions
+    type                           = "simple-entity-with-force",
+    name                           = "eg-transformator-displayer",
+    localised_name                 = { "entity-name.eg-transformator-displayer" },
+    localised_description          = { "entity-description.eg-transformator-displayer" },
+    quality_indicator_scale        = 0,
+    icon                           = constants.EG_ICONS .. "eg-transformator.png",
+    icon_size                      = 128,
+    flags                          = { "placeable-neutral", "placeable-player", "player-creation" },
+    max_health                     = constants.EG_MAX_HEALTH,
+    collision_box                  = { { -0.9, -1.9 }, { 0.9, 1.9 } },
+    hidden_in_factoriopedia        = true,
+    drawing_box_vertical_extension = 1.5,
+    picture                        = get_transformator_picture(),
+    surface_conditions             = surface_conditions
 }
 
 local subgroup

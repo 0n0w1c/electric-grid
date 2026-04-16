@@ -1,6 +1,6 @@
 function create_transformator_steam_engine(variant, tier)
     local name                          = "eg-steam-engine-" .. variant .. "-" .. tier
-    local rating                        = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
+    local rating                        = constants.EG_TRANSFORMATORS[tier].rating
 
     local steam_engine_selection_box_ne = { { -0.5, -0.5 }, { 1.5, 1.5 } }
     local steam_engine_selection_box_sw = { { -1.5, -1.5 }, { 0.5, 0.5 } }

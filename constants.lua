@@ -39,6 +39,7 @@ constants.EG_SUBGROUP = "eg-electric-distribution"
 
 constants.EG_MAX_HEALTH = 500
 constants.EG_FLUID_VOLUME = 100
+constants.DISABLED_FLUID = "eg-fluid-disable"
 
 constants.EG_QUALITIES = {
     "normal",
@@ -86,28 +87,25 @@ constants.EG_INTERNAL_ENTITY_FLAGS = {
 constants.EG_PUMP_TINT = { r = 1.0, g = 1.0, b = 1.0, a = 1 }
 
 constants.EG_TRANSFORMATORS = {
-    ["eg-unit-1"] = { rating = "1MW", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 } },   -- red
-    ["eg-unit-2"] = { rating = "5MW", tint = { r = 1.0, g = 0.5, b = 0.0, a = 1 } },   -- orange
-    ["eg-unit-3"] = { rating = "10MW", tint = { r = 1.0, g = 0.85, b = 0.2, a = 1 } }, -- gold
-    ["eg-unit-4"] = { rating = "50MW", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } },  -- yellow
-    ["eg-unit-5"] = { rating = "100MW", tint = { r = 0.0, g = 1.0, b = 0.0, a = 1 } }, -- green
-    ["eg-unit-6"] = { rating = "500MW", tint = { r = 0.0, g = 1.0, b = 1.0, a = 1 } }, -- cyan
-    ["eg-unit-7"] = { rating = "1GW", tint = { r = 0.0, g = 0.5, b = 1.0, a = 1 } },   -- blue
-    ["eg-unit-8"] = { rating = "5GW", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 } },   -- violet
-    ["eg-unit-9"] = { rating = "10GW", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } }   -- magenta
+    { rating = "1MW", tint = { r = 1.0, g = 0.0, b = 0.0, a = 1 } },   -- red
+    { rating = "5MW", tint = { r = 1.0, g = 0.5, b = 0.0, a = 1 } },   -- orange
+    { rating = "10MW", tint = { r = 1.0, g = 0.85, b = 0.2, a = 1 } }, -- gold
+    { rating = "50MW", tint = { r = 1.0, g = 1.0, b = 0.0, a = 1 } },  -- yellow
+    { rating = "100MW", tint = { r = 0.0, g = 1.0, b = 0.0, a = 1 } }, -- green
+    { rating = "500MW", tint = { r = 0.0, g = 1.0, b = 1.0, a = 1 } }, -- cyan
+    { rating = "1GW", tint = { r = 0.0, g = 0.5, b = 1.0, a = 1 } },   -- blue
+    { rating = "5GW", tint = { r = 0.5, g = 0.0, b = 1.0, a = 1 } },   -- violet
+    { rating = "10GW", tint = { r = 1.0, g = 0.0, b = 1.0, a = 1 } }   -- magenta
 }
 
-for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
+for _, transformator in ipairs(constants.EG_TRANSFORMATORS) do
     local rating_in_watts = normalize_rating(transformator.rating)
     local rating_in_MW = rating_in_watts / 1e6
     transformator.rating_watts = rating_in_watts
     transformator.heat_capacity = (rating_in_MW * constants.HEAT_CAPACITY_PER_MW) .. "kJ"
 end
 
-constants.EG_NUM_TIERS = 0
-for _ in pairs(constants.EG_TRANSFORMATORS) do
-    constants.EG_NUM_TIERS = constants.EG_NUM_TIERS + 1
-end
+constants.EG_NUM_TIERS = #constants.EG_TRANSFORMATORS
 
 constants.EG_LIGHT_COLOR                = { r = 1.0, g = 1.0, b = 0.7 }
 constants.EG_LIGHT_INTENSITY            = 0.7

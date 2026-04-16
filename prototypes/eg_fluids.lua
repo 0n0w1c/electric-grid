@@ -40,7 +40,7 @@ end
 
 function create_transformator_water(tier)
     local fluid_name    = "eg-water-" .. tier
-    local heat_capacity = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].heat_capacity
+    local heat_capacity = constants.EG_TRANSFORMATORS[tier].heat_capacity
 
     return {
         type                  = "fluid",
@@ -62,7 +62,7 @@ end
 
 function create_transformator_steam(tier)
     local fluid_name    = "eg-steam-" .. tier
-    local heat_capacity = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].heat_capacity
+    local heat_capacity = constants.EG_TRANSFORMATORS[tier].heat_capacity
 
     return {
         type                  = "fluid",

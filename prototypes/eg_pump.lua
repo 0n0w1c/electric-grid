@@ -1,4 +1,4 @@
-local function get_pump_picture()
+local function get_pump_picture(tier)
     local overlay = {}
     if constants.EG_INVERT_OVERLAY then
         overlay = {
@@ -105,20 +105,9 @@ local function get_pump_picture()
                     height = 310,
                     shift = { 2.1, -0.95 },
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_PUMP_TINT,
+                    tint = constants.EG_TRANSFORMATORS[tier].tint,
                     scale = 0.5,
                 },
-                --[[
-                {
-                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
-                    x = 1398,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.1, -0.95 },
-                    scale = 0.5,
-                    draw_as_shadow = true,
-                },
-                ]]
             },
         },
         east = {
@@ -139,19 +128,8 @@ local function get_pump_picture()
                     shift = { 2.0, -1.65 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_PUMP_TINT,
+                    tint = constants.EG_TRANSFORMATORS[tier].tint,
                 },
-                --[[
-                {
-                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
-                    x = 932,
-                    width = 466,
-                    height = 310,
-                    shift = { 2.0, -1.65 },
-                    scale = 0.5,
-                    draw_as_shadow = true,
-                },
-                ]]
             },
         },
         south = {
@@ -172,19 +150,8 @@ local function get_pump_picture()
                     shift = { 3.1, 0.05 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_PUMP_TINT,
+                    tint = constants.EG_TRANSFORMATORS[tier].tint,
                 },
-                --[[
-                {
-                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
-                    x = 466,
-                    width = 466,
-                    height = 310,
-                    shift = { 3.1, 0.05 },
-                    scale = 0.5,
-                    draw_as_shadow = true,
-                },
-                ]]
             },
         },
         west = {
@@ -205,19 +172,8 @@ local function get_pump_picture()
                     shift = { 1.05, -0.6 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_PUMP_TINT,
+                    tint = constants.EG_TRANSFORMATORS[tier].tint,
                 },
-                --[[
-                {
-                    filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
-                    x = 0,
-                    width = 466,
-                    height = 310,
-                    shift = { 1.05, -0.6 },
-                    scale = 0.5,
-                    draw_as_shadow = true,
-                },
-                ]]
             },
         },
     }
@@ -239,20 +195,21 @@ local function get_pump_picture()
     return template
 end
 
-function create_transformator_pump()
+function create_transformator_pump(tier, name_override)
     local collision_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
     local selection_box = { { -1.5, -1.5 }, { 0.5, 0.5 } }
     --local selection_box = { { -0.49, -0.49 }, { 0.49,  0.49 } }
 
+    tier = tonumber(tier) or 1
+    local name = name_override or ("eg-pump-" .. tier)
+
     return {
         type                           = "pump",
-        name                           = "eg-pump",
+        name                           = name,
         icon                           = constants.EG_ICONS .. "eg-transformator.png",
         icon_size                      = 128,
         max_health                     = constants.EG_MAX_HEALTH,
         hidden                         = false,
-        hidden_in_factoriopedia        = false,
-        factoriopedia_alternative      = "eg-transformator-displayer",
         selectable_in_game             = true,
         minable                        = { mining_time = 0.5, result = "eg-transformator" },
         flags                          = { "placeable-player", "player-creation", "get-by-unit-number" },
@@ -261,9 +218,10 @@ function create_transformator_pump()
         selection_box                  = selection_box,
         collision_box                  = collision_box,
         drawing_box_vertical_extension = 1.5,
-        localised_name                 = { "entity-name.eg-pump" },
+        localised_name                 = { "entity-name.eg-pump", constants.EG_TRANSFORMATORS[tier].rating },
         localised_description          = { "entity-description.eg-pump" },
-        integration_patch              = get_pump_picture(),
+        icon_draw_specification        = { shift = { 0, 0 }, scale = 0, render_layer = "entity-info-icon" },
+        integration_patch              = get_pump_picture(tier),
         integration_patch_render_layer = "lower-object",
         pumping_speed                  = 100,
         energy_usage                   = "1kW",

@@ -109,6 +109,8 @@ end
 -- Transformator lifecycle helpers
 -- ---------------------------------------------------------------------------
 
+
+
 --- Destroy an entire transformator, including its root pump, and remove it from
 --- persistent storage.
 --- @param pump_unit_number uint Root pump unit number.
@@ -161,6 +163,12 @@ function get_transformator_tier(transformator)
         return tonumber(transformator.tier)
     end
 
+    if transformator.pump and transformator.pump.valid and transformator.pump.name then
+        local tier = transformator.pump.name:match("^eg%-pump%-(%d+)$")
+        if tier then return tonumber(tier) end
+        if transformator.pump.name == "eg-pump" then return 1 end
+    end
+
     if transformator.boiler and transformator.boiler.valid and transformator.boiler.name then
         local tier = transformator.boiler.name:match("^eg%-boiler%-(%d+)$")
         if tier then return tonumber(tier) end
@@ -172,6 +180,24 @@ function get_transformator_tier(transformator)
     end
 
     return nil
+end
+
+--- Check whether an entity or item name is a transformator root pump.
+--- @param name string?
+--- @return boolean is_pump
+function is_transformator_pump(name)
+    return type(name) == "string"
+        and (name == "eg-pump" or name:match("^eg%-pump%-%d+$") ~= nil)
+end
+
+--- Return the canonical transformator pump prototype name for a tier.
+--- The legacy `eg-pump` name is still recognized for migration, but all new
+--- and replaced transformators use the numbered pump names.
+--- @param tier integer|string|nil
+--- @return string pump_name
+function get_transformator_pump_name(tier)
+    local pump_tier = tonumber(tier) or 1
+    return "eg-pump-" .. pump_tier
 end
 
 --- Normalize the steam-engine facing used by the transformator layout.
@@ -218,9 +244,10 @@ end
 --- @param name string?
 --- @return boolean is_transformator_name
 function is_transformator(name)
-    return name == "eg-pump"
+    return is_transformator_pump(name)
         or name == "eg-transformator-displayer"
-        or constants.EG_TRANSFORMATORS[name] ~= nil
+        or (type(name) == "string" and name:match("^eg%-boiler%-%d+$") ~= nil)
+        or (type(name) == "string" and name:match("^eg%-steam%-engine%-%a+%-%d+$") ~= nil)
 end
 
 --- Fetch a stored transformator directly from a root pump entity.
@@ -290,6 +317,7 @@ function replace_tiered_components(transformator)
 
     eg_transformator.boiler = eg_boiler
     eg_transformator.steam_engine = eg_steam_engine
+    sync_transformator_keys()
 end
 
 --- Translate a transformator tier into the configured rating string.
@@ -297,7 +325,7 @@ end
 --- @return string|nil rating
 function get_transformator_rating_for_tier(tier)
     if not tier then return nil end
-    local spec = constants.EG_TRANSFORMATORS["eg-unit-" .. tostring(tier)]
+    local spec = constants.EG_TRANSFORMATORS[tonumber(tier)]
     return spec and spec.rating or nil
 end
 
@@ -313,11 +341,11 @@ end
 ---
 --- Safe to call with nil or invalid entities.
 ---
---- @param entity LuaEntity|nil Root pump entity (`eg-pump`)
+--- @param entity LuaEntity|nil Root pump entity (`eg-pump` / `eg-pump-<tier>`)
 --- @param tags table|nil Blueprint tags from the build event
 --- @return nil
 function apply_transformator_blueprint_tier(entity, tags)
-    if not (entity and entity.valid and entity.name == "eg-pump") then return end
+    if not (entity and entity.valid and is_transformator_pump(entity.name)) then return end
     if not tags then return end
 
     local tier = tonumber(tags[constants.EG_BLUEPRINT_TIER_TAG])
@@ -340,14 +368,14 @@ end
 --- This function ensures that the full transformator structure is created
 --- around the root pump entity and registers it in runtime storage.
 ---
---- Returns the root `eg-pump` entity for the transformator. This return value
+--- Returns the root transformator pump entity for the transformator. This return value
 --- is used by blueprint-tier restoration code to apply stored tier metadata to
 --- the correct final entity, even when the original built entity was a
 --- displayer or item placeholder.
 ---
 --- @param entity LuaEntity The entity that triggered transformator creation.
 --- @param player_index uint|nil Optional acting player index for placement intent.
---- @return LuaEntity|nil root_pump
+--- @return LuaEntity? root_pump
 function eg_transformator_built(entity, player_index)
     if not entity or not entity.name then return nil end
     if not is_transformator(entity.name) then return nil end
@@ -365,7 +393,7 @@ function eg_transformator_built(entity, player_index)
     if entity.name == "eg-transformator-displayer" then
         tier = "1"
         entity.destroy()
-    elseif entity.name == "eg-pump" then
+    elseif is_transformator_pump(entity.name) then
         local pump_offset = rotate_position(constants.EG_ENTITY_OFFSETS.pump, direction)
         transformator_position = {
             x = position.x - pump_offset.x,
@@ -387,8 +415,8 @@ function eg_transformator_built(entity, player_index)
         and storage.eg_transformator_to_build
         and storage.eg_transformator_to_build[player_index]
         or nil
-    if type(transformator_to_build) == "string" and string.sub(transformator_to_build, 1, 8) == "eg-unit-" then
-        tier = transformator_to_build:match("(%d+)$") or tier
+    if tonumber(transformator_to_build) then
+        tier = tostring(transformator_to_build)
     end
 
     tier = tier or "1"
@@ -411,7 +439,7 @@ function eg_transformator_built(entity, player_index)
 
     if not eg_pump then
         eg_pump = surface.create_entity {
-            name = "eg-pump",
+            name = get_transformator_pump_name(tier),
             position = position_from_offset(constants.EG_ENTITY_OFFSETS.pump),
             force = force,
             direction = direction,
@@ -482,7 +510,9 @@ function eg_transformator_built(entity, player_index)
 end
 
 --- Enforce overload rules after a transformator rating change.
---- Disconnects HV pole if overload occurs.
+---
+--- If the replacement would leave the high-voltage side overloaded, all copper
+--- connections on the transformator's HV pole are disconnected.
 --- @param transformator EgTransformator
 --- @return nil
 function enforce_overload_after_rating_change(transformator)
@@ -506,6 +536,133 @@ function enforce_overload_after_rating_change(transformator)
     end
 end
 
+--- Capture all real circuit-wire connections from a transformator pump.
+--- @param pump LuaEntity
+--- @return table[] connections
+local function snapshot_pump_circuit_connections(pump)
+    local snapshots = {}
+    local seen = {}
+    local connectors = pump.get_wire_connectors(false)
+    if not connectors then return snapshots end
+
+    for _, connector in pairs(connectors) do
+        if connector.valid and connector.wire_type ~= defines.wire_type.copper then
+            for _, connection in pairs(connector.real_connections or {}) do
+                local target = connection.target
+                if target and target.valid and target.owner and target.owner.valid then
+                    local key = table.concat({
+                        tostring(connector.wire_connector_id),
+                        tostring(target.owner.unit_number or target.owner.name),
+                        tostring(target.wire_connector_id),
+                        tostring(connector.wire_type)
+                    }, ":")
+
+                    if not seen[key] then
+                        seen[key] = true
+                        snapshots[#snapshots + 1] = {
+                            source_id = connector.wire_connector_id,
+                            target = target,
+                            target_entity = target.owner,
+                            target_id = target.wire_connector_id,
+                            wire_type = connector.wire_type,
+                            origin = connection.origin or defines.wire_origin.player
+                        }
+                    end
+                end
+            end
+        end
+    end
+
+    return snapshots
+end
+
+--- Snapshot runtime circuit-control settings from a transformator pump so
+--- they can be restored after replacement.
+--- @param pump LuaEntity
+--- @return table settings
+local function snapshot_pump_control_behavior(pump)
+    local defaults = {
+        circuit_enable_disable = false,
+        connect_to_logistic_network = true,
+        circuit_condition = nil,
+        logistic_condition = nil
+    }
+
+    if not (pump and pump.valid) then return defaults end
+
+    local cb = pump.get_control_behavior()
+    if not cb then return defaults end
+
+    --- @diagnostic disable-next-line: undefined-field
+    defaults.circuit_enable_disable = cb.circuit_enable_disable
+    --- @diagnostic disable-next-line: undefined-field
+    defaults.connect_to_logistic_network = cb.connect_to_logistic_network
+    --- @diagnostic disable-next-line: undefined-field
+    defaults.circuit_condition = cb.circuit_condition
+    --- @diagnostic disable-next-line: undefined-field
+    defaults.logistic_condition = cb.logistic_condition
+    return defaults
+end
+
+--- Apply previously captured circuit-control settings to a replacement
+--- transformator pump.
+--- @param target_pump LuaEntity
+--- @param settings table
+--- @return nil
+local function apply_pump_control_behavior(target_pump, settings)
+    if not (target_pump and target_pump.valid) then return end
+    if not settings then return end
+
+    local target_cb = target_pump.get_control_behavior()
+    if not target_cb then return end
+
+    --- @cast target_cb LuaPumpControlBehavior
+    target_cb.circuit_enable_disable = settings.circuit_enable_disable
+    target_cb.connect_to_logistic_network = settings.connect_to_logistic_network
+    target_cb.circuit_condition = settings.circuit_condition
+    target_cb.logistic_condition = settings.logistic_condition
+end
+
+--- Restore captured circuit-wire connections onto a replacement transformator
+--- pump.
+--- @param pump LuaEntity
+--- @param snapshots table[]
+--- @return nil
+local function restore_pump_circuit_connections(pump, snapshots)
+    if not (pump and pump.valid) then return end
+    if not snapshots then return end
+
+    for _, snapshot in pairs(snapshots) do
+        local target_entity = snapshot.target_entity
+        if target_entity and target_entity.valid then
+            local source_connector = pump.get_wire_connector(snapshot.source_id, true)
+            local target_connector = target_entity.get_wire_connector(snapshot.target_id, true)
+            if source_connector and source_connector.valid and target_connector and target_connector.valid then
+                local origin = snapshot.origin or defines.wire_origin.player
+                if not source_connector.is_connected_to(target_connector, origin) then
+                    source_connector.connect_to(target_connector, true, origin)
+                end
+            end
+        end
+    end
+end
+
+--- Update any player-selected transformator references after replacement so
+--- open GUIs continue targeting the new record.
+--- @param old_transformator EgTransformator
+--- @param replacement EgTransformator
+--- @return nil
+local function update_selected_transformator_references(old_transformator, replacement)
+    if not (storage and storage.eg_selected_transformator) then return end
+
+    for player_index, selected in pairs(storage.eg_selected_transformator) do
+        if selected == old_transformator then
+            storage.eg_selected_transformator[player_index] = replacement
+        end
+    end
+end
+
+
 --- Replace a transformator's tiered internals while preserving the root pump
 --- and voltage poles.
 ---
@@ -513,48 +670,53 @@ end
 --- tiered entities are recreated.
 --- @param old_transformator EgTransformator?
 --- @param new_rating string Requested rating string.
---- @return nil
+--- @return EgTransformator? replacement
 function replace_transformator(old_transformator, new_rating)
-    if not old_transformator then return end
-    if not new_rating then return end
+    if not old_transformator then return nil end
+    if not new_rating then return nil end
 
-    local new_unit = "eg-unit-1"
-    for unit, specs in pairs(constants.EG_TRANSFORMATORS) do
+    local new_tier = 1
+    for tier, specs in ipairs(constants.EG_TRANSFORMATORS) do
         if specs.rating == new_rating then
-            new_unit = unit
+            new_tier = tier
             break
         end
     end
+    if not new_tier then return nil end
 
-    local new_tier = tonumber(string.sub(new_unit, -1))
-    if not new_tier then return end
-
-    if not (old_transformator.pump and old_transformator.pump.valid) then return end
+    if not (old_transformator.pump and old_transformator.pump.valid) then return nil end
 
     local force = old_transformator.pump.force
     local surface = old_transformator.pump.surface
-    local pump_unit_number = old_transformator.pump.unit_number
-    if not pump_unit_number then return end
+    local old_pump_unit_number = old_transformator.pump.unit_number
+    if not old_pump_unit_number then return nil end
 
     --- @type EgTransformator?
-    local eg_transformator = storage.eg_transformators[pump_unit_number]
-    if not eg_transformator then return end
+    local eg_transformator = storage.eg_transformators[old_pump_unit_number]
+    if not eg_transformator then return nil end
 
     local eg_high_voltage_pole = eg_transformator.high_voltage
     local eg_low_voltage_pole = eg_transformator.low_voltage
-    local eg_pump = eg_transformator.pump
+    local old_pump = eg_transformator.pump
     local old_boiler = eg_transformator.boiler
     local old_infinity_pipe = eg_transformator.infinity_pipe
     local old_steam_engine = eg_transformator.steam_engine
 
-    if not (eg_high_voltage_pole and eg_high_voltage_pole.valid) then return end
-    if not (eg_low_voltage_pole and eg_low_voltage_pole.valid) then return end
-    if not (eg_pump and eg_pump.valid) then return end
-    if not (old_boiler and old_boiler.valid) then return end
-    if not (old_infinity_pipe and old_infinity_pipe.valid) then return end
-    if not (old_steam_engine and old_steam_engine.valid) then return end
+    if not (eg_high_voltage_pole and eg_high_voltage_pole.valid) then return nil end
+    if not (eg_low_voltage_pole and eg_low_voltage_pole.valid) then return nil end
+    if not (old_pump and old_pump.valid) then return nil end
+    if not (old_boiler and old_boiler.valid) then return nil end
+    if not (old_infinity_pipe and old_infinity_pipe.valid) then return nil end
+    if not (old_steam_engine and old_steam_engine.valid) then return nil end
 
     local prior_pump_was_disabled = eg_transformator.pump_was_disabled
+    local previous_alert_tick = eg_transformator.alert_tick or 0
+    local old_pump_position = old_pump.position
+    local old_pump_direction = old_pump.direction
+    local old_pump_health = old_pump.health
+    local old_pump_filter = old_pump.fluidbox.get_filter(1)
+    local pump_connections = snapshot_pump_circuit_connections(old_pump)
+    local pump_cb_settings = snapshot_pump_control_behavior(old_pump)
 
     local eg_boiler_position = old_boiler.position
     local eg_boiler_direction = old_boiler.direction
@@ -563,6 +725,27 @@ function replace_transformator(old_transformator, new_rating)
     local eg_infinity_pipe_position = old_infinity_pipe.position
     local eg_infinity_pipe_direction = old_infinity_pipe.direction
     old_infinity_pipe.destroy()
+
+    local eg_steam_engine_position = old_steam_engine.position
+    local current_engine_name = old_steam_engine.name
+    local current_variant = current_engine_name:match("^eg%-steam%-engine%-(%a+)%-%d+$") or "ne"
+    local eg_steam_engine_direction = get_steam_engine_direction(eg_boiler_direction)
+    old_steam_engine.destroy()
+
+    old_pump.destroy()
+
+    local new_pump = surface.create_entity {
+        name = get_transformator_pump_name(new_tier),
+        position = old_pump_position,
+        direction = old_pump_direction,
+        force = force,
+        create_build_effect_smoke = false
+    }
+    if not (new_pump and new_pump.valid) then return nil end
+
+    if old_pump_health then
+        new_pump.health = math.min(old_pump_health, new_pump.max_health)
+    end
 
     local eg_boiler = surface.create_entity {
         name = "eg-boiler-" .. new_tier,
@@ -580,13 +763,6 @@ function replace_transformator(old_transformator, new_rating)
         create_build_effect_smoke = false
     }
 
-    local eg_steam_engine_position = old_steam_engine.position
-    local current_engine_name = old_steam_engine.name
-    local current_variant = current_engine_name:match("^eg%-steam%-engine%-(%a+)%-%d+$") or "ne"
-    local eg_steam_engine_direction = get_steam_engine_direction(eg_boiler_direction)
-
-    old_steam_engine.destroy()
-
     local eg_steam_engine = surface.create_entity {
         name = "eg-steam-engine-" .. current_variant .. "-" .. new_tier,
         position = eg_steam_engine_position,
@@ -595,10 +771,15 @@ function replace_transformator(old_transformator, new_rating)
         create_build_effect_smoke = false
     }
 
-    eg_pump.clear_fluid_inside()
-    local filter = eg_pump.fluidbox.get_filter(1)
-    if filter and filter.name and filter.name ~= "eg-fluid-disable" then
-        eg_pump.fluidbox.set_filter(1, { name = "eg-water-" .. new_tier })
+    new_pump.clear_fluid_inside()
+    if old_pump_filter and old_pump_filter.name then
+        if old_pump_filter.name == constants.DISABLED_FLUID then
+            new_pump.fluidbox.set_filter(1, { name = constants.DISABLED_FLUID })
+        else
+            new_pump.fluidbox.set_filter(1, { name = "eg-water-" .. new_tier })
+        end
+    else
+        new_pump.fluidbox.set_filter(1, { name = "eg-water-" .. new_tier })
     end
 
     if new_infinity_pipe and new_infinity_pipe.valid then
@@ -610,22 +791,29 @@ function replace_transformator(old_transformator, new_rating)
         }
     end
 
+    restore_pump_circuit_connections(new_pump, pump_connections)
+    apply_pump_control_behavior(new_pump, pump_cb_settings)
+
     --- @type EgTransformator
     local replacement = {
         boiler = eg_boiler,
-        pump = eg_pump,
+        pump = new_pump,
         infinity_pipe = new_infinity_pipe,
         steam_engine = eg_steam_engine,
         high_voltage = eg_high_voltage_pole,
         low_voltage = eg_low_voltage_pole,
-        alert_tick = 0,
+        alert_tick = previous_alert_tick,
         tier = new_tier,
         pump_was_disabled = prior_pump_was_disabled
     }
 
-    storage.eg_transformators[pump_unit_number] = replacement
+    storage.eg_transformators[old_pump_unit_number] = nil
+    storage.eg_transformators[new_pump.unit_number] = replacement
+    update_selected_transformator_references(old_transformator, replacement)
     sync_transformator_keys()
     enforce_overload_after_rating_change(replacement)
+
+    return replacement
 end
 
 --- Destroy only the non-root transformator components.
@@ -748,7 +936,7 @@ end
 --- @param previous_direction defines.direction? Direction before the engine rotation.
 --- @return boolean success
 function rebuild_transformator_dependents_from_pump(pump, previous_direction)
-    if not (pump and pump.valid and pump.name == "eg-pump" and pump.unit_number) then
+    if not (pump and pump.valid and is_transformator_pump(pump.name) and pump.unit_number) then
         return false
     end
 
@@ -870,7 +1058,7 @@ end
 -- ---------------------------------------------------------------------------
 
 --- Find nearby electric poles within copper wire reach of the given pole.
---- @param entity LuaEntity Mined or changed electric pole.
+--- @param entity LuaEntity Pole whose nearby copper-wire neighborhood should be queried.
 --- @return LuaEntity[]? poles
 function get_nearby_poles(entity)
     if not (entity and entity.valid and entity.type == "electric-pole") then return end
@@ -928,6 +1116,31 @@ function reset_short_circuit_alert_state()
     end
 end
 
+--- Ensure each stored transformator uses the tier-matching root pump prototype.
+--- This upgrades older saves that only had the legacy `eg-pump` root entity.
+--- @return nil
+function normalize_transformator_pumps_to_tier()
+    if not (storage and storage.eg_transformators) then return end
+
+    local to_upgrade = {}
+    for _, transformator in pairs(storage.eg_transformators) do
+        if transformator and transformator.pump and transformator.pump.valid then
+            local tier = get_transformator_tier(transformator)
+            local expected_name = get_transformator_pump_name(tier)
+            if tier and transformator.pump.name ~= expected_name then
+                to_upgrade[#to_upgrade + 1] = transformator
+            end
+        end
+    end
+
+    for _, transformator in pairs(to_upgrade) do
+        local rating = get_current_transformator_rating(transformator)
+        if rating then
+            replace_transformator(transformator, rating)
+        end
+    end
+end
+
 --- Check whether an entity is a transformator high-voltage pole.
 --- @param entity LuaEntity?
 --- @return boolean is_high_voltage_pole
@@ -947,13 +1160,12 @@ end
 
 --- Resolve a transformator's configured rating in watts.
 --- @param transformator EgTransformator|LuaEntity|nil
---- @return number rating_watts
+--- @return number rating_watts Zero when the tier cannot be resolved.
 function get_transformator_rating_watts(transformator)
     local tier = get_transformator_tier(transformator)
     if not tier then return 0 end
 
-    local unit_name = "eg-unit-" .. tier
-    local specs = constants.EG_TRANSFORMATORS[unit_name]
+    local specs = constants.EG_TRANSFORMATORS[tier]
     if not specs then return 0 end
 
     return specs.rating_watts or 0
@@ -1230,7 +1442,8 @@ function short_circuit_check()
     end
 end
 
---- Replace the delayed substation displayer with the real substation entity.
+--- Replace the delayed UGP substation displayer proxy with the real substation
+--- entity.
 --- @param args {unit_number:uint}
 --- @return nil
 function replace_displayer_with_ugp_substation(args)
@@ -1411,61 +1624,6 @@ end
 -- GUI helpers
 -- ---------------------------------------------------------------------------
 
---- Create or recreate the standalone transformator rating selection frame.
---- @param player LuaPlayer
---- @return LuaGuiElement frame
-function get_or_create_transformator_frame(player)
-    if player.gui.screen.transformator_rating_selection_frame then
-        player.gui.screen.transformator_rating_selection_frame.destroy()
-    end
-
-    player.play_sound { path = "eg-transformator-gui-open" }
-
-    local frame = player.gui.screen.add {
-        type = "frame",
-        name = "transformator_rating_selection_frame",
-        direction = "vertical"
-    }
-    frame.auto_center = true
-
-    local top_bar = frame.add {
-        type = "flow",
-        name = "transformator_top_bar",
-        direction = "horizontal"
-    }
-    top_bar.style.horizontal_align = "right"
-    top_bar.drag_target = frame
-
-    local title_label = top_bar.add {
-        type = "label",
-        caption = { "entity-name.eg-unit" },
-        style = "frame_title"
-    }
-    title_label.style.horizontally_stretchable = false
-    title_label.ignored_by_interaction = true
-
-    local spacer = top_bar.add {
-        type = "empty-widget",
-        style = "draggable_space_header",
-        ignored_by_interaction = false
-    }
-    spacer.drag_target = frame
-    spacer.style.height = 24
-    spacer.style.horizontally_stretchable = true
-    spacer.ignored_by_interaction = true
-
-    top_bar.add {
-        type = "sprite-button",
-        name = "close_transformator_gui",
-        sprite = "utility/close",
-        style = "close_button",
-        mouse_button_filter = { "left" }
-    }
-
-    player.opened = frame
-    return frame
-end
-
 --- Resolve a transformator's configured rating string.
 --- @param transformator EgTransformator|LuaEntity|nil Transformator table or transformator entity.
 --- @return string? rating
@@ -1483,23 +1641,40 @@ function get_current_transformator_rating(transformator)
     local tier = get_transformator_tier(transformator)
     if not tier then return nil end
 
-    local unit_name = "eg-unit-" .. tier
-    local spec = constants.EG_TRANSFORMATORS[unit_name]
+    local spec = constants.EG_TRANSFORMATORS[tier]
     return spec and spec.rating or nil
 end
 
---- Close either transformator GUI variant for the given player.
+--- Return the current fluid filter name set on a transformator pump.
+--- @param pump LuaEntity?
+--- @return string? filter_name
+function get_transformator_pump_filter_name(pump)
+    if not (pump and pump.valid and pump.fluidbox) then return nil end
+
+    local filter = pump.fluidbox.get_filter(1)
+    if filter and filter.name then
+        return filter.name
+    end
+
+    return nil
+end
+
+--- Check whether a fluid filter is one of the transformator control fluids.
+--- @param fluid_name string?
+--- @return boolean is_control_fluid
+function is_transformator_control_fluid(fluid_name)
+    return type(fluid_name) == "string"
+        and (fluid_name == constants.DISABLED_FLUID or fluid_name:match("^eg%-water%-%d+$") ~= nil)
+end
+
+--- Close the relative transformator GUI for the given player.
 --- @param player LuaPlayer
 --- @return nil
 function close_transformator_gui(player)
     local closed = false
 
-    if player.gui.screen.transformator_rating_selection_frame then
-        player.gui.screen.transformator_rating_selection_frame.destroy()
-        player.opened = nil
-        storage.eg_selected_transformator[player.index] = nil
-        closed = true
-    end
+    storage.eg_opened_pump_filter_name[player.index] = nil
+    storage.eg_opened_pump_unit_number[player.index] = nil
 
     if player.gui.relative.eg_transformator_rating_relative_frame then
         player.gui.relative.eg_transformator_rating_relative_frame.destroy()
@@ -1514,10 +1689,15 @@ end
 
 --- Create or recreate the pump-relative transformator rating frame.
 --- @param player LuaPlayer
---- @return LuaGuiElement frame
+--- @return LuaGuiElement frame Newly created relative frame.
 function get_or_create_transformator_relative_frame(player)
     if player.gui.relative.eg_transformator_rating_relative_frame then
         player.gui.relative.eg_transformator_rating_relative_frame.destroy()
+    end
+
+    local anchor_name = get_transformator_pump_name(1)
+    if player.opened and player.opened.valid and is_transformator_pump(player.opened.name) then
+        anchor_name = player.opened.name
     end
 
     local frame = player.gui.relative.add {
@@ -1527,7 +1707,7 @@ function get_or_create_transformator_relative_frame(player)
         anchor = {
             gui = defines.relative_gui_type.pump_gui,
             position = defines.relative_gui_position.left,
-            name = "eg-pump"
+            name = anchor_name
         }
     }
 
@@ -1535,7 +1715,7 @@ function get_or_create_transformator_relative_frame(player)
     return frame
 end
 
---- Populate the relative transformator GUI with the rating dropdown.
+--- Populate the relative transformator GUI with the current rating selector.
 --- @param parent_frame LuaGuiElement
 --- @param current_rating string
 --- @return nil
@@ -1558,7 +1738,7 @@ function add_relative_rating_dropdown(parent_frame, current_rating)
     local dropdown_items = {}
     local selected_index = 1
     local idx = 1
-    for _, specs in pairs(constants.EG_TRANSFORMATORS) do
+    for _, specs in ipairs(constants.EG_TRANSFORMATORS) do
         if specs.rating then
             table.insert(dropdown_items, specs.rating)
             if specs.rating == current_rating then
@@ -1576,89 +1756,3 @@ function add_relative_rating_dropdown(parent_frame, current_rating)
     }
 end
 
---- Populate the full-screen transformator GUI with rating controls.
---- @param parent_frame LuaGuiElement
---- @param current_rating string
---- @return nil
-function add_rating_dropdown(parent_frame, current_rating)
-    if not (parent_frame and parent_frame.valid) then return end
-
-    local bordered_frame = parent_frame.add {
-        type = "frame",
-        name = "rating_selection_bordered_frame",
-        direction = "vertical"
-    }
-
-    local sprite_frame = bordered_frame.add {
-        type = "frame",
-        name = "sprite_background_frame",
-        style = "deep_frame_in_shallow_frame",
-        direction = "vertical"
-    }
-    sprite_frame.style.minimal_width = 233
-    sprite_frame.style.minimal_height = 155
-    sprite_frame.style.horizontal_align = "center"
-    sprite_frame.style.vertical_align = "center"
-
-    sprite_frame.add {
-        type = "sprite",
-        name = "current_rating_sprite",
-        sprite = current_rating
-    }
-
-    local label_flow = bordered_frame.add {
-        type = "flow",
-        name = "label_flow",
-        direction = "horizontal"
-    }
-    label_flow.style.horizontally_stretchable = true
-    label_flow.style.horizontal_align = "center"
-
-    label_flow.add {
-        type = "label",
-        caption = { "gui.eg-select-rating" },
-        style = "heading_2_label"
-    }
-
-    local dropdown_flow = bordered_frame.add {
-        type = "flow",
-        name = "dropdown_flow",
-        direction = "horizontal"
-    }
-    dropdown_flow.style.horizontally_stretchable = true
-    dropdown_flow.style.horizontal_align = "center"
-
-    local dropdown_items = {}
-    local selected_index = 1
-    local idx = 1
-    for _, specs in pairs(constants.EG_TRANSFORMATORS) do
-        if specs.rating then
-            table.insert(dropdown_items, specs.rating)
-            if specs.rating == current_rating then
-                selected_index = idx
-            end
-            idx = idx + 1
-        end
-    end
-
-    dropdown_flow.add {
-        type = "drop-down",
-        name = "rating_dropdown",
-        items = dropdown_items,
-        selected_index = selected_index
-    }
-
-    local save_button_flow = bordered_frame.add {
-        type = "flow",
-        name = "save_button_flow",
-        direction = "horizontal"
-    }
-    save_button_flow.style.horizontally_stretchable = true
-    save_button_flow.style.horizontal_align = "center"
-
-    save_button_flow.add {
-        type = "button",
-        name = "confirm_transformator_rating",
-        caption = "Save"
-    }
-end

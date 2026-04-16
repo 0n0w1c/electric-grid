@@ -106,7 +106,7 @@ local function get_boiler_picture(tier)
                     height = 310,
                     shift = { 2.1, -0.95 },
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_TRANSFORMATORS[tier].tint,
                     scale = 0.5,
                 },
                 {
@@ -138,7 +138,7 @@ local function get_boiler_picture(tier)
                     shift = { 2.0, -1.65 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_TRANSFORMATORS[tier].tint,
                 },
                 {
                     filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
@@ -169,7 +169,7 @@ local function get_boiler_picture(tier)
                     shift = { 3.1, 0.05 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_TRANSFORMATORS[tier].tint,
                 },
                 {
                     filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
@@ -200,7 +200,7 @@ local function get_boiler_picture(tier)
                     shift = { 1.05, -0.6 },
                     scale = 0.5,
                     blend_mode = constants.EG_TIER_BLEND_MODE,
-                    tint = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].tint,
+                    tint = constants.EG_TRANSFORMATORS[tier].tint,
                 },
                 {
                     filename = constants.EG_ENTITIES .. "eg-unit-shadows.png",
@@ -264,7 +264,7 @@ local function get_boiler_picture_pump(tier)
 end
 
 function create_transformator_boiler(tier)
-    local rating = constants.EG_TRANSFORMATORS["eg-unit-" .. tier].rating
+    local rating = constants.EG_TRANSFORMATORS[tier].rating
 
     local collision_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
     --local selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }

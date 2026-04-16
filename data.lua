@@ -103,7 +103,7 @@ data.extend({
     }
 })
 
-for _, transformator in pairs(constants.EG_TRANSFORMATORS) do
+for _, transformator in ipairs(constants.EG_TRANSFORMATORS) do
     data.extend({ {
         type = "sprite",
         name = transformator.rating,
