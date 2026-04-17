@@ -63,14 +63,12 @@ Transformator copper wire connections are not included in blueprints.
 *Notes*
 If Bob's Power and its startup setting for new power poles and substations is enabled, the Overhaul will be deactivated.
 
-*Recommended Mods:*
-[Energy Combinator](https://mods.factorio.com/mod/energy-combinator) - Reads the electric network and produces circuit signals  
-(For use with Electric Grid, it is recommended to change the *Update rate* startup setting from 5 to 60.) 
-
 *Helpful Mods:*  
 [Wire Tools](https://mods.factorio.com/mod/WireTools) - Isolates selected poles into a separate electric network  
 [Electric Grid Enforcer](https://mods.factorio.com/mod/noangledcables) - Enforce 90 degree wire angles, as poles are placed  
 [Rewire Tool v2](https://mods.factorio.com/mod/rewire-tool-v2) - Enforce 90 degree wire angles, after placement  
+[Energy Combinator](https://mods.factorio.com/mod/energy-combinator) - Reads the electric network and produces circuit signals  
+(For use with Electric Grid, it is recommended to change the *Update rate* startup setting from 5 to 60.) 
 
 *Supported Mods:*  
 [AAI Industry](https://mods.factorio.com/mod/aai-industry)  
