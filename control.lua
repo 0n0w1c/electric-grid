@@ -14,7 +14,6 @@
 --- @field eg_transformator_scan_index uint
 --- @field eg_transformator_scan_accumulator number
 --- @field eg_entity_to_transformator table<uint, uint>
---- @field eg_transformator_partner_by_pole table<uint, uint>
 --- @field eg_selected_transformator table<uint, EgTransformator>
 --- @field eg_copper_wire_on_cursor table<uint, boolean>
 --- @field eg_wire_click_source table<uint, LuaEntity>
@@ -23,6 +22,7 @@
 --- @field eg_opened_pump_filter_name table<uint, string|nil>
 --- @field eg_opened_pump_unit_number table<uint, uint|nil>
 --- @field eg_short_circuit_check_tick uint|nil
+--- @field eg_skip_pole_cleanup_on_mined table<string, boolean>
 --- @field eg_transformators_only boolean
 
 constants = require("constants")
@@ -88,6 +88,26 @@ function eg_schedule_short_circuit_check()
     job_queue.schedule(scheduled_tick, "short_circuit_check")
 end
 
+--- Schedule a delayed overload validation for a newly built electric pole
+--- after engine-created copper connections have settled.
+---
+--- The scheduled job stores a re-findable entity identity rather than the
+--- runtime `LuaEntity` itself, because job arguments are persisted in storage.
+--- @param entity LuaEntity?
+--- @param player_index uint?
+--- @return nil
+local function schedule_built_pole_overload_check(entity, player_index)
+    if not (entity and entity.valid and entity.type == "electric-pole" and entity.surface) then return end
+
+    local scheduled_tick = align_to_scheduler_tick(game.tick + 1)
+    job_queue.schedule(scheduled_tick, "validate_built_pole_overload", {
+        surface_index = entity.surface.index,
+        position = entity.position,
+        name = entity.name,
+        player_index = player_index
+    })
+end
+
 --- Initialize or migrate persistent global state used by the mod.
 ---
 --- This function is safe to call from `on_init` and on_configuration_changed`.
@@ -107,7 +127,7 @@ local function initialize_globals()
     storage.eg_transformator_keys = storage.eg_transformator_keys or {}
     storage.eg_transformator_scan_index = storage.eg_transformator_scan_index or 1
     storage.eg_entity_to_transformator = storage.eg_entity_to_transformator or {}
-    storage.eg_transformator_partner_by_pole = storage.eg_transformator_partner_by_pole or {}
+    storage.eg_skip_pole_cleanup_on_mined = storage.eg_skip_pole_cleanup_on_mined or {}
 
     storage.eg_transformator_scan_accumulator = storage.eg_transformator_scan_accumulator or 0
 
@@ -481,8 +501,12 @@ local function on_entity_built(event)
             local poles = get_nearby_poles(entity)
             if poles then
                 for _, pole in pairs(poles) do
-                    enforce_pole_connections(pole, player, false)
+                    enforce_pole_connections(pole, player, false, false)
                 end
+            end
+
+            if not is_transformator_overload_allowed() then
+                schedule_built_pole_overload_check(entity, event.player_index)
             end
         end
         eg_schedule_short_circuit_check()
@@ -507,11 +531,23 @@ local function on_entity_mined(event)
     end
 
     if entity.type == "electric-pole" then
+        local pole_key = get_electric_pole_storage_key(entity.surface.index, entity.name, entity.position)
+        local skip_cleanup = false
+        if pole_key
+            and storage.eg_skip_pole_cleanup_on_mined
+            and storage.eg_skip_pole_cleanup_on_mined[pole_key]
+        then
+            storage.eg_skip_pole_cleanup_on_mined[pole_key] = nil
+            skip_cleanup = true
+        end
+
         if not storage.eg_transformators_only then
-            local poles = get_nearby_poles(entity)
-            if poles then
-                for _, pole in pairs(poles) do
-                    enforce_pole_connections(pole, player, false)
+            if not skip_cleanup then
+                local poles = get_nearby_poles(entity)
+                if poles then
+                    for _, pole in pairs(poles) do
+                        enforce_pole_connections(pole, player, false)
+                    end
                 end
             end
         end
@@ -903,6 +939,7 @@ script.on_init(function()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("short_circuit_check", short_circuit_check)
+    job_queue.register_function("validate_built_pole_overload", validate_built_pole_overload)
     sync_transformator_keys()
     register_nth_tick_handlers()
     edp_blacklist()
@@ -912,6 +949,7 @@ end)
 script.on_load(function()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("short_circuit_check", short_circuit_check)
+    job_queue.register_function("validate_built_pole_overload", validate_built_pole_overload)
     register_nth_tick_handlers()
     edp_blacklist()
     register_event_handlers()
@@ -923,6 +961,7 @@ script.on_configuration_changed(function()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
     job_queue.register_function("short_circuit_check", short_circuit_check)
+    job_queue.register_function("validate_built_pole_overload", validate_built_pole_overload)
     normalize_transformator_pumps_to_tier()
     sync_transformator_keys()
     reset_short_circuit_alert_state()

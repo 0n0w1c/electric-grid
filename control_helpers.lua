@@ -51,7 +51,6 @@ end
 --- This refreshes:
 --- - the transformator pump-unit key list
 --- - the entity-to-transformator lookup index
---- - the transformator HV/LV partner-by-pole lookup table
 ---
 --- This should be called after any operation that creates, destroys, rotates,
 --- or replaces tracked transformator components.
@@ -63,16 +62,12 @@ function sync_transformator_keys()
 
     local keys = {}
     local entity_to_transformator = {}
-    local transformator_partner_by_pole = {}
 
     for pump_unit_number, transformator in pairs(storage.eg_transformators) do
         keys[#keys + 1] = pump_unit_number
 
         local entities = {
             transformator.pump,
-            transformator.boiler,
-            transformator.infinity_pipe,
-            transformator.steam_engine,
             transformator.high_voltage,
             transformator.low_voltage
         }
@@ -82,20 +77,10 @@ function sync_transformator_keys()
                 entity_to_transformator[entity.unit_number] = pump_unit_number
             end
         end
-
-        local high_voltage = transformator.high_voltage
-        local low_voltage = transformator.low_voltage
-        if high_voltage and high_voltage.valid and high_voltage.unit_number
-            and low_voltage and low_voltage.valid and low_voltage.unit_number
-        then
-            transformator_partner_by_pole[high_voltage.unit_number] = low_voltage.unit_number
-            transformator_partner_by_pole[low_voltage.unit_number] = high_voltage.unit_number
-        end
     end
 
     storage.eg_transformator_keys = keys
     storage.eg_entity_to_transformator = entity_to_transformator
-    storage.eg_transformator_partner_by_pole = transformator_partner_by_pole
 
     storage.eg_transformator_scan_index = storage.eg_transformator_scan_index or 1
     storage.eg_transformator_scan_accumulator = storage.eg_transformator_scan_accumulator or 0
@@ -1158,6 +1143,22 @@ function is_transformator_overload_allowed()
     return settings.startup["eg-enable-transformator-overload"].value == true
 end
 
+--- Build a stable storage key for an electric pole using its surface, name,
+--- and exact position.
+--- @param surface_index uint?
+--- @param name string?
+--- @param position MapPosition?
+--- @return string? key
+function get_electric_pole_storage_key(surface_index, name, position)
+    if not surface_index or not name or not position then return nil end
+    return table.concat({
+        tostring(surface_index),
+        tostring(name),
+        tostring(position.x),
+        tostring(position.y)
+    }, "|")
+end
+
 --- Resolve a transformator's configured rating in watts.
 --- @param transformator EgTransformator|LuaEntity|nil
 --- @return number rating_watts Zero when the tier cannot be resolved.
@@ -1213,8 +1214,40 @@ function get_network_transformator_capacity(network_id)
     return totals
 end
 
+--- Combine transformator capacity totals from two electric networks as if a new
+--- copper-wire connection merged them into one network.
+--- @param network_id_a uint?
+--- @param network_id_b uint?
+--- @return {load_watts:number, supply_watts:number, load_count:integer, supply_count:integer} totals
+local function get_merged_network_transformator_capacity(network_id_a, network_id_b)
+    local totals = {
+        load_watts = 0,
+        supply_watts = 0,
+        load_count = 0,
+        supply_count = 0
+    }
+
+    if network_id_a then
+        local network_a = get_network_transformator_capacity(network_id_a)
+        totals.load_watts = totals.load_watts + network_a.load_watts
+        totals.supply_watts = totals.supply_watts + network_a.supply_watts
+        totals.load_count = totals.load_count + network_a.load_count
+        totals.supply_count = totals.supply_count + network_a.supply_count
+    end
+
+    if network_id_b and network_id_b ~= network_id_a then
+        local network_b = get_network_transformator_capacity(network_id_b)
+        totals.load_watts = totals.load_watts + network_b.load_watts
+        totals.supply_watts = totals.supply_watts + network_b.supply_watts
+        totals.load_count = totals.load_count + network_b.load_count
+        totals.supply_count = totals.supply_count + network_b.supply_count
+    end
+
+    return totals
+end
+
 --- Check whether a transformator high-voltage pole is overloaded on its
---- current network.
+--- current electric network.
 ---
 --- Overload protection is bypassed entirely when:
 --- - the feature is disabled
@@ -1239,6 +1272,128 @@ function is_high_voltage_connection_overloaded(high_voltage_pole)
     end
 
     return totals.load_watts > totals.supply_watts
+end
+
+--- Check whether connecting two poles would overload the merged electric
+--- network that results from joining their current networks.
+--- @param pole_a LuaEntity?
+--- @param pole_b LuaEntity?
+--- @return boolean is_overloaded
+local function is_connection_overloaded_after_merge(pole_a, pole_b)
+    if not pole_a or not pole_b then return false end
+    if is_transformator_overload_allowed() then return false end
+
+    local network_id_a = pole_a.electric_network_id
+    local network_id_b = pole_b.electric_network_id
+    if not network_id_a and not network_id_b then return false end
+
+    local totals = get_merged_network_transformator_capacity(network_id_a, network_id_b)
+    if totals.load_count == 0 or totals.supply_count == 0 then
+        return false
+    end
+
+    return totals.load_watts > totals.supply_watts
+end
+
+--- Resolve the placed item name for a pole entity so a delayed rollback can
+--- refund the same item the player used to build it.
+--- @param entity LuaEntity?
+--- @return string? item_name
+local function get_pole_place_item_name(entity)
+    if not (entity and entity.valid and entity.prototype) then return nil end
+
+    local items_to_place = entity.prototype.items_to_place_this
+    if not items_to_place or not items_to_place[1] then return nil end
+
+    return items_to_place[1].name
+end
+
+--- Undo a just-built electric pole by refunding its place item to the
+--- player cursor or inventory, then removing the pole entity.
+---
+--- After removal, nearby poles are revalidated and the short-circuit scan is
+--- rescheduled so the rollback follows the normal electric-pole removal flow.
+--- @param player LuaPlayer?
+--- @param pole LuaEntity?
+--- @return boolean removed
+local function refund_and_remove_built_pole(player, pole)
+    if not (player and player.valid and pole and pole.valid) then return false end
+
+    local item_name = get_pole_place_item_name(pole)
+    if not item_name then return false end
+    local poles = get_nearby_poles(pole)
+
+    local cursor_stack = player.cursor_stack
+    if cursor_stack and cursor_stack.valid_for_read and cursor_stack.name == item_name then
+        cursor_stack.count = cursor_stack.count + 1
+    elseif cursor_stack and not cursor_stack.valid_for_read then
+        cursor_stack.set_stack { name = item_name, count = 1 }
+    else
+        local inserted = player.insert { name = item_name, count = 1 }
+        if inserted < 1 then
+            pole.surface.spill_item_stack {
+                position = pole.position,
+                stack = { name = item_name, count = 1 },
+                enable_looted = true,
+                force = player.force,
+                allow_belts = false
+            }
+        end
+    end
+
+    pole.destroy()
+    if poles then
+        for _, nearby_pole in pairs(poles) do
+            enforce_pole_connections(nearby_pole, player, false)
+        end
+    end
+    eg_schedule_short_circuit_check()
+    return true
+end
+
+--- Validate the settled network of a just-built electric pole after
+--- engine auto-connections have been created.
+---
+--- If the placed pole leaves its electric network overloaded:
+--- - player builds are undone and refunded
+--- - non-player builds are marked for deconstruction
+---
+--- The target pole is re-resolved from `{ surface_index, position, name }`
+--- because delayed job arguments cannot persist a live `LuaEntity` reference.
+---
+--- @param args {surface_index:uint, position:MapPosition, name:string, player_index:uint?}
+--- @return nil
+function validate_built_pole_overload(args)
+    if not args or not args.surface_index or not args.position or not args.name then return end
+    if storage.eg_transformators_only then return end
+    if is_transformator_overload_allowed() then return end
+
+    local surface = game.get_surface(args.surface_index)
+    if not surface then return end
+
+    local pole = surface.find_entity(args.name, args.position)
+    if not (pole and pole.valid and pole.type == "electric-pole") then return end
+
+    local network_id = pole.electric_network_id
+    if not network_id then return end
+
+    local totals = get_network_transformator_capacity(network_id)
+    if totals.load_count == 0 or totals.supply_count == 0 then return end
+    if totals.load_watts <= totals.supply_watts then return end
+
+    local player = args.player_index and game.get_player(args.player_index) or nil
+    if player and player.valid then
+        notify_blocked_copper_connection(player, pole, "eg.eg-transformator-overload", true)
+        refund_and_remove_built_pole(player, pole)
+        return
+    end
+
+    storage.eg_skip_pole_cleanup_on_mined = storage.eg_skip_pole_cleanup_on_mined or {}
+    local pole_key = get_electric_pole_storage_key(pole.surface.index, pole.name, pole.position)
+    if pole_key then
+        storage.eg_skip_pole_cleanup_on_mined[pole_key] = true
+    end
+    pole.order_deconstruction(pole.force)
 end
 
 --- Show player feedback for a rejected copper wire connection.
@@ -1307,6 +1462,8 @@ end
 --- This is used for manual wire placement and ensures:
 --- - the exact attempted connection is evaluated first
 --- - if invalid, that connection is removed instead of some unrelated neighbor
+--- - overload is evaluated against the prospective merged network produced by
+---   joining the two poles' current electric networks
 ---
 --- This prevents unrelated transformator connections from being disconnected
 --- when overload cleanup is triggered by a newly placed wire.
@@ -1329,16 +1486,20 @@ function enforce_specific_copper_connection(source_pole, target_pole, player, sh
         return false
     end
 
-    local high_voltage_pole = nil
-    if is_transformator_high_voltage_pole(source_pole) then
-        high_voltage_pole = source_pole
-    elseif is_transformator_high_voltage_pole(target_pole) then
-        high_voltage_pole = target_pole
+    if is_transformator_overload_allowed() then
+        return true
     end
 
-    if high_voltage_pole and is_high_voltage_connection_overloaded(high_voltage_pole) then
+    local overload_anchor = source_pole
+    if is_transformator_high_voltage_pole(target_pole) then
+        overload_anchor = target_pole
+    elseif is_transformator_high_voltage_pole(source_pole) then
+        overload_anchor = source_pole
+    end
+
+    if is_connection_overloaded_after_merge(source_pole, target_pole) then
         disconnect_specific_copper_connection(source_pole, target_pole)
-        notify_blocked_copper_connection(player, high_voltage_pole, "eg.eg-transformator-overload", show_message)
+        notify_blocked_copper_connection(player, overload_anchor, "eg.eg-transformator-overload", show_message)
         return false
     end
 
@@ -1348,10 +1509,10 @@ end
 --- Enforce transformator overload rules on one copper wire connection.
 ---
 --- Behavior:
---- - identifies whether either side is a transformator high-voltage pole
---- - computes total load vs supply for that electric network
+--- - computes total load vs supply for the electric network that would result
+---   from joining the two poles' current networks
 --- - allows the connection if:
----   - the network has zero LV-side supply transformators, or
+---   - the merged network has zero LV-side supply transformators, or
 ---   - load does not exceed supply
 --- - otherwise disconnects this connection
 ---
@@ -1369,24 +1530,20 @@ function enforce_transformator_overload_connection(connector, target_connector, 
                                                    show_message)
     show_message = show_message == true
 
-    if not is_transformator_overload_allowed() then return true end
+    if is_transformator_overload_allowed() then return true end
 
-    local high_voltage_pole = nil
-    if is_transformator_high_voltage_pole(pole) then
-        high_voltage_pole = pole
-    elseif is_transformator_high_voltage_pole(target_pole) then
-        high_voltage_pole = target_pole
+    local overload_anchor = pole
+    if is_transformator_high_voltage_pole(target_pole) then
+        overload_anchor = target_pole
+    elseif is_transformator_high_voltage_pole(pole) then
+        overload_anchor = pole
     end
 
-    if not high_voltage_pole then
-        return true
-    end
-
-    if is_high_voltage_connection_overloaded(high_voltage_pole) then
+    if is_connection_overloaded_after_merge(pole, target_pole) then
         connector.disconnect_from(target_connector)
         notify_blocked_copper_connection(
             player,
-            high_voltage_pole,
+            overload_anchor,
             "eg.eg-transformator-overload",
             show_message
         )
@@ -1488,8 +1645,7 @@ end
 --- Check whether a copper cable connection is allowed between two poles.
 ---
 --- Direct copper connections between a transformator's own HV and LV poles are
---- always forbidden. This check uses the cached partner-by-pole lookup rebuilt
---- by `sync_transformator_keys()`.
+--- always forbidden. Ownership is resolved through `get_transformator_by_entity()`.
 --- @param pole_a LuaEntity
 --- @param pole_b LuaEntity
 --- @return boolean is_allowed
@@ -1525,11 +1681,10 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
     end
 
     if is_transformator_a and is_transformator_b then
-        local unit_a = pole_a.unit_number
-        local unit_b = pole_b.unit_number
-        local partner_by_pole = storage.eg_transformator_partner_by_pole
+        local transformator_a = get_transformator_by_entity(pole_a)
+        local transformator_b = get_transformator_by_entity(pole_b)
 
-        if unit_a and unit_b and partner_by_pole and partner_by_pole[unit_a] == unit_b then
+        if transformator_a and transformator_b and transformator_a == transformator_b then
             return false
         end
     end
@@ -1570,14 +1725,22 @@ end
 --- - automatic enforcement (`show_message` omitted or false):
 ---   - silent cleanup during build, robot placement, rotation, or topology updates
 ---
+--- Overload handling:
+--- - `check_overload == nil` or `true`:
+---   - runs transformator overload validation
+--- - `check_overload == false`:
+---   - only enforces general copper-connection legality
+---
 --- Returns `false` if any connection was removed.
 ---
 --- @param pole LuaEntity
 --- @param player LuaPlayer|nil
 --- @param show_message boolean|nil
+--- @param check_overload boolean|nil
 --- @return boolean allowed
-function enforce_pole_connections(pole, player, show_message)
+function enforce_pole_connections(pole, player, show_message, check_overload)
     show_message = show_message == true
+    check_overload = check_overload ~= false
 
     if not pole or not pole.valid or pole.type ~= "electric-pole" then return true end
     if storage.eg_transformators_only then return true end
@@ -1587,6 +1750,7 @@ function enforce_pole_connections(pole, player, show_message)
 
     local allowed = true
     local notified = false
+    local overload_checks_enabled = check_overload and not is_transformator_overload_allowed()
     for _, connector in pairs(connectors) do
         if connector.wire_type == defines.wire_type.copper then
             for _, connection in pairs(connector.connections) do
@@ -1601,7 +1765,7 @@ function enforce_pole_connections(pole, player, show_message)
                             notified = true
                         end
                         allowed = false
-                    elseif not enforce_transformator_overload_connection(
+                    elseif overload_checks_enabled and not enforce_transformator_overload_connection(
                             connector,
                             target_connector,
                             pole,
