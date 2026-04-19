@@ -426,6 +426,16 @@ local function on_player_setup_blueprint(event)
     if not mapping then return end
 
     --- @cast mapping table<uint, LuaEntity>
+    local source_to_blueprint_index = {}
+
+    for blueprint_entity_index, source_entity in pairs(mapping) do
+        --- @cast blueprint_entity_index uint
+        --- @cast source_entity LuaEntity
+
+        if source_entity.valid and source_entity.unit_number then
+            source_to_blueprint_index[source_entity.unit_number] = blueprint_entity_index
+        end
+    end
 
     for blueprint_entity_index, source_entity in pairs(mapping) do
         --- @cast blueprint_entity_index uint
@@ -434,9 +444,20 @@ local function on_player_setup_blueprint(event)
         if source_entity.valid and is_transformator_pump(source_entity.name) then
             local transformator = get_transformator_by_entity(source_entity)
             local tier = get_transformator_tier(transformator)
-            if tier then
+            local wire_snapshots = snapshot_transformator_blueprint_connections(
+                transformator,
+                source_to_blueprint_index
+            )
+
+            if tier or #wire_snapshots > 0 then
                 local tags = blueprint.get_blueprint_entity_tags(blueprint_entity_index) or {}
+
                 tags[constants.EG_BLUEPRINT_TIER_TAG] = tier
+                if #wire_snapshots > 0 then
+                    tags[constants.EG_BLUEPRINT_WIRE_TAG] = wire_snapshots
+                else
+                    tags[constants.EG_BLUEPRINT_WIRE_TAG] = nil
+                end
                 blueprint.set_blueprint_entity_tags(blueprint_entity_index, tags)
             end
         end
@@ -475,7 +496,15 @@ local function on_entity_built(event)
 
     if is_transformator(entity.name) then
         local built_root = eg_transformator_built(entity, event.player_index)
-        apply_transformator_blueprint_tier(built_root or entity, event.tags)
+        local final_root = apply_transformator_blueprint_tier(built_root or entity, event.tags)
+        local wire_snapshots = nil
+        if event.tags then
+            local tagged_wires = event.tags[constants.EG_BLUEPRINT_WIRE_TAG]
+            if type(tagged_wires) == "table" then
+                wire_snapshots = tagged_wires
+            end
+        end
+        begin_transformator_blueprint_wire_restore(final_root, wire_snapshots)
         return
     end
 
@@ -905,7 +934,6 @@ local function register_event_handlers()
     script.on_event(defines.events.on_player_cursor_stack_changed, on_cursor_stack_changed)
     script.on_event("eg-wire-build", on_wire_build)
 
-
     script.on_event(defines.events.on_gui_opened, on_gui_opened)
     script.on_event(defines.events.on_gui_checked_state_changed, on_rating_radio_checked_state_changed)
     script.on_event(defines.events.on_gui_click, on_gui_click)
@@ -916,6 +944,7 @@ script.on_init(function()
     initialize_globals()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("restore_transformator_blueprint_wires_job", restore_transformator_blueprint_wires_job)
     job_queue.register_function("short_circuit_check", short_circuit_check)
     job_queue.register_function("validate_built_pole_overload", validate_built_pole_overload)
     sync_transformator_keys()
@@ -926,6 +955,7 @@ end)
 
 script.on_load(function()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("restore_transformator_blueprint_wires_job", restore_transformator_blueprint_wires_job)
     job_queue.register_function("short_circuit_check", short_circuit_check)
     job_queue.register_function("validate_built_pole_overload", validate_built_pole_overload)
     register_nth_tick_handlers()
@@ -938,6 +968,7 @@ script.on_configuration_changed(function()
     remove_invalid_transformators()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("restore_transformator_blueprint_wires_job", restore_transformator_blueprint_wires_job)
     job_queue.register_function("short_circuit_check", short_circuit_check)
     job_queue.register_function("validate_built_pole_overload", validate_built_pole_overload)
     normalize_transformator_pumps_to_tier()

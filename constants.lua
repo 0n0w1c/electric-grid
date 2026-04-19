@@ -35,6 +35,8 @@ constants.EG_SOUND = constants.EG_MOD .. "/sound/"
 constants.EG_TIER_BLEND_MODE = "additive"
 constants.EG_OVERLAY_TINT = { r = 0.5, g = 0.5, b = 0.5, a = 1 }
 constants.EG_BLUEPRINT_TIER_TAG = "eg_transformator_tier"
+constants.EG_BLUEPRINT_WIRE_TAG = "eg_transformator_wires"
+constants.EG_BLUEPRINT_WIRE_RETRY_COUNT = 60
 constants.EG_SUBGROUP = "eg-electric-distribution"
 
 constants.EG_MAX_HEALTH = 500

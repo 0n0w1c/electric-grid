@@ -10,6 +10,8 @@
 --   * electric pole connection enforcement and short-circuit detection
 --   * transformator GUI construction helpers
 
+local job_queue = require("job_queue")
+
 --- @class EgTransformator
 --- @field boiler LuaEntity?
 --- @field pump LuaEntity?
@@ -225,6 +227,77 @@ function rotate_position(position, direction)
     return { x = x, y = y }
 end
 
+--- Return the opposite cardinal direction.
+--- @param direction defines.direction
+--- @return defines.direction opposite_direction
+local function get_opposite_direction(direction)
+    local opposites = {
+        [defines.direction.north] = defines.direction.south,
+        [defines.direction.east] = defines.direction.west,
+        [defines.direction.south] = defines.direction.north,
+        [defines.direction.west] = defines.direction.east
+    }
+    return opposites[direction] or defines.direction.north
+end
+
+--- Resolve a transformator's geometric center from its root pump.
+--- @param pump LuaEntity?
+--- @return MapPosition? position
+local function get_transformator_position_from_pump(pump)
+    if not (pump and pump.valid) then return nil end
+    local pump_offset = rotate_position(constants.EG_ENTITY_OFFSETS.pump, pump.direction)
+    return {
+        x = pump.position.x - pump_offset.x,
+        y = pump.position.y - pump_offset.y
+    }
+end
+
+--- Convert a world-space position into a transformator-local offset.
+--- @param transformator_position MapPosition
+--- @param world_position MapPosition
+--- @param direction defines.direction
+--- @return MapPosition local_position
+local function world_to_transformator_local(transformator_position, world_position, direction)
+    local delta = {
+        x = world_position.x - transformator_position.x,
+        y = world_position.y - transformator_position.y
+    }
+    return rotate_position(delta, get_opposite_direction(direction))
+end
+
+--- Convert a transformator-local offset into world-space.
+--- @param transformator_position MapPosition
+--- @param local_position MapPosition
+--- @param direction defines.direction
+--- @return MapPosition world_position
+local function transformator_local_to_world(transformator_position, local_position, direction)
+    local rotated = rotate_position(local_position, direction)
+    return {
+        x = transformator_position.x + rotated.x,
+        y = transformator_position.y + rotated.y
+    }
+end
+
+--- Convert a wire type enum to a stable blueprint tag string.
+--- @param wire_type defines.wire_type
+--- @return string? wire_name
+local function wire_type_to_name(wire_type)
+    if wire_type == defines.wire_type.copper then return "copper" end
+    if wire_type == defines.wire_type.red then return "red" end
+    if wire_type == defines.wire_type.green then return "green" end
+    return nil
+end
+
+--- Convert a blueprint tag wire string back into the runtime enum.
+--- @param wire_name string?
+--- @return defines.wire_type? wire_type
+local function wire_name_to_type(wire_name)
+    if wire_name == "copper" then return defines.wire_type.copper end
+    if wire_name == "red" then return defines.wire_type.red end
+    if wire_name == "green" then return defines.wire_type.green end
+    return nil
+end
+
 --- Check whether an entity or item name belongs to the transformator family.
 --- @param name string?
 --- @return boolean is_transformator_name
@@ -314,6 +387,218 @@ function get_transformator_rating_for_tier(tier)
     return spec and spec.rating or nil
 end
 
+--- Capture all external wire connections from a transformator pole for
+--- blueprint restoration.
+--- @param transformator EgTransformator
+--- @param pole LuaEntity
+--- @param side string
+--- @param transformator_position MapPosition
+--- @param source_to_blueprint_index table<uint, uint>
+--- @return table[] snapshots
+local function snapshot_transformator_pole_connections(transformator, pole, side, transformator_position,
+                                                       source_to_blueprint_index)
+    local snapshots = {}
+    local seen = {}
+    local connectors = pole and pole.get_wire_connectors(false) or nil
+    if not connectors then return snapshots end
+
+    for _, connector in pairs(connectors) do
+        local wire_name = wire_type_to_name(connector.wire_type)
+        if wire_name then
+            local connections = connector.wire_type == defines.wire_type.copper
+                and connector.connections
+                or (connector.real_connections or {})
+
+            for _, connection in pairs(connections) do
+                local target = connection.target
+                local target_entity = target and target.valid and target.owner or nil
+                local target_transformator = target_entity and get_transformator_by_entity(target_entity) or nil
+                local target_blueprint_entity = target_entity
+                if target_transformator and target_transformator.pump and target_transformator.pump.valid then
+                    target_blueprint_entity = target_transformator.pump
+                end
+
+                local target_unit_number = target_blueprint_entity and target_blueprint_entity.unit_number or nil
+                local target_blueprint_index = target_unit_number and source_to_blueprint_index[target_unit_number] or nil
+                local target_side = nil
+                if target_transformator == transformator then
+                    if target_entity == transformator.high_voltage then
+                        target_side = "high"
+                    elseif target_entity == transformator.low_voltage then
+                        target_side = "low"
+                    elseif target_entity == transformator.pump then
+                        target_side = "pump"
+                    end
+                end
+
+                if target_entity
+                    and target_entity.valid
+                    and (target_blueprint_index or target_side)
+                then
+                    local key = table.concat({
+                        side,
+                        tostring(connector.wire_connector_id),
+                        wire_name,
+                        tostring(target_blueprint_index or target_side),
+                        tostring(target.wire_connector_id)
+                    }, ":")
+
+                    if not seen[key] then
+                        seen[key] = true
+                        local local_position = world_to_transformator_local(
+                            transformator_position,
+                            target_entity.position,
+                            transformator.pump.direction
+                        )
+
+                        snapshots[#snapshots + 1] = {
+                            side = side,
+                            source_id = connector.wire_connector_id,
+                            target_id = target.wire_connector_id,
+                            wire_type = wire_name,
+                            target_side = target_side,
+                            target_name = target_entity.name,
+                            target_blueprint_index = target_blueprint_index,
+                            local_position = {
+                                x = local_position.x,
+                                y = local_position.y
+                            },
+                            origin = connection.origin or defines.wire_origin.player
+                        }
+                    end
+                end
+            end
+        end
+    end
+
+    return snapshots
+end
+
+--- Capture blueprint-restorable circuit wire connections from the root pump.
+--- @param transformator EgTransformator
+--- @param source_to_blueprint_index table<uint, uint>
+--- @return table[] snapshots
+local function snapshot_transformator_pump_blueprint_connections(transformator, source_to_blueprint_index)
+    local snapshots = {}
+    local seen = {}
+    local pump = transformator and transformator.pump or nil
+    local transformator_position = pump and get_transformator_position_from_pump(pump) or nil
+    local connectors = pump and pump.get_wire_connectors(false) or nil
+    if not (pump and pump.valid and transformator_position and connectors) then return snapshots end
+
+    for _, connector in pairs(connectors) do
+        local wire_name = wire_type_to_name(connector.wire_type)
+        local connections = connector.real_connections or {}
+
+        if wire_name and connector.wire_type ~= defines.wire_type.copper then
+            for _, connection in pairs(connections) do
+                local target = connection.target
+                local target_entity = target and target.valid and target.owner or nil
+                local target_transformator = target_entity and get_transformator_by_entity(target_entity) or nil
+                local target_blueprint_entity = target_entity
+                if target_transformator and target_transformator.pump and target_transformator.pump.valid then
+                    target_blueprint_entity = target_transformator.pump
+                end
+
+                local target_unit_number = target_blueprint_entity and target_blueprint_entity.unit_number or nil
+                local target_blueprint_index = target_unit_number and source_to_blueprint_index[target_unit_number] or nil
+                local target_side = nil
+                if target_transformator == transformator then
+                    if target_entity == transformator.high_voltage then
+                        target_side = "high"
+                    elseif target_entity == transformator.low_voltage then
+                        target_side = "low"
+                    elseif target_entity == transformator.pump then
+                        target_side = "pump"
+                    end
+                end
+
+                if target_entity
+                    and target_entity.valid
+                    and (target_blueprint_index or target_side)
+                then
+                    local key = table.concat({
+                        "pump",
+                        tostring(connector.wire_connector_id),
+                        wire_name,
+                        tostring(target_blueprint_index or target_side),
+                        tostring(target.wire_connector_id)
+                    }, ":")
+
+                    if not seen[key] then
+                        seen[key] = true
+                        local local_position = world_to_transformator_local(
+                            transformator_position,
+                            target_entity.position,
+                            pump.direction
+                        )
+
+                        snapshots[#snapshots + 1] = {
+                            side = "pump",
+                            source_id = connector.wire_connector_id,
+                            target_id = target.wire_connector_id,
+                            wire_type = wire_name,
+                            target_side = target_side,
+                            target_name = target_entity.name,
+                            target_blueprint_index = target_blueprint_index,
+                            local_position = {
+                                x = local_position.x,
+                                y = local_position.y
+                            },
+                            origin = connection.origin or defines.wire_origin.player
+                        }
+                    end
+                end
+            end
+        end
+    end
+
+    return snapshots
+end
+
+--- Capture blueprint-restorable external wire connections from a transformator.
+--- @param transformator EgTransformator?
+--- @param source_to_blueprint_index table<uint, uint>
+--- @return table[] snapshots
+function snapshot_transformator_blueprint_connections(transformator, source_to_blueprint_index)
+    if not transformator then return {} end
+    if not (transformator.pump and transformator.pump.valid) then return {} end
+    if not (transformator.high_voltage and transformator.high_voltage.valid) then return {} end
+    if not (transformator.low_voltage and transformator.low_voltage.valid) then return {} end
+
+    local transformator_position = get_transformator_position_from_pump(transformator.pump)
+    if not transformator_position then return {} end
+
+    local snapshots = {}
+    local pump = snapshot_transformator_pump_blueprint_connections(transformator, source_to_blueprint_index)
+    local high = snapshot_transformator_pole_connections(
+        transformator,
+        transformator.high_voltage,
+        "high",
+        transformator_position,
+        source_to_blueprint_index
+    )
+    local low = snapshot_transformator_pole_connections(
+        transformator,
+        transformator.low_voltage,
+        "low",
+        transformator_position,
+        source_to_blueprint_index
+    )
+
+    for _, snapshot in pairs(pump) do
+        snapshots[#snapshots + 1] = snapshot
+    end
+    for _, snapshot in pairs(high) do
+        snapshots[#snapshots + 1] = snapshot
+    end
+    for _, snapshot in pairs(low) do
+        snapshots[#snapshots + 1] = snapshot
+    end
+
+    return snapshots
+end
+
 --- Apply a blueprint-stored tier to a transformator after it is built.
 ---
 --- This must be called after `eg_transformator_built(...)`, using the returned
@@ -328,24 +613,25 @@ end
 ---
 --- @param entity LuaEntity|nil Root pump entity (`eg-pump` / `eg-pump-<tier>`)
 --- @param tags table|nil Blueprint tags from the build event
---- @return nil
+--- @return LuaEntity? final_root
 function apply_transformator_blueprint_tier(entity, tags)
-    if not (entity and entity.valid and is_transformator_pump(entity.name)) then return end
-    if not tags then return end
+    if not (entity and entity.valid and is_transformator_pump(entity.name)) then return nil end
+    if not tags then return entity end
 
     local tier = tonumber(tags[constants.EG_BLUEPRINT_TIER_TAG])
-    if not tier then return end
+    if not tier then return entity end
 
     local transformator = get_transformator_by_pump_unit_number(entity.unit_number)
-    if not transformator then return end
+    if not transformator then return entity end
 
     local current_tier = get_transformator_tier(transformator)
-    if current_tier == tier then return end
+    if current_tier == tier then return entity end
 
     local rating = get_transformator_rating_for_tier(tier)
-    if not rating then return end
+    if not rating then return entity end
 
-    replace_transformator(transformator, rating)
+    local replacement = replace_transformator(transformator, rating)
+    return replacement and replacement.pump or entity
 end
 
 --- Build or rebuild a transformator from a placed entity.
@@ -631,6 +917,172 @@ local function restore_pump_circuit_connections(pump, snapshots)
             end
         end
     end
+end
+
+--- Find a built target entity for a stored blueprint wire snapshot.
+--- @param surface LuaSurface
+--- @param position MapPosition
+--- @param expected_name string
+--- @return LuaEntity? entity
+local function find_blueprint_wire_restore_target(surface, position, expected_name)
+    if not (surface and position and expected_name) then return nil end
+
+    local direct = surface.find_entity(expected_name, position)
+    if direct and direct.valid then return direct end
+
+    local epsilon = 0.1
+    local entities = surface.find_entities_filtered {
+        area = {
+            { position.x - epsilon, position.y - epsilon },
+            { position.x + epsilon, position.y + epsilon }
+        }
+    }
+
+    for _, entity in pairs(entities) do
+        if entity.valid and entity.name == expected_name then
+            return entity
+        end
+    end
+
+    return nil
+end
+
+--- Attempt to restore one stored blueprint wire connection.
+--- @param transformator EgTransformator
+--- @param snapshot table
+--- @return boolean restored
+local function restore_transformator_blueprint_wire(transformator, snapshot)
+    if not transformator then return false end
+    if not snapshot then return false end
+    if not (transformator.pump and transformator.pump.valid) then return false end
+
+    local source_entity = nil
+    if snapshot.side == "pump" then
+        source_entity = transformator.pump
+    elseif snapshot.side == "high" then
+        source_entity = transformator.high_voltage
+    else
+        source_entity = transformator.low_voltage
+    end
+    if not (source_entity and source_entity.valid) then return false end
+
+    local target_entity = nil
+    if snapshot.target_side == "pump" then
+        target_entity = transformator.pump
+    elseif snapshot.target_side == "high" then
+        target_entity = transformator.high_voltage
+    elseif snapshot.target_side == "low" then
+        target_entity = transformator.low_voltage
+    else
+        local transformator_position = get_transformator_position_from_pump(transformator.pump)
+        if not transformator_position then return false end
+
+        local target_position = transformator_local_to_world(
+            transformator_position,
+            snapshot.local_position,
+            transformator.pump.direction
+        )
+        target_entity = find_blueprint_wire_restore_target(
+            transformator.pump.surface,
+            target_position,
+            snapshot.target_name
+        )
+    end
+    if not (target_entity and target_entity.valid) then return false end
+
+    local wire_type = wire_name_to_type(snapshot.wire_type)
+    if not wire_type then return true end
+
+    local source_connector = source_entity.get_wire_connector(snapshot.source_id, true)
+    local target_connector = target_entity.get_wire_connector(snapshot.target_id, true)
+    if not (source_connector and source_connector.valid and target_connector and target_connector.valid) then
+        return false
+    end
+
+    local origin = snapshot.origin or defines.wire_origin.player
+    if source_connector.is_connected_to(target_connector, origin) then
+        return true
+    end
+
+    local ok = pcall(function()
+        source_connector.connect_to(target_connector, true, origin)
+    end)
+    if not ok then return false end
+
+    if wire_type == defines.wire_type.copper then
+        return enforce_specific_copper_connection(source_entity, target_entity, nil, false)
+    end
+
+    return true
+end
+
+--- Restore any blueprint-tagged transformator HV/LV pole wire connections.
+--- Unresolved targets are returned so callers can retry later.
+--- @param pump_unit_number uint?
+--- @param snapshots table[]|nil
+--- @return boolean complete
+--- @return table[] remaining
+function restore_transformator_blueprint_wires(pump_unit_number, snapshots)
+    local remaining = {}
+    if not pump_unit_number then return true, remaining end
+    if not snapshots or #snapshots == 0 then return true, remaining end
+
+    local transformator = get_transformator_by_pump_unit_number(pump_unit_number)
+    if not transformator then return true, remaining end
+
+    for _, snapshot in pairs(snapshots) do
+        if not restore_transformator_blueprint_wire(transformator, snapshot) then
+            remaining[#remaining + 1] = snapshot
+        end
+    end
+
+    if #remaining == 0 then
+        eg_schedule_short_circuit_check()
+        return true, remaining
+    end
+
+    return false, remaining
+end
+
+--- Deferred retry for blueprint-restored transformator HV/LV pole wires.
+--- @param args {pump_unit_number:uint, snapshots:table[], remaining_attempts:integer}
+--- @return nil
+function restore_transformator_blueprint_wires_job(args)
+    if not args then return end
+    if not args.pump_unit_number then return end
+    if not args.snapshots or #args.snapshots == 0 then return end
+
+    local complete, remaining = restore_transformator_blueprint_wires(args.pump_unit_number, args.snapshots)
+    if complete then return end
+
+    local remaining_attempts = (args.remaining_attempts or 0) - 1
+    if remaining_attempts <= 0 then return end
+
+    job_queue.schedule(game.tick + constants.EG_TICK_INTERVAL, "restore_transformator_blueprint_wires_job", {
+        pump_unit_number = args.pump_unit_number,
+        snapshots = remaining,
+        remaining_attempts = remaining_attempts
+    })
+end
+
+--- Begin restoration of blueprint-tagged transformator HV/LV wire snapshots.
+--- Any unresolved targets are retried through the job queue until the retry
+--- budget is exhausted.
+--- @param pump LuaEntity?
+--- @param snapshots table[]|nil
+--- @return nil
+function begin_transformator_blueprint_wire_restore(pump, snapshots)
+    if not (pump and pump.valid and pump.unit_number) then return end
+    if not snapshots or #snapshots == 0 then return end
+
+    local complete, remaining = restore_transformator_blueprint_wires(pump.unit_number, snapshots)
+    if complete or #remaining == 0 then return end
+
+    job_queue.schedule(game.tick + constants.EG_TICK_INTERVAL, "restore_transformator_blueprint_wires_job", {
+        pump_unit_number = pump.unit_number,
+        snapshots = remaining,
+        remaining_attempts = constants.EG_BLUEPRINT_WIRE_RETRY_COUNT
+    })
 end
 
 --- Update any player-selected transformator references after replacement so
@@ -1524,8 +1976,7 @@ end
 --- @param player LuaPlayer|nil
 --- @param show_message boolean|nil
 --- @return boolean allowed
-function enforce_transformator_overload_connection(connector, target_connector, pole, target_pole, player,
-                                                   show_message)
+function enforce_transformator_overload_connection(connector, target_connector, pole, target_pole, player, show_message)
     show_message = show_message == true
 
     if is_transformator_overload_allowed() then return true end

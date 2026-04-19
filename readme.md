@@ -57,7 +57,8 @@ Disrupted by the heavy planetary magnetic field and extreme electrical storms, T
 Wiring rules are relaxed, permitting copper wire connections between any of the transmission only poles.  
 
 *Limitations:*  
-Transformator copper wire connections are not included in blueprints.  
+Transformator wire connections are not visible in blueprints.
+Attempts are made for up to 1 minute, to restore the wire connections.  
 
 *Helpful Mods:*  
 [Wire Tools](https://mods.factorio.com/mod/WireTools) - Isolates selected poles into a separate electric network  
