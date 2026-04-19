@@ -2,7 +2,7 @@
 Version: 1.27.1
 Date: 19.04.2026
   Bugfixes:
-    - Refactored transformator graphics to pump annimations
+    - Refactored transformator graphics to pump animations
     - Removed pictures from boilers
   Changes:
     - Restore transformator HV/LV wire connections when placing blueprints (new blueprint required)
