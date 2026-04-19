@@ -258,7 +258,7 @@ function create_transformator_pump(tier, name_override)
         localised_description          = { "entity-description.eg-pump" },
         icon_draw_specification        = { shift = { 0, 0 }, scale = 0, render_layer = "entity-info-icon" },
         animations                     = get_pump_animations(tier),
-        pumping_speed                  = 100,
+        pumping_speed                  = 0.5,
         energy_usage                   = "1kW",
         energy_source                  = { type = "void" },
         fluid_box                      = {

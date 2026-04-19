@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.27.2
+Date: 19.04.2026
+  Bugfixes:
+    - Resolved excessive internal fluid box size and pump speed
+  Changes:
+    - Significantly reduced the internal buffer size
+---------------------------------------------------------------------------------------------------
 Version: 1.27.1
 Date: 19.04.2026
   Bugfixes:
