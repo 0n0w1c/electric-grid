@@ -39,7 +39,7 @@ Substations and underground substations are fast-replaceable
 Circuit poles create copper wire connections for performance considerations, but they are hidden  
 
 Startup setting to enable transformator overloads, allowing transformator connections that overload the electric network.  
-Startup settings to modify electric poles, they only take effect if the overhaul is active.  
+Startup settings to modify electric poles
 
 *Transformators can be controlled via the circuit and/or logistic networks.*  
 
@@ -58,9 +58,6 @@ Wiring rules are relaxed, permitting copper wire connections between any of the 
 
 *Limitations:*  
 Transformator copper wire connections are not included in blueprints.  
-
-*Notes*
-If Bob's Power and its startup setting for new power poles and substations is enabled, the Overhaul will be deactivated.
 
 *Helpful Mods:*  
 [Wire Tools](https://mods.factorio.com/mod/WireTools) - Isolates selected poles into a separate electric network  

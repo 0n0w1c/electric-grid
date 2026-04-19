@@ -4,7 +4,7 @@ Date: 18.04.2026
   Bugfixes:
     - None
   Changes:
-    - Transformator only mode has been deprecated (Do not upgrade if you disabled the overhaul)
+    - Transformator only mode has been removed (Do not upgrade if you disabled the overhaul)
     - Removed the startup setting "Disable electric network overhaul"
 ---------------------------------------------------------------------------------------------------
 Version: 1.26.4
