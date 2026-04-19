@@ -29,7 +29,7 @@ Whether you want fine-grained control, modular factory blocks, or simply a clear
 And yes, Transformators support both serial and parallel arrangements.
 
 ---
-#### About existing blueprints?  
+#### What about my favorite blueprints?  
 Why I tagged this mod as an Overhaul, the power distribution portion will likely need to be modified.  
 
 ---
@@ -39,14 +39,18 @@ Just an attempt to be thematic, it is equally correct to refer to them as: input
 ---
 #### What is transformator overload protection?
 
-When enabled via the startup setting, overload protection prevents connecting a Transformator's high voltage pole to an electric network if doing so would exceed the available supply capacity.
+By default, the mod prevents Transformator connections that would overload an electric network.  
+The startup setting `Enable transformator overload` disables that protection and allows overloaded connections.
 
 Each Transformator has a selectable rating.  
-When connected on the high voltage side, this rating is treated as electrical load on that network.  
-When connected on the low voltage side, the rating is treated as available supply.
+On the high-voltage side, that rating counts as load on the connected network.  
+On the low-voltage side, that rating counts as supply.
 
-The mod calculates the total load and total supply across all Transformators connected to the same electric network.
-If the total load would exceed the total supply, the connection is not allowed.
+The mod totals the Transformator load and supply on the affected electric network, including network merges caused by new wire connections or pole placement.  
+If the resulting load would exceed the available supply, the new connection is removed or the placement is rolled back.
+
+Changing a Transformator's rating is also checked.  
+If the new rating would overload its high-voltage network, its high-voltage wire connections are disconnected.
 
 ---
 #### What are the three different selectable sections of the Transformator?  
@@ -62,7 +66,7 @@ This is true, even if the power source you are connecting produces less power th
 ---
 #### How to connect a Transformator to a circuit network?  
 While the electric poles of the Transformator will carry circuit signals as any electric pole, they do *not* connect the Transformator to the circuit network.  
-To connect the Transformator, a circuit wire must be connected the internal pump, which is located near the yellow plug.  
+To connect the Transformator, a circuit wire must be connected the internal pump, which is the middle section.  
 
 ---
 #### In modding terms, what is a Transformator?  
