@@ -1,5 +1,3 @@
-if constants.EG_TRANSFORMATORS_ONLY then return end
-
 if mods["quality"] then
     recycling = require("__quality__/prototypes/recycling")
 end

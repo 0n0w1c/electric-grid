@@ -18,16 +18,6 @@ end
 data.extend({
     {
         type = "bool-setting",
-        name = "eg-transformators-only",
-        setting_type = "startup",
-        default_value = false,
-        order = get_next_order(),
-        localised_name = { "mod-setting-name.eg-transformators-only" },
-        localised_description = { "mod-setting-description.eg-transformators-only" },
-        hidden = is_setting_hidden("eg-transformators-only")
-    },
-    {
-        type = "bool-setting",
         name = "eg-enable-transformator-overload",
         setting_type = "startup",
         default_value = false,

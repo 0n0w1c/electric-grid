@@ -23,7 +23,6 @@
 --- @field eg_opened_pump_unit_number table<uint, uint|nil>
 --- @field eg_short_circuit_check_tick uint|nil
 --- @field eg_skip_pole_cleanup_on_mined table<string, boolean>
---- @field eg_transformators_only boolean
 
 constants = require("constants")
 local job_queue = require("job_queue")
@@ -130,22 +129,6 @@ local function initialize_globals()
     storage.eg_skip_pole_cleanup_on_mined = storage.eg_skip_pole_cleanup_on_mined or {}
 
     storage.eg_transformator_scan_accumulator = storage.eg_transformator_scan_accumulator or 0
-
-    storage.eg_transformators_only = false
-
-    local setting = settings.startup["eg-transformators-only"].value
-    if setting
-        or (script.active_mods["base"] < "2.0.29"
-            and not (script.active_mods["no-quality"]
-                or script.active_mods["unquality"]
-                or script.active_mods["no-more-quality"]))
-    then
-        storage.eg_transformators_only = true
-    end
-
-    if script.active_mods["bobpower"] and settings.startup["bobmods-power-poles"].value then
-        storage.eg_transformators_only = true
-    end
 end
 
 
@@ -497,17 +480,15 @@ local function on_entity_built(event)
     end
 
     if entity.type == "electric-pole" then
-        if not storage.eg_transformators_only then
-            local poles = get_nearby_poles(entity)
-            if poles then
-                for _, pole in pairs(poles) do
-                    enforce_pole_connections(pole, player, false, false)
-                end
+        local poles = get_nearby_poles(entity)
+        if poles then
+            for _, pole in pairs(poles) do
+                enforce_pole_connections(pole, player, false, false)
             end
+        end
 
-            if not is_transformator_overload_allowed() then
-                schedule_built_pole_overload_check(entity, event.player_index)
-            end
+        if not is_transformator_overload_allowed() then
+            schedule_built_pole_overload_check(entity, event.player_index)
         end
         eg_schedule_short_circuit_check()
     end
@@ -541,13 +522,11 @@ local function on_entity_mined(event)
             skip_cleanup = true
         end
 
-        if not storage.eg_transformators_only then
-            if not skip_cleanup then
-                local poles = get_nearby_poles(entity)
-                if poles then
-                    for _, pole in pairs(poles) do
-                        enforce_pole_connections(pole, player, false)
-                    end
+        if not skip_cleanup then
+            local poles = get_nearby_poles(entity)
+            if poles then
+                for _, pole in pairs(poles) do
+                    enforce_pole_connections(pole, player, false)
                 end
             end
         end
@@ -855,7 +834,6 @@ end
 local function on_wire_build(event)
     local player = game.get_player(event.player_index)
     if not player then return end
-    if storage.eg_transformators_only then return end
 
     if player:is_cursor_empty()
         or not player.cursor_stack

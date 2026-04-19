@@ -1365,7 +1365,6 @@ end
 --- @return nil
 function validate_built_pole_overload(args)
     if not args or not args.surface_index or not args.position or not args.name then return end
-    if storage.eg_transformators_only then return end
     if is_transformator_overload_allowed() then return end
 
     local surface = game.get_surface(args.surface_index)
@@ -1478,7 +1477,6 @@ function enforce_specific_copper_connection(source_pole, target_pole, player, sh
 
     if not (source_pole and source_pole.valid and target_pole and target_pole.valid) then return true end
     if source_pole.type ~= "electric-pole" or target_pole.type ~= "electric-pole" then return true end
-    if storage.eg_transformators_only then return true end
 
     if not is_copper_cable_connection_allowed(source_pole, target_pole) then
         disconnect_specific_copper_connection(source_pole, target_pole)
@@ -1650,7 +1648,6 @@ end
 --- @param pole_b LuaEntity
 --- @return boolean is_allowed
 function is_copper_cable_connection_allowed(pole_a, pole_b)
-    if storage.eg_transformators_only then return true end
     if not (pole_a and pole_b and pole_a.valid and pole_b.valid) then
         return false
     end
@@ -1729,7 +1726,7 @@ end
 --- - `check_overload == nil` or `true`:
 ---   - runs transformator overload validation
 --- - `check_overload == false`:
----   - only enforces general copper-connection legality
+---   - skips transformator overload validation
 ---
 --- Returns `false` if any connection was removed.
 ---
@@ -1743,7 +1740,6 @@ function enforce_pole_connections(pole, player, show_message, check_overload)
     check_overload = check_overload ~= false
 
     if not pole or not pole.valid or pole.type ~= "electric-pole" then return true end
-    if storage.eg_transformators_only then return true end
 
     local connectors = pole.get_wire_connectors(false)
     if not connectors then return true end

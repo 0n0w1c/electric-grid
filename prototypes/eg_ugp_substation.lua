@@ -1,4 +1,3 @@
-if constants.EG_TRANSFORMATORS_ONLY then return end
 if mods["PowerOverload"] then return end
 
 local ugp_substation                          = table.deepcopy(data.raw["electric-pole"]["substation"])

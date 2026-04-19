@@ -238,13 +238,6 @@ local eg_transformator_displayer = {
     surface_conditions             = surface_conditions
 }
 
-local subgroup
-if constants.EG_TRANSFORMATORS_ONLY then
-    subgroup = "energy-pipe-distribution"
-else
-    subgroup = constants.EG_SUBGROUP
-end
-
 local order
 if mods["bobpower"] then
     order = "a[energy]-d[substation-4]" .. "zz"
@@ -261,7 +254,7 @@ local eg_transformator_item = {
     localised_description = { "item-description.eg-transformator" },
     icon                  = constants.EG_ICONS .. "eg-transformator.png",
     icon_size             = 128,
-    subgroup              = subgroup,
+    subgroup              = constants.EG_SUBGROUP,
     flags                 = { "hide-from-bonus-gui" },
     order                 = order,
     place_result          = "eg-transformator-displayer",

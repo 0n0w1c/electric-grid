@@ -2,7 +2,6 @@ local visibility = {}
 
 visibility.hidden_if_mod_present = {
     ["bobpower"] = {
-        ["eg-transformators-only"] = true,
         ["eg-medium-pole-lights"] = true,
         ["eg-big-pole-lights"] = true,
         ["eg-huge-pole-lights"] = true,

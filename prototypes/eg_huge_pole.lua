@@ -1,4 +1,3 @@
-if constants.EG_TRANSFORMATORS_ONLY then return end
 if mods["factorioplus"] or mods["PowerOverload"] then return end
 
 local huge_pole                 = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
