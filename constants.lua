@@ -315,6 +315,12 @@ constants.EG_WIRE_CONNECTIONS   = {
         ["medium-steel-pole"] = true,
         ["big-wooden-pole"] = true,
     },
+    ["hidden-rail-pole"] = {
+        ["big-electric-pole"] = true,
+    },
+    ["hidden-rail-pole-invisible"] = {
+        ["big-electric-pole"] = true,
+    },
     ["big-electric-pole"] = {
         ["big-electric-pole"] = true,
         ["medium-electric-pole"] = true,
@@ -335,6 +341,8 @@ constants.EG_WIRE_CONNECTIONS   = {
         ["bi-wooden-pole-big"] = true,
         ["medium-steel-pole"] = true,
         ["big-wooden-pole"] = true,
+        ["hidden-rail-pole-invisible"] = true,
+        ["hidden-rail-pole"] = true,
     },
     ["eg-huge-electric-pole"] = {
         ["power-combinator-meter-network"] = true,
