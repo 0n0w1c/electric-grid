@@ -171,6 +171,8 @@ constants.EG_TRANSMISSION_POLES =
     ["medium-electric-pole"] = true,
     ["floating-electric-pole"] = true,
     ["power-combinator-meter-network"] = true,
+    ["hidden-rail-pole"] = true,
+    ["hidden-rail-pole-invisible"] = true,
     ["bi-wooden-pole-big"] = true,
     ["steel-support"] = true,
     ["medium-steel-pole"] = true,
@@ -240,6 +242,8 @@ constants.EG_WIRE_CONNECTIONS   = {
         ["po-medium-electric-fuse"] = true,
         ["po-hidden-electric-pole-in"] = true,
         ["po-hidden-electric-pole-out"] = true,
+        ["hidden-rail-pole"] = true,
+        ["hidden-rail-pole-invisible"] = true,
         ["small-bronze-pole"] = true,
         ["small-iron-pole"] = true,
         ["medium-steel-pole"] = true,
@@ -315,10 +319,16 @@ constants.EG_WIRE_CONNECTIONS   = {
         ["medium-steel-pole"] = true,
         ["big-wooden-pole"] = true,
     },
-    ["hidden-rail-pole"] = {
+    ["hidden-rail-pole"] = { -- minimalist rails
+        ["hidden-rail-pole"] = true,
+        ["hidden-rail-pole-invisible"] = true,
+        ["medium-electric-pole"] = true,
         ["big-electric-pole"] = true,
     },
-    ["hidden-rail-pole-invisible"] = {
+    ["hidden-rail-pole-invisible"] = { -- minimalist rails
+        ["hidden-rail-pole"] = true,
+        ["hidden-rail-pole-invisible"] = true,
+        ["medium-electric-pole"] = true,
         ["big-electric-pole"] = true,
     },
     ["big-electric-pole"] = {
