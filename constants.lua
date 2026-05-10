@@ -640,6 +640,7 @@ add_wire_connection_aliases("substation", {
     "substation-2",
     "substation-3",
     "substation-4",
+    "snouz_better_substation",
 })
 
 make_wire_connections_symmetric()

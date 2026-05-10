@@ -302,3 +302,15 @@ if mods["IR3_Assets_power"] and settings.startup["IR3-enable-electric-poles"].va
         recipe.subgroup = constants.EG_SUBGROUP
     end
 end
+
+if mods["snouz_better_substation"] then
+    local item = data.raw["electric-pole"]["snouz_better_substation"]
+    if item then
+        item.subgroup = constants.EG_SUBGROUP
+    end
+
+    local recipe = recipes["snouz_better_substation"]
+    if recipe then
+        recipe.subgroup = constants.EG_SUBGROUP
+    end
+end
