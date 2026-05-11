@@ -1,124 +1,200 @@
-# Technical Overview: Transformer Energy Conversion Constants
+# Technical Overview: Transformator Energy Conversion Constants
 
-This document provides a technical explanation of the constants used to configure the Transformer system’s fluid-based energy conversion behavior.  
-These constants ensure predictable, stable operation across all power scales while remaining compatible with Factorio’s fluid mechanics.
+This document explains the constants used by the Electric Grid transformator system. The transformator is implemented as a hidden fluid/heat conversion chain, so its apparent electrical rating depends on several Factorio prototype values working together.
+
+The current constants are derived from a single design target:
+
+```lua
+constants.TRANSFORMATOR_RATED_FLUID_RATE = 30
+constants.TRANSFORMATOR_INPUT_TEMP = 15
+constants.TRANSFORMATOR_OUTPUT_TEMP = 165
+constants.TRANSFORMATOR_GENERATOR_DEFAULT_TEMP = 100
+```
+
+These produce:
+
+```lua
+constants.HEAT_CAPACITY_PER_MW = 0.2222222222222222
+constants.STEAM_ENGINE_EFFECTIVITY = 2.3076923076923075
+```
+
+The goal is for each transformator tier to consume and produce the correct in-game electrical power while using a predictable internal fluid rate of **30 fluid/s at that tier's rated output**. This is only possible because each tier scales the working-fluid heat capacity by its rating.
 
 ---
 
-## 1. Fluid Throughput Constraints
+## 1. Why the constants are derived together
 
-Factorio pipes have high throughput capabilities (approximately 4,200 units/s).  
-If a high-capacity transformer (e.g., 10 GW) used standard water with a heat capacity of 0.2 kJ/°C, the required fluid flow rate would greatly exceed these limits.
+The transformator does not depend on a single magic number. Its behavior depends on the interaction between:
 
-To avoid this limitation, the mod increases the **effective energy density** (heat capacity) of the working fluid.  
-The target design requirement is a **constant fluid flow rate of ~26 units/s per MW**, regardless of transformer rating.
+- working fluid heat capacity
+- boiler energy consumption
+- boiler input and output temperatures
+- Factorio 2.0 boiler fluid conversion behavior
+- generator fluid consumption
+- generator default temperature
+- generator effectivity
+- generator maximum power output
 
-This ensures that:
-- Fluid flow remains well within pipe throughput limits.
-- Scaling the transformer to higher capacities does not create fluid bottlenecks.
-- Internal boiler operation remains stable under all load conditions.
-
----
-
-## 2. Heat Capacity Constant: `HEAT_CAPACITY_PER_MW = 0.25655`
-
-This constant defines the thermal energy stored per unit of fluid per degree of temperature.  
-It is tuned to produce the desired 26 units/s flow rate at a 1 MW load.
-
-### 2.1 Temperature Differential
-
-The system operates with:
-- Target output temperature: 165°C  
-- Ambient temperature: 15°C  
-
-Resulting in a temperature delta:
-
-```
-ΔT = 165°C − 15°C = 150°C
-```
-
-### 2.2 Energy per Unit of Fluid
-
-Heat capacity per MW:
-
-```
-Cp = 0.25655 kJ/°C
-```
-
-Energy contained in one unit of fluid:
-
-```
-Energy_per_unit = Cp × ΔT
-Energy_per_unit = 0.25655 × 150 = 38.4825 kJ
-```
-
-### 2.3 Flow Rate
-
-For a 1 MW (1000 kJ/s) load:
-
-```
-Flow_rate = 1000 kJ/s ÷ 38.4825 kJ
-Flow_rate ≈ 25.986 units/s
-```
+Changing only `HEAT_CAPACITY_PER_MW` or only `STEAM_ENGINE_EFFECTIVITY` can break the apparent power balance. The two values are intentionally derived from the same temperature model.
 
 ---
 
-## 3. Generator Effectivity Constant: `STEAM_ENGINE_EFFECTIVITY = 2.3068`
+## 2. Fluid throughput target
 
-This constant corrects for the difference between the generator’s maximum fluid consumption rate and the actual fluid supplied by the boiler.
+The current design target is:
 
-### 3.1 Generator Consumption Characteristics
-
-The generator is configured as follows:
-
-```
-fluid_usage_per_tick = 1 unit/tick
+```text
+30 fluid/s at rated output for each transformator tier
 ```
 
-Factorio operates at 60 ticks/s:
+For a 1 MW transformator:
 
-```
-Max_consumption = 60 units/s
-```
-
-However, the boiler supplies ~26 units/s.
-
-### 3.2 Duty Cycle Mismatch
-
-Actual generator fill percentage:
-
-```
-Duty_cycle = 26 / 60 ≈ 0.43  (43%)
+```text
+1 MW = 1000 kJ/s
+Fluid rate = 30 fluid/s
 ```
 
-Without correction, the generator would produce only 43% of the intended power output.
+For larger tiers, the fluid rate is **not** intended to scale upward as `rating × 30 fluid/s`. Instead, the working-fluid heat capacity scales with the transformator rating, so the hidden conversion chain can keep the same practical fluid rate while carrying more energy per fluid unit.
 
-### 3.3 Correction Factor Derivation
+That distinction is important. Without rating-scaled heat capacity, the top tiers would require impossible internal fluid rates such as thousands or hundreds of thousands of fluid per second. With rating-scaled heat capacity, each tier targets about the same internal fluid rate at full load:
 
-The correction multiplier aligns generator output with intended rated power:
+| Rating | Rating in MW | Scaled heat capacity | Target internal fluid rate at rated output |
+|--------|--------------|----------------------|--------------------------------------------|
+| 1 MW   | 1            | 0.2222222222 kJ/°C   | 30 fluid/s                                 |
+| 5 MW   | 5            | 1.1111111111 kJ/°C   | 30 fluid/s                                 |
+| 10 MW  | 10           | 2.2222222222 kJ/°C   | 30 fluid/s                                 |
+| 50 MW  | 50           | 11.1111111111 kJ/°C  | 30 fluid/s                                 |
+| 100 MW | 100          | 22.2222222222 kJ/°C  | 30 fluid/s                                 |
+| 500 MW | 500          | 111.1111111111 kJ/°C | 30 fluid/s                                 |
+| 1 GW   | 1000         | 222.2222222222 kJ/°C | 30 fluid/s                                 |
+| 5 GW   | 5000         | 1111.1111111111 kJ/°C | 30 fluid/s                                |
+| 10 GW  | 10000        | 2222.2222222222 kJ/°C | 30 fluid/s                                |
 
+The transformator uses hidden internal entities, so these rates are calibration values for the internal conversion chain rather than normal player pipe throughput targets.
+
+---
+
+## 3. Boiler-side heat capacity
+
+The boiler-side temperature span is:
+
+```text
+input temperature  = 15°C
+output temperature = 165°C
+ΔT_boiler          = 150°C
 ```
-Multiplier = Max_consumption / Actual_supply
-Multiplier = 60 / 25.986 ≈ 2.3089
+
+To make 30 fluid/s carry exactly 1 MW:
+
+```text
+heat_capacity = 1000 kJ/s / (30 fluid/s × 150°C)
+heat_capacity = 0.2222222222222222 kJ/°C
 ```
 
-The implemented value:
+In code:
 
+```lua
+constants.HEAT_CAPACITY_PER_MW =
+    1000 / (
+        constants.TRANSFORMATOR_RATED_FLUID_RATE *
+        (constants.TRANSFORMATOR_OUTPUT_TEMP - constants.TRANSFORMATOR_INPUT_TEMP)
+    )
 ```
+
+This value is a **per-MW base value**, not the final fluid heat capacity used by every transformator. Each transformator tier receives its own scaled heat capacity. In `constants.lua`, the code converts the rating to MW and then multiplies by this base value:
+
+```lua
+local rating_in_MW = rating_in_watts / 1e6
+transformator.heat_capacity = (rating_in_MW * constants.HEAT_CAPACITY_PER_MW) .. "kJ"
+```
+
+So a 1 MW transformator uses:
+
+```text
+1 × 0.2222222222222222 = 0.2222222222222222 kJ/°C
+```
+
+A 10 MW transformator uses:
+
+```text
+10 × 0.2222222222222222 = 2.2222222222222223 kJ/°C
+```
+
+A 1 GW transformator uses:
+
+```text
+1000 × 0.2222222222222222 = 222.22222222222223 kJ/°C
+```
+
+This rating-scaled heat capacity is required. If all tiers used the same final heat capacity, larger transformator tiers would not carry proportionally more energy and their in-game consumption/production would be wrong.
+
+---
+
+## 4. Generator-side effectivity
+
+The generator does not use the same effective temperature span as the boiler.
+
+The generator-side usable temperature span is:
+
+```text
+generator default temperature = 100°C
+fluid output temperature      = 165°C
+ΔT_generator                  = 65°C
+```
+
+The boiler-side span is 150°C, while the generator-side span is only 65°C. Without compensation, the generator would see less usable thermal energy than the boiler put into the fluid.
+
+The correction factor is therefore:
+
+```text
+effectivity = ΔT_boiler / ΔT_generator
+effectivity = 150 / 65
+effectivity = 2.3076923076923075
+```
+
+In code:
+
+```lua
+constants.STEAM_ENGINE_EFFECTIVITY =
+    (constants.TRANSFORMATOR_OUTPUT_TEMP - constants.TRANSFORMATOR_INPUT_TEMP) /
+    (constants.TRANSFORMATOR_OUTPUT_TEMP - constants.TRANSFORMATOR_GENERATOR_DEFAULT_TEMP)
+```
+
+This is why the value is greater than 1. It is not intended to create free energy; it compensates for the mismatch between the boiler-side and generator-side temperature ranges.
+
+---
+
+## 5. Factorio 2.0 boiler behavior
+
+Factorio 2.0 changed boiler behavior so boilers can produce a different amount of output fluid than the input fluid consumed. Current boiler behavior can use a 10:1 water-to-steam style conversion.
+
+For this mod, the important point is not the visible vanilla steam ratio itself, but that boiler and generator calibration must respect Factorio's current fluid-energy behavior. The transformator constants are therefore expressed as derived values rather than unexplained literals.
+
+The older constants:
+
+```lua
+-- old approximate behavior
+HEAT_CAPACITY_PER_MW = 0.25655
 STEAM_ENGINE_EFFECTIVITY = 2.3068
 ```
 
-This value ensures:
+were tuned around an older effective flow target of about 26 fluid/s per MW. The current constants are cleaner because they make the intended target explicit:
 
-- Input and output energy remain equal, through the range of the power ratings.
+```lua
+TRANSFORMATOR_RATED_FLUID_RATE = 30
+```
 
 ---
 
-## 4. Summary of Constants
+## 6. Summary
 
-| Constant Name               | Value      | Purpose                                                                 |
-|-----------------------------|------------|-------------------------------------------------------------------------|
-| `HEAT_CAPACITY_PER_MW`      | 0.25655    | Sets fluid energy density to achieve ~26 units/s per MW throughput.     |
-| `STEAM_ENGINE_EFFECTIVITY`  | 2.3068     | Corrects generator output to compensate for reduced fluid flow.         |
+| Constant | Current value | Meaning |
+|----------|---------------|---------|
+| `TRANSFORMATOR_RATED_FLUID_RATE` | `30` | Target internal fluid rate at rated output for each transformator tier. This is not multiplied by rating; heat capacity scales by rating instead. |
+| `TRANSFORMATOR_INPUT_TEMP` | `15` | Boiler input/baseline temperature. |
+| `TRANSFORMATOR_OUTPUT_TEMP` | `165` | Boiler output and generator input temperature. |
+| `TRANSFORMATOR_GENERATOR_DEFAULT_TEMP` | `100` | Generator default fluid temperature. |
+| `HEAT_CAPACITY_PER_MW` | `0.2222222222222222` | Per-MW heat capacity base. The actual transformator fluid heat capacity is `rating_in_MW × HEAT_CAPACITY_PER_MW`. |
+| `STEAM_ENGINE_EFFECTIVITY` | `2.3076923076923075` | Correction for 150°C boiler span versus 65°C generator span. |
 
-Together, these magic constants *just work* with Factorio's fluid mechanics, across the range of power ratings.
+Together, these values keep the transformator's electrical input and output aligned across the supported power ratings.

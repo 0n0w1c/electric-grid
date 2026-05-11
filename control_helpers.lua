@@ -11,6 +11,7 @@
 --   * transformator GUI construction helpers
 
 local job_queue = require("job_queue")
+local pole_rules = require("pole_rules")
 
 --- @class EgTransformator
 --- @field boiler LuaEntity?
@@ -419,7 +420,8 @@ local function snapshot_transformator_pole_connections(transformator, pole, side
                 end
 
                 local target_unit_number = target_blueprint_entity and target_blueprint_entity.unit_number or nil
-                local target_blueprint_index = target_unit_number and source_to_blueprint_index[target_unit_number] or nil
+                local target_blueprint_index = target_unit_number and source_to_blueprint_index[target_unit_number] or
+                nil
                 local target_side = nil
                 if target_transformator == transformator then
                     if target_entity == transformator.high_voltage then
@@ -501,7 +503,8 @@ local function snapshot_transformator_pump_blueprint_connections(transformator, 
                 end
 
                 local target_unit_number = target_blueprint_entity and target_blueprint_entity.unit_number or nil
-                local target_blueprint_index = target_unit_number and source_to_blueprint_index[target_unit_number] or nil
+                local target_blueprint_index = target_unit_number and source_to_blueprint_index[target_unit_number] or
+                nil
                 local target_side = nil
                 if target_transformator == transformator then
                     if target_entity == transformator.high_voltage then
@@ -1099,7 +1102,6 @@ local function update_selected_transformator_references(old_transformator, repla
         end
     end
 end
-
 
 --- Replace a transformator's tiered internals while preserving the root pump
 --- and voltage poles.
@@ -2108,25 +2110,6 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
 
     local is_transformator_a = constants.EG_TRANSFORMATOR_POLE_NAMES[name_a]
     local is_transformator_b = constants.EG_TRANSFORMATOR_POLE_NAMES[name_b]
-    local is_transmission_a = constants.EG_TRANSMISSION_POLES[name_a]
-    local is_transmission_b = constants.EG_TRANSMISSION_POLES[name_b]
-    local is_huge_a = constants.EG_HUGE_POLES[name_a]
-    local is_huge_b = constants.EG_HUGE_POLES[name_b]
-
-    local is_proxy_a = string.sub(name_a, 1, 15) == "electric-proxy-"
-    local is_proxy_b = string.sub(name_b, 1, 15) == "electric-proxy-"
-    local is_f077et_a = string.sub(name_a, 1, 7) == "F077ET-"
-    local is_f077et_b = string.sub(name_b, 1, 7) == "F077ET-"
-    local is_po_interface_a = string.sub(name_a, 1, 12) == "po-interface"
-    local is_po_interface_b = string.sub(name_b, 1, 12) == "po-interface"
-    local is_po_fuse_a = string.sub(name_a, 1, 3) == "po-" and string.find(name_a, "-fuse", 1, true)
-    local is_po_fuse_b = string.sub(name_b, 1, 3) == "po-" and string.find(name_b, "-fuse", 1, true)
-
-    local wire_connections_a = constants.EG_WIRE_CONNECTIONS[name_a]
-
-    if name_a == "power-combinator-meter-network" and name_b == "power-combinator-meter-network" then
-        return false
-    end
 
     if is_transformator_a and is_transformator_b then
         local transformator_a = get_transformator_by_entity(pole_a)
@@ -2137,26 +2120,13 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
         end
     end
 
-    if pole_a.surface.name == "fulgora" then
-        if is_transmission_a and is_transmission_b then return true end
-        if (is_transmission_a and is_huge_b) or (is_transmission_b and is_huge_a) then return true end
-        if is_huge_a and is_huge_b then return true end
-    end
-
-    if wire_connections_a and wire_connections_a[name_b] then return true end
-    if is_transformator_a and is_transformator_b then return true end
-    if (is_transformator_a and is_transmission_b) or (is_transformator_b and is_transmission_a) then return true end
-    if (is_transformator_a and is_huge_b) or (is_transformator_b and is_huge_a) then return true end
-    if (is_transformator_a and is_po_interface_b) or (is_transformator_b and is_po_interface_a) then return true end
-    if (is_transformator_a and is_po_fuse_b) or (is_transformator_b and is_po_fuse_a) then return true end
-    if is_proxy_a and is_proxy_b then return true end
-    if is_f077et_a and is_f077et_b then return true end
-    if (is_huge_a and is_proxy_b) or (is_huge_b and is_proxy_a) then return false end
-    if (is_huge_a and is_f077et_b) or (is_huge_b and is_f077et_a) then return false end
-    if (is_transmission_a and is_proxy_b) or (is_transmission_b and is_proxy_a) then return true end
-    if (is_transmission_a and is_f077et_b) or (is_transmission_b and is_f077et_a) then return true end
-
-    return false
+    return pole_rules.can_connect(
+        name_a,
+        name_b,
+        pole_a.surface and pole_a.surface.name or nil,
+        is_transformator_a == true,
+        is_transformator_b == true
+    )
 end
 
 --- Validate and enforce all copper wire connections on a pole.

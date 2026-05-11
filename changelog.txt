@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.30.0
+Date: 10.05.2026
+  Bugfixes:
+    - Underground substation pole dragging resulted in incorrect spacing
+  Changes:
+    - Refactored electric pole connection rules to use classes and tags
+    - Recalibrated the transformator thermal constants
+---------------------------------------------------------------------------------------------------
 Version: 1.29.0
 Date: 09.05.2026
   Bugfixes:

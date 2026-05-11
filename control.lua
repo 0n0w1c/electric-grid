@@ -488,7 +488,8 @@ local function on_entity_built(event)
     local player = event.player_index and game.get_player(event.player_index) or nil
 
     if entity.name == "eg-ugp-substation-displayer" then
-        job_queue.schedule(game.tick + 1, "replace_displayer_with_ugp_substation", {
+        local replace_delay = constants.EG_UGP_SUBSTATION_REPLACE_DELAY_TICKS or (3 * constants.EG_TICK_INTERVAL)
+        job_queue.schedule(game.tick + replace_delay, "replace_displayer_with_ugp_substation", {
             unit_number = entity.unit_number
         })
         return
