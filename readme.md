@@ -14,6 +14,7 @@ Comments and suggestions are welcome.
 Transformator  
 Small iron electric pole  
 Huge electric pole  
+Underground small electric pole
 Underground substation  
 Circuit pole  
 
@@ -35,7 +36,7 @@ Transformators can only connect to medium, big and huge poles
 
 Small poles and substations are for power distribution and collection  
 Medium, big and huge poles are for power transmission only  
-Substations and underground substations are fast-replaceable  
+Electric poles and underground electric poles are fast-replaceable  
 Circuit poles create copper wire connections for performance considerations, but they are hidden  
 
 Startup setting to enable transformator overloads, allowing transformator connections that overload the electric network.  
