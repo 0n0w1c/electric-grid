@@ -2050,12 +2050,11 @@ function short_circuit_check()
     end
 end
 
---- Replace the delayed UGP substation displayer proxy with the real substation
---- entity.
---- @param args {unit_number:uint}
+--- Replace a delayed UGP displayer proxy with the real underground pole entity.
+--- @param args {unit_number:uint, target_name:string}
 --- @return nil
-function replace_displayer_with_ugp_substation(args)
-    if not args or not args.unit_number then return end
+function replace_displayer_with_ugp_pole(args)
+    if not args or not args.unit_number or not args.target_name then return end
 
     local displayer = game.get_entity_by_unit_number(args.unit_number)
     if not (displayer and displayer.valid) then return end
@@ -2068,8 +2067,8 @@ function replace_displayer_with_ugp_substation(args)
 
     displayer.destroy()
 
-    local eg_ugp_substation = surface.create_entity {
-        name = "eg-ugp-substation",
+    local ugp_pole = surface.create_entity {
+        name = args.target_name,
         position = position,
         direction = direction,
         force = force,
@@ -2077,10 +2076,10 @@ function replace_displayer_with_ugp_substation(args)
         create_build_effect_smoke = false
     }
 
-    if eg_ugp_substation then
-        enforce_pole_connections(eg_ugp_substation)
+    if ugp_pole then
+        enforce_pole_connections(ugp_pole)
 
-        local poles = get_nearby_poles(eg_ugp_substation)
+        local poles = get_nearby_poles(ugp_pole)
         if poles then
             for _, pole in pairs(poles) do
                 if pole.valid then
@@ -2091,6 +2090,25 @@ function replace_displayer_with_ugp_substation(args)
     end
 
     eg_schedule_short_circuit_check()
+end
+
+--- Replace the delayed UGP substation displayer proxy with the real substation
+--- entity.
+--- @param args any -- unit_number:uint
+--- @return nil
+function replace_displayer_with_ugp_substation(args)
+    if not args then return end
+    args.target_name = "eg-ugp-substation"
+    replace_displayer_with_ugp_pole(args)
+end
+
+--- Replace the delayed UGP small pole displayer proxy with the real pole entity.
+--- @param args any -- unit_number:uint
+--- @return nil
+function replace_displayer_with_ugp_small_electric_pole(args)
+    if not args then return end
+    args.target_name = "eg-ugp-small-electric-pole"
+    replace_displayer_with_ugp_pole(args)
 end
 
 --- Check whether a copper cable connection is allowed between two poles.

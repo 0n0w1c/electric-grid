@@ -25,7 +25,7 @@ ugp_substation.minable                        = { mining_time = 0.5, result = "e
 ugp_substation.next_upgrade                   = nil
 ugp_substation.fast_replaceable_group         = "substation"
 ugp_substation.selection_priority             = 1
-ugp_substation.collision_mask                 = { colliding_with_tiles_only = true, layers = {} }
+ugp_substation.collision_mask                 = { colliding_with_tiles_only = true, layers = { is_object = true } }
 ugp_substation.integration_patch_render_layer = "ground-patch"
 ugp_substation.integration_patch              = {
     layers = {

@@ -17,6 +17,7 @@ pole_rules.poles = {
     ["medium-electric-pole"] = pole("transmission_medium", { "vanilla", "transmission" }),
     ["big-electric-pole"] = pole("transmission_big", { "vanilla", "transmission" }),
     ["substation"] = pole("distribution_substation", { "vanilla", "distribution" }),
+    ["eg-ugp-small-electric-pole"] = pole("distribution_small", { "electric-grid", "underground", "distribution" }),
     ["eg-ugp-substation"] = pole("distribution_substation", { "electric-grid", "underground", "distribution" }),
     ["eg-circuit-pole"] = pole("utility_circuit", { "electric-grid", "utility" }),
     ["eg-huge-electric-pole"] = pole("transmission_huge_eg", { "electric-grid", "transmission", "huge" }),

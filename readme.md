@@ -76,7 +76,6 @@ Attempts are made for up to 1 minute, to restore the wire connections.
 [Energy Combinator](https://mods.factorio.com/mod/energy-combinator)  
 [Engineers vs Environmentalist Redux](https://mods.factorio.com/mod/Engineersvsenvironmentalist-redux)  
 [Factorio+](https://mods.factorio.com/mod/factorioplus)  
-[Foundations](https://mods.factorio.com/mod/Foundations)  
 [Hypercell substation](https://mods.factorio.com/mod/snouz_better_substation)  
 [James' Electric Trains Plus](https://mods.factorio.com/mod/James-Train-Mod)  
 [Krastorio2](https://mods.factorio.com/mod/Krastorio2)  

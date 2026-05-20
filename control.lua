@@ -495,6 +495,14 @@ local function on_entity_built(event)
         return
     end
 
+    if entity.name == "eg-ugp-small-electric-pole-displayer" then
+        local replace_delay = constants.EG_UGP_SUBSTATION_REPLACE_DELAY_TICKS or (3 * constants.EG_TICK_INTERVAL)
+        job_queue.schedule(game.tick + replace_delay, "replace_displayer_with_ugp_small_electric_pole", {
+            unit_number = entity.unit_number
+        })
+        return
+    end
+
     if is_transformator(entity.name) then
         local built_root = eg_transformator_built(entity, event.player_index)
         local final_root = apply_transformator_blueprint_tier(built_root or entity, event.tags)
@@ -945,6 +953,8 @@ script.on_init(function()
     initialize_globals()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("replace_displayer_with_ugp_small_electric_pole",
+        replace_displayer_with_ugp_small_electric_pole)
     job_queue.register_function("restore_transformator_blueprint_wires_job", restore_transformator_blueprint_wires_job)
     job_queue.register_function("short_circuit_check", short_circuit_check)
     job_queue.register_function("validate_built_pole_overload", validate_built_pole_overload)
@@ -956,6 +966,8 @@ end)
 
 script.on_load(function()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("replace_displayer_with_ugp_small_electric_pole",
+        replace_displayer_with_ugp_small_electric_pole)
     job_queue.register_function("restore_transformator_blueprint_wires_job", restore_transformator_blueprint_wires_job)
     job_queue.register_function("short_circuit_check", short_circuit_check)
     job_queue.register_function("validate_built_pole_overload", validate_built_pole_overload)
@@ -969,6 +981,8 @@ script.on_configuration_changed(function()
     remove_invalid_transformators()
     job_queue.init()
     job_queue.register_function("replace_displayer_with_ugp_substation", replace_displayer_with_ugp_substation)
+    job_queue.register_function("replace_displayer_with_ugp_small_electric_pole",
+        replace_displayer_with_ugp_small_electric_pole)
     job_queue.register_function("restore_transformator_blueprint_wires_job", restore_transformator_blueprint_wires_job)
     job_queue.register_function("short_circuit_check", short_circuit_check)
     job_queue.register_function("validate_built_pole_overload", validate_built_pole_overload)

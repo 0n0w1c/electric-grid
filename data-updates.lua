@@ -75,6 +75,19 @@ apply_substation_settings(substation)
 if not substation.next_upgrade and poles["eg-ugp-substation-displayer"] then
     substation.next_upgrade = "eg-ugp-substation-displayer"
 end
+if poles["eg-ugp-small-electric-pole"] then
+    poles["eg-ugp-small-electric-pole"].maximum_wire_distance = constants.EG_MAX_WIRE_SMALL_IRON
+    poles["eg-ugp-small-electric-pole"].supply_area_distance = constants.EG_MAX_SUPPLY_SMALL_IRON
+end
+
+if items["eg-ugp-small-electric-pole-displayer"] then
+    items["eg-ugp-small-electric-pole-displayer"].subgroup = constants.EG_SUBGROUP
+end
+
+if poles["small-iron-electric-pole"] and not poles["small-iron-electric-pole"].next_upgrade and poles["eg-ugp-small-electric-pole-displayer"] then
+    poles["small-iron-electric-pole"].next_upgrade = "eg-ugp-small-electric-pole-displayer"
+end
+
 
 if recipes["eg-huge-electric-pole"] then
     local technology = technologies["eg-tech-1"]
@@ -235,10 +248,6 @@ end
 if mods["energy-combinator"] then
     local pole = poles["power-combinator-meter-network"]
     if pole then pole.auto_connect_up_to_n_wires = 1 end
-end
-
-if mods["Foundations"] and items["F077ET-esp-foundation"] then
-    items["F077ET-esp-foundation"].subgroup = constants.EG_SUBGROUP
 end
 
 if mods["fixLargeElectricPole"] then
