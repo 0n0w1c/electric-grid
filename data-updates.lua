@@ -193,10 +193,15 @@ if mods["factorioplus"] then
     table.insert(data.raw["technology"]["electric-energy-distribution-1"].effects,
         { type = "unlock-recipe", recipe = "huge-electric-pole" })
 
-    data.raw["electric-pole"]["eg-ugp-substation"].fast_replaceable_group =
-        data.raw["electric-pole"]["substation"].fast_replaceable_group
-    data.raw["electric-pole"]["eg-ugp-substation-displayer"].fast_replaceable_group =
-        data.raw["electric-pole"]["substation"].fast_replaceable_group
+    if data.raw["electric-pole"]["eg-ugp-substation"] then
+        data.raw["electric-pole"]["eg-ugp-substation"].fast_replaceable_group =
+            data.raw["electric-pole"]["substation"].fast_replaceable_group
+    end
+
+    if data.raw["electric-pole"]["eg-ugp-substation-displayer"] then
+        data.raw["electric-pole"]["eg-ugp-substation-displayer"].fast_replaceable_group =
+            data.raw["electric-pole"]["substation"].fast_replaceable_group
+    end
 end
 
 if mods["Bio_Industries_2"] then
