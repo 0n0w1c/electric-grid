@@ -73,7 +73,6 @@ Attempts are made for up to 1 minute, to restore the wire connections.
 [Bio Industries](https://mods.factorio.com/mod/Bio_Industries_2)  
 [Cargo Ships](https://mods.factorio.com/mod/cargo-ships)  
 [Dredgeworks](https://mods.factorio.com/mod/dredgeworks)  
-[Electric Tiles](https://mods.factorio.com/mod/electric-tiles)  
 [Energy Combinator](https://mods.factorio.com/mod/energy-combinator)  
 [Engineers vs Environmentalist Redux](https://mods.factorio.com/mod/Engineersvsenvironmentalist-redux)  
 [Factorio+](https://mods.factorio.com/mod/factorioplus)  

@@ -38,11 +38,9 @@ function job_queue.schedule(tick, function_name, arguments, repeat_interval)
         repeat_interval = repeat_interval
     })
 
-    --game.print("Scheduled job '" .. function_name .. "' for tick " .. tick .. (repeat_interval and " (repeating)" or ""))
 end
 
 function job_queue.process(current_tick)
-    --game.print("Processing jobs at tick " .. current_tick)
     local to_process = {}
 
     for tick, jobs in pairs(storage.jobs) do
@@ -61,7 +59,6 @@ function job_queue.process(current_tick)
                 if not ok then
                     log("Error running job '" .. job.function_name .. "' at tick " .. tick .. ": " .. err)
                 else
-                    --game.print("Executed job '" .. job.function_name .. "' at tick " .. tick)
                     success = true
                 end
             else
@@ -70,7 +67,6 @@ function job_queue.process(current_tick)
 
             if success and job.repeat_interval then
                 local next_tick = tick + constants.EG_TICK_INTERVAL
-                --game.print("Rescheduling job '" .. job.function_name .. "' for tick " .. next_tick)
                 job_queue.schedule(next_tick, job.function_name, job.arguments, true)
             end
         end

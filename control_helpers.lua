@@ -1,15 +1,3 @@
--- Shared runtime helpers for Electric Grid.
---
--- This file exposes the helper API used by `control.lua`. Functions are defined
--- globally because the mod loads this file with `require("control_helpers")` and
--- then calls the helpers directly from the control script.
---
--- Broadly, these helpers cover:
---   * transformator lookup and storage synchronization
---   * transformator build / rebuild / replacement operations
---   * electric pole connection enforcement and short-circuit detection
---   * transformator GUI construction helpers
-
 local job_queue = require("job_queue")
 local pole_rules = require("pole_rules")
 
@@ -50,13 +38,6 @@ function get_transformator_by_entity(entity)
 end
 
 --- Rebuild cached transformator indexes derived from runtime storage.
----
---- This refreshes:
---- - the transformator pump-unit key list
---- - the entity-to-transformator lookup index
----
---- This should be called after any operation that creates, destroys, rotates,
---- or replaces tracked transformator components.
 --- @return nil
 function sync_transformator_keys()
     if not storage then return end
@@ -97,10 +78,7 @@ end
 -- Transformator lifecycle helpers
 -- ---------------------------------------------------------------------------
 
-
-
---- Destroy an entire transformator, including its root pump, and remove it from
---- persistent storage.
+--- Destroy an entire transformator, including its root pump, and remove it from persistent storage.
 --- @param pump_unit_number uint Root pump unit number.
 --- @return nil
 function remove_transformator(pump_unit_number)
@@ -122,8 +100,6 @@ function remove_transformator(pump_unit_number)
 end
 
 --- Check whether a stored transformator is fully intact.
----
---- All tracked component entities must exist and be valid.
 --- @param pump_unit_number uint Root pump unit number.
 --- @return boolean is_valid
 function is_transformator_valid(pump_unit_number)
@@ -179,8 +155,6 @@ function is_transformator_pump(name)
 end
 
 --- Return the canonical transformator pump prototype name for a tier.
---- The legacy `eg-pump` name is still recognized for migration, but all new
---- and replaced transformators use the numbered pump names.
 --- @param tier integer|string|nil
 --- @return string pump_name
 function get_transformator_pump_name(tier)
@@ -209,9 +183,6 @@ function get_steam_engine_variant(direction)
 end
 
 --- Rotate a local offset around the transformator origin.
----
---- This helper is intentionally limited to the four cardinal directions used by
---- the mod's transformator layout.
 --- @param position MapPosition Relative position to rotate.
 --- @param direction defines.direction Cardinal direction.
 --- @return MapPosition rotated_position
@@ -322,9 +293,6 @@ end
 -- ---------------------------------------------------------------------------
 
 --- Recreate only the tiered boiler and steam-engine components in-place.
----
---- Used when the pump disable state requires refreshing tiered prototypes while
---- preserving the rest of the transformator.
 --- @param transformator EgTransformator
 --- @return nil
 function replace_tiered_components(transformator)
@@ -388,8 +356,7 @@ function get_transformator_rating_for_tier(tier)
     return spec and spec.rating or nil
 end
 
---- Capture all external wire connections from a transformator pole for
---- blueprint restoration.
+--- Capture all external wire connections from a transformator pole for blueprint restoration.
 --- @param transformator EgTransformator
 --- @param pole LuaEntity
 --- @param side string
@@ -421,7 +388,7 @@ local function snapshot_transformator_pole_connections(transformator, pole, side
 
                 local target_unit_number = target_blueprint_entity and target_blueprint_entity.unit_number or nil
                 local target_blueprint_index = target_unit_number and source_to_blueprint_index[target_unit_number] or
-                nil
+                    nil
                 local target_side = nil
                 if target_transformator == transformator then
                     if target_entity == transformator.high_voltage then
@@ -504,7 +471,7 @@ local function snapshot_transformator_pump_blueprint_connections(transformator, 
 
                 local target_unit_number = target_blueprint_entity and target_blueprint_entity.unit_number or nil
                 local target_blueprint_index = target_unit_number and source_to_blueprint_index[target_unit_number] or
-                nil
+                    nil
                 local target_side = nil
                 if target_transformator == transformator then
                     if target_entity == transformator.high_voltage then
@@ -603,17 +570,6 @@ function snapshot_transformator_blueprint_connections(transformator, source_to_b
 end
 
 --- Apply a blueprint-stored tier to a transformator after it is built.
----
---- This must be called after `eg_transformator_built(...)`, using the returned
---- root pump entity when available.
----
---- Behavior:
---- - Reads the tier from `tags[constants.EG_BLUEPRINT_TIER_TAG]`
---- - Compares against the current transformator tier
---- - Replaces the transformator if the tiers differ
----
---- Safe to call with nil or invalid entities.
----
 --- @param entity LuaEntity|nil Root pump entity (`eg-pump` / `eg-pump-<tier>`)
 --- @param tags table|nil Blueprint tags from the build event
 --- @return LuaEntity? final_root
@@ -638,15 +594,6 @@ function apply_transformator_blueprint_tier(entity, tags)
 end
 
 --- Build or rebuild a transformator from a placed entity.
----
---- This function ensures that the full transformator structure is created
---- around the root pump entity and registers it in runtime storage.
----
---- Returns the root transformator pump entity for the transformator. This return value
---- is used by blueprint-tier restoration code to apply stored tier metadata to
---- the correct final entity, even when the original built entity was a
---- displayer or item placeholder.
----
 --- @param entity LuaEntity The entity that triggered transformator creation.
 --- @param player_index uint|nil Optional acting player index for placement intent.
 --- @return LuaEntity? root_pump
@@ -784,9 +731,6 @@ function eg_transformator_built(entity, player_index)
 end
 
 --- Enforce overload rules after a transformator rating change.
----
---- If the replacement would leave the high-voltage side overloaded, all copper
---- connections on the transformator's HV pole are disconnected.
 --- @param transformator EgTransformator
 --- @return nil
 function enforce_overload_after_rating_change(transformator)
@@ -850,8 +794,7 @@ local function snapshot_pump_circuit_connections(pump)
     return snapshots
 end
 
---- Snapshot runtime circuit-control settings from a transformator pump so
---- they can be restored after replacement.
+--- Snapshot runtime circuit-control settings from a transformator pump so they can be restored after replacement.
 --- @param pump LuaEntity
 --- @return table settings
 local function snapshot_pump_control_behavior(pump)
@@ -878,8 +821,7 @@ local function snapshot_pump_control_behavior(pump)
     return defaults
 end
 
---- Apply previously captured circuit-control settings to a replacement
---- transformator pump.
+--- Apply previously captured circuit-control settings to a replacement transformator pump.
 --- @param target_pump LuaEntity
 --- @param settings table
 --- @return nil
@@ -898,8 +840,7 @@ local function apply_pump_control_behavior(target_pump, settings)
     target_cb.logistic_condition = settings.logistic_condition
 end
 
---- Restore captured circuit-wire connections onto a replacement transformator
---- pump.
+--- Restore captured circuit-wire connections onto a replacement transformator pump.
 --- @param pump LuaEntity
 --- @param snapshots table[]
 --- @return nil
@@ -1020,7 +961,6 @@ local function restore_transformator_blueprint_wire(transformator, snapshot)
 end
 
 --- Restore any blueprint-tagged transformator HV/LV pole wire connections.
---- Unresolved targets are returned so callers can retry later.
 --- @param pump_unit_number uint?
 --- @param snapshots table[]|nil
 --- @return boolean complete
@@ -1069,8 +1009,6 @@ function restore_transformator_blueprint_wires_job(args)
 end
 
 --- Begin restoration of blueprint-tagged transformator HV/LV wire snapshots.
---- Any unresolved targets are retried through the job queue until the retry
---- budget is exhausted.
 --- @param pump LuaEntity?
 --- @param snapshots table[]|nil
 --- @return nil
@@ -1088,8 +1026,7 @@ function begin_transformator_blueprint_wire_restore(pump, snapshots)
     })
 end
 
---- Update any player-selected transformator references after replacement so
---- open GUIs continue targeting the new record.
+--- Update any player-selected transformator references after replacement so open GUIs continue targeting the new record.
 --- @param old_transformator EgTransformator
 --- @param replacement EgTransformator
 --- @return nil
@@ -1103,11 +1040,7 @@ local function update_selected_transformator_references(old_transformator, repla
     end
 end
 
---- Replace a transformator's tiered internals while preserving the root pump
---- and voltage poles.
----
---- The transformator's short-circuit alert state is reset because the tracked
---- tiered entities are recreated.
+--- Replace a transformator's tiered internals while preserving the root pump and voltage poles.
 --- @param old_transformator EgTransformator?
 --- @param new_rating string Requested rating string.
 --- @return EgTransformator? replacement
@@ -1257,9 +1190,6 @@ function replace_transformator(old_transformator, new_rating)
 end
 
 --- Destroy only the non-root transformator components.
----
---- Used by rotation rebuilds that keep the game-rotated pump as the stable
---- owner/root entity.
 --- @param transformator EgTransformator
 --- @return nil
 function destroy_transformator_dependents(transformator)
@@ -1286,10 +1216,6 @@ function destroy_transformator_dependents(transformator)
 end
 
 --- Check whether a rotated transformator can place its new electric poles.
----
---- This validates only the new pole positions needed by a center-axis rotation
---- and ignores the current transformator's own existing entities, because they
---- will be rebuilt as part of the rotation.
 --- @param transformator EgTransformator
 --- @param center MapPosition
 --- @param direction defines.direction
@@ -1364,14 +1290,6 @@ function can_rotate_transformator_poles(transformator, center, direction)
 end
 
 --- Rotate the full transformator about its geometric center.
----
---- The game rotates the root pump in place before the event fires. For this
---- multi-entity structure, the pump must then be relocated so that all four
---- internal 1x1 entities rotate about the transformator center rather than
---- about the pump's own tile.
----
---- After rebuilding dependents, pole connection rules are re-enforced and a
---- deferred short-circuit scan is scheduled.
 --- @param pump LuaEntity Root pump that the game has already rotated.
 --- @param previous_direction defines.direction? Direction before the engine rotation.
 --- @return boolean success
@@ -1541,10 +1459,6 @@ function remove_invalid_transformators()
 end
 
 --- Reset cached short-circuit alert state for all stored transformators.
----
---- This is useful after migrations where the alert entity changed from the old
---- transformator unit to the pump root, because preserved `alert_tick` values
---- can suppress new alerts for migrated records.
 --- @return nil
 function reset_short_circuit_alert_state()
     if not (storage and storage.eg_transformators) then return end
@@ -1557,7 +1471,6 @@ function reset_short_circuit_alert_state()
 end
 
 --- Ensure each stored transformator uses the tier-matching root pump prototype.
---- This upgrades older saves that only had the legacy `eg-pump` root entity.
 --- @return nil
 function normalize_transformator_pumps_to_tier()
     if not (storage and storage.eg_transformators) then return end
@@ -1597,8 +1510,7 @@ function is_transformator_overload_allowed()
     return settings.startup["eg-enable-transformator-overload"].value == true
 end
 
---- Build a stable storage key for an electric pole using its surface, name,
---- and exact position.
+--- Build a stable storage key for an electric pole using its surface, name, and exact position.
 --- @param surface_index uint?
 --- @param name string?
 --- @param position MapPosition?
@@ -1627,13 +1539,6 @@ function get_transformator_rating_watts(transformator)
 end
 
 --- Compute total transformator load and supply for a network.
----
---- Load: sum of ratings for transformator high-voltage poles on the network
----
---- Supply: sum of ratings for transformator low-voltage poles on the network
----
---- Used for overload protection logic.
----
 --- @param network_id uint?
 --- @return {load_watts:number, supply_watts:number, load_count:integer, supply_count:integer} totals
 function get_network_transformator_capacity(network_id)
@@ -1700,15 +1605,7 @@ local function get_merged_network_transformator_capacity(network_id_a, network_i
     return totals
 end
 
---- Check whether a transformator high-voltage pole is overloaded on its
---- current electric network.
----
---- Overload protection is bypassed entirely when:
---- - the feature is disabled
---- - the entity is not a transformator high-voltage pole
---- - the pole is not on an electric network
---- - the network has zero LV-side supply transformators connected
----
+--- Check whether a transformator high-voltage pole is overloaded on its current electric network.
 --- @param high_voltage_pole LuaEntity?
 --- @return boolean is_overloaded
 function is_high_voltage_connection_overloaded(high_voltage_pole)
@@ -1764,9 +1661,6 @@ end
 
 --- Undo a just-built electric pole by refunding its place item to the
 --- player cursor or inventory, then removing the pole entity.
----
---- After removal, nearby poles are revalidated and the short-circuit scan is
---- rescheduled so the rollback follows the normal electric-pole removal flow.
 --- @param player LuaPlayer?
 --- @param pole LuaEntity?
 --- @return boolean removed
@@ -1807,14 +1701,6 @@ end
 
 --- Validate the settled network of a just-built electric pole after
 --- engine auto-connections have been created.
----
---- If the placed pole leaves its electric network overloaded:
---- - player builds are undone and refunded
---- - non-player builds are marked for deconstruction
----
---- The target pole is re-resolved from `{ surface_index, position, name }`
---- because delayed job arguments cannot persist a live `LuaEntity` reference.
----
 --- @param args {surface_index:uint, position:MapPosition, name:string, player_index:uint?}
 --- @return nil
 function validate_built_pole_overload(args)
@@ -1850,16 +1736,6 @@ function validate_built_pole_overload(args)
 end
 
 --- Show player feedback for a rejected copper wire connection.
----
---- Only displays when `show_message == true`, which is used for manual wire
---- connections through the custom wire-build flow. Automatic cleanup paths call
---- the same validation helpers with `show_message` omitted or false, which
---- keeps those paths silent.
----
---- Includes:
---- - local flying text
---- - the standard "cannot build" sound
----
 --- @param player LuaPlayer|nil
 --- @param pole LuaEntity?
 --- @param locale_key string
@@ -1882,10 +1758,6 @@ function notify_blocked_copper_connection(player, pole, locale_key, show_message
 end
 
 --- Disconnect one specific copper-wire edge between two poles.
----
---- This is used by the manual-wire validation path so the just-attempted wire
---- is removed first, instead of disconnecting some other overloaded neighbor on
---- the same network.
 --- @param source_pole LuaEntity?
 --- @param target_pole LuaEntity?
 --- @return boolean disconnected
@@ -1911,16 +1783,6 @@ function disconnect_specific_copper_connection(source_pole, target_pole)
 end
 
 --- Validate a specific attempted copper wire connection between two poles.
----
---- This is used for manual wire placement and ensures:
---- - the exact attempted connection is evaluated first
---- - if invalid, that connection is removed instead of some unrelated neighbor
---- - overload is evaluated against the prospective merged network produced by
----   joining the two poles' current electric networks
----
---- This prevents unrelated transformator connections from being disconnected
---- when overload cleanup is triggered by a newly placed wire.
----
 --- @param source_pole LuaEntity
 --- @param target_pole LuaEntity
 --- @param player LuaPlayer|nil
@@ -1959,18 +1821,6 @@ function enforce_specific_copper_connection(source_pole, target_pole, player, sh
 end
 
 --- Enforce transformator overload rules on one copper wire connection.
----
---- Behavior:
---- - computes total load vs supply for the electric network that would result
----   from joining the two poles' current networks
---- - allows the connection if:
----   - the merged network has zero LV-side supply transformators, or
----   - load does not exceed supply
---- - otherwise disconnects this connection
----
---- This helper validates only the provided connector pair. Broader pole/network
---- cleanup is handled by the caller.
----
 --- @param connector LuaWireConnector
 --- @param target_connector LuaWireConnector
 --- @param pole LuaEntity
@@ -2005,11 +1855,6 @@ function enforce_transformator_overload_connection(connector, target_connector, 
 end
 
 --- Check for illegal short-circuit conditions between transformator HV/LV poles.
----
---- When a transformator's high-voltage and low-voltage poles land on the same
---- electric network, a custom alert is added once and later removed when the
---- short is cleared. The pending scheduled-check marker is cleared at the start
---- of the scan.
 --- @return nil
 function short_circuit_check()
     storage.eg_short_circuit_check_tick = nil
@@ -2092,8 +1937,7 @@ function replace_displayer_with_ugp_pole(args)
     eg_schedule_short_circuit_check()
 end
 
---- Replace the delayed UGP substation displayer proxy with the real substation
---- entity.
+--- Replace the delayed UGP substation displayer proxy with the real substation entity.
 --- @param args any -- unit_number:uint
 --- @return nil
 function replace_displayer_with_ugp_substation(args)
@@ -2112,9 +1956,6 @@ function replace_displayer_with_ugp_small_electric_pole(args)
 end
 
 --- Check whether a copper cable connection is allowed between two poles.
----
---- Direct copper connections between a transformator's own HV and LV poles are
---- always forbidden. Ownership is resolved through `get_transformator_by_entity()`.
 --- @param pole_a LuaEntity
 --- @param pole_b LuaEntity
 --- @return boolean is_allowed
@@ -2148,27 +1989,6 @@ function is_copper_cable_connection_allowed(pole_a, pole_b)
 end
 
 --- Validate and enforce all copper wire connections on a pole.
----
---- Behavior:
---- - iterates all copper-wire connections on the pole
---- - removes invalid connections based on:
----   - general pole compatibility rules
----   - transformator overload rules
----
---- Modes:
---- - manual wiring (`show_message == true`):
----   - shows player-local feedback
---- - automatic enforcement (`show_message` omitted or false):
----   - silent cleanup during build, robot placement, rotation, or topology updates
----
---- Overload handling:
---- - `check_overload == nil` or `true`:
----   - runs transformator overload validation
---- - `check_overload == false`:
----   - skips transformator overload validation
----
---- Returns `false` if any connection was removed.
----
 --- @param pole LuaEntity
 --- @param player LuaPlayer|nil
 --- @param show_message boolean|nil

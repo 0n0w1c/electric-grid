@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.31.0
+Date: 16.06.2026
+  Bugfixes:
+    - Refactored to use copies of the base electric poles (main menu simulations compatibility)
+  Changes:
+    - Removed Electric Tiles and Foundations mod compatibility
+    - Added lua migration of existing base electric poles to eg-* poles
+    - Copper wire connection rules are only enforced if both poles are supported
+    - Modded electric poles which are not supported, will not be disconnected
+---------------------------------------------------------------------------------------------------
 Version: 1.30.2
 Date: 31.05.2026
   Bugfixes:

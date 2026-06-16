@@ -28,6 +28,13 @@ constants.EG_TICK_INTERVAL = 60
 constants.EG_UGP_SUBSTATION_REPLACE_DELAY_TICKS = 3 * constants.EG_TICK_INTERVAL
 constants.EG_PROCESS_PER_TICK = 5
 
+constants.EG_BASE_TO_EG_POLES = {
+    ["small-electric-pole"] = "eg-small-electric-pole",
+    ["medium-electric-pole"] = "eg-medium-electric-pole",
+    ["big-electric-pole"] = "eg-big-electric-pole",
+    ["substation"] = "eg-substation"
+}
+
 constants.EG_MOD = "__electric-grid__"
 constants.EG_GRAPHICS = constants.EG_MOD .. "/graphics/"
 constants.EG_ENTITIES = constants.EG_GRAPHICS .. "entities/"

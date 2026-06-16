@@ -1,3 +1,4 @@
+local recycling
 if mods["quality"] then
     recycling = require("__quality__/prototypes/recycling")
 end
@@ -7,10 +8,56 @@ local recipes      = data.raw["recipe"]
 local technologies = data.raw["technology"]
 local poles        = data.raw["electric-pole"]
 
-local small_pole   = poles["small-electric-pole"]
-local medium_pole  = poles["medium-electric-pole"]
-local big_pole     = poles["big-electric-pole"]
-local substation   = poles["substation"]
+local base_to_eg = constants.EG_BASE_TO_EG_POLES
+
+local function clone_base_pole(base_name, eg_name)
+    local base_pole = poles[base_name]
+    local base_item = items[base_name]
+    local base_recipe = recipes[base_name]
+    if not (base_pole and base_item and base_recipe) then return end
+
+    local pole = table.deepcopy(base_pole)
+    pole.name = eg_name
+    pole.localised_name = { "entity-name." .. base_name }
+    if pole.minable and pole.minable.result == base_name then
+        pole.minable.result = eg_name
+    end
+    if pole.placeable_by and pole.placeable_by.item == base_name then
+        pole.placeable_by.item = eg_name
+    end
+
+    local item = table.deepcopy(base_item)
+    item.name = eg_name
+    item.place_result = eg_name
+
+    local recipe = table.deepcopy(base_recipe)
+    recipe.name = eg_name
+    if recipe.main_product == base_name then
+        recipe.main_product = eg_name
+    end
+
+    for _, result in pairs(recipe.results or {}) do
+        if result.name == base_name then
+            result.name = eg_name
+        elseif result[1] == base_name then
+            result[1] = eg_name
+        end
+    end
+
+    data:extend({ pole, item, recipe })
+    if recycling then
+        recycling.generate_recycling_recipe(recipe)
+    end
+end
+
+for base_name, eg_name in pairs(base_to_eg) do
+    clone_base_pole(base_name, eg_name)
+end
+
+local small_pole  = poles["eg-small-electric-pole"]
+local medium_pole = poles["eg-medium-electric-pole"]
+local big_pole    = poles["eg-big-electric-pole"]
+local substation  = poles["eg-substation"]
 
 local function apply_medium_pole_settings(pole)
     if not pole then return end
@@ -89,14 +136,12 @@ if poles["small-iron-electric-pole"] and not poles["small-iron-electric-pole"].n
 end
 
 
-if recipes["eg-huge-electric-pole"] then
-    local technology = technologies["eg-tech-1"]
-    table.insert(technology.effects, { type = "unlock-recipe", recipe = "eg-huge-electric-pole" })
+local huge_pole_recipe = recipes["eg-huge-electric-pole"]
+local eg_technology = technologies["eg-tech-1"]
+if huge_pole_recipe and eg_technology then
+    table.insert(eg_technology.effects, { type = "unlock-recipe", recipe = "eg-huge-electric-pole" })
 end
 
-for _, pole in pairs(poles) do
-    pole.rewire_neighbours_when_destroying = false
-end
 
 shift_big_pole_visuals(big_pole)
 
@@ -124,10 +169,10 @@ if mods["Subsurface"] then
     steel_support.supply_area_distance   = 0
 end
 
-items["small-electric-pole"].subgroup           = constants.EG_SUBGROUP
-items["medium-electric-pole"].subgroup          = constants.EG_SUBGROUP
-items["big-electric-pole"].subgroup             = constants.EG_SUBGROUP
-items["substation"].subgroup                    = constants.EG_SUBGROUP
+items["eg-small-electric-pole"].subgroup        = constants.EG_SUBGROUP
+items["eg-medium-electric-pole"].subgroup       = constants.EG_SUBGROUP
+items["eg-big-electric-pole"].subgroup          = constants.EG_SUBGROUP
+items["eg-substation"].subgroup                 = constants.EG_SUBGROUP
 
 data.raw["power-switch"]["power-switch"].hidden = true
 items["power-switch"].hidden                    = true
@@ -318,7 +363,7 @@ if mods["IR3_Assets_power"] and settings.startup["IR3-enable-electric-poles"].va
 end
 
 if mods["snouz_better_substation"] then
-    local item = data.raw["electric-pole"]["snouz_better_substation"]
+    local item = items["snouz_better_substation"]
     if item then
         item.subgroup = constants.EG_SUBGROUP
     end

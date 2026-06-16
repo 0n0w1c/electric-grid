@@ -1,14 +1,10 @@
---- Runtime control script for Electric Grid.
---
--- This file owns event registration, persistent runtime state initialization,
--- blueprint tier tagging, GUI interactions, and the high-level lifecycle of
--- transformators and related pole wiring rules.
---
--- Helper functions that build, rebuild, replace, validate, and query
--- transformators live in `control_helpers.lua` and are loaded below.
----
+--- @class EgQueuedJob
+--- @field function_name string
+--- @field arguments any
+--- @field repeat_interval boolean|number|nil
 
 --- @class EgStorage
+--- @field jobs table<uint, EgQueuedJob[]>
 --- @field eg_transformators table<uint, EgTransformator>
 --- @field eg_transformator_keys uint[]
 --- @field eg_transformator_scan_index uint
@@ -31,12 +27,7 @@ require("control_helpers")
 --- @type EgStorage
 storage = storage
 
--- ---------------------------------------------------------------------------
--- Initialization helpers
--- ---------------------------------------------------------------------------
-
---- Add Electric Grid entities to the Picker Dollies blacklist when the remote
---- interface is available.
+--- Add Electric Grid entities to the Picker Dollies blacklist.
 --- @return nil
 local function edp_blacklist()
     if not remote.interfaces["PickerDollies"] then return end
@@ -62,7 +53,7 @@ local function edp_blacklist()
     end
 end
 
---- Round a target tick up to the next job-queue scheduler bucket.
+--- Align a tick to the job-queue interval.
 --- @param tick uint Target tick.
 --- @return uint aligned_tick
 local function align_to_scheduler_tick(tick)
@@ -70,11 +61,7 @@ local function align_to_scheduler_tick(tick)
     return math.ceil(tick / scheduler_interval) * scheduler_interval
 end
 
---- Schedule a coalesced short-circuit scan for the next aligned scheduler tick.
----
---- Multiple requests for the same aligned tick collapse into a single queued
---- job. The pending marker is cleared when `short_circuit_check()` runs.
----
+--- Schedule one short-circuit scan for the next scheduler tick.
 --- @return nil
 function eg_schedule_short_circuit_check()
     local scheduled_tick = align_to_scheduler_tick(game.tick + 1)
@@ -87,11 +74,7 @@ function eg_schedule_short_circuit_check()
     job_queue.schedule(scheduled_tick, "short_circuit_check")
 end
 
---- Schedule a delayed overload validation for a newly built electric pole
---- after engine-created copper connections have settled.
----
---- The scheduled job stores a re-findable entity identity rather than the
---- runtime `LuaEntity` itself, because job arguments are persisted in storage.
+--- Schedule overload validation after automatic wiring settles.
 --- @param entity LuaEntity?
 --- @param player_index uint?
 --- @return nil
@@ -107,9 +90,7 @@ local function schedule_built_pole_overload_check(entity, player_index)
     })
 end
 
---- Initialize or migrate persistent global state used by the mod.
----
---- This function is safe to call from `on_init` and on_configuration_changed`.
+--- Initialize persistent runtime state.
 --- @return nil
 local function initialize_globals()
     storage = storage or {}
@@ -132,15 +113,7 @@ local function initialize_globals()
 end
 
 
--- ---------------------------------------------------------------------------
--- Transformator monitoring helpers
--- ---------------------------------------------------------------------------
-
---- Ensure transformator pumps never use circuit-driven "Set filter".
----
---- This mod owns the pump fluid filter as part of transformator state, so the
---- pump's circuit "Set filter" option must stay disabled. If a player enables
---- it, the setting is reverted and the expected managed filter is restored.
+--- Disable circuit-controlled transformator pump filters.
 --- @param transformator EgTransformator Stored transformator state.
 --- @return nil
 local function enforce_transformator_pump_filter_mode(transformator)
@@ -170,12 +143,7 @@ local function enforce_transformator_pump_filter_mode(transformator)
     end
 end
 
---- React to a pump being disabled through circuit control.
----
---- Only the transition from enabled -> disabled matters. When the pump is
---- disabled, buffered fluid is cleared and the boiler/steam-engine pair is
---- refreshed so their tiered prototypes match the transformator state.
----
+--- Handle transformator pump circuit-disable transitions.
 --- @param transformator EgTransformator Stored transformator state.
 --- @return nil
 local function check_pump_disabled(transformator)
@@ -188,8 +156,6 @@ local function check_pump_disabled(transformator)
 
     local cb = pump.get_control_behavior()
 
-    -- LuaLS sees `get_control_behavior()` as a broad union type, so these
-    -- pump-specific fields need explicit diagnostic suppression.
     --- @diagnostic disable-next-line: undefined-field
     if not (cb and cb.circuit_enable_disable) then
         transformator.pump_was_disabled = false
@@ -215,13 +181,7 @@ local function check_pump_disabled(transformator)
     transformator.pump_was_disabled = disabled
 end
 
---- Resolve deferred manual copper-wire actions after vanilla wiring has settled.
----
---- The exact attempted `source <-> target` connection is validated first so an
---- overload or illegal pairing disconnects the newly created wire rather than a
---- nearby pre-existing one. After that, nearby poles are re-enforced silently
---- to restore network invariants without showing extra player feedback.
----
+--- Validate deferred manual copper-wire connections.
 --- @return nil
 local function process_pending_wire_cleanup()
     local pending = storage.eg_pending_wire_cleanup
@@ -286,15 +246,7 @@ local function process_pending_wire_cleanup()
     end
 end
 
---- Track changes to open transformator pump GUIs and close them when
---- circuit-control fluid transitions require the vanilla pump window to be
---- dismissed.
----
---- While a transformator pump GUI is open, this watches the current fluid
---- filter against the last observed value for each player. When the pump
---- leaves the disabled state or enters any managed control fluid, the tracked
---- GUI state is cleared and the player's opened entity is closed so the mod can
---- reassert the intended transformator UI flow.
+--- Track transformator pump filter changes while its GUI is open.
 --- @return nil
 local function process_open_pump_gui_changes()
     local opened_filter_names = storage.eg_opened_pump_filter_name
@@ -344,12 +296,7 @@ local function process_open_pump_gui_changes()
     end
 end
 
---- Run per-tick transformator maintenance.
----
---- This processes deferred copper-wire cleanup, watches open pump GUIs for
---- filter-state transitions, and incrementally scans tracked transformators so
---- pump disable transitions are handled over time without spiking work in a
---- single tick.
+--- Run incremental transformator maintenance.
 --- @return nil
 local function on_tick_pump_checks()
     process_pending_wire_cleanup()
@@ -403,15 +350,7 @@ local function on_tick_pump_checks()
     storage.eg_transformator_scan_accumulator = accumulator
 end
 
--- ---------------------------------------------------------------------------
--- Blueprint helpers
--- ---------------------------------------------------------------------------
-
---- Write transformator tier data into blueprint entity tags.
----
---- Only transformator root pump entities are tagged. This preserves the configured tier for
---- blueprint placement, copy, and cut/copy style flows without assuming the
---- mapping contains ghost entities.
+--- Store transformator tier and wire data in blueprint tags.
 --- @param event EventData.on_player_setup_blueprint
 --- @return nil
 local function on_player_setup_blueprint(event)
@@ -464,16 +403,7 @@ local function on_player_setup_blueprint(event)
     end
 end
 
--- ---------------------------------------------------------------------------
--- Entity lifecycle handlers
--- ---------------------------------------------------------------------------
-
---- Handle all build-like events that can create Electric Grid entities.
----
---- Transformator builds may originate from a placed pump, a transformator item,
---- or a displayer proxy. `eg_transformator_built()` returns the root pump when
---- one exists so any blueprint-stored tier tag can be restored onto the final
---- transformator after reconstruction.
+--- Handle Electric Grid entity creation events.
 --- @param event EventData.on_built_entity
 --- | EventData.on_robot_built_entity
 --- | EventData.on_space_platform_built_entity
@@ -532,7 +462,7 @@ local function on_entity_built(event)
     end
 end
 
---- Handle removal/destruction of transformator pieces and electric poles.
+--- Handle transformator and electric-pole removal.
 --- @param event EventData.on_player_mined_entity|EventData.on_robot_mined_entity|EventData.on_space_platform_mined_entity|EventData.on_entity_died|EventData.script_raised_destroy
 --- @return nil
 local function on_entity_mined(event)
@@ -572,10 +502,7 @@ local function on_entity_mined(event)
     end
 end
 
---- Rebuild transformator dependents after a player rotates the root pump.
----
---- The root pump is first rotated by the engine in place, then relocated so the
---- whole transformator rotates about its center.
+--- Rebuild a transformator after its pump is rotated.
 --- @param event EventData.on_player_rotated_entity
 --- @return nil
 local function on_player_rotated_entity(event)
@@ -604,30 +531,7 @@ local function on_player_rotated_entity(event)
     end
 end
 
---- Restrict special script-raised build handling to proxy pole entities that
---- need the normal build path.
---- @param event EventData.script_raised_built|EventData.script_raised_revive
---- @return nil
-local function on_script_raised_built(event)
-    local entity = event.entity
-    if not (entity and entity.valid) then return end
-    if entity.type ~= "electric-pole" then return end
-    if not (string.sub(entity.name, 1, 7) == "F077ET-" or string.sub(entity.name, 1, 14) == "electric-proxy") then
-        return
-    end
-
-    on_entity_built(event)
-end
-
-
--- ---------------------------------------------------------------------------
--- Cursor / selection helpers
--- ---------------------------------------------------------------------------
-
---- Track whether the player currently holds copper wire on the cursor.
----
---- This state is used to defer pole-connection enforcement until the player
---- finishes dragging copper wire.
+--- Track copper wire cursor state.
 --- @param event EventData.on_player_cursor_stack_changed
 --- @return nil
 local function on_cursor_stack_changed(event)
@@ -648,9 +552,7 @@ local function on_cursor_stack_changed(event)
     end
 end
 
---- Remember the currently selected transformator entity or displayer when the
---- player uses pipette, so later placement can inherit the intended
---- transformator tier or prototype choice.
+--- Remember transformator tier or prototype selected with pipette.
 --- @param event EventData.on_player_pipette
 --- @return nil
 local function on_entity_pipetted(event)
@@ -673,13 +575,7 @@ local function on_entity_pipetted(event)
 end
 
 
--- ---------------------------------------------------------------------------
--- GUI helpers
--- ---------------------------------------------------------------------------
-
-
---- Open or refresh the relative transformator rating GUI when the player opens
---- a transformator pump.
+--- Open or refresh the transformator rating GUI.
 --- @param event EventData.on_gui_opened
 --- @return nil
 local function on_gui_opened(event)
@@ -720,10 +616,7 @@ local function on_gui_opened(event)
     end
 end
 
---- Handle the relative transformator rating GUI being closed.
----
---- When a pump GUI closes, this also restores the pump's expected filter state
---- and refreshes tiered components if the disabled control fluid was selected.
+--- Close the rating GUI and restore transformator pump state.
 --- @param event EventData.on_gui_closed
 --- @return nil
 local function on_gui_closed(event)
@@ -773,7 +666,7 @@ local function on_gui_closed(event)
     end
 end
 
---- Handle button clicks in the transformator rating GUI.
+--- Handle transformator GUI button clicks.
 --- @param event EventData.on_gui_click
 --- @return nil
 local function on_gui_click(event)
@@ -790,7 +683,7 @@ local function on_gui_click(event)
     end
 end
 
---- Handle rating radio button changes for the relative GUI.
+--- Handle transformator rating selection.
 --- @param event EventData.on_gui_checked_state_changed
 --- @return nil
 local function on_rating_radio_checked_state_changed(event)
@@ -839,11 +732,7 @@ local function on_rating_radio_checked_state_changed(event)
 end
 
 
--- ---------------------------------------------------------------------------
--- Scheduled job helpers
--- ---------------------------------------------------------------------------
-
---- Process queued delayed jobs due on the current scheduler bucket tick.
+--- Process queued jobs for the current scheduler tick.
 --- @param event { tick: uint }
 --- @return nil
 local function on_periodic_tick(event)
@@ -856,17 +745,7 @@ local function register_nth_tick_handlers()
     script.on_nth_tick(constants.EG_TICK_INTERVAL, on_periodic_tick)
 end
 
---- Handle custom copper-wire build input.
----
---- Implements a two-click state machine:
---- 1. First click stores the source pole
---- 2. Second click queues a deferred validation job
----
---- Validation and disconnection occur on the next tick via
---- `process_pending_wire_cleanup()` to ensure vanilla wiring has completed.
---- Player-facing flying text is only shown for this manual-wire path; build,
---- mining, and topology cleanup rechecks remain silent.
----
+--- Track two-click manual copper-wire connections for deferred validation.
 --- @param event { player_index: uint }
 --- @return nil
 local function on_wire_build(event)
@@ -914,11 +793,7 @@ local function on_wire_build(event)
     storage.eg_wire_click_source[player_index] = nil
 end
 
--- ---------------------------------------------------------------------------
--- Event registration and script lifecycle
--- ---------------------------------------------------------------------------
-
---- Register all event handlers used by the mod.
+--- Register runtime event handlers.
 --- @return nil
 local function register_event_handlers()
     script.on_event(defines.events.on_tick, on_tick_pump_checks)
@@ -932,7 +807,6 @@ local function register_event_handlers()
     script.on_event(defines.events.on_space_platform_built_entity, on_entity_built)
     script.on_event(defines.events.on_entity_cloned, on_entity_built)
     script.on_event(defines.events.script_raised_revive, on_entity_built)
-    script.on_event(defines.events.script_raised_built, on_script_raised_built)
 
     script.on_event(defines.events.on_player_mined_entity, on_entity_mined)
     script.on_event(defines.events.on_robot_mined_entity, on_entity_mined)

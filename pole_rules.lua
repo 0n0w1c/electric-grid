@@ -11,16 +11,26 @@ local function pole(class, tags)
 end
 
 pole_rules.poles = {
-    -- Electric Grid / vanilla
-    ["small-electric-pole"] = pole("distribution_small", { "vanilla", "distribution" }),
+    -- Electric Grid
+    ["eg-small-electric-pole"] = pole("distribution_small", { "electric-grid", "base-copy", "distribution" }),
     ["small-iron-electric-pole"] = pole("distribution_small", { "electric-grid", "aai-industry", "distribution" }),
-    ["medium-electric-pole"] = pole("transmission_medium", { "vanilla", "transmission" }),
-    ["big-electric-pole"] = pole("transmission_big", { "vanilla", "transmission" }),
-    ["substation"] = pole("distribution_substation", { "vanilla", "distribution" }),
+    ["eg-medium-electric-pole"] = pole("transmission_medium", { "electric-grid", "base-copy", "transmission" }),
+    ["eg-big-electric-pole"] = pole("transmission_big", { "electric-grid", "base-copy", "transmission" }),
+    ["eg-substation"] = pole("distribution_substation", { "electric-grid", "base-copy", "distribution" }),
     ["eg-ugp-small-electric-pole"] = pole("distribution_small", { "electric-grid", "underground", "distribution" }),
     ["eg-ugp-substation"] = pole("distribution_substation", { "electric-grid", "underground", "distribution" }),
     ["eg-circuit-pole"] = pole("utility_circuit", { "electric-grid", "utility" }),
     ["eg-huge-electric-pole"] = pole("transmission_huge_eg", { "electric-grid", "transmission", "huge" }),
+
+    -- Transformator connection poles
+    ["eg-high-voltage-pole-0"] = pole("transformator_high", { "electric-grid", "transformator", "high-voltage" }),
+    ["eg-high-voltage-pole-2"] = pole("transformator_high", { "electric-grid", "transformator", "high-voltage" }),
+    ["eg-high-voltage-pole-4"] = pole("transformator_high", { "electric-grid", "transformator", "high-voltage" }),
+    ["eg-high-voltage-pole-6"] = pole("transformator_high", { "electric-grid", "transformator", "high-voltage" }),
+    ["eg-low-voltage-pole-0"] = pole("transformator_low", { "electric-grid", "transformator", "low-voltage" }),
+    ["eg-low-voltage-pole-2"] = pole("transformator_low", { "electric-grid", "transformator", "low-voltage" }),
+    ["eg-low-voltage-pole-4"] = pole("transformator_low", { "electric-grid", "transformator", "low-voltage" }),
+    ["eg-low-voltage-pole-6"] = pole("transformator_low", { "electric-grid", "transformator", "low-voltage" }),
 
     -- Engineers vs environmentalist redux
     ["medium-electric-pole-2"] = pole("transmission_medium", { "engineersvsenvironmentalist-redux", "transmission" }),
@@ -315,6 +325,10 @@ end
 function pole_rules.can_connect(name_a, name_b, surface_name, is_transformator_a, is_transformator_b)
     if not (name_a and name_b) then return false end
 
+    if not pole_rules.poles[name_a] or not pole_rules.poles[name_b] then
+        return true
+    end
+
     if pole_rules.explicit_deny[name_a] and pole_rules.explicit_deny[name_a][name_b] then return false end
     if pole_rules.explicit_deny[name_b] and pole_rules.explicit_deny[name_b][name_a] then return false end
 
@@ -341,18 +355,6 @@ function pole_rules.can_connect(name_a, name_b, surface_name, is_transformator_a
     end
 
     if classes_can_connect(class_a, class_b) or classes_can_connect(class_b, class_a) then return true end
-
-    local is_proxy_a = has_prefix(name_a, "electric-proxy-")
-    local is_proxy_b = has_prefix(name_b, "electric-proxy-")
-    local is_f077et_a = has_prefix(name_a, "F077ET-")
-    local is_f077et_b = has_prefix(name_b, "F077ET-")
-
-    if is_proxy_a and is_proxy_b then return true end
-    if is_f077et_a and is_f077et_b then return true end
-    if (is_huge_a and is_proxy_b) or (is_huge_b and is_proxy_a) then return false end
-    if (is_huge_a and is_f077et_b) or (is_huge_b and is_f077et_a) then return false end
-    if (is_transmission_a and is_proxy_b) or (is_transmission_b and is_proxy_a) then return true end
-    if (is_transmission_a and is_f077et_b) or (is_transmission_b and is_f077et_a) then return true end
 
     return false
 end

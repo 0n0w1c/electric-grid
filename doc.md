@@ -168,7 +168,7 @@ This is why the value is greater than 1. It is not intended to create free energ
 
 Factorio 2.0 changed boiler behavior so boilers can produce a different amount of output fluid than the input fluid consumed. Current boiler behavior can use a 10:1 water-to-steam style conversion.
 
-For this mod, the important point is not the visible vanilla steam ratio itself, but that boiler and generator calibration must respect Factorio's current fluid-energy behavior. The transformator constants are therefore expressed as derived values rather than unexplained literals.
+For this mod, the important point is not the steam ratio itself, but that boiler and generator calibration must respect Factorio's current fluid-energy behavior. The transformator constants are therefore expressed as derived values rather than unexplained literals.
 
 The older constants:
 
