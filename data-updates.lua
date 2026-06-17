@@ -18,7 +18,11 @@ local function clone_base_pole(base_name, eg_name)
 
     local pole = table.deepcopy(base_pole)
     pole.name = eg_name
-    pole.localised_name = { "entity-name." .. base_name }
+    if base_name == "small-iron-electric-pole" then
+        pole.localised_name = { "entity-name.eg-small-iron-electric-pole" }
+    else
+        pole.localised_name = { "entity-name." .. base_name }
+    end
     if pole.minable and pole.minable.result == base_name then
         pole.minable.result = eg_name
     end
