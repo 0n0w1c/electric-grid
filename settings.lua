@@ -11,9 +11,6 @@ local function get_next_order()
 end
 
 local huge_localised = { "", "[item=eg-huge-electric-pole] ", { "mod-setting-name.eg-max-wire-huge" } }
-if mods["PowerOverload"] then
-    huge_localised = { "", "[item=po-huge-electric-pole] ", { "mod-setting-name.eg-max-wire-huge" } }
-end
 
 data.extend({
     {
@@ -145,7 +142,7 @@ data.extend({
         minimum_value = 4.0,
         maximum_value = 12.0,
         order = get_next_order(),
-        localised_name = { "", "[item=small-iron-electric-pole] ", { "mod-setting-name.eg-max-wire-small-iron" } },
+        localised_name = { "", "[item=eg-small-iron-electric-pole] ", { "mod-setting-name.eg-max-wire-small-iron" } },
         localised_description = { "mod-setting-description.eg-max-wire-small-iron" },
         hidden = is_setting_hidden("eg-max-wire-small-iron")
     },
@@ -157,7 +154,7 @@ data.extend({
         minimum_value = 4.0,
         maximum_value = 10.0,
         order = get_next_order(),
-        localised_name = { "", "[item=small-iron-electric-pole] ", { "mod-setting-name.eg-max-supply-small-iron" } },
+        localised_name = { "", "[item=eg-small-iron-electric-pole] ", { "mod-setting-name.eg-max-supply-small-iron" } },
         localised_description = { "mod-setting-description.eg-max-supply-small-iron" },
         hidden = is_setting_hidden("eg-max-supply-small-iron")
     },

@@ -1,9 +1,3 @@
---- Parses the rating string to extract the numeric value and converts it to watts (W).
--- The input string should be formatted as a number followed by a unit (e.g., "5.5MW").
--- This function converts the numeric value based on the unit to return the value in watts (W).
--- Supported units are W, kW, MW, and GW. If an unsupported unit is provided, the function returns 0.
--- @param rating string The energy string to parse, which should contain a number followed by an energy unit (e.g., "10MW", "5.5GW").
--- @return number The numeric value converted to watts (W), or 0 if the unit is unsupported.
 local function normalize_rating(rating)
     local value, unit = rating:match("^(%d+%.?%d*)(%a+)$")
     value = tonumber(value)
@@ -32,7 +26,8 @@ constants.EG_BASE_TO_EG_POLES = {
     ["small-electric-pole"] = "eg-small-electric-pole",
     ["medium-electric-pole"] = "eg-medium-electric-pole",
     ["big-electric-pole"] = "eg-big-electric-pole",
-    ["substation"] = "eg-substation"
+    ["substation"] = "eg-substation",
+    ["small-iron-electric-pole"] = "eg-small-iron-electric-pole"
 }
 
 constants.EG_MOD = "__electric-grid__"

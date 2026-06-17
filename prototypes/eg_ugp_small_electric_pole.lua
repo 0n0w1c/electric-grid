@@ -1,7 +1,5 @@
-if mods["PowerOverload"] then return end
-
-local base_pole_name = data.raw["electric-pole"]["small-iron-electric-pole"] and "small-iron-electric-pole" or
-    "small-electric-pole"
+local base_pole_name = data.raw["electric-pole"]["eg-small-iron-electric-pole"] and "eg-small-iron-electric-pole" or
+    (data.raw["electric-pole"]["small-iron-electric-pole"] and "small-iron-electric-pole" or "small-electric-pole")
 local base_pole = data.raw["electric-pole"][base_pole_name]
 if not base_pole then return end
 

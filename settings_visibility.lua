@@ -17,10 +17,6 @@ visibility.hidden_if_mod_present = {
         ["eg-max-supply-substation"] = true,
     },
 
-    ["PowerOverload"] = {
-        ["eg-max-wire-small-iron"] = true,
-        ["eg-max-supply-small-iron"] = true,
-    },
 
     ["Engineersvsenvironmentalist-redux"] = {
         ["eg-max-wire-medium"] = true,

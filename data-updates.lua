@@ -8,7 +8,7 @@ local recipes      = data.raw["recipe"]
 local technologies = data.raw["technology"]
 local poles        = data.raw["electric-pole"]
 
-local base_to_eg = constants.EG_BASE_TO_EG_POLES
+local base_to_eg   = table.deepcopy(constants.EG_BASE_TO_EG_POLES)
 
 local function clone_base_pole(base_name, eg_name)
     local base_pole = poles[base_name]
@@ -131,8 +131,8 @@ if items["eg-ugp-small-electric-pole-displayer"] then
     items["eg-ugp-small-electric-pole-displayer"].subgroup = constants.EG_SUBGROUP
 end
 
-if poles["small-iron-electric-pole"] and not poles["small-iron-electric-pole"].next_upgrade and poles["eg-ugp-small-electric-pole-displayer"] then
-    poles["small-iron-electric-pole"].next_upgrade = "eg-ugp-small-electric-pole-displayer"
+if poles["eg-small-iron-electric-pole"] and not poles["eg-small-iron-electric-pole"].next_upgrade and poles["eg-ugp-small-electric-pole-displayer"] then
+    poles["eg-small-iron-electric-pole"].next_upgrade = "eg-ugp-small-electric-pole-displayer"
 end
 
 
@@ -178,41 +178,9 @@ data.raw["power-switch"]["power-switch"].hidden = true
 items["power-switch"].hidden                    = true
 recipes["power-switch"].hidden                  = true
 
-if not mods["aai-industry"] and recipes["small-iron-electric-pole"] then
+if not mods["aai-industry"] and recipes["eg-small-iron-electric-pole"] then
     table.insert(technologies["electronics"].effects,
-        { type = "unlock-recipe", recipe = "small-iron-electric-pole" })
-end
-
-if mods["PowerOverload"] then
-    local po_huge_pole                          = poles["po-huge-electric-pole"]
-    po_huge_pole.light                          = constants.EG_HUGE_POLE_LIGHTS and
-        constants.EG_HUGE_POLE_LIGHT or nil
-    po_huge_pole.maximum_wire_distance          = tonumber(settings.startup["eg-max-wire-huge"].value)
-    po_huge_pole.drawing_box_vertical_extension = 3
-
-    items["po-huge-electric-pole"].subgroup     = constants.EG_SUBGROUP
-    items["po-interface"].subgroup              = constants.EG_SUBGROUP
-
-    items["po-transformer"].subgroup            = constants.EG_SUBGROUP
-    items["po-transformer-high"].subgroup       = constants.EG_SUBGROUP
-    items["po-transformer-low"].subgroup        = constants.EG_SUBGROUP
-
-    if mods["quality"] then
-        recipes["po-transformer-recycling"].hidden = true
-    end
-
-    for _, pole in pairs(poles) do
-        if string.sub(pole.name, 1, 3) == "po-" and string.find(pole.name, "-fuse") then
-            items[pole.name].subgroup = constants.EG_SUBGROUP
-        end
-    end
-
-    technologies["po-electric-energy-distribution-3"].hidden = true
-
-    table.insert(technologies["eg-tech-1"].effects, { type = "unlock-recipe", recipe = "po-huge-electric-pole" })
-
-    table.insert(technologies["electric-energy-distribution-2"].effects,
-        { type = "unlock-recipe", recipe = "po-interface" })
+        { type = "unlock-recipe", recipe = "eg-small-iron-electric-pole" })
 end
 
 if mods["factorioplus"] then
@@ -258,10 +226,12 @@ if mods["Bio_Industries_2"] then
 end
 
 if mods["aai-industry"] then
-    local small_iron_pole = poles["small-iron-electric-pole"]
+    local small_iron_pole = poles["eg-small-iron-electric-pole"]
     if small_iron_pole then
-        local small_iron_pole_item            = items["small-iron-electric-pole"]
-        small_iron_pole_item.subgroup         = constants.EG_SUBGROUP
+        local small_iron_pole_item = items["eg-small-iron-electric-pole"]
+        if small_iron_pole_item then
+            small_iron_pole_item.subgroup = constants.EG_SUBGROUP
+        end
 
         small_iron_pole.maximum_wire_distance = constants.EG_MAX_WIRE_SMALL_IRON
         small_iron_pole.supply_area_distance  = constants.EG_MAX_SUPPLY_SMALL_IRON

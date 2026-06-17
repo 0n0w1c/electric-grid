@@ -81,7 +81,6 @@ Attempts are made for up to 1 minute, to restore the wire connections.
 [Krastorio2](https://mods.factorio.com/mod/Krastorio2)  
 [Krastorio2 Spaced Out](https://mods.factorio.com/mod/Krastorio2-spaced-out)  
 [Minimal Electric Rails](https://mods.factorio.com/mod/minimalist-rails)  
-[Power Overload](https://mods.factorio.com/mod/PowerOverload)  
 [Subsurface](https://mods.factorio.com/mod/Subsurface)  
 
 *Alternate locales:*  

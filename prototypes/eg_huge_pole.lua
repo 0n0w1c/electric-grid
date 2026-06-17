@@ -1,4 +1,4 @@
-if mods["factorioplus"] or mods["PowerOverload"] then return end
+if mods["factorioplus"] then return end
 
 local huge_pole                 = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
 

@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.32.0
+Date: 17.06.2026
+  Bugfixes:
+    - None
+  Changes:
+    - Migration of the small iron electric poles to an eg-* pole
+    - Removed compatibility with Power Overload
+---------------------------------------------------------------------------------------------------
 Version: 1.31.0
 Date: 16.06.2026
   Bugfixes:

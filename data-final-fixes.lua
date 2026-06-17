@@ -1,4 +1,4 @@
-local base_to_eg = constants.EG_BASE_TO_EG_POLES
+local base_to_eg = table.deepcopy(constants.EG_BASE_TO_EG_POLES)
 
 local items = data.raw.item or {}
 local poles = data.raw["electric-pole"] or {}

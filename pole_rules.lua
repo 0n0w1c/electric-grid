@@ -13,7 +13,7 @@ end
 pole_rules.poles = {
     -- Electric Grid
     ["eg-small-electric-pole"] = pole("distribution_small", { "electric-grid", "base-copy", "distribution" }),
-    ["small-iron-electric-pole"] = pole("distribution_small", { "electric-grid", "aai-industry", "distribution" }),
+    ["eg-small-iron-electric-pole"] = pole("distribution_small", { "electric-grid", "aai-industry", "base-copy", "distribution" }),
     ["eg-medium-electric-pole"] = pole("transmission_medium", { "electric-grid", "base-copy", "transmission" }),
     ["eg-big-electric-pole"] = pole("transmission_big", { "electric-grid", "base-copy", "transmission" }),
     ["eg-substation"] = pole("distribution_substation", { "electric-grid", "base-copy", "distribution" }),
@@ -71,17 +71,6 @@ pole_rules.poles = {
     -- Energy combinator
     ["power-combinator-meter-network"] = pole("meter_network", { "energy-combinator", "utility" }),
 
-    -- Power Overload
-    ["po-interface"] = pole("po_interface", { "PowerOverload", "utility" }),
-    ["po-small-electric-fuse"] = pole("po_small_fuse", { "PowerOverload", "fuse" }),
-    ["po-medium-electric-fuse"] = pole("po_medium_fuse", { "PowerOverload", "fuse" }),
-    ["po-big-electric-fuse"] = pole("po_big_fuse", { "PowerOverload", "fuse" }),
-    ["po-substation-fuse"] = pole("po_substation_fuse", { "PowerOverload", "fuse" }),
-    ["po-huge-electric-fuse"] = pole("po_huge_fuse", { "PowerOverload", "fuse" }),
-    ["po-hidden-electric-pole-in"] = pole("po_hidden_link", { "PowerOverload", "hidden" }),
-    ["po-hidden-electric-pole-out"] = pole("po_hidden_link", { "PowerOverload", "hidden" }),
-    ["po-huge-electric-pole"] = pole("transmission_huge_po", { "PowerOverload", "transmission", "huge" }),
-
     -- Krastorio 2
     ["kr-superior-substation"] = pole("distribution_substation", { "Krastorio2", "distribution" }),
 
@@ -104,7 +93,6 @@ local class_allows = {
         distribution_small = true,
         transmission_medium = true,
         rail_power = true,
-        po_small_fuse = true,
         meter_network = true,
     },
     transmission_medium = {
@@ -116,9 +104,6 @@ local class_allows = {
         subsurface_wooden_support = true,
         subsurface_entrance = true,
         water_transmission_tap = true,
-        po_small_fuse = true,
-        po_medium_fuse = true,
-        po_hidden_link = true,
         meter_network = true,
     },
     transmission_big = {
@@ -130,48 +115,31 @@ local class_allows = {
         big_endpoint = true,
         rail_hidden = true,
         subsurface_entrance = true,
-        po_medium_fuse = true,
-        po_big_fuse = true,
-        po_substation_fuse = true,
-        po_hidden_link = true,
         meter_network = true,
     },
     distribution_substation = {
         distribution_substation = true,
         transmission_big = true,
-        po_substation_fuse = true,
         meter_network = true,
     },
     transmission_huge_eg = {
         transmission_huge_eg = true,
         transmission_huge_bio = true,
-        po_hidden_link = true,
         meter_network = true,
     },
     transmission_huge_factorioplus = {
         transmission_huge_factorioplus = true,
         transmission_huge_bio = true,
-        po_hidden_link = true,
-        meter_network = true,
-    },
-    transmission_huge_po = {
-        transmission_huge_po = true,
-        transmission_huge_bio = true,
-        po_huge_fuse = true,
-        po_hidden_link = true,
         meter_network = true,
     },
     transmission_huge_large = {
         transmission_huge_large = true,
-        po_hidden_link = true,
         meter_network = true,
     },
     transmission_huge_bio = {
         transmission_huge_bio = true,
         transmission_huge_eg = true,
         transmission_huge_factorioplus = true,
-        transmission_huge_po = true,
-        po_hidden_link = true,
         meter_network = true,
     },
     utility_circuit = {
@@ -229,54 +197,10 @@ local class_allows = {
         transmission_big = true,
         transmission_huge_eg = true,
         transmission_huge_factorioplus = true,
-        transmission_huge_po = true,
         transmission_huge_large = true,
         transmission_huge_bio = true,
         distribution_substation = true,
         big_endpoint = true,
-    },
-    po_interface = {
-        po_huge_fuse = true,
-    },
-    po_small_fuse = {
-        distribution_small = true,
-        transmission_medium = true,
-        po_hidden_link = true,
-    },
-    po_medium_fuse = {
-        transmission_medium = true,
-        transmission_big = true,
-        po_hidden_link = true,
-    },
-    po_big_fuse = {
-        transmission_big = true,
-        distribution_substation = true,
-        po_hidden_link = true,
-    },
-    po_substation_fuse = {
-        distribution_substation = true,
-        transmission_big = true,
-        po_hidden_link = true,
-    },
-    po_huge_fuse = {
-        transmission_huge_po = true,
-        po_interface = true,
-        po_hidden_link = true,
-    },
-    po_hidden_link = {
-        po_hidden_link = true,
-        transmission_medium = true,
-        transmission_big = true,
-        transmission_huge_eg = true,
-        transmission_huge_factorioplus = true,
-        transmission_huge_po = true,
-        transmission_huge_large = true,
-        transmission_huge_bio = true,
-        po_small_fuse = true,
-        po_medium_fuse = true,
-        po_big_fuse = true,
-        po_substation_fuse = true,
-        po_huge_fuse = true,
     },
 }
 
@@ -304,7 +228,6 @@ function pole_rules.is_transmission(name)
         def.class == "transmission_big" or
         def.class == "transmission_huge_eg" or
         def.class == "transmission_huge_factorioplus" or
-        def.class == "transmission_huge_po" or
         def.class == "transmission_huge_large" or
         def.class == "transmission_huge_bio"
 end
@@ -312,10 +235,6 @@ end
 function pole_rules.is_huge(name)
     local def = pole_rules.poles[name]
     return def and def.tags and def.tags.huge == true
-end
-
-function pole_rules.is_power_overload_fuse(name)
-    return has_prefix(name, "po-") and string.find(name, "-fuse", 1, true) ~= nil
 end
 
 local function classes_can_connect(class_a, class_b)
@@ -348,11 +267,6 @@ function pole_rules.can_connect(name_a, name_b, surface_name, is_transformator_a
     if is_transformator_a and is_transformator_b then return true end
     if (is_transformator_a and is_transmission_b) or (is_transformator_b and is_transmission_a) then return true end
     if (is_transformator_a and is_huge_b) or (is_transformator_b and is_huge_a) then return true end
-    if (is_transformator_a and class_b == "po_interface") or (is_transformator_b and class_a == "po_interface") then return true end
-    if (is_transformator_a and pole_rules.is_power_overload_fuse(name_b)) or
-        (is_transformator_b and pole_rules.is_power_overload_fuse(name_a)) then
-        return true
-    end
 
     if classes_can_connect(class_a, class_b) or classes_can_connect(class_b, class_a) then return true end
 

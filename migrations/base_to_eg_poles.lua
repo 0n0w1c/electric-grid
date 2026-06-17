@@ -4,7 +4,8 @@ local replacements = {
     ["small-electric-pole"] = "eg-small-electric-pole",
     ["medium-electric-pole"] = "eg-medium-electric-pole",
     ["big-electric-pole"] = "eg-big-electric-pole",
-    ["substation"] = "eg-substation"
+    ["substation"] = "eg-substation",
+    ["small-iron-electric-pole"] = "eg-small-iron-electric-pole"
 }
 
 local function replace_item_stack(stack)

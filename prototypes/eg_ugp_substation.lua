@@ -1,5 +1,3 @@
-if mods["PowerOverload"] then return end
-
 local ugp_substation                          = table.deepcopy(data.raw["electric-pole"]["substation"])
 ugp_substation.name                           = "eg-ugp-substation"
 ugp_substation.localised_name                 = { "entity-name.eg-ugp-substation" }

@@ -1,4 +1,4 @@
-if mods["aai-industry"] or mods["PowerOverload"] then return end
+if mods["aai-industry"] then return end
 
 local small_iron_pole                 = table.deepcopy(data.raw["electric-pole"]["small-electric-pole"])
 
