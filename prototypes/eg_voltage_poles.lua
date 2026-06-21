@@ -76,6 +76,7 @@ for direction, _ in pairs(constants.EG_DIRECTION_TO_CARDINAL) do
         pole.minable                        = nil
         pole.selectable_in_game             = true
         pole.flags                          = constants.EG_INTERNAL_ENTITY_FLAGS
+        pole.next_upgrade                   = nil
         pole.max_health                     = constants.EG_MAX_HEALTH
         pole.connection_points              = eg_wireconnections(connection_name, direction)
         pole.collision_box                  = { { -0.9, -0.9 }, { 0.9, 0.9 } }
