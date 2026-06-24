@@ -52,12 +52,14 @@ function create_transformator_steam_engine(variant, tier)
                     connection_category = "eg-guts-category",
                     direction = defines.direction.north,
                     flow_direction = "input-output",
+                    hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
                     position = { 0, 0 }
                 },
                 {
                     connection_category = "eg-guts-category",
                     direction = defines.direction.south,
                     flow_direction = "input-output",
+                    hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
                     position = { 0, 0 }
                 }
             }

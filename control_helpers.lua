@@ -154,6 +154,47 @@ function is_transformator_pump(name)
         and (name == "eg-pump" or name:match("^eg%-pump%-%d+$") ~= nil)
 end
 
+--- Safely return an entity fluidbox.
+--- @param entity LuaEntity?
+--- @return any fluidbox
+function eg_get_fluidbox(entity)
+    if not (entity and entity.valid) then return nil end
+
+    local entity_fields = entity
+    --- @cast entity_fields table
+    local ok, fluidbox = pcall(function() return entity_fields.fluidbox end)
+    if ok and fluidbox then return fluidbox end
+
+    return nil
+end
+
+--- Safely read a fluidbox filter.
+--- @param entity LuaEntity?
+--- @param index uint|nil
+--- @return table? filter
+function eg_get_fluidbox_filter(entity, index)
+    local fluidbox = eg_get_fluidbox(entity)
+    if not fluidbox then return nil end
+
+    local ok, filter = pcall(function() return fluidbox.get_filter(index or 1) end)
+    if ok then return filter end
+
+    return nil
+end
+
+--- Safely set a fluidbox filter.
+--- @param entity LuaEntity?
+--- @param filter table|nil
+--- @param index uint|nil
+--- @return boolean success
+function eg_set_fluidbox_filter(entity, filter, index)
+    local fluidbox = eg_get_fluidbox(entity)
+    if not fluidbox then return false end
+
+    local ok, result = pcall(function() return fluidbox.set_filter(index or 1, filter) end)
+    return ok and result == true
+end
+
 --- Return the canonical transformator pump prototype name for a tier.
 --- @param tier integer|string|nil
 --- @return string pump_name
@@ -621,7 +662,7 @@ function eg_transformator_built(entity, player_index)
             y = position.y - pump_offset.y
         }
 
-        local filter = entity.fluidbox and entity.fluidbox.get_filter(1)
+        local filter = eg_get_fluidbox_filter(entity, 1)
         if filter and filter.name then
             tier = filter.name:match("^eg%-water%-(%d+)$")
         end
@@ -810,14 +851,13 @@ local function snapshot_pump_control_behavior(pump)
     local cb = pump.get_control_behavior()
     if not cb then return defaults end
 
-    --- @diagnostic disable-next-line: undefined-field
-    defaults.circuit_enable_disable = cb.circuit_enable_disable
-    --- @diagnostic disable-next-line: undefined-field
-    defaults.connect_to_logistic_network = cb.connect_to_logistic_network
-    --- @diagnostic disable-next-line: undefined-field
-    defaults.circuit_condition = cb.circuit_condition
-    --- @diagnostic disable-next-line: undefined-field
-    defaults.logistic_condition = cb.logistic_condition
+    local cb_fields = cb
+    --- @cast cb_fields table
+
+    defaults.circuit_enable_disable = cb_fields.circuit_enable_disable
+    defaults.connect_to_logistic_network = cb_fields.connect_to_logistic_network
+    defaults.circuit_condition = cb_fields.circuit_condition
+    defaults.logistic_condition = cb_fields.logistic_condition
     return defaults
 end
 
@@ -1087,7 +1127,7 @@ function replace_transformator(old_transformator, new_rating)
     local old_pump_position = old_pump.position
     local old_pump_direction = old_pump.direction
     local old_pump_health = old_pump.health
-    local old_pump_filter = old_pump.fluidbox.get_filter(1)
+    local old_pump_filter = eg_get_fluidbox_filter(old_pump, 1)
     local pump_connections = snapshot_pump_circuit_connections(old_pump)
     local pump_cb_settings = snapshot_pump_control_behavior(old_pump)
 
@@ -1147,12 +1187,12 @@ function replace_transformator(old_transformator, new_rating)
     new_pump.clear_fluid_inside()
     if old_pump_filter and old_pump_filter.name then
         if old_pump_filter.name == constants.DISABLED_FLUID then
-            new_pump.fluidbox.set_filter(1, { name = constants.DISABLED_FLUID })
+            eg_set_fluidbox_filter(new_pump, { name = constants.DISABLED_FLUID }, 1)
         else
-            new_pump.fluidbox.set_filter(1, { name = "eg-water-" .. new_tier })
+            eg_set_fluidbox_filter(new_pump, { name = "eg-water-" .. new_tier }, 1)
         end
     else
-        new_pump.fluidbox.set_filter(1, { name = "eg-water-" .. new_tier })
+        eg_set_fluidbox_filter(new_pump, { name = "eg-water-" .. new_tier }, 1)
     end
 
     if new_infinity_pipe and new_infinity_pipe.valid then
@@ -2068,9 +2108,9 @@ end
 --- @param pump LuaEntity?
 --- @return string? filter_name
 function get_transformator_pump_filter_name(pump)
-    if not (pump and pump.valid and pump.fluidbox) then return nil end
+    if not (pump and pump.valid) then return nil end
 
-    local filter = pump.fluidbox.get_filter(1)
+    local filter = eg_get_fluidbox_filter(pump, 1)
     if filter and filter.name then
         return filter.name
     end

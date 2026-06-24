@@ -25,21 +25,25 @@ local eg_infinity_pipe = {
             {
                 connection_category = "eg-guts-category",
                 direction = defines.direction.north,
+                hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
                 position = { 0, 0 }
             },
             {
                 connection_category = "eg-guts-category",
                 direction = defines.direction.east,
+                hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
                 position = { 0, 0 }
             },
             {
                 connection_category = "eg-guts-category",
                 direction = defines.direction.south,
+                hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
                 position = { 0, 0 }
             },
             {
                 connection_category = "eg-guts-category",
                 direction = defines.direction.west,
+                hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
                 position = { 0, 0 }
             }
         }

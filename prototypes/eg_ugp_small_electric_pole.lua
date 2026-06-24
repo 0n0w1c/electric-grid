@@ -115,9 +115,9 @@ local ugp_small_pole_displayer_recipe =
 {
     type = "recipe",
     name = ugp_small_pole_displayer_name,
-    category = base_recipe and base_recipe.category or "crafting",
+    categories = base_recipe and base_recipe.categories and table.deepcopy(base_recipe.categories) or { "crafting" },
     enabled = false,
-    ingredients = base_recipe and table.deepcopy(base_recipe.ingredients) or
+    ingredients = base_recipe and base_recipe.ingredients and table.deepcopy(base_recipe.ingredients) or
         {
             { type = "item", name = "iron-plate",   amount = 1 },
             { type = "item", name = "copper-cable", amount = 2 }

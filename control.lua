@@ -138,7 +138,7 @@ local function enforce_transformator_pump_filter_mode(transformator)
                 or ("eg-water-" .. tier)
 
             pump.clear_fluid_inside()
-            pump.fluidbox.set_filter(1, { name = expected_filter })
+            eg_set_fluidbox_filter(pump, { name = expected_filter }, 1)
         end
     end
 end
@@ -155,15 +155,19 @@ local function check_pump_disabled(transformator)
     enforce_transformator_pump_filter_mode(transformator)
 
     local cb = pump.get_control_behavior()
-
-    --- @diagnostic disable-next-line: undefined-field
-    if not (cb and cb.circuit_enable_disable) then
+    if not cb then
         transformator.pump_was_disabled = false
         return
     end
 
-    --- @diagnostic disable-next-line: undefined-field
-    local disabled = cb.disabled
+    local cb_fields = cb
+    --- @cast cb_fields table
+    if not cb_fields.circuit_enable_disable then
+        transformator.pump_was_disabled = false
+        return
+    end
+
+    local disabled = cb_fields.disabled
     local prev = transformator.pump_was_disabled
 
     if prev == nil then
@@ -360,10 +364,10 @@ local function on_player_setup_blueprint(event)
     local lazy_mapping = event.mapping
     if not lazy_mapping then return end
 
-    --- @diagnostic disable-next-line: assign-type-mismatch
-    local mapping = lazy_mapping.get()
-    if not mapping then return end
+    local raw_mapping = lazy_mapping.get()
+    if not raw_mapping then return end
 
+    local mapping = raw_mapping
     --- @cast mapping table<uint, LuaEntity>
     local source_to_blueprint_index = {}
 
@@ -639,7 +643,7 @@ local function on_gui_closed(event)
 
             local pump = transformator.pump
             if pump and pump.valid then
-                local filter = pump.fluidbox.get_filter(1)
+                local filter = eg_get_fluidbox_filter(pump, 1)
                 if filter and filter.name then
                     local tier = transformator.tier
                     if tier then
@@ -647,11 +651,11 @@ local function on_gui_closed(event)
                             transformator.pump_was_disabled = true
                             pump.clear_fluid_inside()
                             replace_tiered_components(transformator)
-                            pump.fluidbox.set_filter(1, { name = constants.DISABLED_FLUID })
+                            eg_set_fluidbox_filter(pump, { name = constants.DISABLED_FLUID }, 1)
                         else
                             transformator.pump_was_disabled = false
                             pump.clear_fluid_inside()
-                            pump.fluidbox.set_filter(1, { name = "eg-water-" .. tier })
+                            eg_set_fluidbox_filter(pump, { name = "eg-water-" .. tier }, 1)
                         end
                     end
                 end
@@ -752,14 +756,13 @@ local function on_wire_build(event)
     local player = game.get_player(event.player_index)
     if not player then return end
 
-    if player:is_cursor_empty()
-        or not player.cursor_stack
-        or not player.cursor_stack.valid_for_read
-        or player.cursor_stack.name ~= "copper-wire"
-        or not player.selected
-        or not player.selected.valid
-        or player.selected.type ~= "electric-pole"
-    then
+    local cursor_stack = player.cursor_stack
+    if not (cursor_stack and cursor_stack.valid_for_read and cursor_stack.name == "copper-wire") then
+        return
+    end
+
+    local selected = player.selected
+    if not (selected and selected.valid and selected.type == "electric-pole") then
         return
     end
 
@@ -768,8 +771,7 @@ local function on_wire_build(event)
 
     local player_index = event.player_index
 
-    --- @type LuaEntity
-    local selected = player.selected
+    --- @cast selected LuaEntity
 
     --- @type LuaEntity?
     local previous = storage.eg_wire_click_source[player_index]

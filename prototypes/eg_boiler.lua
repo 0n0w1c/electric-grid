@@ -41,12 +41,14 @@ function create_transformator_boiler(tier)
                     connection_category = "eg-guts-category",
                     direction = defines.direction.west,
                     flow_direction = "input-output",
+                    hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
                     position = { 0, 0 }
                 },
                 {
                     connection_category = "eg-guts-category",
                     direction = defines.direction.east,
                     flow_direction = "input-output",
+                    hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
                     position = { 0, 0 }
                 }
             },
@@ -61,6 +63,7 @@ function create_transformator_boiler(tier)
                     connection_category = "eg-guts-category",
                     direction = defines.direction.north,
                     flow_direction = "output",
+                    hide_connection_info = not constants.EG_DEBUG_TRANSFORMATOR,
                     position = { 0, 0 }
                 }
             },

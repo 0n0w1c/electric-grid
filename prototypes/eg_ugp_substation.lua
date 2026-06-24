@@ -109,9 +109,10 @@ local ugp_substation_displayer_recipe            =
 {
     type        = "recipe",
     name        = name,
-    category    = data.raw["recipe"]["substation"].category,
+    categories  = data.raw["recipe"]["substation"].categories and
+    table.deepcopy(data.raw["recipe"]["substation"].categories) or { "crafting" },
     enabled     = false,
-    ingredients = data.raw["recipe"]["substation"].ingredients,
+    ingredients = table.deepcopy(data.raw["recipe"]["substation"].ingredients),
     results     = { { type = "item", name = name, amount = 1 } }
 }
 

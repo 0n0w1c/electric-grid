@@ -1,6 +1,6 @@
 local recycling
-if mods["quality"] then
-    recycling = require("__quality__/prototypes/recycling")
+if mods["recycler"] then
+    recycling = require("__recycler__.recycling")
 end
 
 local items        = data.raw["item"]
@@ -251,7 +251,7 @@ if mods["aai-industry"] then
             { type = "item", name = "concrete",     amount = 2 }
         }
 
-        if mods["quality"] then
+        if recycling then
             recycling.generate_recycling_recipe(huge_pole_recipe)
         end
     end

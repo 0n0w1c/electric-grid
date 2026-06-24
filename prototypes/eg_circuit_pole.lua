@@ -71,7 +71,8 @@ local eg_circuit_pole_recipe =
 {
     type        = "recipe",
     name        = "eg-circuit-pole",
-    category    = data.raw["recipe"]["big-electric-pole"].category,
+    categories  = data.raw["recipe"]["big-electric-pole"].categories and
+    table.deepcopy(data.raw["recipe"]["big-electric-pole"].categories) or { "crafting" },
     enabled     = false,
     ingredients =
     {

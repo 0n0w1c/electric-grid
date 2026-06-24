@@ -234,7 +234,8 @@ local huge_pole_recipe =
 {
     type        = "recipe",
     name        = "eg-huge-electric-pole",
-    category    = data.raw["recipe"]["big-electric-pole"].category,
+    categories  = data.raw["recipe"]["big-electric-pole"].categories and
+    table.deepcopy(data.raw["recipe"]["big-electric-pole"].categories) or { "crafting" },
     enabled     = false,
     results     = { { type = "item", name = "eg-huge-electric-pole", amount = 1 } },
     ingredients =

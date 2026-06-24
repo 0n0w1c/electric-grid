@@ -46,9 +46,9 @@ small_iron_pole.pictures              = {
     }
 }
 
-local item_sounds            = require("__base__/prototypes/item_sounds")
+local item_sounds                     = require("__base__/prototypes/item_sounds")
 
-local small_iron_pole_item   =
+local small_iron_pole_item            =
 {
     type                  = "item",
     name                  = "small-iron-electric-pole",
@@ -65,11 +65,12 @@ local small_iron_pole_item   =
     drop_sound            = item_sounds.electric_small_inventory_move
 }
 
-local small_iron_pole_recipe =
+local small_iron_pole_recipe          =
 {
     type        = "recipe",
     name        = "small-iron-electric-pole",
-    category    = data.raw["recipe"]["small-electric-pole"].category,
+    categories  = data.raw["recipe"]["small-electric-pole"].categories and
+    table.deepcopy(data.raw["recipe"]["small-electric-pole"].categories) or { "crafting" },
     enabled     = false,
     results     = { { type = "item", name = "small-iron-electric-pole", amount = 2 } },
     ingredients =

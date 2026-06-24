@@ -268,7 +268,8 @@ local eg_transformator_item = {
 local eg_transformator_recipe = {
     type               = "recipe",
     name               = "eg-transformator",
-    category           = data.raw["recipe"]["substation"].category,
+    categories         = data.raw["recipe"]["substation"].categories and
+    table.deepcopy(data.raw["recipe"]["substation"].categories) or { "crafting" },
     ingredients        = {
         { type = "item", name = "copper-plate", amount = 2 },
         { type = "item", name = "steel-plate",  amount = 4 },
